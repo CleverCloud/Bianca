@@ -73,7 +73,7 @@ public class OptionsModule extends AbstractQuercusModule {
    public static final String INT_CURR_SYMBOL = (Currency.getInstance(Locale.getDefault())).toString();
    public static final int PHP_MAJOR_VERSION = Integer.parseInt(phpVersionArray[0]);
    public static final int PHP_MINOR_VERSION = Integer.parseInt(phpVersionArray[1]);
-   public static final int PHP_RELEASE_VERSION = Integer.parseInt(phpVersionArray[2]);
+   public static final int PHP_RELEASE_VERSION = Integer.parseInt(phpVersionArray[2].replace("x", "0"));
    public static final String PHP_EXTRA_VERSION = "-" + phpVersionEArray[1];
    public static final int PHP_VERSION_ID = PHP_MAJOR_VERSION * 10000 + PHP_MINOR_VERSION * 100 + PHP_RELEASE_VERSION;
    public static final int PHP_ZTS = 0;
