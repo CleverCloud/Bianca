@@ -7,8 +7,11 @@ DATE=`git log --pretty=format:"%ad" --date=short -1 | sed s/"-"/""/g`
 
 if [[ "$TAGV" == "$TAGT" ]]; then
 VER=$TAGV
+else if [[ "BR" == "master" ]]; then
+VER=`cat VERSION`
 else
 VER=$BR
+fi
 fi
 
 if [[ -z $1 ]]; then
