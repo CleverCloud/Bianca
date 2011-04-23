@@ -1084,9 +1084,17 @@ public class JavaAdapterVar extends Value {
    /**
     * Returns true if there are more elements.
     */
-   @Override
    public boolean hasCurrent() {
-      return getValue().hasCurrent();
+      Value v = getValue();
+      if (v instanceof ArgRef)
+         return ((ArgRef)v).hasCurrent();
+      else if (v instanceof ArrayValue)
+         return ((ArrayValue)v).hasCurrent();
+      else if (v instanceof Var)
+         return ((Var)v).hasCurrent();
+      else if (v instanceof JavaAdapterVar)
+         return ((JavaAdapterVar)v).hasCurrent();
+      return false;
    }
 
    /**

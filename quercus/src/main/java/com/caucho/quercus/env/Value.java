@@ -105,18 +105,6 @@ abstract public class Value implements java.io.Serializable {
    }
 
    /**
-    * Checks if 'this' is a valid protected call for 'className'
-    */
-   public void checkProtected(Env env, String className) {
-   }
-
-   /**
-    * Checks if 'this' is a valid private call for 'className'
-    */
-   public void checkPrivate(Env env, String className) {
-   }
-
-   /**
     * Returns the ValueType.
     */
    public ValueType getValueType() {
@@ -351,20 +339,6 @@ abstract public class Value implements java.io.Serializable {
     */
    public boolean isEmpty() {
       return false;
-   }
-
-   /**
-    * Returns true if there are more elements.
-    */
-   public boolean hasCurrent() {
-      return false;
-   }
-
-   /**
-    * Returns true for equality
-    */
-   public Value eqValue(Value rValue) {
-      return eq(rValue) ? BooleanValue.TRUE : BooleanValue.FALSE;
    }
 
    /**

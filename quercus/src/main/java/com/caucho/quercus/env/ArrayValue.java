@@ -1044,7 +1044,6 @@ abstract public class ArrayValue extends Value {
    /**
     * Returns true if there are more elements.
     */
-   @Override
    public boolean hasCurrent() {
       return _current != null;
    }
