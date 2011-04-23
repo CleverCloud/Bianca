@@ -560,7 +560,7 @@ public class JavaClassDef extends ClassDef {
    public Value callNew(Env env, Value[] args) {
       if (_cons != null) {
          if (__construct != null) {
-            Value value = _cons.call(env, Value.NULL_ARGS);
+            Value value = _cons.call(env, new Value[0]);
 
             __construct.callMethod(env, __construct.getQuercusClass(), value, args);
 

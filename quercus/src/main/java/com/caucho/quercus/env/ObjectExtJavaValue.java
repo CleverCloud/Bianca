@@ -128,7 +128,7 @@ public class ObjectExtJavaValue extends ObjectExtValue
     * Creats a backing Java object for this php object.
     */
    private Object createJavaObject(Env env) {
-      Value javaWrapper = _javaClassDef.callNew(env, Value.NULL_ARGS);
+      Value javaWrapper = _javaClassDef.callNew(env, new Value[0]);
       return javaWrapper.toJavaObject();
    }
 

@@ -50,7 +50,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
       super(env);
 
       _env = env;
-      _wrapper = qClass.callNew(_env, Value.NULL_ARGS);
+      _wrapper = qClass.callNew(_env, new Value[0]);
    }
 
    public boolean opendir(StringValue path, LongValue flags) {

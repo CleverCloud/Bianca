@@ -1736,7 +1736,6 @@ abstract public class ArrayValue extends Value {
    /**
     * Returns the field keys.
     */
-   @Override
    public Value[] getKeyArray(Env env) {
       int len = getSize();
       Value[] keys = new Value[len];
@@ -1753,7 +1752,6 @@ abstract public class ArrayValue extends Value {
    /**
     * Returns the field values.
     */
-   @Override
    public Value[] getValueArray(Env env) {
       int len = getSize();
       Value[] values = new Value[len];

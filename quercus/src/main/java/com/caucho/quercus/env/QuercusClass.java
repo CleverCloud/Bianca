@@ -693,7 +693,7 @@ public class QuercusClass extends NullValue {
    }
 
    public void init(Env env) {
-      if (_staticFieldExprMap.size() == 0) {
+      if (_staticFieldExprMap.isEmpty()) {
          return;
       }
 
@@ -821,12 +821,12 @@ public class QuercusClass extends NullValue {
 
       if (_isJavaWrapper) {
          // Java objects always need to call the constructor?
-         return _javaClassDef.callNew(env, Value.NULL_ARGS);
+         return _javaClassDef.callNew(env, new Value[0]);
       } else if (_javaClassDef != null && _javaClassDef.isDelegate()) {
          objectValue = new ObjectExtValue(this);
       } else if (_javaClassDef != null && _javaClassDef.isPhpClass()) {
          // Java objects always need to call the constructor?
-         Value javaWrapper = _javaClassDef.callNew(env, Value.NULL_ARGS);
+         Value javaWrapper = _javaClassDef.callNew(env, new Value[0]);
          Object object = javaWrapper.toJavaObject();
 
          objectValue = new ObjectExtJavaValue(this, object, _javaClassDef);

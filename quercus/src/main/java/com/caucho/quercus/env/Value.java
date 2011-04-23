@@ -50,10 +50,6 @@ import java.util.*;
 abstract public class Value implements java.io.Serializable {
 
    protected static final L10N L = new L10N(Value.class);
-   private static final Value[] NULL_ARG_VALUES = new Value[0];
-   public static final StringValue SCALAR_V = new ConstStringValue("scalar");
-   public static final Value[] NULL_VALUE_ARRAY = new Value[0];
-   public static final Value[] NULL_ARGS = new Value[0];
 
    //
    // Properties
@@ -1269,14 +1265,14 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates the function.
     */
    public Value call(Env env) {
-      return call(env, NULL_ARG_VALUES);
+      return call(env, new Value[0]);
    }
 
    /**
     * Evaluates the function.
     */
    public Value callRef(Env env) {
-      return callRef(env, NULL_ARG_VALUES);
+      return callRef(env, new Value[0]);
    }
 
    /**
@@ -1404,7 +1400,7 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 0 args.
     */
    public Value callMethod(Env env, StringValue methodName, int hash) {
-      return callMethod(env, methodName, hash, NULL_ARG_VALUES);
+      return callMethod(env, methodName, hash, new Value[0]);
    }
 
    /**
@@ -1420,7 +1416,7 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 0 args.
     */
    public Value callMethodRef(Env env, StringValue methodName, int hash) {
-      return callMethodRef(env, methodName, hash, NULL_ARG_VALUES);
+      return callMethodRef(env, methodName, hash, new Value[0]);
    }
 
    /**
@@ -1994,20 +1990,6 @@ abstract public class Value implements java.io.Serializable {
             iter.remove();
          }
       };
-   }
-
-   /**
-    * Returns the field keys.
-    */
-   public Value[] getKeyArray(Env env) {
-      return NULL_VALUE_ARRAY;
-   }
-
-   /**
-    * Returns the field values.
-    */
-   public Value[] getValueArray(Env env) {
-      return NULL_VALUE_ARRAY;
    }
 
    /**
