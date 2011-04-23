@@ -1589,29 +1589,6 @@ abstract public class Value implements java.io.Serializable {
    }
 
    //
-   // Methods from StringValue
-   //
-   /**
-    * Evaluates a method.
-    */
-   private Value callClassMethod(Env env, AbstractFunction fun, Value[] args) {
-      return NullValue.NULL;
-   }
-
-   private Value errorNoMethod(Env env, char[] name, int nameLen) {
-      String methodName = new String(name, 0, nameLen);
-
-      if (isNull()) {
-         return env.error(L.l("Method call '{0}' is not allowed for a null value.",
-                 methodName));
-      } else {
-         return env.error(L.l("'{0}' is an unknown method of {1}.",
-                 methodName,
-                 toDebugString()));
-      }
-   }
-
-   //
    // Arithmetic operations
    //
    /**
@@ -2618,12 +2595,19 @@ abstract public class Value implements java.io.Serializable {
       }
    }
 
-   public int getHashCode() {
-      return hashCode();
-   }
-
    @Override
    public int hashCode() {
       return 1021;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == null) {
+         return false;
+      }
+      if (getClass() != obj.getClass()) {
+         return false;
+      }
+      return true;
    }
 }
