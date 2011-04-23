@@ -68,21 +68,6 @@ abstract public class Value implements java.io.Serializable {
       return null;
    }
 
-   /**
-    * Returns the called class
-    */
-   public Value getCalledClass(Env env) {
-      QuercusClass qClass = getQuercusClass();
-
-      if (qClass != null) {
-         return env.createString(qClass.getName());
-      } else {
-         env.warning(L.l("get_called_class() must be called in a class context"));
-
-         return BooleanValue.FALSE;
-      }
-   }
-
    //
    // Predicates and Relations
    //
@@ -91,17 +76,6 @@ abstract public class Value implements java.io.Serializable {
     */
    public boolean isA(String name) {
       return false;
-   }
-
-   /**
-    * Returns true for an implementation of a class
-    */
-   final public boolean isA(Value value) {
-      if (value.isObject()) {
-         return isA(value.getClassName());
-      } else {
-         return isA(value.toString());
-      }
    }
 
    /**
