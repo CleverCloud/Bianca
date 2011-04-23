@@ -116,7 +116,7 @@ public class QuercusContext {
    //  = new LruCache<String, SessionArrayValue>(4096);
    private ConcurrentHashMap<String, Object> _specialMap = new ConcurrentHashMap<String, Object>();
    private String _scriptEncoding;
-   private String _phpVersion = "5.3.2-quercus-" + QuercusVersion.getVersionNumber();
+   private String _phpVersion = QuercusVersion.getVersionNumber();
    private String _mySqlVersion;
    private String _jdbcEncoding = "ISO8859_1";
    private StringValue _phpVersionValue;
@@ -234,7 +234,7 @@ public class QuercusContext {
    }
 
    public String getVersion() {
-      return "Open Source " + QuercusVersion.getVersionNumber();
+      return "Bianca " + QuercusVersion.getVersionNumber();
    }
 
    public String getVersionDate() {
