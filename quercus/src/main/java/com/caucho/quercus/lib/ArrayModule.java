@@ -1260,7 +1260,7 @@ public class ArrayModule
          }
       }
 
-      Value[] rows = primary.getKeyArray(env);
+      Value[] rows = (primary instanceof ArrayValue) ? ((ArrayValue)primary).getKeyArray(env) : new Value[0];
 
       int maxsize = 0;
       for (int i = 0; i < arrays.length; i++) {

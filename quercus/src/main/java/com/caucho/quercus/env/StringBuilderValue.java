@@ -1773,11 +1773,6 @@ public class StringBuilderValue
       }
    }
 
-   @Override
-   public int getHashCode() {
-      return hashCode();
-   }
-
    /**
     * Returns true for equality
     */

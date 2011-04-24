@@ -50,10 +50,6 @@ import java.util.*;
 abstract public class Value implements java.io.Serializable {
 
    protected static final L10N L = new L10N(Value.class);
-   private static final Value[] NULL_ARG_VALUES = new Value[0];
-   public static final StringValue SCALAR_V = new ConstStringValue("scalar");
-   public static final Value[] NULL_VALUE_ARRAY = new Value[0];
-   public static final Value[] NULL_ARGS = new Value[0];
 
    //
    // Properties
@@ -72,21 +68,6 @@ abstract public class Value implements java.io.Serializable {
       return null;
    }
 
-   /**
-    * Returns the called class
-    */
-   public Value getCalledClass(Env env) {
-      QuercusClass qClass = getQuercusClass();
-
-      if (qClass != null) {
-         return env.createString(qClass.getName());
-      } else {
-         env.warning(L.l("get_called_class() must be called in a class context"));
-
-         return BooleanValue.FALSE;
-      }
-   }
-
    //
    // Predicates and Relations
    //
@@ -95,29 +76,6 @@ abstract public class Value implements java.io.Serializable {
     */
    public boolean isA(String name) {
       return false;
-   }
-
-   /**
-    * Returns true for an implementation of a class
-    */
-   final public boolean isA(Value value) {
-      if (value.isObject()) {
-         return isA(value.getClassName());
-      } else {
-         return isA(value.toString());
-      }
-   }
-
-   /**
-    * Checks if 'this' is a valid protected call for 'className'
-    */
-   public void checkProtected(Env env, String className) {
-   }
-
-   /**
-    * Checks if 'this' is a valid private call for 'className'
-    */
-   public void checkPrivate(Env env, String className) {
    }
 
    /**
@@ -355,20 +313,6 @@ abstract public class Value implements java.io.Serializable {
     */
    public boolean isEmpty() {
       return false;
-   }
-
-   /**
-    * Returns true if there are more elements.
-    */
-   public boolean hasCurrent() {
-      return false;
-   }
-
-   /**
-    * Returns true for equality
-    */
-   public Value eqValue(Value rValue) {
-      return eq(rValue) ? BooleanValue.TRUE : BooleanValue.FALSE;
    }
 
    /**
@@ -1269,14 +1213,14 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates the function.
     */
    public Value call(Env env) {
-      return call(env, NULL_ARG_VALUES);
+      return call(env, new Value[0]);
    }
 
    /**
     * Evaluates the function.
     */
    public Value callRef(Env env) {
-      return callRef(env, NULL_ARG_VALUES);
+      return callRef(env, new Value[0]);
    }
 
    /**
@@ -1404,7 +1348,7 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 0 args.
     */
    public Value callMethod(Env env, StringValue methodName, int hash) {
-      return callMethod(env, methodName, hash, NULL_ARG_VALUES);
+      return callMethod(env, methodName, hash, new Value[0]);
    }
 
    /**
@@ -1420,7 +1364,7 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 0 args.
     */
    public Value callMethodRef(Env env, StringValue methodName, int hash) {
-      return callMethodRef(env, methodName, hash, NULL_ARG_VALUES);
+      return callMethodRef(env, methodName, hash, new Value[0]);
    }
 
    /**
@@ -1642,29 +1586,6 @@ abstract public class Value implements java.io.Serializable {
 
       return callMethodRef(env, methodName, hash,
               a1, a2, a3, a4, a5);
-   }
-
-   //
-   // Methods from StringValue
-   //
-   /**
-    * Evaluates a method.
-    */
-   private Value callClassMethod(Env env, AbstractFunction fun, Value[] args) {
-      return NullValue.NULL;
-   }
-
-   private Value errorNoMethod(Env env, char[] name, int nameLen) {
-      String methodName = new String(name, 0, nameLen);
-
-      if (isNull()) {
-         return env.error(L.l("Method call '{0}' is not allowed for a null value.",
-                 methodName));
-      } else {
-         return env.error(L.l("'{0}' is an unknown method of {1}.",
-                 methodName,
-                 toDebugString()));
-      }
    }
 
    //
@@ -1994,20 +1915,6 @@ abstract public class Value implements java.io.Serializable {
             iter.remove();
          }
       };
-   }
-
-   /**
-    * Returns the field keys.
-    */
-   public Value[] getKeyArray(Env env) {
-      return NULL_VALUE_ARRAY;
-   }
-
-   /**
-    * Returns the field values.
-    */
-   public Value[] getValueArray(Env env) {
-      return NULL_VALUE_ARRAY;
    }
 
    /**
@@ -2688,12 +2595,19 @@ abstract public class Value implements java.io.Serializable {
       }
    }
 
-   public int getHashCode() {
-      return hashCode();
-   }
-
    @Override
    public int hashCode() {
       return 1021;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (obj == null) {
+         return false;
+      }
+      if (getClass() != obj.getClass()) {
+         return false;
+      }
+      return true;
    }
 }

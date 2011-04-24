@@ -1499,9 +1499,16 @@ public class Var extends Value
    /**
     * Returns true if there are more elements.
     */
-   @Override
    public boolean hasCurrent() {
-      return _value.hasCurrent();
+      if (_value instanceof ArgRef)
+         return ((ArgRef)_value).hasCurrent();
+      else if (_value instanceof ArrayValue)
+         return ((ArrayValue)_value).hasCurrent();
+      else if (_value instanceof Var)
+         return ((Var)_value).hasCurrent();
+      else if (_value instanceof JavaAdapterVar)
+         return ((JavaAdapterVar)_value).hasCurrent();
+      return false;
    }
 
    /**

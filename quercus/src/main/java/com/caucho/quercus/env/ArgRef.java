@@ -48,7 +48,6 @@ public class ArgRef extends Value
       _var = var;
    }
 
-   @Override
    public boolean hasCurrent() {
       return _var.hasCurrent();
    }
@@ -311,9 +310,8 @@ public class ArgRef extends Value
       return _var.getCount(env);
    }
 
-   @Override
    public Value[] getKeyArray(Env env) {
-      return _var.getKeyArray(env);
+      return new Value[0];
    }
 
    @Override
