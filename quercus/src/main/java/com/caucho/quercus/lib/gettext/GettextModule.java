@@ -413,11 +413,7 @@ public class GettextModule
 
       StringValue sb;
 
-      if (msg.isUnicode()) {
-         sb = env.createUnicodeBuilder();
-      } else {
-         sb = env.createBinaryBuilder();
-      }
+      sb = new StringBuilderValue();
 
       return formatImpl(env, msg, args, sb);
    }

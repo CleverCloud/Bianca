@@ -713,7 +713,7 @@ public class QuercusClass extends NullValue {
                val = expr.eval(env);
             }
 
-            StringValue fullName = env.createStringBuilder();
+            StringValue fullName = new StringBuilderValue();
             fullName.append(_className);
             fullName.append("::");
             fullName.append(field._name);

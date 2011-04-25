@@ -31,6 +31,7 @@ import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Env;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.lib.file.BinaryInput;
 import com.caucho.util.L10N;
 
@@ -111,7 +112,7 @@ public class QuercusZipEntry {
    /**
     * Reads and decompresses entry's compressed data.
     *
-    * @return decompressed BinaryValue or FALSE on error
+    * @return decompressed StringValue or FALSE on error
     */
    @ReturnNullAsFalse
    public StringValue zip_entry_read(Env env,
@@ -120,7 +121,7 @@ public class QuercusZipEntry {
          return null;
       }
 
-      StringValue bb = env.createBinaryBuilder();
+      StringValue bb = new StringBuilderValue();
 
       bb.appendReadAll((InputStream) _in, length);
 

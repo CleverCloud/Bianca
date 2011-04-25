@@ -44,7 +44,6 @@ import java.util.Set;
 public class CompiledObjectValue extends ObjectValue
         implements Serializable {
 
-   private static final StringValue TO_STRING = new UnicodeValueImpl("__toString");
    private static final Value[] NULL_FIELDS = new Value[0];
    public Value[] _fields;
    private ObjectExtValue _object;

@@ -230,7 +230,7 @@ public class Zlib {
          return null;
       }
 
-      UnicodeBuilderValue sbv = new UnicodeBuilderValue();
+      StringBuilderValue sbv = new StringBuilderValue();
       int readChar;
 
       try {
@@ -268,7 +268,6 @@ public class Zlib {
     */
    public ArrayValue gzfile() {
       Value line;
-      int oldLength = 0;
 
       ArrayValue array = new ArrayValueImpl();
 
@@ -287,13 +286,12 @@ public class Zlib {
    /**
     * same as gzgets but does not stop at '\n' or '\r'
     * @param length
-    * @return BinaryValue, an empty BinaryValue if no data read
+    * @return StringValue, an empty StringValue if no data read
     * @throws IOException
     * @throws DataFormatException
     */
    public StringValue gzread(Env env, int length) {
-      StringValue sb = env.createBinaryBuilder();
-      int readChar;
+      StringValue sb = new StringBuilderValue();
 
       if (_in == null) {
          return sb;
@@ -339,7 +337,7 @@ public class Zlib {
             return null;
          }
 
-         UnicodeBuilderValue sbv = new UnicodeBuilderValue();
+         StringBuilderValue sbv = new StringBuilderValue();
          int readChar;
          for (int i = 0; i < length; i++) {
             readChar = _in.read();

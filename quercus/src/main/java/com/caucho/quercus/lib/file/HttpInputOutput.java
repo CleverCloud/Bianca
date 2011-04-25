@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.EnvCleanup;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.resources.StreamContextResource;
@@ -152,7 +153,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
          } else if (optionName.equals("user_agent")) {
             _httpStream.setAttribute("User-Agent", optionValue.toString());
          } else if (optionName.equals("content")) {
-            _bodyStart = optionValue.toBinaryValue(env).toBytes();
+            _bodyStart = optionValue.toStringValue(env).toBytes();
          } else if (optionName.equals("proxy")) {
             env.stub("StreamContextResource::proxy option");
          } else if (optionName.equals("request_fulluri")) {
@@ -259,7 +260,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
    @Override
    public StringValue read(int length)
            throws IOException {
-      StringValue bb = _env.createBinaryBuilder();
+      StringValue bb = new StringBuilderValue();
       TempBuffer temp = TempBuffer.allocate();
 
       try {

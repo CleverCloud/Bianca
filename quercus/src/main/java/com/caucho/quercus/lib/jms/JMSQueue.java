@@ -99,8 +99,8 @@ public class JMSQueue {
          Set<Map.Entry<Value, Value>> entrySet = array.entrySet();
 
          for (Map.Entry<Value, Value> entry : entrySet) {
-            if (entry.getValue() instanceof BinaryValue) {
-               byte[] bytes = ((BinaryValue) entry.getValue()).toBytes();
+            if (entry.getValue() instanceof StringValue) {
+               byte[] bytes = ((StringValue) entry.getValue()).toBytes();
 
                ((MapMessage) message).setBytes(entry.getKey().toString(), bytes);
             } else {
@@ -109,11 +109,11 @@ public class JMSQueue {
                        entry.getValue().toString());
             }
          }
-      } else if (value instanceof BinaryValue) {
+      } else if (value instanceof StringValue) {
          message = _session.createBytesMessage();
 
 
-         byte[] bytes = ((BinaryValue) value).toBytes();
+         byte[] bytes = ((StringValue) value).toBytes();
 
          ((BytesMessage) message).writeBytes(bytes);
       } else if (value.isLongConvertible()) {
@@ -167,7 +167,7 @@ public class JMSQueue {
          BytesMessage bytesMessage = (BytesMessage) message;
          int length = (int) bytesMessage.getBodyLength();
 
-         StringValue bb = env.createBinaryBuilder(length);
+         StringValue bb = new StringBuilderValue(length);
 
          TempBuffer tempBuffer = TempBuffer.allocate();
          int sublen;

@@ -29,6 +29,7 @@
 package com.caucho.quercus.lib.file;
 
 import com.caucho.quercus.env.Env;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.resources.StreamResource;
 import com.caucho.vfs.Path;
@@ -69,7 +70,7 @@ public class FileValue extends StreamResource {
    @Override
    public StringValue readLine(Env env)
            throws IOException {
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       int ch;
 

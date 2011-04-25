@@ -3393,12 +3393,10 @@ public class QuercusParser {
                        || "double".equalsIgnoreCase(type)
                        || "real".equalsIgnoreCase(type)) {
                   return _factory.createToDouble(parseAssignExpr());
-               } else if ("string".equalsIgnoreCase(type)) {
+               } else if ("string".equalsIgnoreCase(type)
+                       || "binary".equalsIgnoreCase(type)
+                       || "unicode".equalsIgnoreCase(type)) {
                   return _factory.createToString(parseAssignExpr());
-               } else if ("binary".equalsIgnoreCase(type)) {
-                  return _factory.createToBinary(parseAssignExpr());
-               } else if ("unicode".equalsIgnoreCase(type)) {
-                  return _factory.createToUnicode(parseAssignExpr());
                } else if ("object".equalsIgnoreCase(type)) {
                   return _factory.createToObject(parseAssignExpr());
                } else if ("array".equalsIgnoreCase(type)) {

@@ -54,11 +54,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
    }
 
    public boolean opendir(StringValue path, LongValue flags) {
-      if (_env.isUnicodeSemantics()) {
-         return _wrapper.callMethod(_env, DIR_OPENDIR_U, path, flags).toBoolean();
-      } else {
-         return _wrapper.callMethod(_env, DIR_OPENDIR, path, flags).toBoolean();
-      }
+      return _wrapper.callMethod(_env, DIR_OPENDIR_U, path, flags).toBoolean();
    }
 
    /**
@@ -66,11 +62,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
     */
    @Override
    public Value readdir() {
-      if (_env.isUnicodeSemantics()) {
-         return _wrapper.callMethod(_env, DIR_READDIR_U);
-      } else {
-         return _wrapper.callMethod(_env, DIR_READDIR);
-      }
+      return _wrapper.callMethod(_env, DIR_READDIR_U);
    }
 
    /**
@@ -78,11 +70,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
     */
    @Override
    public void rewinddir() {
-      if (_env.isUnicodeSemantics()) {
-         _wrapper.callMethod(_env, DIR_REWINDDIR_U);
-      } else {
-         _wrapper.callMethod(_env, DIR_REWINDDIR);
-      }
+      _wrapper.callMethod(_env, DIR_REWINDDIR_U);
    }
 
    /**
@@ -90,11 +78,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
     */
    @Override
    public void close() {
-      if (_env.isUnicodeSemantics()) {
-         _wrapper.callMethod(_env, DIR_CLOSEDIR_U);
-      } else {
-         _wrapper.callMethod(_env, DIR_CLOSEDIR);
-      }
+      _wrapper.callMethod(_env, DIR_CLOSEDIR_U);
    }
 
    /**

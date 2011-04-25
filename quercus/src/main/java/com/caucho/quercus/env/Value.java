@@ -163,20 +163,6 @@ abstract public class Value implements java.io.Serializable {
    }
 
    /**
-    * Returns true for a BinaryValue.
-    */
-   public boolean isBinary() {
-      return false;
-   }
-
-   /**
-    * Returns true for a UnicodeValue.
-    */
-   public boolean isUnicode() {
-      return false;
-   }
-
-   /**
     * Returns true for a BooleanValue
     */
    public boolean isBoolean() {
@@ -278,23 +264,9 @@ abstract public class Value implements java.io.Serializable {
    }
 
    /**
-    * Cost to convert to a binary value
-    */
-   public int toBinaryValueMarshalCost() {
-      return Marshal.COST_TO_STRING + 1;
-   }
-
-   /**
     * Cost to convert to a StringValue
     */
    public int toStringValueMarshalCost() {
-      return Marshal.COST_TO_STRING + 1;
-   }
-
-   /**
-    * Cost to convert to a UnicodeValue
-    */
-   public int toUnicodeValueMarshalCost() {
       return Marshal.COST_TO_STRING + 1;
    }
 
@@ -841,79 +813,6 @@ abstract public class Value implements java.io.Serializable {
    }
 
    /**
-    * Converts to a Unicode string.  For unicode.semantics=false, this will
-    * still return a StringValue. For unicode.semantics=true, this will
-    * return a UnicodeStringValue.
-    */
-   public StringValue toUnicode(Env env) {
-      return toUnicodeValue(env);
-   }
-
-   /**
-    * Converts to a UnicodeValue for marshaling, so it will create a
-    * UnicodeValue event when unicode.semantics=false.
-    */
-   public StringValue toUnicodeValue() {
-      return toUnicodeValue(Env.getInstance());
-   }
-
-   /**
-    * Converts to a UnicodeValue for marshaling, so it will create a
-    * UnicodeValue event when unicode.semantics=false.
-    */
-   public StringValue toUnicodeValue(Env env) {
-      // php/0ci0
-      return new UnicodeBuilderValue(env.createString(toString()));
-   }
-
-   /**
-    * Converts to a BinaryValue.
-    */
-   public StringValue toBinaryValue() {
-      return toBinaryValue(Env.getInstance());
-   }
-
-   /**
-    * Converts to a BinaryValue.
-    */
-   public StringValue toBinaryValue(String charset) {
-      return toBinaryValue();
-   }
-
-   /**
-    * Converts to a BinaryValue.
-    */
-   public StringValue toBinaryValue(Env env) {
-      StringValue bb = env.createBinaryBuilder();
-
-      bb.append(this);
-
-      return bb;
-
-      /*
-      try {
-      int length = 0;
-      while (true) {
-      bb.ensureCapacity(bb.getLength() + 256);
-
-      int sublen = is.read(bb.getBuffer(),
-      bb.getOffset(),
-      bb.getLength() - bb.getOffset());
-
-      if (sublen <= 0)
-      return bb;
-      else {
-      length += sublen;
-      bb.setOffset(length);
-      }
-      }
-      } catch (IOException e) {
-      throw new QuercusException(e);
-      }
-       */
-   }
-
-   /**
     * Returns a byteArrayInputStream for the value.
     * See TempBufferStringValue for how this can be overriden
     *
@@ -934,7 +833,7 @@ abstract public class Value implements java.io.Serializable {
     * Converts to a string builder
     */
    public StringValue toStringBuilder(Env env) {
-      return env.createUnicodeBuilder().appendUnicode(this);
+      return new StringBuilderValue().appendUnicode(this);
    }
 
    /**

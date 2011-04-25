@@ -134,7 +134,6 @@ public class RegexpState {
    }
 
    public boolean setSubject(Env env, StringValue subject) {
-      _subject = _regexp.convertSubject(env, subject);
       _subjectLength = _subject != null ? _subject.length() : 0;
 
       return _subject != null;
@@ -208,8 +207,6 @@ public class RegexpState {
 
    public boolean find(Env env, StringValue subject) {
       try {
-         subject = _regexp.convertSubject(env, subject);
-
          if (subject == null) {
             throw new QuercusException(L.l("error converting subject to utf8"));
          }
@@ -233,8 +230,6 @@ public class RegexpState {
          if (log.isLoggable(Level.FINEST)) {
             log.finest(this + " find(" + subject + ")");
          }
-
-         subject = _regexp.convertSubject(env, subject);
 
          if (subject == null) {
             throw new QuercusException(L.l("error converting subject to utf8"));
@@ -264,8 +259,6 @@ public class RegexpState {
          if (log.isLoggable(Level.FINEST)) {
             log.finest(this + " exec(" + subject + ")");
          }
-
-         subject = _regexp.convertSubject(env, subject);
 
          if (subject == null) {
             if (log.isLoggable(Level.FINE)) {
@@ -391,9 +384,7 @@ public class RegexpState {
       int begin = getBegin(i);
       int end = getEnd(i);
 
-      StringValue s = _subject.substring(begin, end);
-
-      return _regexp.convertResult(env, s);
+      return _subject.substring(begin, end);
    }
 
    public StringValue getGroupName(int i) {
@@ -407,15 +398,11 @@ public class RegexpState {
    }
 
    public StringValue substring(Env env, int start) {
-      StringValue result = _subject.substring(start);
-
-      return _regexp.convertResult(env, result);
+      return _subject.substring(start);
    }
 
    public StringValue substring(Env env, int start, int end) {
-      StringValue result = _subject.substring(start, end);
-
-      return _regexp.convertResult(env, result);
+      return _subject.substring(start, end);
    }
 
    @Override

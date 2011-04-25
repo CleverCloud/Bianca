@@ -210,22 +210,6 @@ public class JavaAdapterVar extends Value {
    }
 
    /**
-    * Returns true for a BinaryValue.
-    */
-   @Override
-   public boolean isBinary() {
-      return getValue().isBinary();
-   }
-
-   /**
-    * Returns true for a UnicodeValue.
-    */
-   @Override
-   public boolean isUnicode() {
-      return getValue().isUnicode();
-   }
-
-   /**
     * Returns true for a BooleanValue
     */
    @Override
@@ -504,16 +488,6 @@ public class JavaAdapterVar extends Value {
    @Override
    public StringValue toStringValue() {
       return getValue().toStringValue();
-   }
-
-   @Override
-   public StringValue toBinaryValue(Env env) {
-      return getValue().toBinaryValue(env);
-   }
-
-   @Override
-   public StringValue toUnicodeValue(Env env) {
-      return getValue().toUnicodeValue(env);
    }
 
    @Override

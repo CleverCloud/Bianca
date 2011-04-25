@@ -148,7 +148,7 @@ public class Post {
                return;
             }
          } else {
-            StringValue bb = env.createBinaryBuilder();
+            StringValue bb = new StringBuilderValue();
 
             bb.appendReadAll(is, Integer.MAX_VALUE);
 
@@ -213,7 +213,7 @@ public class Post {
          if (bracketIndex >= 0 && bracketIndex < name.length() - 1) {
             // php/085c
          } else if (filename == null) {
-            StringValue value = env.createStringBuilder();
+            StringValue value = new StringBuilderValue();
 
             value.appendReadAll(is, Integer.MAX_VALUE);
 

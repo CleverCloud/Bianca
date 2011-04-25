@@ -28,6 +28,8 @@
  */
 package com.caucho.quercus.env;
 
+/* TODO: append cleanup */
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +44,6 @@ import java.util.zip.CRC32;
 import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.QuercusRuntimeException;
 import com.caucho.quercus.lib.file.BinaryInput;
-import com.caucho.quercus.lib.i18n.Decoder;
 import com.caucho.quercus.marshal.Marshal;
 import com.caucho.util.ByteAppendable;
 import com.caucho.vfs.ReadStream;
@@ -121,10 +122,6 @@ abstract public class StringValue
     * @param charset to decode string from
     */
    public StringValue create(Env env, StringValue unicodeStr, String charset) {
-      if (!unicodeStr.isUnicode()) {
-         return unicodeStr;
-      }
-
       try {
          StringValue sb = createStringBuilder();
 
@@ -351,14 +348,6 @@ abstract public class StringValue
    @Override
    public int toStringValueMarshalCost() {
       return Marshal.COST_IDENTICAL;
-   }
-
-   /**
-    * Cost to convert to a binary value
-    */
-   @Override
-   public int toBinaryValueMarshalCost() {
-      return Marshal.COST_STRING_TO_BINARY;
    }
 
    /**
@@ -830,9 +819,9 @@ abstract public class StringValue
    @Override
    public Object valuesToArray(Env env, Class elementType) {
       if (char.class.equals(elementType)) {
-         return toUnicode(env).toCharArray();
+         return toCharArray();
       } else if (Character.class.equals(elementType)) {
-         char[] chars = toUnicode(env).toCharArray();
+         char[] chars = toCharArray();
 
          int length = chars.length;
 
@@ -844,9 +833,9 @@ abstract public class StringValue
 
          return charObjects;
       } else if (byte.class.equals(elementType)) {
-         return toBinaryValue(env).toBytes();
+         return toStringValue(env).toBytes();
       } else if (Byte.class.equals(elementType)) {
-         byte[] bytes = toBinaryValue(env).toBytes();
+         byte[] bytes = toStringValue(env).toBytes();
 
          int length = bytes.length;
 
@@ -939,7 +928,7 @@ abstract public class StringValue
       int len = length();
 
       if (index < 0 || len <= index) {
-         return UnsetUnicodeValue.UNSET;
+         return UnsetStringValue.UNSET;
       } else {
          return StringValue.create(charAt((int) index));
       }
@@ -1317,10 +1306,6 @@ abstract public class StringValue
     * @param charset to decode string from
     */
    public StringValue append(Env env, StringValue unicodeStr, String charset) {
-      if (!unicodeStr.isUnicode()) {
-         return append(unicodeStr);
-      }
-
       try {
          byte[] bytes = unicodeStr.toString().getBytes(charset);
 
@@ -2105,7 +2090,7 @@ abstract public class StringValue
    public StringValue toLowerCase() {
       int length = length();
 
-      UnicodeBuilderValue string = new UnicodeBuilderValue(length);
+      StringBuilderValue string = new StringBuilderValue(length);
 
       char[] buffer = string.getBuffer();
       getChars(0, buffer, 0, length);
@@ -2132,7 +2117,7 @@ abstract public class StringValue
    public StringValue toUpperCase() {
       int length = length();
 
-      UnicodeBuilderValue string = new UnicodeBuilderValue(length);
+      StringBuilderValue string = new StringBuilderValue(length);
 
       char[] buffer = string.getBuffer();
       getChars(0, buffer, 0, length);
@@ -2202,52 +2187,23 @@ abstract public class StringValue
    }
 
    /**
-    * Converts to a unicode value.
+    * Converts to a string builder
     */
    @Override
-   public StringValue toUnicode(Env env) {
-      return this;
-   }
-
-   /**
-    * Decodes from charset and returns UnicodeValue.
-    *
-    * @param env
-    * @param charset
-    */
-   public StringValue toUnicodeValue(Env env, String charset) {
-      StringValue sb = new UnicodeBuilderValue();
-
-      Decoder decoder = Decoder.create(charset);
-
-      sb.append(decoder.decode(env, this));
-
-      return sb;
-   }
-
-   /**
-    * Decodes from charset and returns UnicodeValue.
-    *
-    * @param env
-    * @param charset
-    */
-   public StringValue convertToUnicode(Env env, String charset) {
-      UnicodeBuilderValue sb = new UnicodeBuilderValue();
-
-      Decoder decoder = Decoder.create(charset);
-      decoder.setAllowMalformedOut(true);
-
-      sb.append(decoder.decode(env, this));
-
-      return sb;
+   public StringValue toStringBuilder(Env env) {
+      return createStringBuilder().append(this);
    }
 
    /**
     * Converts to a string builder
     */
    @Override
-   public StringValue toStringBuilder(Env env) {
-      return createStringBuilder().append(this);
+   public StringValue toStringBuilder() {
+      StringBuilderValue sb = new StringBuilderValue();
+
+      sb.append(this);
+
+      return sb;
    }
 
    /**
@@ -2360,10 +2316,6 @@ abstract public class StringValue
 
       StringValue s = (StringValue) o;
 
-      if (s.isUnicode() != isUnicode()) {
-         return false;
-      }
-
       int aLength = length();
       int bLength = s.length();
 
@@ -2391,10 +2343,6 @@ abstract public class StringValue
       }
 
       StringValue s = (StringValue) o;
-
-      if (s.isUnicode() != isUnicode()) {
-         return false;
-      }
 
       int aLength = length();
       int bLength = s.length();
@@ -2469,14 +2417,52 @@ abstract public class StringValue
    }
 
    @Override
-   abstract public String toDebugString();
+   public String toDebugString() {
+      StringBuilder sb = new StringBuilder();
+
+      int length = length();
+
+      sb.append("unicode(");
+      sb.append(length);
+      sb.append(") \"");
+
+      int appendLength = length > 256 ? 256 : length;
+
+      for (int i = 0; i < appendLength; i++) {
+         sb.append(charAt(i));
+      }
+
+      if (length > 256) {
+         sb.append(" ...");
+      }
+
+      sb.append('"');
+
+      return sb.toString();
+   }
 
    @Override
-   abstract public void varDumpImpl(Env env,
+   public void varDumpImpl(Env env,
            WriteStream out,
            int depth,
            IdentityHashMap<Value, String> valueSet)
-           throws IOException;
+           throws IOException {
+      int length = length();
+
+      if (length < 0) {
+         length = 0;
+      }
+
+      out.print("unicode(");
+      out.print(length);
+      out.print(") \"");
+
+      for (int i = 0; i < length; i++) {
+         out.print(charAt(i));
+      }
+
+      out.print("\"");
+   }
 
    class StringValueInputStream extends java.io.InputStream {
 

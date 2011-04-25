@@ -34,6 +34,7 @@ import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.annotation.UsesSymbolTable;
 import com.caucho.quercus.annotation.Name;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.file.FileModule;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.quercus.module.IniDefinition;
@@ -394,7 +395,7 @@ public class OptionsModule extends AbstractQuercusModule {
       if (v != null) {
          return v;
       } else {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 

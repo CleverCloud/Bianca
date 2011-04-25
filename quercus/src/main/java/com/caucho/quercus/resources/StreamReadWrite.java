@@ -119,7 +119,7 @@ public class StreamReadWrite extends StreamResource
       if (_is != null) {
          return env.createString(_is.readLineNoChop());
       } else {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 

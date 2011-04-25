@@ -87,7 +87,7 @@ public class ExceptionClass {
     * Returns a String representation of this Exception.
     */
    public static Value __toString(Env env, @This ObjectValue value) {
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringBuilderValue();
 
       sb.append("ExceptionClass[" + value.getName() + "]\n");
       sb.append(getMessage(env, value));
@@ -146,7 +146,7 @@ public class ExceptionClass {
    public static Value getTraceAsString(Env env, @This Value obj) {
       Value trace = getTrace(env, obj);
 
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringBuilderValue();
       sb.append("<trace>");
 
       Iterator<Value> iter = trace.getValueIterator(env);

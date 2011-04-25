@@ -198,22 +198,6 @@ public class LargeStringBuilderValue
    }
 
    /**
-    * Converts to a BinaryValue.
-    */
-   @Override
-   public StringValue toBinaryValue(Env env) {
-      return this;
-   }
-
-   /**
-    * Converts to a BinaryValue in desired charset.
-    */
-   @Override
-   public StringValue toBinaryValue(String charset) {
-      return this;
-   }
-
-   /**
     * Append to a string builder.
     */
    public void appendTo(StringValue bb) {
@@ -642,7 +626,7 @@ public class LargeStringBuilderValue
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
+   public StringValue appendTo(StringBuilderValue sb) {
       if (length() == 0) {
          return sb;
       }

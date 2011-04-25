@@ -990,10 +990,7 @@ public class MysqliResult extends JdbcResultResource {
             return NullValue.NULL;
          }
 
-         StringValue bb = env.createUnicodeBuilder();
-
-         int length = bytes.length;
-         int offset = 0;
+         StringValue bb = new StringBuilderValue();
 
          bb.appendUtf8(bytes);
 
@@ -1028,7 +1025,7 @@ public class MysqliResult extends JdbcResultResource {
             return NullValue.NULL;
          }
 
-         StringValue bb = env.createUnicodeBuilder();
+         StringValue bb = new StringBuilderValue();
 
          bb.append(bytes);
 

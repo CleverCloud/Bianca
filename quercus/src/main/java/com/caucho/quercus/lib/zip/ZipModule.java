@@ -179,7 +179,7 @@ public class ZipModule extends AbstractQuercusModule {
    /**
     * Reads and decompresses entry's compressed data.
     *
-    * @return false or decompressed BinaryValue
+    * @return false or decompressed StringValue
     */
    @ReturnNullAsFalse
    public StringValue zip_entry_read(Env env,

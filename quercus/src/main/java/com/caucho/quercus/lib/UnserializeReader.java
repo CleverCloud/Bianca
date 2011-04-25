@@ -95,7 +95,9 @@ public final class UnserializeReader {
          }
 
          case 's':
-         case 'S': {
+         case 'S': 
+         case 'u':
+         case 'U':{
             expect(':');
             int len = (int) readInt();
             expect(':');
@@ -107,29 +109,6 @@ public final class UnserializeReader {
             }
 
             Value value = readStringValue(env, len);
-
-            expect('"');
-            expect(';');
-
-            if (_useReference) {
-               value = createReference(value);
-            }
-
-            return value;
-         }
-         case 'u':
-         case 'U': {
-            expect(':');
-            int len = (int) readInt();
-            expect(':');
-            expect('"');
-
-            if (!isValidString(len)) {
-               env.notice(L.l("expected string length of {0}", len));
-               return BooleanValue.FALSE;
-            }
-
-            Value value = readUnicodeValue(env, len);
 
             expect('"');
             expect(';');
@@ -714,14 +693,6 @@ public final class UnserializeReader {
 
    public final StringValue readStringValue(Env env, int len) {
       StringValue s = env.createString(_buffer, _index, len);
-
-      _index += len;
-
-      return s;
-   }
-
-   public final StringValue readUnicodeValue(Env env, int len) {
-      StringValue s = new UnicodeBuilderValue(_buffer, _index, len);
 
       _index += len;
 

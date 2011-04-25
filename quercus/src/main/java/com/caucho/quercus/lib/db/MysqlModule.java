@@ -32,6 +32,7 @@ import com.caucho.quercus.annotation.NotNull;
 import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
 import com.caucho.util.Log;
@@ -550,7 +551,7 @@ public class MysqlModule extends AbstractQuercusModule {
 
          fieldResult.putThisField(env, SV_NAME, env.createString(columnLabel));
          fieldResult.putThisField(env, SV_TABLE, env.createString(tableName));
-         fieldResult.putThisField(env, SV_DEF, env.getEmptyString());
+         fieldResult.putThisField(env, SV_DEF, StringValue.EMPTY);
          fieldResult.putThisField(env, SV_MAX_LENGTH,
                  LongValue.create(maxLength));
          fieldResult.putThisField(env, SV_NOT_NULL,
@@ -1252,10 +1253,10 @@ public class MysqlModule extends AbstractQuercusModule {
       }
 
       conn = new MysqliResource(env,
-              env.getEmptyString(),
-              env.getEmptyString(), env.getEmptyString(),
+              StringValue.EMPTY,
+              StringValue.EMPTY, StringValue.EMPTY,
               db, 3306,
-              env.getEmptyString());
+              StringValue.EMPTY);
 
       env.setSpecialValue("caucho.mysql", conn);
 

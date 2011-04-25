@@ -91,11 +91,11 @@ public class HtmlModule extends AbstractQuercusModule {
          Value value = entry.getValue();
 
          if (key.isString()) {
-            key = key.toUnicodeValue(env);
+            key = key.toStringValue(env);
          }
 
          if (value.isString()) {
-            value = value.toUnicodeValue(env);
+            value = value.toStringValue(env);
          }
 
          copy.put(key, value);
@@ -113,36 +113,29 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional("ENT_COMPAT") int quoteStyle) {
       Value result;
 
-      if (!env.isUnicodeSemantics()) {
-         if (table == HTML_ENTITIES) {
-            result = HTML_ENTITIES_ARRAY.copy();
-         } else {
-            result = HTML_SPECIALCHARS_ARRAY.copy();
+      
+      if (table == HTML_ENTITIES) {
+         if (HTML_ENTITIES_ARRAY_UNICODE == null) {
+            HTML_ENTITIES_ARRAY_UNICODE = toUnicodeArray(
+                    env, HTML_ENTITIES_ARRAY);
          }
+
+         result = HTML_ENTITIES_ARRAY_UNICODE.copy();
       } else {
-         if (table == HTML_ENTITIES) {
-            if (HTML_ENTITIES_ARRAY_UNICODE == null) {
-               HTML_ENTITIES_ARRAY_UNICODE = toUnicodeArray(
-                       env, HTML_ENTITIES_ARRAY);
-            }
-
-            result = HTML_ENTITIES_ARRAY_UNICODE.copy();
-         } else {
-            if (HTML_SPECIALCHARS_ARRAY_UNICODE == null) {
-               HTML_SPECIALCHARS_ARRAY_UNICODE = toUnicodeArray(
-                       env, HTML_SPECIALCHARS_ARRAY);
-            }
-
-            result = HTML_SPECIALCHARS_ARRAY_UNICODE.copy();
+         if (HTML_SPECIALCHARS_ARRAY_UNICODE == null) {
+            HTML_SPECIALCHARS_ARRAY_UNICODE = toUnicodeArray(
+                    env, HTML_SPECIALCHARS_ARRAY);
          }
+
+         result = HTML_SPECIALCHARS_ARRAY_UNICODE.copy();
       }
 
       if ((quoteStyle & ENT_HTML_QUOTE_SINGLE) != 0) {
-         result.put(env.createString('\''), env.createString("&#39;"));
+         result.put(env.createString("'"), env.createString("&#39;"));
       }
 
       if ((quoteStyle & ENT_HTML_QUOTE_DOUBLE) != 0) {
-         result.put(env.createString('"'), env.createString("&quot;"));
+         result.put(env.createString("\""), env.createString("&quot;"));
       }
 
       return result;
@@ -343,15 +336,8 @@ public class HtmlModule extends AbstractQuercusModule {
                }
             } else if (entity != null) {
                sb.append(entity);
-            } else if (env.isUnicodeSemantics() || 0x00 <= ch && ch <= 0xff) {
-               sb.append((char) ch);
             } else {
-               sb.append("&#");
-               sb.append(hexdigit(ch >> 12));
-               sb.append(hexdigit(ch >> 8));
-               sb.append(hexdigit(ch >> 4));
-               sb.append(hexdigit(ch));
-               sb.append(";");
+               sb.append((char) ch);
             }
          }
       } catch (IOException e) {
@@ -384,77 +370,55 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional int quoteStyle,
            @Optional String charset) {
       if (string.length() == 0) {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
 
       ArrayValue htmlEntities = null;
 
-      boolean isUnicode = env.isUnicodeSemantics();
-
-      if (isUnicode) {
-         if (HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY == null) {
-            HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY = toUnicodeArray(
-                    env, HTML_ENTITIES_ARRAY_ENTITY_KEY);
-         }
-
-         htmlEntities = HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY;
-      } else {
-         htmlEntities = HTML_ENTITIES_ARRAY_ENTITY_KEY;
+      if (HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY == null) {
+         HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY = toUnicodeArray(
+                 env, HTML_ENTITIES_ARRAY_ENTITY_KEY);
       }
 
-      EncodingWriter out = null;
-
-      if (!isUnicode) {
-         if (charset == null || charset.length() == 0) {
-            charset = env.getRuntimeEncoding();
-         }
-
-         out = Encoding.getWriteEncoding(charset);
-      }
+      htmlEntities = HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY;
 
       int len = string.length();
       int htmlEntityStart = -1;
-      StringValue result = env.createStringBuilder();
+      StringValue result = new StringBuilderValue();
 
-      try {
-         // Loop through each character
-         for (int i = 0; i < len; i++) {
-            char ch = string.charAt(i);
+      // Loop through each character
+      for (int i = 0; i < len; i++) {
+         char ch = string.charAt(i);
 
-            // Check whether it's a html entity
-            // i.e. starts with '&' and ends with ';'
-            if (ch == '&' && htmlEntityStart < 0) {
-               htmlEntityStart = i;
-            } else if (htmlEntityStart < 0) {
-               // else add it to result.
-               result.append(ch);
-            } else if (ch == ';') {
-               // If so substitute the entity and add it to result.
-               StringValue entity = string.substring(htmlEntityStart, i + 1);
-               Value value = htmlEntities.get(entity);
+         // Check whether it's a html entity
+         // i.e. starts with '&' and ends with ';'
+         if (ch == '&' && htmlEntityStart < 0) {
+            htmlEntityStart = i;
+         } else if (htmlEntityStart < 0) {
+            // else add it to result.
+            result.append(ch);
+         } else if (ch == ';') {
+            // If so substitute the entity and add it to result.
+            StringValue entity = string.substring(htmlEntityStart, i + 1);
+            Value value = htmlEntities.get(entity);
 
-               if (value.isNull()) {
-                  result.append(entity);
-               } else if (isUnicode) {
-                  result.append((char) value.toInt());
-               } else {
-                  out.write(result, (char) value.toInt());
-               }
-
-               htmlEntityStart = -1;
-            } else if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z')) {
+            if (value.isNull()) {
+               result.append(entity);
             } else {
-               result.append('&');
-               i = htmlEntityStart;
-               htmlEntityStart = -1;
+               result.append((char) value.toInt());
             }
-         }
 
-         if (htmlEntityStart > 0) {
-            result.append(string, htmlEntityStart, len);
+            htmlEntityStart = -1;
+         } else if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z')) {
+         } else {
+            result.append('&');
+            i = htmlEntityStart;
+            htmlEntityStart = -1;
          }
-      } catch (IOException e) {
-         log.log(Level.FINE, e.toString(), e);
+      }
+
+      if (htmlEntityStart > 0) {
+         result.append(string, htmlEntityStart, len);
       }
 
       return result;

@@ -35,6 +35,7 @@ import com.caucho.quercus.annotation.Reference;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
@@ -122,7 +123,7 @@ public class XmlModule extends AbstractQuercusModule {
     * Converts from utf8 to iso-8859-1
     */
    public static Value utf8_decode(Env env, StringValue str) {
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringBuilderValue();
 
       int len = str.length();
       for (int i = 0; i < len; i++) {

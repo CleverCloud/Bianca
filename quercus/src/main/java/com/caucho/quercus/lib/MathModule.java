@@ -174,7 +174,7 @@ public class MathModule extends AbstractQuercusModule {
 
    private static StringValue intToBase(Env env, long num, int base) {
       if (num == 0) {
-         return env.createString((char) '0');
+         return env.createString("0");
       }
 
       // ignore sign
@@ -209,7 +209,7 @@ public class MathModule extends AbstractQuercusModule {
       BigInteger toBaseBig = BigInteger.valueOf(base);
       BigInteger zero = BigInteger.valueOf(0);
 
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       do {
          BigInteger[] resultArray = num.divideAndRemainder(toBaseBig);
@@ -225,7 +225,7 @@ public class MathModule extends AbstractQuercusModule {
 
       } while (num.compareTo(zero) != 0);
 
-      StringValue toReturn = env.createStringBuilder();
+      StringValue toReturn = new StringBuilderValue();
 
       int len = sb.length();
       for (int i = len - 1; i >= 0; i--) {

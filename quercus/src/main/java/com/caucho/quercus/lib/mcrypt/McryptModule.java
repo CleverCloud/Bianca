@@ -36,6 +36,7 @@ import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
@@ -141,7 +142,7 @@ public class McryptModule extends AbstractQuercusModule {
    public static StringValue mcrypt_create_iv(Env env,
            int size,
            @Optional int randomMode) {
-      StringValue bb = env.createBinaryBuilder(size);
+      StringValue bb = new StringBuilderValue(size);
 
       for (int i = 0; i < size; i++) {
          bb.appendByte((byte) RandomUtil.nextInt(256));

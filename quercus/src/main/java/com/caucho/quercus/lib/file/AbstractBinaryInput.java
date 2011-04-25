@@ -176,7 +176,7 @@ public class AbstractBinaryInput
          return null;
       }
 
-      StringValue bb = _env.createBinaryBuilder();
+      StringValue bb = new StringBuilderValue();
 
       if (bb.appendRead(_is, length) > 0) {
          return bb;

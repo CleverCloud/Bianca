@@ -42,7 +42,6 @@ import com.caucho.util.*;
 public class BinaryBuilderValue
         extends StringBuilderValue {
 
-   public static final BinaryBuilderValue EMPTY = new BinaryBuilderValue("");
    private final static BinaryBuilderValue[] CHAR_STRINGS;
 
    public BinaryBuilderValue() {
@@ -119,14 +118,6 @@ public class BinaryBuilderValue
       return "string";
    }
 
-   /**
-    * Returns true for a BinaryValue.
-    */
-   @Override
-   public boolean isBinary() {
-      return true;
-   }
-
    //
    // marshal costs
    //
@@ -169,51 +160,11 @@ public class BinaryBuilderValue
    }
 
    /**
-    * Cost to convert to a binary value
-    */
-   @Override
-   public int toBinaryValueMarshalCost() {
-      return Marshal.COST_IDENTICAL;
-   }
-
-   /**
     * Cost to convert to a string value
     */
    @Override
    public int toStringValueMarshalCost() {
       return Marshal.COST_IDENTICAL + 1;
-   }
-
-   /**
-    * Converts to a Unicode, 16-bit string.
-    */
-   @Override
-   public StringValue toUnicode(Env env) {
-      return new UnicodeBuilderValue(this);
-   }
-
-   /**
-    * Converts to a UnicodeValue.
-    */
-   @Override
-   public StringValue toUnicodeValue() {
-      return new UnicodeBuilderValue(this);
-   }
-
-   /**
-    * Converts to a UnicodeValue.
-    */
-   @Override
-   public StringValue toUnicodeValue(Env env) {
-      return new UnicodeBuilderValue(this);
-   }
-
-   /**
-    * Converts to a UnicodeValue in desired charset.
-    */
-   @Override
-   public StringValue toUnicodeValue(Env env, String charset) {
-      return toUnicodeValue(env);
    }
 
    /**
@@ -233,7 +184,7 @@ public class BinaryBuilderValue
       int len = getOffset();
 
       if (index < 0 || len <= index) {
-         return UnsetBinaryValue.UNSET;
+         return UnsetStringValue.UNSET;
       } else {
          return BinaryBuilderValue.create(getBuffer()[(int) index] & 0xff);
       }
@@ -615,13 +566,7 @@ public class BinaryBuilderValue
          }
 
          return true;
-      } /*
-      else if (o instanceof UnicodeValue) {
-      UnicodeValue value = (UnicodeValue)o;
-
-      return value.equals(this);
-      }
-       */ else {
+      } else {
          return false;
       }
    }

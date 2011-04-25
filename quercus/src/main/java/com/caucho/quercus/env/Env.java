@@ -178,7 +178,6 @@ public class Env {
    // TODO: may require a LinkedHashMap for ordering?
    private HashMap<Path, QuercusPage> _includeMap = new HashMap<Path, QuercusPage>();
    private Value _this = NullThisValue.NULL;
-   private final boolean _isUnicodeSemantics;
    private boolean _isAllowUrlInclude;
    private boolean _isAllowUrlFopen;
    private HashMap<StringValue, Path> _lookupCache = new HashMap<StringValue, Path>();
@@ -259,7 +258,6 @@ public class Env {
       _quercus = quercus;
 
       _isStrict = quercus.isStrict();
-      _isUnicodeSemantics = quercus.isUnicodeSemantics();
 
       _isAllowUrlInclude = quercus.isAllowUrlInclude();
       _isAllowUrlFopen = quercus.isAllowUrlFopen();
@@ -482,7 +480,7 @@ public class Env {
             warning(e);
          }
 
-         StringValue bb = createBinaryBuilder();
+         StringValue bb = new StringBuilderValue();
          bb.appendReadAll(is, Integer.MAX_VALUE);
 
          setInputData(bb);
@@ -534,13 +532,6 @@ public class Env {
    // i18n
    //
    /**
-    * Returns true if unicode.semantics is on.
-    */
-   public boolean isUnicodeSemantics() {
-      return _isUnicodeSemantics;
-   }
-
-   /**
     * Returns the encoding used for scripts.
     */
    public String getScriptEncoding() {
@@ -562,10 +553,6 @@ public class Env {
     * XXX: ISO-8859-1 when unicode.semantics is OFF
     */
    public String getRuntimeEncoding() {
-      if (!_isUnicodeSemantics) {
-         return "iso-8859-1";
-      }
-
       StringValue encoding = getIni("unicode.runtime_encoding");
 
       if (encoding.length() == 0) {
@@ -599,10 +586,6 @@ public class Env {
     * null if unicode.semantics is off.
     */
    public String getHttpInputEncoding() {
-      if (!_isUnicodeSemantics) {
-         return null;
-      }
-
       StringValue encoding = getIni("unicode.http_input_encoding");
 
       if (encoding.length() == 0) {
@@ -620,10 +603,6 @@ public class Env {
     * Returns the encoding used for output, null if unicode.semantics is off.
     */
    public String getOutputEncoding() {
-      if (!_isUnicodeSemantics) {
-         return null;
-      }
-
       String encoding = QuercusContext.INI_UNICODE_OUTPUT_ENCODING.getAsString(this);
 
       if (encoding == null) {
@@ -640,67 +619,15 @@ public class Env {
    /**
     * Creates a binary builder.
     */
-   public StringValue createBinaryBuilder() {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue();
-      } else {
-         return new StringBuilderValue();
-      }
-   }
-
-   /**
-    * Creates a binary builder for large things like files.
-    */
-   public StringValue createLargeBinaryBuilder() {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue();
-      } else {
-         return new LargeStringBuilderValue();
-      }
-   }
-
-   /**
-    * Creates a binary builder.
-    */
-   public StringValue createBinaryBuilder(int length) {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue(length);
-      } else {
-         return new StringBuilderValue(length);
-      }
-   }
-
-   /**
-    * Creates a binary builder.
-    */
    public StringValue createBinaryBuilder(byte[] buffer, int offset, int length) {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue(buffer, offset, length);
-      } else {
-         return new StringBuilderValue(buffer, offset, length);
-      }
+      return new StringBuilderValue(buffer, offset, length);
    }
 
    /**
     * Creates a binary builder.
     */
    public StringValue createBinaryBuilder(byte[] buffer) {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue(buffer, 0, buffer.length);
-      } else {
-         return new StringBuilderValue(buffer, 0, buffer.length);
-      }
-   }
-
-   /**
-    * Creates a unicode builder.
-    */
-   public StringValue createUnicodeBuilder() {
-      if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue();
-      } else {
-         return new StringBuilderValue();
-      }
+      return new StringBuilderValue(buffer, 0, buffer.length);
    }
 
    public TimeZone getDefaultTimeZone() {
@@ -3224,12 +3151,7 @@ public class Env {
       int id;
 
       if (isCaseInsensitive) {
-         StringValue newname = null;
-         if (isUnicodeSemantics()) {
-            newname = new UnicodeBuilderValue(name);
-         } else {
-            newname = new ConstStringValue(name);
-         }
+         StringValue newname = new StringBuilderValue(name);
          id = _quercus.addLowerConstantId(newname);
       } else {
          id = _quercus.getConstantId(name);
@@ -4152,59 +4074,25 @@ public class Env {
       }
    }
 
-   /*
-    * Creates an empty string.
-    */
-   public StringValue getEmptyString() {
-      if (_isUnicodeSemantics) {
-         return UnicodeBuilderValue.EMPTY;
-      } else {
-         return ConstStringValue.EMPTY;
-      }
-   }
-
-   /*
-    * Creates an empty string builder.
-    */
-   public StringValue createStringBuilder() {
-      if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue();
-      } else {
-         return new StringBuilderValue();
-      }
-   }
-
    /**
     * Creates a PHP string from a byte buffer.
     */
    public StringValue createString(byte[] buffer, int offset, int length) {
-      if (_isUnicodeSemantics) {
-         return new UnicodeValueImpl(new String(buffer, offset, length));
-      } else {
-         return new ConstStringValue(buffer, offset, length);
-      }
+      return new StringBuilderValue(new String(buffer, offset, length));
    }
 
    /**
     * Creates a PHP string from a byte buffer.
     */
    public StringValue createString(char[] buffer, int length) {
-      if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue(buffer, length);
-      } else {
-         return new ConstStringValue(buffer, length);
-      }
+      return new StringBuilderValue(buffer, length);
    }
 
    /**
     * Creates a PHP string from a char buffer.
     */
    public StringValue createString(char[] buffer, int offset, int length) {
-      if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue(buffer, offset, length);
-      } else {
-         return new ConstStringValue(buffer, offset, length);
-      }
+      return new StringBuilderValue(buffer, offset, length);
    }
 
    /**
@@ -4212,39 +4100,11 @@ public class Env {
     */
    public StringValue createString(String s) {
       if (s == null || s.length() == 0) {
-         return (_isUnicodeSemantics
-                 ? UnicodeBuilderValue.EMPTY
-                 : ConstStringValue.EMPTY);
+         return (StringBuilderValue.EMPTY);
       } else if (s.length() == 1) {
-         if (_isUnicodeSemantics) {
-            return UnicodeBuilderValue.create(s.charAt(0));
-         } else {
-            return ConstStringValue.create(s.charAt(0));
-         }
-      } else if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue(s);
+         return StringBuilderValue.create(s.charAt(0));
       } else {
-         StringValue stringValue = _internStringMap.get(s);
-
-         if (stringValue == null) {
-            stringValue = new ConstStringValue(s);
-            _internStringMap.put(s, stringValue);
-         }
-
-         return stringValue;
-
-         // return new ConstStringValue(s);
-      }
-   }
-
-   /**
-    * Creates a string from a byte.
-    */
-   public StringValue createString(char ch) {
-      if (_isUnicodeSemantics) {
-         return UnicodeValueImpl.create(ch);
-      } else {
-         return ConstStringValue.create(ch);
+         return new StringBuilderValue(s);
       }
    }
 
@@ -4252,13 +4112,7 @@ public class Env {
     * Creates a PHP string from a buffer.
     */
    public StringValue createBinaryString(TempBuffer head) {
-      StringValue string;
-
-      if (_isUnicodeSemantics) {
-         string = new BinaryBuilderValue();
-      } else {
-         string = new StringBuilderValue();
-      }
+      StringValue string = new StringBuilderValue();
 
       for (; head != null; head = head.getNext()) {
          string.append(head.getBuffer(), 0, head.getLength());

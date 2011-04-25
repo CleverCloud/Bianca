@@ -48,7 +48,7 @@ public class PhpBinaryInput extends AbstractBinaryInput {
       StringValue inputData = env.getInputData();
 
       if (inputData == null) {
-         inputData = env.getEmptyString();
+         inputData = StringValue.EMPTY;
       }
 
       init(new ReadStream(new VfsStream(inputData.toInputStream(), null)));

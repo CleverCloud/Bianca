@@ -29,7 +29,6 @@
 package com.caucho.quercus.env;
 
 import com.caucho.quercus.QuercusModuleException;
-import com.caucho.vfs.*;
 
 import java.io.*;
 
@@ -37,9 +36,8 @@ import java.io.*;
  * Represents a PHP string value.
  */
 public class UnicodeBuilderValue
-        extends UnicodeValue {
-
-   public static final UnicodeBuilderValue EMPTY = new UnicodeBuilderValue("");
+        extends StringValue {
+   
    private static final UnicodeBuilderValue[] CHAR_STRINGS;
    private char[] _buffer;
    private int _length;
@@ -183,25 +181,6 @@ public class UnicodeBuilderValue
    }
 
    /**
-    * Decodes from charset and returns UnicodeValue.
-    *
-    * @param env
-    * @param charset
-    */
-   @Override
-   public final StringValue convertToUnicode(Env env, String charset) {
-      return this;
-   }
-
-   /**
-    * Returns true for UnicodeValue
-    */
-   @Override
-   public final boolean isUnicode() {
-      return true;
-   }
-
-   /**
     * Returns the value.
     */
    public final String getValue() {
@@ -258,30 +237,6 @@ public class UnicodeBuilderValue
    @Override
    public StringValue copyStringBuilder() {
       return new UnicodeBuilderValue(this);
-   }
-
-   /**
-    * Converts to a UnicodeValue.
-    */
-   @Override
-   public final StringValue toUnicodeValue() {
-      return this;
-   }
-
-   /**
-    * Converts to a UnicodeValue.
-    */
-   @Override
-   public final StringValue toUnicodeValue(Env env) {
-      return this;
-   }
-
-   /**
-    * Converts to a UnicodeValue in desired charset.
-    */
-   @Override
-   public final StringValue toUnicodeValue(Env env, String charset) {
-      return this;
    }
 
    /**
@@ -628,48 +583,6 @@ public class UnicodeBuilderValue
    }
 
    /**
-    * Converts to a BinaryValue.
-    */
-   @Override
-   public StringValue toBinaryValue() {
-      return toBinaryValue(Env.getInstance());
-   }
-
-   /**
-    * Converts to a BinaryValue.
-    */
-   @Override
-   public StringValue toBinaryValue(Env env) {
-      return toBinaryValue(env.getRuntimeEncoding());
-   }
-
-   /**
-    * Converts to a BinaryValue in desired charset.
-    *
-    * @param env
-    * @param charset
-    */
-   @Override
-   public StringValue toBinaryValue(String charset) {
-      try {
-         BinaryBuilderValue result = new BinaryBuilderValue();
-         BinaryBuilderStream stream = new BinaryBuilderStream(result);
-
-         // TODO: can use EncodingWriter directly(?)
-         WriteStream out = new WriteStream(stream);
-         out.setEncoding(charset);
-
-         out.print(_buffer, 0, _length);
-
-         out.close();
-
-         return result;
-      } catch (IOException e) {
-         throw new QuercusModuleException(e.getMessage());
-      }
-   }
-
-   /**
     * Returns the character at an index
     */
    @Override
@@ -677,7 +590,7 @@ public class UnicodeBuilderValue
       int len = _length;
 
       if (index < 0 || len <= index) {
-         return UnsetUnicodeValue.UNSET;
+         return UnsetStringValue.UNSET;
       } else {
          int ch = _buffer[(int) index];
 
@@ -1289,13 +1202,7 @@ public class UnicodeBuilderValue
          }
 
          return true;
-      } /*
-      else if (o instanceof UnicodeValue) {
-      UnicodeValue value = (UnicodeValue)o;
-
-      return value.equals(this);
-      }
-       */ else {
+      } else {
          return false;
       }
    }

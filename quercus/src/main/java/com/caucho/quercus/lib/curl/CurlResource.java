@@ -515,7 +515,7 @@ public class CurlResource {
     * Returns all the request properties as a String.
     */
    public Value getRequestProperties(Env env) {
-      StringValue bb = env.createBinaryBuilder();
+      StringValue bb = new StringBuilderValue();
 
       for (Map.Entry<String, String> entry : _requestProperties.entrySet()) {
          bb.append(entry.getKey());
@@ -687,7 +687,7 @@ public class CurlResource {
             return BooleanValue.TRUE;
          }
       } else {
-         StringValue bb = env.createBinaryBuilder();
+         StringValue bb = new StringBuilderValue();
 
          if (_isReturningHeader) {
             bb.append(_header);

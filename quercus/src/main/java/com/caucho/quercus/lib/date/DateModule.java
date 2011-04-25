@@ -814,7 +814,7 @@ public class DateModule extends AbstractQuercusModule {
       if (getAsFloat) {
          return new DoubleValue(now);
       } else {
-         return (env.createUnicodeBuilder().append(String.format("%.6f", now - Math.floor(now))).append(' ').append((int) Math.floor(now)));
+         return (new StringBuilderValue().append(String.format("%.6f", now - Math.floor(now))).append(' ').append((int) Math.floor(now)));
       }
    }
 

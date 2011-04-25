@@ -426,20 +426,6 @@ public class ExprFactory {
    }
 
    /**
-    * Creates a unicode cast
-    */
-   public Expr createToUnicode(Expr expr) {
-      return new ToUnicodeExpr(expr);
-   }
-
-   /**
-    * Creates a binary string cast
-    */
-   public Expr createToBinary(Expr expr) {
-      return new ToBinaryExpr(expr);
-   }
-
-   /**
     * Creates an object cast
     */
    public Expr createToObject(Expr expr) {

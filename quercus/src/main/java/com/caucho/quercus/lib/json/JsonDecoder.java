@@ -429,7 +429,7 @@ class JsonDecoder {
     * Returns a PHP string.
     */
    private Value decodeString(Env env, boolean isQuoted) {
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringBuilderValue();
 
       while (_offset < _len) {
          char ch = _str.charAt(_offset++);

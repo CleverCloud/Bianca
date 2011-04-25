@@ -30,6 +30,7 @@ package com.caucho.quercus.lib;
 
 import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.file.BinaryInput;
 import com.caucho.quercus.lib.file.BinaryStream;
 import com.caucho.quercus.lib.file.FileModule;
@@ -128,7 +129,7 @@ public class UrlModule
          return str;
       }
 
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       OutputStream os = new StringBuilderOutputStream(sb);
 
@@ -234,7 +235,7 @@ public class UrlModule
                   if (colon < line.length()) {
                      value = env.createString(line.substring(colon + 1).trim());
                   } else {
-                     value = env.getEmptyString();
+                     value = StringValue.EMPTY;
                   }
 
 
@@ -356,12 +357,12 @@ public class UrlModule
            Value formdata,
            @Optional StringValue numeric_prefix,
            @Optional("'&'") StringValue separator) {
-      StringValue result = env.createUnicodeBuilder();
+      StringValue result = new StringBuilderValue();
 
       httpBuildQueryImpl(env,
               result,
               formdata,
-              env.getEmptyString(),
+              StringValue.EMPTY,
               numeric_prefix,
               separator);
 
@@ -519,29 +520,27 @@ public class UrlModule
    public static Value parse_url(Env env,
            StringValue str,
            @Optional("-1") int component) {
-      boolean isUnicode = env.isUnicodeSemantics();
-
       ArrayValueImpl array = new ArrayValueImpl();
 
-      parseUrl(env, str, array, isUnicode);
+      parseUrl(env, str, array);
 
       switch (component) {
          case PHP_URL_SCHEME:
-            return array.get(isUnicode ? SCHEME_U : SCHEME_V);
+            return array.get(SCHEME_U);
          case PHP_URL_HOST:
-            return array.get(isUnicode ? HOST_U : HOST_V);
+            return array.get(HOST_U);
          case PHP_URL_PORT:
-            return array.get(isUnicode ? PORT_U : PORT_V);
+            return array.get(PORT_U);
          case PHP_URL_USER:
-            return array.get(isUnicode ? USER_U : USER_V);
+            return array.get(USER_U);
          case PHP_URL_PASS:
-            return array.get(isUnicode ? PASS_U : PASS_V);
+            return array.get(PASS_U);
          case PHP_URL_PATH:
-            return array.get(isUnicode ? PATH_U : PATH_V);
+            return array.get(PATH_U);
          case PHP_URL_QUERY:
-            return array.get(isUnicode ? QUERY_U : QUERY_V);
+            return array.get(QUERY_U);
          case PHP_URL_FRAGMENT:
-            return array.get(isUnicode ? FRAGMENT_U : FRAGMENT_V);
+            return array.get(FRAGMENT_U);
       }
 
       return array;
@@ -549,12 +548,11 @@ public class UrlModule
 
    private static void parseUrl(Env env,
            StringValue str,
-           ArrayValue array,
-           boolean isUnicode) {
+           ArrayValue array) {
       int strlen = str.length();
 
       if (strlen == 0) {
-         array.put(PATH_V, PATH_U, env.getEmptyString(), isUnicode);
+         array.put(PATH_U, StringValue.EMPTY);
          return;
       }
 
@@ -578,17 +576,17 @@ public class UrlModule
                }
             }
 
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
             sb.append(str, 0, colon);
-            array.put(SCHEME_V, SCHEME_U, sb, isUnicode);
+            array.put(SCHEME_U, sb);
 
             i = end + 1;
          } else if (colon + 1 == strlen
                  || (ch = str.charAt(colon + 1)) <= '0'
                  || '9' <= ch) {
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
             sb.append(str, 0, colon);
-            array.put(SCHEME_V, SCHEME_U, sb, isUnicode);
+            array.put(SCHEME_U, sb);
 
             i = colon + 1;
          } else {
@@ -606,12 +604,12 @@ public class UrlModule
       if (0 <= atSign && hasHost) {
          if (0 <= colon && colon < atSign) {
             if (i < colon) {
-               user = env.createStringBuilder();
+               user = new StringBuilderValue();
                user.append(str, i, colon);
             }
 
             if (colon + 1 < atSign) {
-               pass = env.createStringBuilder();
+               pass = new StringBuilderValue();
                pass.append(str, colon + 1, atSign);
             }
 
@@ -619,7 +617,7 @@ public class UrlModule
 
             colon = str.indexOf(':', i);
          } else {
-            user = env.createStringBuilder();
+            user = new StringBuilderValue();
             user.append(str, i, atSign);
 
             i = atSign + 1;
@@ -633,9 +631,9 @@ public class UrlModule
          int slash = str.indexOf('/', i);
 
          if (i < colon) {
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
             sb.append(str, i, colon);
-            array.put(HOST_V, HOST_U, sb, isUnicode);
+            array.put(HOST_U, sb);
 
             int end;
             if (i < slash) {
@@ -661,32 +659,32 @@ public class UrlModule
                   }
                }
 
-               array.put(PORT_V, PORT_U, LongValue.create(port), isUnicode);
+               array.put(PORT_U, LongValue.create(port));
             }
 
             i = end;
          } else if (i < question && (slash < i || question < slash)) {
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
             sb.append(str, i, question);
-            array.put(HOST_V, HOST_U, sb, isUnicode);
+            array.put(HOST_U, sb);
 
             i = question + 1;
          } else if (i < slash) {
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
             sb.append(str, i, slash);
-            array.put(HOST_V, HOST_U, sb, isUnicode);
+            array.put(HOST_U, sb);
 
             i = slash;
          } else if (i < pound) {
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
             sb.append(str, i, pound);
-            array.put(HOST_V, HOST_U, sb, isUnicode);
+            array.put(HOST_U, sb);
 
             i = pound + 1;
          } else {
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
             sb.append(str, i, strlen);
-            array.put(HOST_V, HOST_U, sb, isUnicode);
+            array.put(HOST_U, sb);
 
             i = strlen;
          }
@@ -694,47 +692,47 @@ public class UrlModule
 
       // insert user and password after port
       if (user != null) {
-         array.put(USER_V, USER_U, user, isUnicode);
+         array.put(USER_U, user);
       }
 
       if (pass != null) {
-         array.put(PASS_V, PASS_U, pass, isUnicode);
+         array.put(PASS_U, pass);
       }
 
       if (i < question) {
-         StringValue sb = env.createStringBuilder();
+         StringValue sb = new StringBuilderValue();
          sb.append(str, i, question);
-         array.put(PATH_V, PATH_U, sb, isUnicode);
+         array.put(PATH_U, sb);
 
          i = question + 1;
       }
 
       if (0 <= pound) {
          if (i < pound) {
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
 
             sb.append(str, i, pound);
 
             if (0 <= question) {
-               array.put(QUERY_V, QUERY_U, sb, isUnicode);
+               array.put(QUERY_U, sb);
             } else {
-               array.put(PATH_V, PATH_U, sb, isUnicode);
+               array.put(PATH_U, sb);
             }
          }
 
          if (pound + 1 < strlen) {
-            StringValue sb = env.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
             sb.append(str, pound + 1, strlen);
-            array.put(FRAGMENT_V, FRAGMENT_U, sb, isUnicode);
+            array.put(FRAGMENT_U, sb);
          }
       } else if (i < strlen) {
-         StringValue sb = env.createStringBuilder();
+         StringValue sb = new StringBuilderValue();
          sb.append(str, i, strlen);
 
          if (0 <= question) {
-            array.put(QUERY_V, QUERY_U, sb, isUnicode);
+            array.put(QUERY_U, sb);
          } else {
-            array.put(PATH_V, PATH_U, sb, isUnicode);
+            array.put(PATH_U, sb);
          }
       }
    }

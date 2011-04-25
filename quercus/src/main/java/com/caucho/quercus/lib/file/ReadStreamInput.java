@@ -177,7 +177,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
          return null;
       }
 
-      StringValue bb = _env.createBinaryBuilder();
+      StringValue bb = new StringBuilderValue();
 
       bb.appendReadAll(_is, length);
 

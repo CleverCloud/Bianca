@@ -33,9 +33,8 @@ import java.util.logging.*;
 
 import com.caucho.quercus.QuercusException;
 import com.caucho.quercus.env.Env;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.quercus.env.UnicodeBuilderValue;
-import com.caucho.quercus.lib.i18n.Utf8Encoder;
 import com.caucho.util.*;
 
 public class Regexp {
@@ -205,22 +204,6 @@ public class Regexp {
       return _isEval;
    }
 
-   public StringValue convertSubject(Env env, StringValue subject) {
-      if (isUTF8()) {
-         return fromUtf8(subject);
-      } else {
-         return subject;
-      }
-   }
-
-   public StringValue convertResult(Env env, StringValue result) {
-      if (isUTF8()) {
-         return toUtf8(env, result);
-      } else {
-         return result;
-      }
-   }
-
    private void compile(RegexpNode prog, Regcomp comp) {
       _ignoreCase = (comp._flags & Regcomp.IGNORE_CASE) != 0;
       _isGlobal = (comp._flags & Regcomp.GLOBAL) != 0;
@@ -252,12 +235,6 @@ public class Regexp {
       _groupNames = new StringValue[_nGroup + 1];
       for (Map.Entry<Integer, StringValue> entry : comp._groupNameMap.entrySet()) {
          StringValue groupName = entry.getValue();
-
-         if (_isUnicode) {
-         } else if (isUTF8()) {
-            groupName.toBinaryValue("UTF-8");
-         }
-
          _groupNames[entry.getKey().intValue()] = groupName;
       }
    }
@@ -275,7 +252,7 @@ public class Regexp {
    }
 
    static StringValue fromUtf8(StringValue source) {
-      StringValue target = new UnicodeBuilderValue();
+      StringValue target = new StringBuilderValue();
       int len = source.length();
 
       for (int i = 0; i < len; i++) {
@@ -329,12 +306,6 @@ public class Regexp {
       }
 
       return target;
-   }
-
-   static StringValue toUtf8(Env env, StringValue source) {
-      Utf8Encoder encoder = new Utf8Encoder();
-
-      return encoder.encode(env, source);
    }
 
    @Override

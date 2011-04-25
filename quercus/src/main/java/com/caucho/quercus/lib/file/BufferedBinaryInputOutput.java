@@ -169,7 +169,7 @@ abstract public class BufferedBinaryInputOutput
 
          log.log(Level.FINER, e.toString(), e);
 
-         return _env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 

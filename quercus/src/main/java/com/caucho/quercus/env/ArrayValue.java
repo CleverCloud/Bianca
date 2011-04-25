@@ -92,26 +92,10 @@ abstract public class ArrayValue extends Value {
    }
 
    /**
-    * Cost to convert to a binary value
-    */
-   @Override
-   public int toBinaryValueMarshalCost() {
-      return Marshal.COST_INCOMPATIBLE;
-   }
-
-   /**
     * Cost to convert to a StringValue
     */
    @Override
    public int toStringValueMarshalCost() {
-      return Marshal.COST_INCOMPATIBLE;
-   }
-
-   /**
-    * Cost to convert to a UnicodeValue
-    */
-   @Override
-   public int toUnicodeValueMarshalCost() {
       return Marshal.COST_INCOMPATIBLE;
    }
 
@@ -637,20 +621,6 @@ abstract public class ArrayValue extends Value {
       append(key, value);
 
       return value;
-   }
-
-   /**
-    * Adds a new value.
-    */
-   public final void put(StringValue keyBinary,
-           StringValue keyUnicode,
-           Value value,
-           boolean isUnicode) {
-      if (isUnicode) {
-         append(keyUnicode, value);
-      } else {
-         append(keyBinary, value);
-      }
    }
 
    /**

@@ -43,6 +43,7 @@ import com.caucho.quercus.env.LongValue;
 import com.caucho.quercus.env.NullValue;
 import com.caucho.quercus.env.ObjectExtJavaValue;
 import com.caucho.quercus.env.QuercusClass;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.util.L10N;
@@ -711,7 +712,7 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
    @ReturnNullAsFalse
    public StringValue asXML(Env env) {
       if (_parent == null) {
-         StringValue sb = env.createBinaryBuilder();
+         StringValue sb = new StringBuilderValue();
 
          sb.append("<?xml version=\"1.0\"?>\n");
          toXMLImpl(sb);
@@ -724,7 +725,7 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
    }
 
    public StringValue toXML(Env env) {
-      StringValue sb = env.createBinaryBuilder();
+      StringValue sb = new StringBuilderValue();
 
       toXMLImpl(sb);
 
@@ -1234,7 +1235,7 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
       if (_text != null) {
          return _text;
       } else {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 

@@ -251,16 +251,6 @@ public class ArgRef extends Value
    }
 
    @Override
-   public StringValue toBinaryValue(Env env) {
-      return _var.toBinaryValue(env);
-   }
-
-   @Override
-   public StringValue toUnicodeValue(Env env) {
-      return _var.toUnicodeValue(env);
-   }
-
-   @Override
    public StringValue toStringBuilder() {
       return _var.toStringBuilder();
    }

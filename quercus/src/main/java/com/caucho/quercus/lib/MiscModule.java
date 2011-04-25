@@ -37,6 +37,7 @@ import com.caucho.quercus.annotation.Reference;
 import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.annotation.UsesSymbolTable;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.file.BinaryStream;
 import com.caucho.quercus.lib.file.FileInput;
 import com.caucho.quercus.lib.file.FileModule;
@@ -163,7 +164,7 @@ public class MiscModule extends AbstractQuercusModule {
          quote = '\'';
       }
 
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       sb.append(quote);
 
@@ -340,7 +341,7 @@ public class MiscModule extends AbstractQuercusModule {
            ArrayValue browsers,
            String user_agent,
            boolean return_array) {
-      StringValue patternMatched = env.getEmptyString();
+      StringValue patternMatched = StringValue.EMPTY;
       String regExpMatched = null;
 
       for (Map.Entry<Value, Value> entry : browsers.entrySet()) {
@@ -521,7 +522,7 @@ public class MiscModule extends AbstractQuercusModule {
             return BooleanValue.FALSE;
          }
 
-         StringValue bb = env.createBinaryBuilder();
+         StringValue bb = new StringBuilderValue();
 
          int i = 0;
          for (PackSegment segment : segments) {
@@ -632,7 +633,7 @@ public class MiscModule extends AbstractQuercusModule {
          OutputStream os = process.getOutputStream();
          os.close();
 
-         StringValue sb = env.createUnicodeBuilder();
+         StringValue sb = new StringBuilderValue();
 
          int ch;
          while ((ch = is.read()) >= 0) {
@@ -1252,7 +1253,7 @@ public class MiscModule extends AbstractQuercusModule {
             return offset;
          }
 
-         StringValue bb = env.createBinaryBuilder();
+         StringValue bb = new StringBuilderValue();
 
          int j = offset;
 
@@ -1271,7 +1272,7 @@ public class MiscModule extends AbstractQuercusModule {
          }
 
          if (_name.length() == 0) {
-            result.put(env.createString('1'), bb);
+            result.put(env.createString("1"), bb);
          } else {
             result.put(_name, bb);
          }
@@ -1318,7 +1319,7 @@ public class MiscModule extends AbstractQuercusModule {
       @Override
       public int unpack(Env env, ArrayValue result,
               StringValue s, int offset, int strLen) {
-         StringValue bb = env.createBinaryBuilder();
+         StringValue bb = new StringBuilderValue();
 
          int j = offset;
 
@@ -1337,7 +1338,7 @@ public class MiscModule extends AbstractQuercusModule {
          }
 
          if (_name.length() == 0) {
-            result.put(env.createString('1'), bb);
+            result.put(env.createString("1"), bb);
          } else {
             result.put(_name, bb);
          }
@@ -1418,7 +1419,7 @@ public class MiscModule extends AbstractQuercusModule {
             return offset;
          }
 
-         StringValue sb = env.createStringBuilder();
+         StringValue sb = new StringBuilderValue();
          for (int i = _length / 2 - 1; i >= 0; i--) {
             char ch = s.charAt(offset++);
 
@@ -1504,7 +1505,7 @@ public class MiscModule extends AbstractQuercusModule {
             return offset;
          }
 
-         StringValue sb = env.createStringBuilder();
+         StringValue sb = new StringBuilderValue();
          for (int i = _length / 2 - 1; i >= 0; i--) {
             char ch = s.charAt(offset++);
 
@@ -1580,7 +1581,7 @@ public class MiscModule extends AbstractQuercusModule {
             } else if (_length == 1) {
                key = env.createString(_name);
             } else {
-               StringValue sb = env.createStringBuilder();
+               StringValue sb = new StringBuilderValue();
                sb.append(_name);
                sb.append(j + 1);
 
@@ -1679,7 +1680,7 @@ public class MiscModule extends AbstractQuercusModule {
             } else if (_length == 1) {
                key = env.createString(_name);
             } else {
-               StringValue sb = env.createStringBuilder();
+               StringValue sb = new StringBuilderValue();
                sb.append(_name);
                sb.append(j + 1);
 
@@ -1761,7 +1762,7 @@ public class MiscModule extends AbstractQuercusModule {
             } else if (_length == 1) {
                key = env.createString(_name);
             } else {
-               StringValue sb = env.createBinaryBuilder();
+               StringValue sb = new StringBuilderValue();
                sb.append(_name);
                sb.append(j + 1);
 
@@ -1843,7 +1844,7 @@ public class MiscModule extends AbstractQuercusModule {
             } else if (_length == 1) {
                key = env.createString(_name);
             } else {
-               StringValue sb = env.createBinaryBuilder();
+               StringValue sb = new StringBuilderValue();
                sb.append(_name);
                sb.append(j + 1);
 

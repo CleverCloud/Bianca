@@ -212,7 +212,7 @@ public class LongValue extends NumberValue {
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return env.createUnicodeBuilder().append(_value);
+      return new StringBuilderValue().append(_value);
    }
 
    /**

@@ -508,7 +508,7 @@ public class OutputModule extends AbstractQuercusModule
 
       GZOutputPair pair = null;
 
-      StringValue result = env.createBinaryBuilder();
+      StringValue result = new StringBuilderValue();
 
       if ((state & (PHP_OUTPUT_HANDLER_START)) != 0) {
          HttpModule.header(

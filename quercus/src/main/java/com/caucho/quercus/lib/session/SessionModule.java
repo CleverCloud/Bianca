@@ -30,6 +30,7 @@ package com.caucho.quercus.lib.session;
 
 import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.OutputModule;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.quercus.module.ModuleStartupListener;
@@ -428,7 +429,7 @@ public class SessionModule extends AbstractQuercusModule
          }
 
          if (!generateCookie) {
-            env.addConstant("SID", env.getEmptyString(), false);
+            env.addConstant("SID", StringValue.EMPTY, false);
          }
       }
 

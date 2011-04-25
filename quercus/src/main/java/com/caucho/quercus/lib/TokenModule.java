@@ -212,7 +212,7 @@ public class TokenModule extends AbstractQuercusModule {
            StringValue s,
            @Optional boolean isReturn) {
       try {
-         StringValue sb = isReturn ? env.createUnicodeBuilder() : null;
+         StringValue sb = isReturn ? new StringBuilderValue() : null;
          WriteStream out = env.getOut();
 
          Token lexer = new Token(env, s);
@@ -372,7 +372,7 @@ public class TokenModule extends AbstractQuercusModule {
 
       while ((token = lexer.nextToken()) >= 0) {
          if (0x20 <= token && token <= 0x7f) {
-            result.put(env.createString((char) token));
+            result.put(env.createString(((char)token) + ""));
          } else {
             result.put(new ArrayValueImpl().append(LongValue.create(token)).append(lexer.getLexeme()));
          }
@@ -646,7 +646,7 @@ public class TokenModule extends AbstractQuercusModule {
       }
 
       int nextToken() {
-         _lexeme = _env.createUnicodeBuilder();
+         _lexeme = new StringBuilderValue();
 
          if (!_inPhp) {
             _inPhp = true;

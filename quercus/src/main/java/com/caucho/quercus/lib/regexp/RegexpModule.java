@@ -36,6 +36,7 @@ import com.caucho.quercus.annotation.NotNull;
 import com.caucho.quercus.annotation.Reference;
 import com.caucho.quercus.annotation.UsesSymbolTable;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.i18n.MbstringModule;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
@@ -313,7 +314,7 @@ public class RegexpModule
          StringValue regexpStr;
 
          if (value.isNull() || value.isBoolean()) {
-            regexpStr = env.getEmptyString();
+            regexpStr = StringValue.EMPTY;
          } else if (!value.isString()) {
             regexpStr = value.toLongValue().toStringValue();
          } else {
@@ -372,7 +373,7 @@ public class RegexpModule
          StringValue regexpStr;
 
          if (value.isNull() || value.isBoolean()) {
-            regexpStr = env.getEmptyString();
+            regexpStr = StringValue.EMPTY;
          } else if (!value.isString()) {
             regexpStr = value.toLongValue().toStringValue();
          } else {
@@ -439,8 +440,6 @@ public class RegexpModule
          UnicodeEreg ereg = _unicodeEregCache.get(key);
 
          if (ereg == null) {
-            pattern = pattern.convertToUnicode(env, encoding);
-
             StringValue cleanPattern = cleanEregRegexp(pattern, false);
 
             ereg = new UnicodeEreg(cleanPattern);
@@ -470,8 +469,6 @@ public class RegexpModule
          UnicodeEregi ereg = _unicodeEregiCache.get(key);
 
          if (ereg == null) {
-            pattern = pattern.convertToUnicode(env, encoding);
-
             StringValue cleanPattern = cleanEregRegexp(pattern, false);
 
             ereg = new UnicodeEregi(cleanPattern);
@@ -927,7 +924,7 @@ public class RegexpModule
                     subject.toStringValue(),
                     limit, count);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } catch (IllegalRegexpException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -963,7 +960,7 @@ public class RegexpModule
          if (replacementIter.hasNext()) {
             replacementStr = replacementIter.next().toStringValue();
          } else {
-            replacementStr = env.getEmptyString();
+            replacementStr = StringValue.EMPTY;
          }
 
          string = pregReplaceString(env,
@@ -1034,7 +1031,7 @@ public class RegexpModule
                     subject.toStringValue(),
                     limit, count);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } catch (IllegalRegexpException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -1071,7 +1068,7 @@ public class RegexpModule
             if (replacementIter.hasNext()) {
                replacementStr = replacementIter.next().toStringValue();
             } else {
-               replacementStr = env.getEmptyString();
+               replacementStr = StringValue.EMPTY;
             }
 
             string = pregReplaceString(env,
@@ -1223,7 +1220,7 @@ public class RegexpModule
       StringValue regexpStr;
 
       if (regexpValue.isLong()) {
-         regexpStr = env.createString((char) regexpValue.toInt());
+         regexpStr = new StringBuilderValue((char) regexpValue.toInt());
       } else {
          regexpStr = regexpValue.toStringValue(env);
       }
@@ -1248,7 +1245,7 @@ public class RegexpModule
       StringValue regexpStr;
 
       if (regexpValue.isLong()) {
-         regexpStr = env.createString((char) regexpValue.toInt());
+         regexpStr = new StringBuilderValue((char) regexpValue.toInt());
       } else {
          regexpStr = regexpValue.toStringValue(env);
       }
@@ -1279,7 +1276,7 @@ public class RegexpModule
       // a single character.
 
       if (replacement instanceof NullValue) {
-         replacementStr = env.getEmptyString();
+         replacementStr = StringValue.EMPTY;
       } else if (replacement instanceof StringValue) {
          replacementStr = replacement.toStringValue();
       } else {
@@ -1455,7 +1452,7 @@ public class RegexpModule
                     limit,
                     count);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } catch (IllegalRegexpException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -1511,7 +1508,7 @@ public class RegexpModule
                     limit,
                     count);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } catch (IllegalRegexpException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -1536,7 +1533,7 @@ public class RegexpModule
       }
 
       if (!subject.isset()) {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       } else {
          return pregReplaceCallbackImpl(env,
                  regexp,
@@ -1562,7 +1559,7 @@ public class RegexpModule
       }
 
       if (!subject.isset()) {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       } else {
          for (int i = 0; i < regexpList.length; i++) {
             subject = pregReplaceCallbackImpl(env,

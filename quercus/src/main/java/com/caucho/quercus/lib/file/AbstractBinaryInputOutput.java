@@ -155,7 +155,7 @@ abstract public class AbstractBinaryInputOutput
          return null;
       }
 
-      StringValue bb = _env.createBinaryBuilder();
+      StringValue bb = new StringBuilderValue();
 
       if (bb.appendRead(_is, length) > 0) {
          return bb;
@@ -180,7 +180,7 @@ abstract public class AbstractBinaryInputOutput
 
          log.log(Level.FINER, e.toString(), e);
 
-         return _env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 

@@ -30,6 +30,7 @@ package com.caucho.quercus.lib.file;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.EnvCleanup;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.vfs.Encoding;
@@ -222,7 +223,7 @@ public class FileInputOutput extends AbstractBinaryOutput
    @Override
    public StringValue read(int length)
            throws IOException {
-      StringValue bb = _env.createBinaryBuilder();
+      StringValue bb = new StringBuilderValue();
       TempBuffer temp = TempBuffer.allocate();
 
       try {

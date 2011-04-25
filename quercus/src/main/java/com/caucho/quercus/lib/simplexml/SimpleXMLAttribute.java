@@ -101,7 +101,7 @@ public class SimpleXMLAttribute extends SimpleXMLElement {
     */
    @Override
    public StringValue asXML(Env env) {
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       toXMLImpl(sb);
 

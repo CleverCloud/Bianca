@@ -40,12 +40,11 @@ import java.util.zip.CRC32;
  * Represents a PHP 5 style string builder (unicode.semantics = off)
  */
 public class StringBuilderValue
-        extends BinaryValue {
+        extends StringValue {
 
-   public static final StringBuilderValue EMPTY = new ConstStringValue("");
    private static final StringBuilderValue[] CHAR_STRINGS;
    private static final int LARGE_BUILDER_THRESHOLD = LargeStringBuilderValue.SIZE;
-   private byte[] _buffer;
+   private char[] _buffer;
    private int _length;
    private boolean _isCopy;
    private int _hashCode;
@@ -466,47 +465,6 @@ public class StringBuilderValue
    }
 
    /**
-    * Converts to a BinaryValue.
-    */
-   @Override
-   public final StringValue toBinaryValue(Env env) {
-      return this;
-   }
-
-   /**
-    * Converts to a BinaryValue in desired charset.
-    */
-   @Override
-   public final StringValue toBinaryValue(String charset) {
-      return this;
-   }
-
-   /**
-    * Converts to a UnicodeValue.
-    */
-   @Override
-   public StringValue toUnicodeValue() {
-      // php/0c94
-      return new UnicodeBuilderValue().append(getBuffer(), 0, length());
-   }
-
-   /**
-    * Converts to a UnicodeValue.
-    */
-   @Override
-   public StringValue toUnicodeValue(Env env) {
-      return toUnicodeValue();
-   }
-
-   /**
-    * Converts to a UnicodeValue in desired charset.
-    */
-   @Override
-   public StringValue toUnicodeValue(Env env, String charset) {
-      return toUnicodeValue();
-   }
-
-   /**
     * Converts to an object.
     */
    @Override
@@ -529,7 +487,6 @@ public class StringBuilderValue
    public final void writeTo(OutputStream os) {
       try {
          os.write(_buffer, 0, _length);
-
       } catch (IOException e) {
          throw new QuercusModuleException(e);
       }
@@ -1520,7 +1477,7 @@ public class StringBuilderValue
    /**
     * Returns the buffer.
     */
-   public final byte[] getBuffer() {
+   public final char[] getBuffer() {
       return _buffer;
    }
 
@@ -1881,13 +1838,7 @@ public class StringBuilderValue
          }
 
          return true;
-      } /*
-      else if (o instanceof UnicodeValue) {
-      UnicodeValue value = (UnicodeValue)o;
-
-      return value.equals(this);
-      }
-       */ else {
+      } else {
          return false;
       }
    }

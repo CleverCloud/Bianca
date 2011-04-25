@@ -271,33 +271,32 @@ public class ServerArrayValue extends ArrayValueImpl {
       }
 
       HttpServletRequest request = _env.getRequest();
-      boolean isUnicode = _env.isUnicodeSemantics();
 
       if (request != null) {
-         super.put(isUnicode ? SERVER_ADDR_VU : SERVER_ADDR_V,
+         super.put(SERVER_ADDR_VU,
                  _env.createString(request.getLocalAddr()));
-         super.put(isUnicode ? SERVER_NAME_VU : SERVER_NAME_V,
+         super.put(SERVER_NAME_VU,
                  _env.createString(request.getServerName()));
 
-         super.put(isUnicode ? SERVER_PORT_VU : SERVER_PORT_V,
+         super.put(SERVER_PORT_VU,
                  LongValue.create(request.getServerPort()));
-         super.put(isUnicode ? REMOTE_HOST_VU : REMOTE_HOST_V,
+         super.put(REMOTE_HOST_VU,
                  _env.createString(request.getRemoteHost()));
-         super.put(isUnicode ? REMOTE_ADDR_VU : REMOTE_ADDR_V,
+         super.put(REMOTE_ADDR_VU,
                  _env.createString(request.getRemoteAddr()));
-         super.put(isUnicode ? REMOTE_PORT_VU : REMOTE_PORT_V,
+         super.put(REMOTE_PORT_VU,
                  LongValue.create(request.getRemotePort()));
 
          // Drupal's optional activemenu plugin only works on Apache servers!
          // bug at http://drupal.org/node/221867
-         super.put(isUnicode ? SERVER_SOFTWARE_VU : SERVER_SOFTWARE_V,
+         super.put(SERVER_SOFTWARE_VU,
                  _env.createString("Apache PHP Quercus("
                  + _env.getQuercus().getVersion()
                  + ")"));
 
-         super.put(isUnicode ? SERVER_PROTOCOL_VU : SERVER_PROTOCOL_V,
+         super.put(SERVER_PROTOCOL_VU,
                  _env.createString(request.getProtocol()));
-         super.put(isUnicode ? REQUEST_METHOD_VU : REQUEST_METHOD_V,
+         super.put(REQUEST_METHOD_VU,
                  _env.createString(request.getMethod()));
 
          String queryString = QuercusRequestAdapter.getPageQueryString(request);
@@ -307,7 +306,7 @@ public class ServerArrayValue extends ArrayValueImpl {
          String contextPath = QuercusRequestAdapter.getPageContextPath(request);
 
          if (queryString != null) {
-            super.put(isUnicode ? QUERY_STRING_VU : QUERY_STRING_V,
+            super.put(QUERY_STRING_VU,
                     _env.createString(queryString));
          }
 
@@ -320,43 +319,43 @@ public class ServerArrayValue extends ArrayValueImpl {
             root = '/' + root;
          }
 
-         super.put(isUnicode ? DOCUMENT_ROOT_VU : DOCUMENT_ROOT_V,
+         super.put(DOCUMENT_ROOT_VU,
                  _env.createString(root));
-         super.put(isUnicode ? SCRIPT_NAME_VU : SCRIPT_NAME_V,
+         super.put(SCRIPT_NAME_VU,
                  _env.createString(contextPath + servletPath));
-         super.put(isUnicode ? SCRIPT_URL_VU : SCRIPT_URL_V,
+         super.put(SCRIPT_URL_VU,
                  _env.createString(requestURI));
 
          if (queryString != null) {
             requestURI = requestURI + '?' + queryString;
          }
 
-         super.put(isUnicode ? REQUEST_URI_VU : REQUEST_URI_V,
+         super.put(REQUEST_URI_VU,
                  _env.createString(requestURI));
 
-         super.put(isUnicode ? REQUEST_TIME_VU : REQUEST_TIME_V,
+         super.put(REQUEST_TIME_VU,
                  LongValue.create(_env.getStartTime() / 1000));
 
-         super.put(isUnicode ? SCRIPT_FILENAME_VU : SCRIPT_FILENAME_V,
+         super.put(SCRIPT_FILENAME_VU,
                  _env.createString(request.getRealPath(servletPath)));
 
          if (pathInfo != null) {
-            super.put(isUnicode ? PATH_INFO_VU : PATH_INFO_V,
+            super.put(PATH_INFO_VU,
                     _env.createString(pathInfo));
-            super.put(isUnicode ? PATH_TRANSLATED_VU : PATH_TRANSLATED_V,
+            super.put(PATH_TRANSLATED_VU,
                     _env.createString(request.getRealPath(pathInfo)));
          }
 
          if (request.isSecure()) {
-            super.put(isUnicode ? HTTPS_VU : HTTPS_V,
+            super.put(HTTPS_VU,
                     _env.createString("on"));
          }
 
          if (pathInfo == null) {
-            super.put(isUnicode ? PHP_SELF_VU : PHP_SELF_V,
+            super.put(PHP_SELF_VU,
                     _env.createString(contextPath + servletPath));
          } else {
-            super.put(isUnicode ? PHP_SELF_VU : PHP_SELF_V,
+            super.put(PHP_SELF_VU,
                     _env.createString(contextPath + servletPath + pathInfo));
          }
 
@@ -366,11 +365,11 @@ public class ServerArrayValue extends ArrayValueImpl {
 
          if (authHeader != null) {
             if (authHeader.indexOf("Basic") == 0) {
-               super.put(isUnicode ? AUTH_TYPE_VU : AUTH_TYPE_V,
+               super.put(AUTH_TYPE_VU,
                        _env.createString("Basic"));
 
                if (request.getRemoteUser() != null) {
-                  super.put(isUnicode ? PHP_AUTH_USER_VU : PHP_AUTH_USER_V,
+                  super.put(PHP_AUTH_USER_VU,
                           _env.createString(request.getRemoteUser()));
 
                   String digest = authHeader.substring("Basic ".length());
@@ -379,17 +378,17 @@ public class ServerArrayValue extends ArrayValueImpl {
 
                   int i = userPass.indexOf(':');
                   if (i > 0) {
-                     super.put(isUnicode ? PHP_AUTH_PW_VU : PHP_AUTH_PW_V,
+                     super.put(PHP_AUTH_PW_VU,
                              _env.createString(userPass.substring(i + 1)));
                   }
                }
             } else if (authHeader.indexOf("Digest") == 0) {
-               super.put(isUnicode ? AUTH_TYPE_VU : AUTH_TYPE_V,
+               super.put(AUTH_TYPE_VU,
                        _env.createString("Digest"));
 
                String digest = authHeader.substring("Digest ".length());
 
-               super.put(isUnicode ? PHP_AUTH_DIGEST_VU : PHP_AUTH_DIGEST_V,
+               super.put(PHP_AUTH_DIGEST_VU,
                        _env.createString(digest));
             }
          }
@@ -401,13 +400,13 @@ public class ServerArrayValue extends ArrayValueImpl {
             String value = request.getHeader(key);
 
             if (key.equalsIgnoreCase("Host")) {
-               super.put(isUnicode ? HTTP_HOST_VU : HTTP_HOST_V,
+               super.put(HTTP_HOST_VU,
                        _env.createString(value));
             } else if (key.equalsIgnoreCase("Content-Length")) {
-               super.put(isUnicode ? CONTENT_LENGTH_VU : CONTENT_LENGTH_V,
+               super.put(CONTENT_LENGTH_VU,
                        _env.createString(value));
             } else if (key.equalsIgnoreCase("Content-Type")) {
-               super.put(isUnicode ? CONTENT_TYPE_VU : CONTENT_TYPE_V,
+               super.put(CONTENT_TYPE_VU,
                        _env.createString(value));
             } else {
                super.put(convertHttpKey(key), _env.createString(value));
@@ -420,7 +419,7 @@ public class ServerArrayValue extends ArrayValueImpl {
     * Converts a header key to HTTP_
     */
    private StringValue convertHttpKey(String key) {
-      StringValue sb = _env.createUnicodeBuilder();
+      StringValue sb = new StringBuilderValue();
 
       sb.append("HTTP_");
 

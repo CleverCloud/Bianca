@@ -221,22 +221,6 @@ public class Var extends Value
    }
 
    /**
-    * Returns true for a BinaryValue.
-    */
-   @Override
-   public boolean isBinary() {
-      return _value.isBinary();
-   }
-
-   /**
-    * Returns true for a UnicodeValue.
-    */
-   @Override
-   public boolean isUnicode() {
-      return _value.isUnicode();
-   }
-
-   /**
     * Returns true for a BooleanValue
     */
    @Override
@@ -569,27 +553,11 @@ public class Var extends Value
    }
 
    /**
-    * Cost to convert to a binary value
-    */
-   @Override
-   public int toBinaryValueMarshalCost() {
-      return _value.toBinaryValueMarshalCost();
-   }
-
-   /**
     * Cost to convert to a StringValue
     */
    @Override
    public int toStringValueMarshalCost() {
       return _value.toStringValueMarshalCost();
-   }
-
-   /**
-    * Cost to convert to a UnicdeValue
-    */
-   @Override
-   public int toUnicodeValueMarshalCost() {
-      return _value.toUnicodeValueMarshalCost();
    }
 
    /**
@@ -727,21 +695,6 @@ public class Var extends Value
    @Override
    public StringValue toStringValue(Env env) {
       return _value.toStringValue(env);
-   }
-
-   @Override
-   public StringValue toBinaryValue(Env env) {
-      return _value.toBinaryValue(env);
-   }
-
-   @Override
-   public StringValue toUnicode(Env env) {
-      return _value.toUnicode(env);
-   }
-
-   @Override
-   public StringValue toUnicodeValue(Env env) {
-      return _value.toUnicodeValue(env);
    }
 
    @Override

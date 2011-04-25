@@ -191,7 +191,7 @@ public class NullValue extends Value
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return env.createUnicodeBuilder();
+      return new StringBuilderValue();
    }
 
    /**
@@ -413,13 +413,7 @@ public class NullValue extends Value
     */
    @Override
    public StringValue toStringValue() {
-      Env env = Env.getInstance();
-
-      if (env != null && env.isUnicodeSemantics()) {
-         return UnicodeBuilderValue.EMPTY;
-      } else {
-         return StringBuilderValue.EMPTY;
-      }
+      return StringBuilderValue.EMPTY;
    }
 
    @Override

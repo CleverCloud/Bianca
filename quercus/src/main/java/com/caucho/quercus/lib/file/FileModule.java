@@ -484,7 +484,7 @@ public class FileModule extends AbstractQuercusModule {
          int ch = is.read();
 
          if (ch >= 0) {
-            StringValue v = env.createBinaryBuilder(1);
+            StringValue v = new StringBuilderValue(1);
 
             v.append((char) ch);
 
@@ -561,7 +561,7 @@ public class FileModule extends AbstractQuercusModule {
                }
             }
 
-            StringValue sb = env.createBinaryBuilder();
+            StringValue sb = new StringBuilderValue();
 
             if (ch == quote) {
                for (ch = is.read(); ch >= 0; ch = is.read()) {
@@ -693,7 +693,7 @@ public class FileModule extends AbstractQuercusModule {
 
          try {
             while (true) {
-               StringValue bb = env.createBinaryBuilder();
+               StringValue bb = new StringBuilderValue();
 
                for (int ch = is.read(); ch >= 0; ch = is.read()) {
                   if (ch == '\n') {
@@ -941,7 +941,7 @@ public class FileModule extends AbstractQuercusModule {
 
       BinaryInput is = (BinaryInput) s;
 
-      StringValue bb = env.createLargeBinaryBuilder();
+      StringValue bb = new StringBuilderValue();
       bb.appendReadAll(is, maxLen);
 
       s.close();
@@ -1613,7 +1613,7 @@ public class FileModule extends AbstractQuercusModule {
          length = Integer.MAX_VALUE;
       }
 
-      StringValue sb = env.createBinaryBuilder();
+      StringValue sb = new StringBuilderValue();
 
       sb.appendRead(is, length);
 
@@ -1801,7 +1801,7 @@ public class FileModule extends AbstractQuercusModule {
          Matcher matcher = compiledGlobRegex.matcher(entry);
 
          if (matcher.matches()) {
-            StringValue sb = env.createUnicodeBuilder();
+            StringValue sb = new StringBuilderValue();
 
             if (prefix.length() > 0) {
                sb.append(prefix);
@@ -2393,7 +2393,7 @@ public class FileModule extends AbstractQuercusModule {
       }
 
       if (ch == '"') {
-         StringValue sb = env.createUnicodeBuilder();
+         StringValue sb = new StringBuilderValue();
 
          for (ch = is.read(); ch >= 0 && ch != '"'; ch = is.read()) {
             sb.append((char) ch);
@@ -2403,7 +2403,7 @@ public class FileModule extends AbstractQuercusModule {
 
          return sb;
       } else if (ch == '\'') {
-         StringValue sb = env.createUnicodeBuilder();
+         StringValue sb = new StringBuilderValue();
 
          for (ch = is.read(); ch >= 0 && ch != '\''; ch = is.read()) {
             sb.append((char) ch);
@@ -2445,7 +2445,7 @@ public class FileModule extends AbstractQuercusModule {
                }
 
             } else if (ch == '"') {
-               StringValue result = env.createUnicodeBuilder();
+               StringValue result = new StringBuilderValue();
 
                String value = sb.toString().trim();
 
@@ -2516,12 +2516,12 @@ public class FileModule extends AbstractQuercusModule {
     */
    public static Value pathinfo(Env env, String path, @Optional Value optionsV) {
       if (optionsV == null) {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
 
       if (path == null) {
          if (!(optionsV instanceof DefaultValue)) {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
 
          ArrayValueImpl value = new ArrayValueImpl();
@@ -2563,7 +2563,7 @@ public class FileModule extends AbstractQuercusModule {
          } else if ((options & PATHINFO_FILENAME) == PATHINFO_FILENAME) {
             return env.createString(filename);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } else {
          ArrayValueImpl value = new ArrayValueImpl();
@@ -2701,7 +2701,7 @@ public class FileModule extends AbstractQuercusModule {
          pathStr = path.getFullPath();
       }
 
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       // php/164c
       if (pathStr.endsWith("/")) {
