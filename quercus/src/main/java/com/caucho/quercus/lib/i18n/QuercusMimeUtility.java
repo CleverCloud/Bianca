@@ -43,6 +43,7 @@ import com.caucho.quercus.env.ArrayValue;
 import com.caucho.quercus.env.ArrayValueImpl;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.Env;
+import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 
@@ -106,9 +107,7 @@ public class QuercusMimeUtility {
            throws UnsupportedEncodingException {
       String decodedStr = MimeUtility.decodeText(word.toString());
 
-      StringValue str = env.createString(MimeUtility.unfold(decodedStr));
-
-      return str.toBinaryValue(charset);
+      return env.createString(MimeUtility.unfold(decodedStr));
    }
 
    public static Value encodeMime(Env env,
@@ -154,7 +153,7 @@ public class QuercusMimeUtility {
       decoder.reset();
       String valueUnicode = decoder.decode(env, value).toString();
 
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringBuilderValue();
       sb.append(UnicodeUtility.encode(env, nameUnicode, outCharset));
       sb.append(':');
       sb.append(' ');

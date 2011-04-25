@@ -44,7 +44,7 @@ public class StringBuilderValue
 
    private static final StringBuilderValue[] CHAR_STRINGS;
    private static final int LARGE_BUILDER_THRESHOLD = LargeStringBuilderValue.SIZE;
-   private char[] _buffer;
+   private byte[] _buffer;
    private int _length;
    private boolean _isCopy;
    private int _hashCode;
@@ -1477,7 +1477,7 @@ public class StringBuilderValue
    /**
     * Returns the buffer.
     */
-   public final char[] getBuffer() {
+   public final byte[] getBuffer() {
       return _buffer;
    }
 

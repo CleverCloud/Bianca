@@ -47,39 +47,6 @@ public class Big5Decoder
       super(charsetName);
    }
 
-   @Override
-   public boolean isDecodable(Env env, StringValue str) {
-      if (str.isUnicode()) {
-         return true;
-      }
-
-      ByteBuffer in = ByteBuffer.wrap(str.toBytes());
-      CharBuffer out = CharBuffer.allocate(512);
-
-      while (in.hasRemaining()) {
-         CoderResult coder = _decoder.decode(in, out, false);
-         if (isMalformed(coder, in)) {
-            return false;
-         }
-
-         out.clear();
-      }
-
-      CoderResult coder = _decoder.decode(in, out, true);
-      if (isMalformed(coder, in)) {
-         return false;
-      }
-
-      out.clear();
-
-      coder = _decoder.flush(out);
-      if (isMalformed(coder, in)) {
-         return false;
-      }
-
-      return true;
-   }
-
    private boolean isMalformed(CoderResult coder, ByteBuffer in) {
       if (coder.isMalformed() || coder.isUnmappable()) {
          int errorPosition = in.position();

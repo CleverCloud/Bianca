@@ -64,39 +64,6 @@ public class GenericDecoder
    }
 
    @Override
-   public boolean isDecodable(Env env, StringValue str) {
-      if (str.isUnicode()) {
-         return true;
-      }
-
-      ByteBuffer in = ByteBuffer.wrap(str.toBytes());
-      CharBuffer out = CharBuffer.allocate(512);
-
-      while (in.hasRemaining()) {
-         CoderResult coder = _decoder.decode(in, out, false);
-         if (coder.isMalformed()) {
-            return false;
-         }
-
-         out.clear();
-      }
-
-      CoderResult coder = _decoder.decode(in, out, true);
-      if (coder.isMalformed()) {
-         return false;
-      }
-
-      out.clear();
-
-      coder = _decoder.flush(out);
-      if (coder.isMalformed()) {
-         return false;
-      }
-
-      return true;
-   }
-
-   @Override
    protected StringBuilder decodeImpl(Env env, StringValue str) {
       ByteBuffer in = ByteBuffer.wrap(str.toBytes());
 

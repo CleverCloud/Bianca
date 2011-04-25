@@ -76,12 +76,8 @@ public class UnicodeModule extends AbstractQuercusModule {
       return _iniDefinitions;
    }
 
-   public static BooleanValue unicode_semantics(Env env) {
-      return env.isUnicodeSemantics() ? BooleanValue.TRUE : BooleanValue.FALSE;
-   }
-
    public static Value unicode_decode(Env env,
-           BinaryValue str,
+           StringValue str,
            String encoding,
            @Optional int errorMode) {
       try {
@@ -97,7 +93,7 @@ public class UnicodeModule extends AbstractQuercusModule {
    }
 
    public static Value unicode_encode(Env env,
-           UnicodeValue str,
+           StringValue str,
            String encoding,
            @Optional int errorMode) {
       try {
@@ -243,7 +239,7 @@ public class UnicodeModule extends AbstractQuercusModule {
          }
 
          if (newOffset < 0 || tail < newOffset) {
-            return str.EMPTY;
+            return StringValue.EMPTY;
          }
 
          unicodeStr = unicodeStr.subSequence(newOffset, tail);

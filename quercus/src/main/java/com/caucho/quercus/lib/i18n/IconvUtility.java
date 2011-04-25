@@ -116,7 +116,7 @@ public class IconvUtility {
 
          out.flush();
 
-         StringValue sb = env.createBinaryBuilder();
+         StringValue sb = new StringBuilderValue();
          for (TempBuffer ptr = ts.getHead(); ptr != null; ptr = ptr.getNext()) {
             sb.append(ptr.getBuffer(), 0, ptr.getLength());
          }
@@ -136,10 +136,8 @@ public class IconvUtility {
            CharSequence word,
            String charset)
            throws UnsupportedEncodingException {
-      StringValue str = env.createString(
+      return env.createString(
               MimeUtility.unfold(MimeUtility.decodeText(word.toString())));
-
-      return str.toBinaryValue(charset);
    }
 
    public static Value encodeMime(Env env,
@@ -180,10 +178,7 @@ public class IconvUtility {
            String lineBreakChars,
            int lineLength)
            throws UnsupportedEncodingException {
-      name = name.toUnicodeValue(env, inCharset);
-      value = value.toUnicodeValue(env, inCharset);
-
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringBuilderValue();
       sb.append(name);
       sb.append(':');
       sb.append(' ');

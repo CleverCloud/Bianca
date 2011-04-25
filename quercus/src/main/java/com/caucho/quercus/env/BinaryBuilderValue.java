@@ -296,19 +296,11 @@ public class BinaryBuilderValue
     */
    @Override
    public StringValue toStringBuilder(Env env, Value value) {
-      if (value.isUnicode()) {
-         UnicodeBuilderValue sb = new UnicodeBuilderValue(this);
+      StringBuilderValue sb = new StringBuilderValue(this);
 
-         value.appendTo(sb);
+      value.appendTo(sb);
 
-         return sb;
-      } else {
-         BinaryBuilderValue v = new BinaryBuilderValue(this);
-
-         value.appendTo(v);
-
-         return v;
-      }
+      return sb;
    }
 
    /**
@@ -316,19 +308,11 @@ public class BinaryBuilderValue
     */
    @Override
    public StringValue toStringBuilder(Env env, StringValue value) {
-      if (value.isUnicode()) {
-         UnicodeBuilderValue sb = new UnicodeBuilderValue(this);
+      StringBuilderValue sb = new StringBuilderValue(this);
 
-         value.appendTo(sb);
+      value.appendTo(sb);
 
-         return sb;
-      } else {
-         BinaryBuilderValue v = new BinaryBuilderValue(this);
-
-         value.appendTo(v);
-
-         return v;
-      }
+      return sb;
    }
 
    /**

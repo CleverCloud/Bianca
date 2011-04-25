@@ -90,11 +90,7 @@ abstract public class Decoder {
    }
 
    public final CharSequence decode(Env env, StringValue str) {
-      if (str.isUnicode()) {
-         return str;
-      }
-
-      return decodeStringBuilder(env, str);
+      return str;
    }
 
    public StringBuilder decodeStringBuilder(Env env, StringValue str) {
@@ -108,8 +104,6 @@ abstract public class Decoder {
 
       return sb.append(unicodeStr);
    }
-
-   abstract public boolean isDecodable(Env env, StringValue str);
 
    abstract protected StringBuilder decodeImpl(Env env, StringValue str);
 }

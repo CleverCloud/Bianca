@@ -52,25 +52,6 @@ public class Utf8Decoder
    }
 
    @Override
-   public boolean isDecodable(Env env, StringValue str) {
-      if (str.isUnicode()) {
-         return true;
-      }
-
-      Utf8Reader reader = new Utf8Reader(str);
-
-      int ch;
-
-      while ((ch = reader.read()) >= 0) {
-         if (ch == ERROR_CHARACTER) {
-            return false;
-         }
-      }
-
-      return true;
-   }
-
-   @Override
    protected StringBuilder decodeImpl(Env env, StringValue str) {
       StringBuilder sb = new StringBuilder();
 

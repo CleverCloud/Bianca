@@ -91,10 +91,8 @@ public class MbstringModule
          encoding = getEncoding(env);
       }
 
-      Decoder decoder = Decoder.create(encoding);
-
       if (!var.isDefault()) {
-         return decoder.isDecodable(env, var.toStringValue());
+         return true;
       } else {
          throw new UnimplementedException("mb_check_encoding() with no args");
       }
@@ -110,11 +108,7 @@ public class MbstringModule
       if (mode == MB_CASE_TITLE) {
          encoding = getEncoding(env, encoding);
 
-         CharSequence unicodeStr = decode(env, str, encoding);
-
-         unicodeStr = toUpperCaseTitle(env, unicodeStr);
-
-         return encode(env, unicodeStr, encoding);
+         return encode(env, toUpperCaseTitle(env, str), encoding);
       } else if (mode == MB_CASE_LOWER) {
          return mb_strtolower(env, str, encoding);
       } else if (mode == MB_CASE_UPPER) {
@@ -131,20 +125,7 @@ public class MbstringModule
            StringValue str,
            String destEncoding,
            @Optional Value fromEncodings) {
-      ArrayList<String> charsetList = getEncodingList(env, fromEncodings);
-
-      CharSequence unicodeStr = null;
-      for (int i = 0; i < charsetList.size(); i++) {
-         String charset = charsetList.get(i);
-
-         try {
-            unicodeStr = decode(env, str, charset);
-         } catch (UnsupportedCharsetException e) {
-            // should probably not log anything here because this is normal
-            // behavior because of fallback encodings
-            continue;
-         }
-      }
+      CharSequence unicodeStr = str;
 
       if (unicodeStr == null) {
          log.log(Level.FINE,
@@ -239,19 +220,11 @@ public class MbstringModule
       // TODO: strict
 
       ArrayList<String> encodingList = getDetectOrderList(env, encodingV);
-
-      int len = encodingList.size();
-      for (int i = 0; i < len; i++) {
-         String charset = encodingList.get(i);
-
-         Decoder decoder = Decoder.create(charset);
-
-         if (decoder.isDecodable(env, str)) {
-            return env.createString(charset);
-         }
-      }
-
-      return BooleanValue.FALSE;
+      
+      if (encodingList.isEmpty())
+         return BooleanValue.FALSE;
+      
+      return env.createString(encodingList.get(0));
    }
 
    /**
@@ -385,9 +358,6 @@ public class MbstringModule
            UnicodeEreg ereg,
            StringValue string,
            @Optional String option) {
-      String encoding = getEncoding(env);
-
-      string = string.convertToUnicode(env, encoding);
 
       // TODO: option
 
@@ -415,11 +385,8 @@ public class MbstringModule
       if (eregValue.isLong()) {
          eregStr = UnicodeBuilderValue.create((char) eregValue.toInt());
       } else {
-         eregStr = eregValue.toStringValue(env).convertToUnicode(env, encoding);
+         eregStr = eregValue.toStringValue(env);
       }
-
-      replacement = replacement.convertToUnicode(env, encoding);
-      subject = subject.convertToUnicode(env, encoding);
 
       //XXX: option
 
@@ -456,11 +423,8 @@ public class MbstringModule
       if (pattern.isLong()) {
          eregStr = UnicodeBuilderValue.create((char) pattern.toInt());
       } else {
-         eregStr = pattern.toStringValue(env).convertToUnicode(env, encoding);
+         eregStr = pattern.toStringValue(env);
       }
-
-      replacement = replacement.convertToUnicode(env, encoding);
-      subject = subject.convertToUnicode(env, encoding);
 
       //XXX: option
 
@@ -484,8 +448,6 @@ public class MbstringModule
            StringValue string,
            ArrayValue regs) {
       String encoding = getEncoding(env);
-
-      string = string.convertToUnicode(env, encoding);
 
       if (regs == null) {
          return RegexpModule.eregImpl(env, ereg, string, null);
@@ -884,12 +846,6 @@ public class MbstringModule
            @Optional StringValue additionalParameters) {
       //XXX: not correct
 
-      String encoding = getEncoding(env);
-
-      subject = subject.toBinaryValue(encoding);
-      message = message.toBinaryValue(encoding);
-      additionalHeaders = additionalHeaders.toBinaryValue(encoding);
-
       boolean result = MailModule.mail(env,
               to.toString(),
               subject.toString(),
@@ -908,9 +864,6 @@ public class MbstringModule
            StringValue string,
            @Optional("-1") long limit) {
       String encoding = getEncoding(env);
-
-      string = string.convertToUnicode(env, encoding);
-
       Value val = RegexpModule.split(env, ereg, string, limit);
 
       return encodeAll(env, val, encoding);
@@ -927,9 +880,7 @@ public class MbstringModule
            @Optional String encoding) {
       encoding = getEncoding(env, encoding);
 
-      CharSequence unicodeStr = decode(env, str, encoding);
-
-      int len = unicodeStr.length();
+      int len = str.length();
       int end = start + length;
 
       if (end > len) {
@@ -937,17 +888,17 @@ public class MbstringModule
       }
 
       if (start < 0 || start > end) {
-         return str.EMPTY;
+         return StringValue.EMPTY;
       }
 
       // TODO: not quite exactly the same behavior as PHP
-      if (start < len && Character.isHighSurrogate(unicodeStr.charAt(start))) {
+      if (start < len && Character.isHighSurrogate(str.charAt(start))) {
          start--;
       }
 
       StringBuilder sb = new StringBuilder();
 
-      sb.append(unicodeStr, start, end);
+      sb.append(str, start, end);
 
       return encode(env, sb, encoding);
    }
@@ -963,9 +914,7 @@ public class MbstringModule
            @Optional("") String encoding) {
       encoding = getEncoding(env, encoding);
 
-      CharSequence unicodeStr = decode(env, str, encoding);
-
-      int len = unicodeStr.length();
+      int len = str.length();
       int end = start + width;
 
       if (end > len) {
@@ -973,18 +922,16 @@ public class MbstringModule
       }
 
       if (start < 0 || start > end) {
-         return str.EMPTY;
+         return StringValue.EMPTY;
       }
 
       StringBuilder sb = new StringBuilder();
 
       if (end < len && trimmarker.length() > 0) {
-         sb.append(unicodeStr, start, end - 1);
-         sb.append(decode(env, trimmarker, encoding));
-
-         unicodeStr = sb;
+         sb.append(str, start, end - 1);
+         sb.append(trimmarker);
       } else {
-         sb.append(unicodeStr, start, end);
+         sb.append(str, start, end);
       }
 
       return encode(env, sb, encoding);
@@ -997,8 +944,6 @@ public class MbstringModule
            StringValue str,
            @Optional("") String encoding) {
       encoding = getEncoding(env, encoding);
-
-      str = str.convertToUnicode(env, encoding);
 
       return LongValue.create(str.length());
    }
@@ -1013,9 +958,6 @@ public class MbstringModule
            @Optional("") String encoding) {
       encoding = getEncoding(env, encoding);
 
-      haystack = haystack.convertToUnicode(env, encoding);
-      needle = needle.convertToUnicode(env, encoding);
-
       return StringModule.strpos(env, haystack, needle, offset);
    }
 
@@ -1029,9 +971,6 @@ public class MbstringModule
            @Optional("") String encoding) {
       encoding = getEncoding(env, encoding);
 
-      haystack = haystack.convertToUnicode(env, encoding);
-      needle = needle.convertToUnicode(env, encoding);
-
       return StringModule.strrpos(env, haystack, needle, offsetV);
    }
 
@@ -1043,10 +982,7 @@ public class MbstringModule
            @Optional("") String encoding) {
       encoding = getEncoding(env, encoding);
 
-      StringValue unicodeStr = str.convertToUnicode(env, encoding);
-      unicodeStr = StringModule.strtolower(str);
-
-      return str.create(env, unicodeStr, encoding);
+      return str.create(env, StringModule.strtolower(str), encoding);
    }
 
    /**
@@ -1057,10 +993,7 @@ public class MbstringModule
            @Optional("") String encoding) {
       encoding = getEncoding(env, encoding);
 
-      StringValue unicodeStr = str.convertToUnicode(env, encoding);
-      unicodeStr = StringModule.strtoupper(str);
-
-      return str.create(env, unicodeStr, encoding);
+      return str.create(env, StringModule.strtoupper(str), encoding);
    }
 
    /**
@@ -1070,8 +1003,6 @@ public class MbstringModule
            StringValue str,
            @Optional("") String encoding) {
       encoding = getEncoding(env, encoding);
-
-      str = str.convertToUnicode(env, encoding);
 
       return LongValue.create(str.length());
 
@@ -1112,9 +1043,6 @@ public class MbstringModule
            @Optional("") String encoding) {
       encoding = getEncoding(env, encoding);
 
-      haystack = haystack.convertToUnicode(env, encoding);
-      needle = needle.convertToUnicode(env, encoding);
-
       int count = 0;
       int sublen = needle.length();
 
@@ -1138,12 +1066,10 @@ public class MbstringModule
            @Optional String encoding) {
       encoding = getEncoding(env, encoding);
 
-      StringValue unicodeStr = str.convertToUnicode(env, encoding);
-
-      Value val = StringModule.substr(env, unicodeStr, start, lengthV);
+      Value val = StringModule.substr(env, str, start, lengthV);
 
       if (val == BooleanValue.FALSE) {
-         return str.EMPTY;
+         return StringValue.EMPTY;
       }
 
       return encode(env, val.toStringValue(), encoding);
@@ -1183,18 +1109,6 @@ public class MbstringModule
       }
 
       return sb;
-   }
-
-   private static CharSequence decode(Env env,
-           StringValue str,
-           String encoding) {
-      if (str.isUnicode()) {
-         return str;
-      }
-
-      Decoder decoder = getDecoder(env, encoding);
-
-      return decoder.decode(env, str);
    }
 
    private static Decoder getDecoder(Env env, String encoding) {
@@ -1455,7 +1369,6 @@ public class MbstringModule
               StringValue string,
               UnicodeEregi ereg,
               Value option) {
-         _string = string.convertToUnicode(env, getEncoding(env));
          _position = 0;
          _length = _string.length();
 
@@ -1478,7 +1391,7 @@ public class MbstringModule
          } else if (_position < _length) {
             return _string.substring(_position);
          } else {
-            return _string.EMPTY;
+            return StringValue.EMPTY;
          }
       }
 

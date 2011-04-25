@@ -2065,9 +2065,10 @@ abstract public class StringValue
       int length = length();
 
       char[] array = new char[length()];
-
-      getChars(0, array, 0, length);
-
+      for (int i = 0; i < length; i++) {
+         array[i] = charAt(i);
+      }
+      
       return array;
    }
 
@@ -2078,9 +2079,9 @@ abstract public class StringValue
    /**
     * Copies the chars
     */
-   public void getChars(int stringOffset, char[] buffer, int offset, int length) {
+   public void getChars(int stringOffset, byte[] buffer, int offset, int length) {
       for (int i = 0; i < length; i++) {
-         buffer[offset + i] = charAt(stringOffset + i);
+         buffer[offset + i] = (byte) charAt(stringOffset + i);
       }
    }
 
@@ -2092,17 +2093,17 @@ abstract public class StringValue
 
       StringBuilderValue string = new StringBuilderValue(length);
 
-      char[] buffer = string.getBuffer();
+      byte[] buffer = string.getBuffer();
       getChars(0, buffer, 0, length);
 
       for (int i = 0; i < length; i++) {
-         char ch = buffer[i];
+         byte ch = buffer[i];
 
          if ('A' <= ch && ch <= 'Z') {
-            buffer[i] = (char) (ch + 'a' - 'A');
+            buffer[i] = (byte) (ch + 'a' - 'A');
          } else if (ch < 0x80) {
          } else if (Character.isUpperCase(ch)) {
-            buffer[i] = Character.toLowerCase(ch);
+            buffer[i] = (byte)Character.toLowerCase(ch);
          }
       }
 
@@ -2119,17 +2120,17 @@ abstract public class StringValue
 
       StringBuilderValue string = new StringBuilderValue(length);
 
-      char[] buffer = string.getBuffer();
+      byte[] buffer = string.getBuffer();
       getChars(0, buffer, 0, length);
 
       for (int i = 0; i < length; i++) {
-         char ch = buffer[i];
+         byte ch = buffer[i];
 
          if ('a' <= ch && ch <= 'z') {
-            buffer[i] = (char) (ch + 'A' - 'a');
+            buffer[i] = (byte) (ch + 'A' - 'a');
          } else if (ch < 0x80) {
          } else if (Character.isLowerCase(ch)) {
-            buffer[i] = Character.toUpperCase(ch);
+            buffer[i] = (byte) Character.toUpperCase(ch);
          }
       }
 
