@@ -396,14 +396,6 @@ public class JavaAdapterVar extends Value {
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return getValue().appendTo(sb);
-   }
-
-   /**
-    * Append to a string builder.
-    */
-   @Override
    public StringValue appendTo(StringBuilderValue sb) {
       return getValue().appendTo(sb);
    }

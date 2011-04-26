@@ -459,14 +459,6 @@ public class LongValue extends NumberValue {
    }
 
    /**
-    * Append to a unicode builder.
-    */
-   @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return sb.append(_value);
-   }
-
-   /**
     * Append to a string builder.
     */
    @Override

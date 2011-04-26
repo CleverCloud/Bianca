@@ -383,7 +383,7 @@ public class MbstringModule
       StringValue eregStr;
 
       if (eregValue.isLong()) {
-         eregStr = UnicodeBuilderValue.create((char) eregValue.toInt());
+         eregStr = StringBuilderValue.create((char) eregValue.toInt());
       } else {
          eregStr = eregValue.toStringValue(env);
       }
@@ -421,7 +421,7 @@ public class MbstringModule
       StringValue eregStr;
 
       if (pattern.isLong()) {
-         eregStr = UnicodeBuilderValue.create((char) pattern.toInt());
+         eregStr = StringBuilderValue.create((char) pattern.toInt());
       } else {
          eregStr = pattern.toStringValue(env);
       }

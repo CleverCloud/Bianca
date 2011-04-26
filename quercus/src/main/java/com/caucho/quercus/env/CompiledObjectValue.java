@@ -550,8 +550,7 @@ public class CompiledObjectValue extends ObjectValue
    if (fun != null)
    return fun.callMethod(env, this, new Expr[0]).toString(env);
    else
-   return env
-   .createUnicodeBuilder().append(_quercusClass.getName()).append("[]");
+   return new StringBuilderValue().append(_quercusClass.getName()).append("[]");
    }
     */
    /**

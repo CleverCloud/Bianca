@@ -30,7 +30,7 @@ package com.caucho.quercus.lib.i18n;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.quercus.env.UnicodeBuilderValue;
+import com.caucho.quercus.env.StringBuilderValue;
 
 abstract public class Decoder {
 
@@ -98,7 +98,7 @@ abstract public class Decoder {
    }
 
    public StringValue decodeUnicode(Env env, StringValue str) {
-      UnicodeBuilderValue sb = new UnicodeBuilderValue();
+      StringBuilderValue sb = new StringBuilderValue();
 
       StringBuilder unicodeStr = decodeImpl(env, str);
 

@@ -326,21 +326,6 @@ public class QuercusServlet
       return ini;
    }
 
-   public boolean isUnicodeSemantics() {
-      for (PhpIni ini : _phpIniList) {
-         String value = ini._propertyMap.get("unicode.semantics");
-
-         if (value != null
-                 && !value.equals("0")
-                 && !value.equals("false")
-                 && !value.equals("off")) {
-            return true;
-         }
-      }
-
-      return _unicode;
-   }
-
    /**
     * Sets a php.ini file.
     */
@@ -487,10 +472,6 @@ public class QuercusServlet
       Class configClass = config.getClass();
 
       _impl = getQuercusServlet(configClass.getName().startsWith("com.caucho"));
-
-      if (isUnicodeSemantics()) {
-         _impl.getQuercus().setUnicodeSemantics(true);
-      }
 
       _impl.init(config);
 

@@ -558,14 +558,6 @@ public class NullValue extends Value
    }
 
    /**
-    * Append to a unicode builder.
-    */
-   @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return sb;
-   }
-
-   /**
     * Append to a string builder.
     */
    @Override

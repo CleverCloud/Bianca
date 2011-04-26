@@ -355,10 +355,8 @@ public class StringBuilderValue
    public final boolean toBoolean() {
       if (_length == 0) {
          return false;
-      } else if (_length == 1 && _buffer[0] == '0') {
-         return false;
       } else {
-         return true;
+         return (_length != 1 || _buffer[0] != '0');
       }
    }
 
@@ -1780,7 +1778,7 @@ public class StringBuilderValue
          return hash;
       }
 
-      for (int i = length - 1; i >= 0; i--) {
+      for (int i = length - 1; i >= 0; --i) {
          hash = 65521 * hash + buffer[i];
       }
 

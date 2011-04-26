@@ -68,22 +68,14 @@ public class UrlModule
    public static final int PHP_URL_PATH = 5;
    public static final int PHP_URL_QUERY = 6;
    public static final int PHP_URL_FRAGMENT = 7;
-   private static final StringValue SCHEME_V = new ConstStringValue("scheme");
-   private static final StringValue SCHEME_U = new UnicodeBuilderValue("scheme");
-   private static final StringValue USER_V = new ConstStringValue("user");
-   private static final StringValue USER_U = new UnicodeBuilderValue("user");
-   private static final StringValue PASS_V = new ConstStringValue("pass");
-   private static final StringValue PASS_U = new UnicodeBuilderValue("pass");
-   private static final StringValue HOST_V = new ConstStringValue("host");
-   private static final StringValue HOST_U = new UnicodeBuilderValue("host");
-   private static final StringValue PORT_V = new ConstStringValue("port");
-   private static final StringValue PORT_U = new UnicodeBuilderValue("port");
-   private static final StringValue PATH_V = new ConstStringValue("path");
-   private static final StringValue PATH_U = new UnicodeBuilderValue("path");
-   private static final StringValue QUERY_V = new ConstStringValue("query");
-   private static final StringValue QUERY_U = new UnicodeBuilderValue("query");
-   private static final StringValue FRAGMENT_V = new ConstStringValue("fragment");
-   private static final StringValue FRAGMENT_U = new UnicodeBuilderValue("fragment");
+   private static final StringValue SCHEME_U = new StringBuilderValue("scheme");
+   private static final StringValue USER_U = new StringBuilderValue("user");
+   private static final StringValue PASS_U = new StringBuilderValue("pass");
+   private static final StringValue HOST_U = new StringBuilderValue("host");
+   private static final StringValue PORT_U = new StringBuilderValue("port");
+   private static final StringValue PATH_U = new StringBuilderValue("path");
+   private static final StringValue QUERY_U = new StringBuilderValue("query");
+   private static final StringValue FRAGMENT_U = new StringBuilderValue("fragment");
 
    /**
     * Encodes base64

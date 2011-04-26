@@ -52,8 +52,7 @@ import java.util.Map;
 public class Post {
 
    private static final L10N L = new L10N(Post.class);
-   private static StringValue MAX_FILE_SIZE = new ConstStringValue("MAX_FILE_SIZE");
-   private static StringValue MAX_FILE_SIZE_U = new UnicodeBuilderValue("MAX_FILE_SIZE");
+   private static StringValue MAX_FILE_SIZE = new StringBuilderValue("MAX_FILE_SIZE");
 
    static void fillPost(Env env,
            ArrayValue postArray,

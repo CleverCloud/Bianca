@@ -72,8 +72,7 @@ public class QuercusContext {
    private final QuercusSessionManager _sessionManager;
    private final ClassLoader _loader;
    private ModuleContext _moduleContext;
-   private static LruCache<String, UnicodeBuilderValue> _unicodeMap = new LruCache<String, UnicodeBuilderValue>(8 * 1024);
-   private static LruCache<String, StringValue> _stringMap = new LruCache<String, StringValue>(8 * 1024);
+   private static LruCache<String, StringBuilderValue> _stringMap = new LruCache<String, StringBuilderValue>(8 * 1024);
    private HashMap<String, ModuleInfo> _modules = new HashMap<String, ModuleInfo>();
    private HashSet<ModuleStartupListener> _moduleStartupListeners = new HashSet<ModuleStartupListener>();
    private HashSet<String> _extensionSet = new HashSet<String>();
@@ -124,7 +123,6 @@ public class QuercusContext {
    private boolean _isLooseParse;
    private boolean _isRequireSource;
    private boolean _isConnectionPool = true;
-   private Boolean _isUnicodeSemantics;
    private DataSource _database;
    private ConcurrentHashMap<String, DataSource> _databaseMap = new ConcurrentHashMap<String, DataSource>();
    protected ConcurrentHashMap<Env, Env> _activeEnvSet = new ConcurrentHashMap<Env, Env>();
@@ -322,21 +320,6 @@ public class QuercusContext {
       return false;
    }
 
-   public void setUnicodeSemantics(boolean isUnicode) {
-      _isUnicodeSemantics = isUnicode;
-   }
-
-   /**
-    * Returns true if unicode.semantics is on.
-    */
-   public boolean isUnicodeSemantics() {
-      if (_isUnicodeSemantics == null) {
-         _isUnicodeSemantics = Boolean.valueOf(getIniBoolean("unicode.semantics"));
-      }
-
-      return _isUnicodeSemantics.booleanValue();
-   }
-
    /*
     * Returns true if URLs may be arguments of include().
     */
@@ -378,11 +361,8 @@ public class QuercusContext {
    public String getScriptEncoding() {
       if (_scriptEncoding != null) {
          return _scriptEncoding;
-      } else if (isUnicodeSemantics()) {
-         return "utf-8";
-      } else {
-         return "iso-8859-1";
       }
+      return "utf-8";
    }
 
    /*
@@ -435,11 +415,7 @@ public class QuercusContext {
 
    public StringValue getPhpVersionValue() {
       if (_phpVersionValue == null) {
-         if (isUnicodeSemantics()) {
-            _phpVersionValue = createUnicodeString(_phpVersion);
-         } else {
-            _phpVersionValue = createString(_phpVersion);
-         }
+         _phpVersionValue = createUnicodeString(_phpVersion);
       }
 
       return _phpVersionValue;
@@ -846,11 +822,7 @@ public class QuercusContext {
     */
    public void setServerEnv(String name, String value) {
       // php/3j58
-      if (isUnicodeSemantics()) {
-         setServerEnv(createUnicodeString(name), createUnicodeString(value));
-      } else {
-         setServerEnv(createString(name), createString(value));
-      }
+      setServerEnv(createUnicodeString(name), createUnicodeString(value));
    }
 
    /**
@@ -1348,11 +1320,7 @@ public class QuercusContext {
     */
    public int getConstantId(String name) {
       // php/3j12
-      if (isUnicodeSemantics()) {
-         return getConstantId(new UnicodeBuilderValue(name));
-      } else {
-         return getConstantId(new ConstStringValue(name));
-      }
+      return getConstantId(new StringBuilderValue(name));
    }
 
    /**
@@ -1608,11 +1576,7 @@ public class QuercusContext {
 
       Map<StringValue, Value> map;
 
-      if (isUnicodeSemantics()) {
-         map = info.getUnicodeConstMap();
-      } else {
-         map = info.getConstMap();
-      }
+      map = info.getUnicodeConstMap();
 
       if (map != null) {
          for (Map.Entry<StringValue, Value> entry : map.entrySet()) {
@@ -1662,13 +1626,13 @@ public class QuercusContext {
     * Creates a string.  Because these strings are typically Java
     * constants, they fit into a lru cache.
     */
-   public UnicodeBuilderValue createUnicodeString(String name) {
-      UnicodeBuilderValue value = _unicodeMap.get(name);
+   public StringBuilderValue createUnicodeString(String name) {
+      StringBuilderValue value = _stringMap.get(name);
 
       if (value == null) {
-         value = new UnicodeBuilderValue(name);
+         value = new StringBuilderValue(name);
 
-         _unicodeMap.put(name, value);
+         _stringMap.put(name, value);
       }
 
       return value;
@@ -1679,10 +1643,10 @@ public class QuercusContext {
     * constants, they fit into a lru cache.
     */
    public StringValue createString(String name) {
-      StringValue value = _stringMap.get(name);
+      StringBuilderValue value = _stringMap.get(name);
 
       if (value == null) {
-         value = new ConstStringValue(name);
+         value = new StringBuilderValue(name);
 
          _stringMap.put(name, value);
       }

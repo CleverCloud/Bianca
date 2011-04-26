@@ -100,7 +100,7 @@ public class ReflectionExtension
          Set<String> extensionSet = moduleInfo.getLoadedExtensions();
 
          if (extensionSet.contains(_name)) {
-            for (Map.Entry<StringValue, Value> entry : moduleInfo.getConstMap().entrySet()) {
+            for (Map.Entry<StringValue, Value> entry : moduleInfo.getUnicodeConstMap().entrySet()) {
                array.put(entry.getKey(), entry.getValue());
             }
          }

@@ -1296,13 +1296,6 @@ abstract public class StringValue
       return append((CharSequence) sb, head, tail);
    }
 
-   /**
-    * Append a Java buffer to the value.
-    */
-   public StringValue append(UnicodeBuilderValue sb, int head, int tail) {
-      return append((CharSequence) sb, head, tail);
-   }
-
    /*
     * Appends a Unicode string to the value.
     *
@@ -1404,7 +1397,7 @@ abstract public class StringValue
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
+   public StringValue appendTo(StringBuilderValue sb) {
       int length = length();
 
       for (int i = 0; i < length; i++) {

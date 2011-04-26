@@ -561,14 +561,6 @@ public class Var extends Value
    }
 
    /**
-    * Append to a unicode builder.
-    */
-   @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return _value.appendTo(sb);
-   }
-
-   /**
     * Append to a string builder.
     */
    @Override
