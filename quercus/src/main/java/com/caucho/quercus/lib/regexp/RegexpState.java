@@ -134,6 +134,7 @@ public class RegexpState {
    }
 
    public boolean setSubject(Env env, StringValue subject) {
+      _subject = subject;
       _subjectLength = _subject != null ? _subject.length() : 0;
 
       return _subject != null;
