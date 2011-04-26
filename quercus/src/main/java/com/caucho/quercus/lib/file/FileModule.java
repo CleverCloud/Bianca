@@ -1120,7 +1120,7 @@ public class FileModule extends AbstractQuercusModule {
                if (lastCh == '[') {
                   globRegex.append(ch);
                } else {
-                  globRegex.append("\\" + ch);
+                  globRegex.append("\\").append(ch);
 
                   if (inSquareBrackets) {
                      bracketCount++;

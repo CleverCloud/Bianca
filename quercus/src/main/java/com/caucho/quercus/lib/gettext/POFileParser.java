@@ -65,7 +65,7 @@ class POFileParser extends GettextParser {
       init(path);
    }
 
-   void init(Path path)
+   final void init(Path path)
            throws IOException {
       _in = path.openRead();
       _peekChar = -1;
@@ -106,6 +106,7 @@ class POFileParser extends GettextParser {
     *
     * @return translations from file, or null on error
     */
+   @Override
    HashMap<StringValue, ArrayList<StringValue>> readTranslations()
            throws IOException {
       HashMap<StringValue, ArrayList<StringValue>> translations =
@@ -359,6 +360,7 @@ class POFileParser extends GettextParser {
       }
    }
 
+   @Override
    void close() {
       if (_in != null) {
          _in.close();

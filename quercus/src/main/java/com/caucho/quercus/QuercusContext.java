@@ -66,8 +66,8 @@ public class QuercusContext {
 
    private static L10N L = new L10N(QuercusContext.class);
    private static final Logger log = Logger.getLogger(QuercusContext.class.getName());
-   private static HashSet<String> _superGlobals = new HashSet<String>();
-   private static IniDefinitions _ini = new IniDefinitions();
+   private static final HashSet<String> _superGlobals = new HashSet<String>();
+   private static final IniDefinitions _ini = new IniDefinitions();
    private final PageManager _pageManager;
    private final QuercusSessionManager _sessionManager;
    private final ClassLoader _loader;
@@ -257,11 +257,11 @@ public class QuercusContext {
    public void setProfileProbability(double probability) {
    }
 
-   protected PageManager createPageManager() {
+   private PageManager createPageManager() {
       return new PageManager(this);
    }
 
-   protected QuercusSessionManager createSessionManager() {
+   private QuercusSessionManager createSessionManager() {
       return new QuercusSessionManager(this);
    }
 
@@ -1642,7 +1642,7 @@ public class QuercusContext {
     * Creates a string.  Because these strings are typically Java
     * constants, they fit into a lru cache.
     */
-   public StringValue createString(String name) {
+   private StringValue createString(String name) {
       StringBuilderValue value = _stringMap.get(name);
 
       if (value == null) {

@@ -34,21 +34,16 @@ import com.caucho.quercus.env.StringBuilderValue;
 
 abstract public class Decoder {
 
-   protected String _charset;
    protected CharSequence _replacement;
    protected boolean _isIgnoreErrors = false;
    protected boolean _isReplaceUnicode = false;
    protected boolean _isAllowMalformedOut = false;
    protected boolean _hasError;
 
-   protected Decoder(String charset) {
-      _charset = charset;
-   }
-
    public static Decoder create(String charset) {
       if (charset.equalsIgnoreCase("utf8")
               || charset.equalsIgnoreCase("utf-8")) {
-         return new Utf8Decoder(charset);
+         return new Utf8Decoder();
       } else if (charset.equalsIgnoreCase("big5")
               || charset.equalsIgnoreCase("big-5")) {
          return new Big5Decoder(charset);

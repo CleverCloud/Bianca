@@ -38,7 +38,6 @@ import com.caucho.vfs.Path;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 /**
  * Module to find translated strings and return them in desired charset.
@@ -48,7 +47,6 @@ public class GettextModule
         extends AbstractQuercusModule {
 
    private LruCache<Object, GettextResource> _cache = new LruCache<Object, GettextResource>(16);
-   private final Logger log = Logger.getLogger(GettextModule.class.getName());
    private final L10N L = new L10N(GettextModule.class);
 
    @Override

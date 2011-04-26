@@ -30,7 +30,7 @@ package com.caucho.quercus.env;
 
 import java.util.Locale;
 
-public class LocaleInfo {
+public final class LocaleInfo {
 
    private QuercusLocale _collate;
    private QuercusLocale _ctype;

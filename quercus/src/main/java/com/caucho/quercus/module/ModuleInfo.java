@@ -37,6 +37,7 @@ import com.caucho.util.L10N;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -117,9 +118,7 @@ public class ModuleInfo {
     */
    private void introspectPhpModuleClass(Class cl)
            throws IllegalAccessException, InstantiationException {
-      for (String ext : _module.getLoadedExtensions()) {
-         _extensionSet.add(ext);
-      }
+      _extensionSet.addAll(Arrays.asList(_module.getLoadedExtensions()));
 
       Map<StringValue, Value> map = _module.getConstMap();
 

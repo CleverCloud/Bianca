@@ -61,7 +61,7 @@ public class AbstractBinaryInput
       init(is);
    }
 
-   public void init(ReadStream is) {
+   public final void init(ReadStream is) {
       _is = is;
    }
 

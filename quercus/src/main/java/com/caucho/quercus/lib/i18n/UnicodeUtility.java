@@ -172,7 +172,7 @@ public class UnicodeUtility {
 
       Decoder decoder;
       if (isStartUtf8) {
-         decoder = new Utf8Decoder(inCharset);
+         decoder = new Utf8Decoder();
       } else {
          decoder = new GenericDecoder(inCharset);
       }

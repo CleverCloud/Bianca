@@ -59,7 +59,7 @@ public class StreamReadWrite extends StreamResource
       init(is, os);
    }
 
-   protected void init(ReadStream is, WriteStream os) {
+   protected final void init(ReadStream is, WriteStream os) {
       _is = is;
       _os = os;
    }

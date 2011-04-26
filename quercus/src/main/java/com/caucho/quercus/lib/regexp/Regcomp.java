@@ -142,7 +142,7 @@ class Regcomp {
       }
 
       if (log.isLoggable(Level.FINEST)) {
-         log.finest("regexp[] " + value);
+         log.log(Level.FINEST, "regexp[] {0}", value);
       }
 
       return value;

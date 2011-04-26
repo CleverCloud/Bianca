@@ -147,7 +147,7 @@ public class RegexpState {
    public boolean find() {
       try {
          if (log.isLoggable(Level.FINEST)) {
-            log.finest(this + " find()");
+            log.log(Level.FINEST, "{0} find()", this);
          }
 
          int minLength = _regexp._minLength;
@@ -228,7 +228,7 @@ public class RegexpState {
    public int find(Env env, StringValue subject, int first) {
       try {
          if (log.isLoggable(Level.FINEST)) {
-            log.finest(this + " find(" + subject + ")");
+            log.log(Level.FINEST, "{0} find({1})", new Object[]{this, subject});
          }
 
          if (subject == null) {
@@ -257,7 +257,7 @@ public class RegexpState {
    public int exec(Env env, StringValue subject, int start) {
       try {
          if (log.isLoggable(Level.FINEST)) {
-            log.finest(this + " exec(" + subject + ")");
+            log.log(Level.FINEST, "{0} exec({1})", new Object[]{this, subject});
          }
 
          if (subject == null) {

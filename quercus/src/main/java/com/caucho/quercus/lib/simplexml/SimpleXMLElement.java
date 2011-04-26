@@ -228,7 +228,7 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
       _namespaceMap.put(prefix, namespace);
    }
 
-   protected boolean hasNamespace(String prefix, String namespace) {
+   protected final boolean hasNamespace(String prefix, String namespace) {
       String uri = getNamespace(prefix);
 
       return uri != null && uri.equals(namespace);

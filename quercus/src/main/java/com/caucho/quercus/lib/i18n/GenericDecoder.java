@@ -33,24 +33,18 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
-import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.util.L10N;
 import com.caucho.vfs.TempCharBuffer;
 
 public class GenericDecoder
         extends Decoder {
-
-   private static final Logger log = Logger.getLogger(GenericDecoder.class.getName());
-   private static final L10N L = new L10N(GenericDecoder.class);
+   
    private Charset _charset;
    protected CharsetDecoder _decoder;
 
    public GenericDecoder(String charsetName) {
-      super(charsetName);
-
       _charset = Charset.forName(charsetName);
 
       _decoder = _charset.newDecoder();

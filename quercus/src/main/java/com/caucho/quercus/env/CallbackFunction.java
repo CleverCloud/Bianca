@@ -182,7 +182,7 @@ public class CallbackFunction extends Callback {
     */
    @Override
    public void varExport(StringBuilder sb) {
-      sb.append("'' . \"\\0\" . '" + _funName.substring(1) + "'");
+      sb.append("'' . \"\\0\" . '").append(_funName.substring(1)).append("'");
    }
 
    @Override

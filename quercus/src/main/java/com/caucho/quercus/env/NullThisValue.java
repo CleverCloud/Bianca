@@ -36,15 +36,8 @@ import java.io.Serializable;
 public class NullThisValue extends NullValue
         implements Serializable {
 
-   public static final NullThisValue NULL = new NullThisValue();
+   public static final NullThisValue NULLTHIS = new NullThisValue();
 
    private NullThisValue() {
-   }
-
-   //
-   // Java Serialization
-   //
-   private Object readResolve() {
-      return NULL;
    }
 }

@@ -534,7 +534,7 @@ public abstract class JdbcConnectionResource
    @Override
    public void cleanup() {
       if (log.isLoggable(Level.FINER)) {
-         log.finer(this + " cleanup()");
+         log.log(Level.FINER, "{0} cleanup()", this);
       }
 
       try {

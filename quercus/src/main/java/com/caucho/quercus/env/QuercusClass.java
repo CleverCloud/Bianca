@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 /**
  * Represents a Quercus runtime class.
  */
-public class QuercusClass extends NullValue {
+public final class QuercusClass extends NullValue {
 
    private static final L10N L = new L10N(QuercusClass.class);
    private static final Logger log = Logger.getLogger(QuercusClass.class.getName());

@@ -384,6 +384,7 @@ public class QuercusServlet
    /**
     * Initializes the servlet.
     */
+   @Override
    public void init(ServletConfig config)
            throws ServletException {
       super.init(config);
@@ -538,6 +539,7 @@ public class QuercusServlet
    /**
     * Service.
     */
+   @Override
    public void service(HttpServletRequest request,
            HttpServletResponse response)
            throws ServletException, IOException {
@@ -558,6 +560,7 @@ public class QuercusServlet
    /**
     * Closes the servlet instance.
     */
+   @Override
    public void destroy() {
       _quercus.close();
       _impl.destroy();

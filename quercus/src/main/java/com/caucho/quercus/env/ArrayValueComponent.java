@@ -145,7 +145,7 @@ public class ArrayValueComponent {
       out.print("}");
    }
 
-   public void init() {
+   public final void init() {
    }
 
    public void init(Env env) {

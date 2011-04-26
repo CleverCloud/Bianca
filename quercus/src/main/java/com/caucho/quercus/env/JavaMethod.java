@@ -31,7 +31,6 @@ package com.caucho.quercus.env;
 import com.caucho.quercus.QuercusException;
 import com.caucho.quercus.annotation.Name;
 import com.caucho.quercus.module.ModuleContext;
-import com.caucho.util.L10N;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,7 +41,6 @@ import java.lang.reflect.Modifier;
  */
 public class JavaMethod extends JavaInvoker {
 
-   private static final L10N L = new L10N(JavaMethod.class);
    private final Method _method;
 
    /**

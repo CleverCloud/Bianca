@@ -86,6 +86,7 @@ public class ConnectionEntry implements EnvCleanup {
       _conn.setCatalog(catalog);
    }
 
+   @Override
    public int hashCode() {
       int hash = _ds.hashCode();
 
@@ -96,6 +97,7 @@ public class ConnectionEntry implements EnvCleanup {
       }
    }
 
+   @Override
    public boolean equals(Object o) {
       if (!(o instanceof ConnectionEntry)) {
          return false;

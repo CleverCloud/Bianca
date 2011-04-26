@@ -28,22 +28,13 @@
  */
 package com.caucho.quercus.lib.i18n;
 
-import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringBuilderValue;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.util.L10N;
 
 public class Utf8Encoder
         extends Encoder {
-
-   private static final Logger log = Logger.getLogger(Utf8Encoder.class.getName());
-   private static final L10N L = new L10N(Utf8Encoder.class);
-
-   public Utf8Encoder() {
-      super("utf-8");
-   }
 
    @Override
    public boolean isUtf8() {

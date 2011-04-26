@@ -31,14 +31,12 @@ package com.caucho.quercus.env;
 import com.caucho.quercus.program.JavaClassDef;
 
 import java.util.Calendar;
-import java.util.logging.Logger;
 
 /**
  * Represents a Quercus java Calendar value.
  */
 public class JavaCalendarValue extends JavaValue {
 
-   private static final Logger log = Logger.getLogger(JavaCalendarValue.class.getName());
    private final Calendar _calendar;
 
    public JavaCalendarValue(Env env, Calendar calendar, JavaClassDef def) {

@@ -38,7 +38,6 @@ import java.io.PrintWriter;
 public class ConstStringValue
         extends StringBuilderValue {
 
-   public static final ConstStringValue EMPTY = new ConstStringValue();
    protected LongValue _longValue;
    protected DoubleValue _doubleValue;
    protected String _string;

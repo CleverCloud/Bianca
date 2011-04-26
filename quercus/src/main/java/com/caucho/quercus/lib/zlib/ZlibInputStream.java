@@ -55,7 +55,7 @@ public class ZlibInputStream extends ReadStreamInput {
       init(in);
    }
 
-   protected void init(BinaryInput in)
+   protected final void init(BinaryInput in)
            throws IOException {
       _in = in;
 

@@ -563,7 +563,7 @@ public class ModuleContext {
 
                introspectPhpModuleClass(cl);
             } catch (Throwable e) {
-               log.fine("Failed loading " + className + "\n" + e.toString());
+               log.log(Level.FINE, "Failed loading {0}\n{1}", new Object[]{className, e.toString()});
                log.log(Level.FINE, e.toString(), e);
             }
          }
@@ -606,9 +606,7 @@ public class ModuleContext {
             return;
          }
 
-         log.finest(getClass().getSimpleName()
-                 + " loading module "
-                 + cl.getName());
+         log.log(Level.FINEST, "{0} loading module {1}", new Object[]{getClass().getSimpleName(), cl.getName()});
 
          QuercusModule module = (QuercusModule) cl.newInstance();
 
@@ -792,7 +790,7 @@ public class ModuleContext {
 
             introspectJavaClass(phpClassName, cl, extension, javaClassDefClass);
          } catch (Exception e) {
-            log.fine("Failed loading " + className + "\n" + e.toString());
+            log.log(Level.FINE, "Failed loading {0}\n{1}", new Object[]{className, e.toString()});
             log.log(Level.FINE, e.toString(), e);
          }
       }

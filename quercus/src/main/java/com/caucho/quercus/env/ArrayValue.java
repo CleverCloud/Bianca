@@ -242,8 +242,6 @@ abstract public class ArrayValue extends Value {
          list = new ArrayList();
       } else if (type.isAssignableFrom(LinkedList.class)) {
          list = new LinkedList();
-      } else if (type.isAssignableFrom(Vector.class)) {
-         list = new Vector();
       } else {
          try {
             list = (List) type.newInstance();

@@ -166,8 +166,6 @@ abstract public class JavaAdapter extends ArrayValue
          list = new ArrayList();
       } else if (type.isAssignableFrom(LinkedList.class)) {
          list = new LinkedList();
-      } else if (type.isAssignableFrom(Vector.class)) {
-         list = new Vector();
       } else {
          try {
             list = (List) type.newInstance();

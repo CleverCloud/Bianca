@@ -88,7 +88,7 @@ public class UrlRewriterCallback extends CallbackFunction {
       String encodedVar = URLUtil.encodeURL(var.replaceAll(" ", "+"));
       String encodedValue = URLUtil.encodeURL(value.replaceAll(" ", "+"));
 
-      _rewriterQuery.append(encodedVar + "=" + encodedValue);
+      _rewriterQuery.append(encodedVar).append("=").append(encodedValue);
       _rewriterVars.add(new String[]{encodedVar, encodedValue});
    }
 

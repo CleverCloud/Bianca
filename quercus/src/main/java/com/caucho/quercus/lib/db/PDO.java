@@ -305,7 +305,7 @@ public class PDO implements EnvCleanup {
    /**
     * Executes a statement, returning the number of rows.
     */
-   public int exec(String query)
+   public final int exec(String query)
            throws SQLException {
       if (_conn == null) {
          return -1;

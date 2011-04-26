@@ -238,7 +238,7 @@ public class QuercusProgram {
    /**
     * Adds a dependency.
     */
-   public void addDepend(Path path) {
+   public final void addDepend(Path path) {
       Depend depend = new Depend(path);
 
       depend.setRequireSource(_quercus.isRequireSource());
@@ -450,7 +450,7 @@ public class QuercusProgram {
       @Override
       public boolean logModified(Logger log) {
          if (isModified()) {
-            log.finer(_sourceFile + " is modified");
+            log.log(Level.FINER, "{0} is modified", _sourceFile);
 
             return true;
          } else {

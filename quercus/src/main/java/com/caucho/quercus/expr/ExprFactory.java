@@ -852,9 +852,9 @@ public class ExprFactory {
 
       if ("isset".equals(name) && args.size() == 1) {
          return new FunIssetExpr(args.get(0));
-      } else if ("get_called_class".equals(name) && args.size() == 0) {
+      } else if ("get_called_class".equals(name) && args.isEmpty()) {
          return new FunGetCalledClassExpr(loc);
-      } else if ("get_class".equals(name) && args.size() == 0) {
+      } else if ("get_class".equals(name) && args.isEmpty()) {
          return new FunGetClassExpr(parser);
       } else if ("each".equals(name) && args.size() == 1) {
          Expr arg = args.get(0);

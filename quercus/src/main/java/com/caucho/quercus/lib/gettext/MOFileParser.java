@@ -109,6 +109,7 @@ class MOFileParser extends GettextParser {
     *
     * @return translations from file, or null on error
     */
+   @Override
    HashMap<StringValue, ArrayList<StringValue>> readTranslations()
            throws IOException {
       int[] originalOffsets = new int[_numberOfStrings];
@@ -225,6 +226,7 @@ class MOFileParser extends GettextParser {
       }
    }
 
+   @Override
    void close() {
       if (_in != null) {
          _in.close();

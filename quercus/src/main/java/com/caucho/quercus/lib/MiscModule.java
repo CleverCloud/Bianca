@@ -195,7 +195,7 @@ public class MiscModule extends AbstractQuercusModule {
    public Value eval(Env env, String code) {
       try {
          if (log.isLoggable(Level.FINER)) {
-            log.finer("quercus eval: [[" + code + "]]");
+            log.log(Level.FINER, "quercus eval: [[{0}]]", code);
          }
 
          QuercusContext quercus = env.getQuercus();
@@ -578,7 +578,6 @@ public class MiscModule extends AbstractQuercusModule {
     * Dumps the Java stack to standard out.
     */
    public Value resin_thread_dump() {
-      Thread.dumpStack();
 
       return NullValue.NULL;
    }

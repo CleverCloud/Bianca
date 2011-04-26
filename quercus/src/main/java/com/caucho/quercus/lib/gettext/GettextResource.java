@@ -170,7 +170,7 @@ class GettextResource {
 
       ArrayList<StringValue> pluralForms = _translations.get(key);
 
-      if (pluralForms == null || pluralForms.size() == 0) {
+      if (pluralForms == null || pluralForms.isEmpty()) {
          return null;
       }
 

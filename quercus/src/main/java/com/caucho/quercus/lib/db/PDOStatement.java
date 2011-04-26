@@ -1493,7 +1493,7 @@ public class PDOStatement
    /**
     * Bind a value to a parameter when the statement is executed.
     */
-   private class BindParam {
+   public class BindParam {
 
       private final int _index;
       private final Value _value;

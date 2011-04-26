@@ -59,10 +59,7 @@ class GroupState {
       _set = new long[src._set.length];
       _group = new IntArray();
       _group.add(src._group);
-
-      for (int i = 0; i < src._set.length; i++) {
-         _set[i] = src._set[i];
-      }
+      System.arraycopy(src._set, 0, _set, 0, src._set.length);
    }
 
    public boolean isMatched(int group) {
@@ -101,10 +98,7 @@ class GroupState {
 
          state._group.clear();
          state._group.add(_group);
-
-         for (int i = 0; i < _set.length; i++) {
-            state._set[i] = _set[i];
-         }
+         System.arraycopy(_set, 0, state._set, 0, _set.length);
       } else {
          state = new GroupState(this);
       }

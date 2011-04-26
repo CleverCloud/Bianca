@@ -84,7 +84,7 @@ public class QuercusException extends RuntimeException {
          sb.append("\n");
 
          for (int i = 0; i < _quercusStackTrace.size(); i++) {
-            sb.append("   " + _quercusStackTrace.get(i) + "\n");
+            sb.append("   ").append(_quercusStackTrace.get(i)).append("\n");
          }
 
          return sb.toString();

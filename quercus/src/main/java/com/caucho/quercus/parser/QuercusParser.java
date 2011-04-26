@@ -42,7 +42,6 @@ import com.caucho.util.L10N;
 import com.caucho.vfs.*;
 
 import java.io.CharConversionException;
-import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1877,7 +1876,7 @@ public class QuercusParser {
       // TODO: should only throw fatal error if break statement is reached
       //      during execution
 
-      if (!_isTop && _loopLabelList.size() == 0 && !_quercus.isLooseParse()) {
+      if (!_isTop && _loopLabelList.isEmpty() && !_quercus.isLooseParse()) {
          throw error(L.l("cannot 'break' inside a function"));
       }
 
@@ -1909,7 +1908,7 @@ public class QuercusParser {
     */
    private Statement parseContinue()
            throws IOException {
-      if (!_isTop && _loopLabelList.size() == 0 && !_quercus.isLooseParse()) {
+      if (!_isTop && _loopLabelList.isEmpty() && !_quercus.isLooseParse()) {
          throw error(L.l("cannot 'continue' inside a function"));
       }
 
@@ -5856,7 +5855,7 @@ public class QuercusParser {
       }
 
       private boolean equals(String s1, String s2) {
-         return (s1 == null || s2 == null) ? s1 == s2 : s1.equals(s2);
+         return (s1 == null) ? s2 == null : s1.equals(s2);
       }
 
       @Override

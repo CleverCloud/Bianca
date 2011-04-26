@@ -609,6 +609,7 @@ public class ObjectExtValue extends ObjectValue
    /**
     * Removes the field array ref.
     */
+   @Override
    public void unsetThisArray(Env env, StringValue name, Value index) {
       if (_quercusClass.getFieldGet() != null) {
          return;

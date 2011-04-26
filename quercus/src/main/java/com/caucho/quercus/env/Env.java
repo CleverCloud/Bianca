@@ -177,7 +177,7 @@ public class Env {
    private HashMap<Path, ArrayList<Path>> _includePathMap;
    // TODO: may require a LinkedHashMap for ordering?
    private HashMap<Path, QuercusPage> _includeMap = new HashMap<Path, QuercusPage>();
-   private Value _this = NullThisValue.NULL;
+   private Value _this = NullThisValue.NULLTHIS;
    private boolean _isAllowUrlInclude;
    private boolean _isAllowUrlFopen;
    private HashMap<StringValue, Path> _lookupCache = new HashMap<StringValue, Path>();
@@ -200,6 +200,7 @@ public class Env {
    private LinkedList<FieldGetEntry> _fieldSetList = new LinkedList<FieldGetEntry>();
    private LinkedList<FieldGetEntry> _issetList = new LinkedList<FieldGetEntry>();
    private LinkedList<FieldGetEntry> _unsetList = new LinkedList<FieldGetEntry>();
+   private static Logger _logger;
 
    public enum OVERLOADING_TYPES {
 
@@ -231,7 +232,6 @@ public class Env {
    private SessionCallback _sessionCallback;
    private StreamContextResource _defaultStreamContext;
    private int _objectId = 0;
-   private Logger _logger;
    // hold special Quercus php import statements
    private ImportMap _importMap;
    private TimeZone _defaultTimeZone;
@@ -487,14 +487,14 @@ public class Env {
       }
    }
 
-   protected AbstractFunction[] getDefaultFunctionMap() {
+   protected final AbstractFunction[] getDefaultFunctionMap() {
       return getQuercus().getFunctionMap();
    }
 
    /**
     * Initialize the page, loading any functions and classes
     */
-   protected QuercusPage pageInit(QuercusPage page) {
+   protected final QuercusPage pageInit(QuercusPage page) {
       if (page.getCompiledPage() != null) {
          page = page.getCompiledPage();
       }
@@ -1178,7 +1178,7 @@ public class Env {
    /**
     * Returns the current directory.
     */
-   public Path getPwd() {
+   public final Path getPwd() {
       return _pwd;
    }
 
@@ -1200,7 +1200,7 @@ public class Env {
    /**
     * Sets the current directory.
     */
-   public void setPwd(Path path) {
+   public final void setPwd(Path path) {
       _pwd = path;
       _lookupCache.clear();
    }
@@ -1222,7 +1222,7 @@ public class Env {
    /**
     * Sets the initial directory.
     */
-   public void setSelfPath(Path path) {
+   public final void setSelfPath(Path path) {
       _selfPath = path;
       _selfDirectory = _selfPath.getParent();
    }
@@ -2547,7 +2547,7 @@ public class Env {
    /**
     * Gets a value.
     */
-   public Var getGlobalVar(String name) {
+   public final Var getGlobalVar(String name) {
       EnvVar envVar = getGlobalEnvVar(createString(name));
 
       return envVar.getVar();
@@ -3129,7 +3129,7 @@ public class Env {
    /**
     * Sets a constant.
     */
-   public Value addConstant(String name,
+   public final Value addConstant(String name,
            Value value,
            boolean isCaseInsensitive) {
       int id;
@@ -3644,7 +3644,7 @@ public class Env {
     */
    protected Value executePage(QuercusPage page) {
       if (log.isLoggable(Level.FINEST)) {
-         log.finest(this + " executePage " + page);
+         log.log(Level.FINEST, "{0} executePage {1}", new Object[]{this, page});
       }
 
       if (page.getCompiledPage() != null) {
@@ -3952,7 +3952,7 @@ public class Env {
     * saved
     */
    boolean isSpecialVar(StringValue name) {
-      if (_quercus.isSuperGlobal(name)) {
+      if (QuercusContext.isSuperGlobal(name)) {
          return true;
       } else if (_scriptGlobalMap.get(name) != null) {
          return true;
@@ -4299,7 +4299,7 @@ public class Env {
    /**
     * Returns a PHP value for a Java object
     */
-   public Value wrapJava(Object obj) {
+   public final Value wrapJava(Object obj) {
       if (obj == null) {
          return NullValue.NULL;
       }
@@ -4647,7 +4647,7 @@ public class Env {
          _autoloadList.remove(fun);
 
          //restore original __autoload functionality
-         if (_autoloadList.size() == 0) {
+         if (_autoloadList.isEmpty()) {
             _autoloadList = null;
          }
       }
@@ -5005,7 +5005,7 @@ public class Env {
          if (!_isAllowUrlInclude && isUrl(path)) {
             String msg = (L.l("not allowed to include url {0}", path.getURL()));
 
-            log.warning(dbgId() + msg);
+            log.log(Level.WARNING, "{0}{1}", new Object[]{dbgId(), msg});
             error(msg);
 
             return BooleanValue.FALSE;
@@ -5031,7 +5031,7 @@ public class Env {
 
    void executePage(Path path) {
       if (log.isLoggable(Level.FINEST)) {
-         log.finest(this + " execute " + path);
+         log.log(Level.FINEST, "{0} execute {1}", new Object[]{this, path});
       }
 
       try {
@@ -5800,7 +5800,7 @@ public class Env {
     */
    public Value stub(String msg) {
       if (log.isLoggable(Level.FINE)) {
-         log.fine(getLocation().getMessagePrefix() + msg);
+         log.log(Level.FINE, "{0}{1}", new Object[]{getLocation().getMessagePrefix(), msg});
       }
 
       return NullValue.NULL;
@@ -5854,9 +5854,7 @@ public class Env {
     * Sets an error handler
     */
    public void setErrorHandler(int mask, Callable fun) {
-      for (int i = 0; i < _errorHandlers.length; i++) {
-         _prevErrorHandlers[i] = _errorHandlers[i];
-      }
+      System.arraycopy(_errorHandlers, 0, _prevErrorHandlers, 0, _errorHandlers.length);
 
       if ((mask & E_ERROR) != 0) {
          _errorHandlers[B_ERROR] = fun;
@@ -5899,9 +5897,7 @@ public class Env {
     * Sets an error handler
     */
    public void restoreErrorHandler() {
-      for (int i = 0; i < _errorHandlers.length; i++) {
-         _errorHandlers[i] = _prevErrorHandlers[i];
-      }
+      System.arraycopy(_prevErrorHandlers, 0, _errorHandlers, 0, _errorHandlers.length);
    }
 
    /**
@@ -5964,7 +5960,7 @@ public class Env {
 
       if ((errorMask & mask) != 0) {
          if (log.isLoggable(Level.FINE)) {
-            log.fine(this + " " + loc + msg);
+            log.log(Level.FINE, "{0} {1}{2}", new Object[]{this, loc, msg});
          }
       }
 
@@ -6404,6 +6400,7 @@ public class Env {
    return retValue;
    }
     */
+   @Override
    public String toString() {
       return "Env[]";
    }
@@ -6489,7 +6486,7 @@ public class Env {
       _quercus.completeEnv(this);
 
       if (_duplex != null) {
-         log.fine(this + " skipping close for duplex mode");
+         log.log(Level.FINE, "{0} skipping close for duplex mode", this);
          return;
       }
 

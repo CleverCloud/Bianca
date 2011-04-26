@@ -28,8 +28,6 @@
  */
 package com.caucho.quercus.lib.regexp;
 
-import com.caucho.quercus.env.StringValue;
-
 class PeekString extends PeekStream {
 
    CharSequence _string;

@@ -35,14 +35,11 @@ import com.caucho.quercus.lib.regexp.RegexpModule;
 import com.caucho.quercus.lib.regexp.Regexp;
 import com.caucho.quercus.expr.Expr;
 
-import java.util.logging.*;
-
 /**
  * Code for marshaling (PHP to Java) and unmarshaling (Java to PHP) arguments.
  */
 public class RegexpMarshal extends StringMarshal {
 
-   private static final Logger log = Logger.getLogger(RegexpModule.class.getName());
    public static final RegexpMarshal MARSHAL = new RegexpMarshal();
 
    @Override

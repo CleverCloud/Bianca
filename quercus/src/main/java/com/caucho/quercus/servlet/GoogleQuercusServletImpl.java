@@ -75,6 +75,7 @@ public class GoogleQuercusServletImpl extends QuercusServletImpl {
       return this;
    }
 
+   @Override
    protected WriteStream openWrite(HttpServletResponse response)
            throws IOException {
       WriteStream ws;
@@ -134,6 +135,7 @@ public class GoogleQuercusServletImpl extends QuercusServletImpl {
    /**
     * Service.
     */
+   @Override
    public void service(HttpServletRequest request,
            HttpServletResponse response)
            throws ServletException, IOException {

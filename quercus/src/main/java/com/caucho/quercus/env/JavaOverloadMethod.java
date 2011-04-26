@@ -64,7 +64,7 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
     * Returns an overloaded java method.
     */
    @Override
-   public AbstractJavaMethod overload(AbstractJavaMethod fun) {
+   public final AbstractJavaMethod overload(AbstractJavaMethod fun) {
       if (fun.getHasRestArgs()) {
          int len = fun.getMinArgLength();
 

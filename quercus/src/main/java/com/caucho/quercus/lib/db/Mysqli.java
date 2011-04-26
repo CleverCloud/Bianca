@@ -771,7 +771,7 @@ public class Mysqli extends JdbcConnectionResource {
       setResultResource(null);
 
       if (log.isLoggable(Level.FINE)) {
-         log.fine("mysql_query(" + sql + ")");
+         log.log(Level.FINE, "mysql_query({0})", sql);
       }
 
       try {

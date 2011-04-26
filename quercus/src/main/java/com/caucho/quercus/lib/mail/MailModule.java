@@ -188,7 +188,7 @@ public class MailModule extends AbstractQuercusModule {
 
          smtp.sendMessage(msg, addr);
 
-         log.fine("quercus-mail: sent mail to " + to);
+         log.log(Level.FINE, "quercus-mail: sent mail to {0}", to);
 
          return true;
       } catch (RuntimeException e) {

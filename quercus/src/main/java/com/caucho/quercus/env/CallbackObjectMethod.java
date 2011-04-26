@@ -28,7 +28,6 @@
  */
 package com.caucho.quercus.env;
 
-import com.caucho.util.L10N;
 import com.caucho.vfs.WriteStream;
 
 import java.io.IOException;
@@ -39,7 +38,6 @@ import java.util.IdentityHashMap;
  */
 public class CallbackObjectMethod extends Callback {
 
-   private static final L10N L = new L10N(CallbackObjectMethod.class);
    private final Value _obj;
    private final StringValue _methodName;
    private final int _hash;
@@ -153,12 +151,5 @@ public class CallbackObjectMethod extends Callback {
    public boolean isInternal(Env env) {
       // return _fun instanceof JavaInvoker;
       return false;
-   }
-
-   private Value error(Env env) {
-      env.warning(L.l("{0}::{1}() is an invalid callback method",
-              _obj.getClassName(), _methodName));
-
-      return NullValue.NULL;
    }
 }
