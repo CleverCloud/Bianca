@@ -424,7 +424,7 @@ public class GettextModule
    Value []args,
    String charset)
    {
-   StringValue sb = env.createBinaryBuilder();
+   StringValue sb = new StringBuilderValue();
 
    byte []bytes = null;
 

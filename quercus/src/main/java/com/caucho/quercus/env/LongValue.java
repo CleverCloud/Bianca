@@ -467,14 +467,6 @@ public class LongValue extends NumberValue {
    }
 
    /**
-    * Append to a binary builder.
-    */
-   @Override
-   public StringValue appendTo(BinaryBuilderValue sb) {
-      return sb.append(_value);
-   }
-
-   /**
     * Append to a string builder.
     */
    @Override

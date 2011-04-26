@@ -284,7 +284,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
    @Override
    public void write(byte[] buffer, int offset, int length)
            throws IOException {
-      StringValue bb = _env.createBinaryBuilder(buffer, offset, length);
+      StringValue bb = new StringBuilderValue(buffer, offset, length);
 
       Value output;
 

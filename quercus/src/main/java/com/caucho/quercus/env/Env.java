@@ -616,20 +616,6 @@ public class Env {
       return encoding;
    }
 
-   /**
-    * Creates a binary builder.
-    */
-   public StringValue createBinaryBuilder(byte[] buffer, int offset, int length) {
-      return new StringBuilderValue(buffer, offset, length);
-   }
-
-   /**
-    * Creates a binary builder.
-    */
-   public StringValue createBinaryBuilder(byte[] buffer) {
-      return new StringBuilderValue(buffer, 0, buffer.length);
-   }
-
    public TimeZone getDefaultTimeZone() {
       if (_defaultTimeZone != null) {
          return _defaultTimeZone;

@@ -127,8 +127,6 @@ public class MarshalFactory {
          marshal = PathMarshal.MARSHAL;
       } else if (StringValue.class.equals(argType)) {
          marshal = StringValueMarshal.MARSHAL;
-      } else if (BinaryBuilderValue.class.equals(argType)) {
-         marshal = StringValueMarshal.MARSHAL;
       } else if (InputStream.class.equals(argType)) {
          marshal = InputStreamMarshal.MARSHAL;
       } else if (BinaryInput.class.equals(argType)) {

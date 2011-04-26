@@ -558,14 +558,6 @@ public class NullValue extends Value
    }
 
    /**
-    * Append to a binary builder.
-    */
-   @Override
-   public StringValue appendTo(BinaryBuilderValue sb) {
-      return sb;
-   }
-
-   /**
     * Append to a unicode builder.
     */
    @Override

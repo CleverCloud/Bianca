@@ -58,7 +58,7 @@ abstract public class StringValue
         implements CharSequence, ByteAppendable {
 
    public static final StringValue EMPTY = new ConstStringValue("");
-   protected static final int MIN_LENGTH = 32;
+   protected static final int MIN_LENGTH = 128;
    protected static final int IS_STRING = 0;
    protected static final int IS_LONG = 1;
    protected static final int IS_DOUBLE = 2;
@@ -313,6 +313,10 @@ abstract public class StringValue
          return Marshal.COST_TO_CHAR_ARRAY + 30;
       } else if (valueType.isNumberCmp()) {
          return Marshal.COST_TO_CHAR_ARRAY + 50;
+      } else if (isLongConvertible()) {
+         return Marshal.COST_NUMERIC_LOSSLESS;
+      } else if (isDoubleConvertible()) {
+         return Marshal.COST_NUMERIC_LOSSY;
       } else {
          return Marshal.COST_STRING_TO_BYTE;
       }

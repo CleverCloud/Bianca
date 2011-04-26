@@ -569,14 +569,6 @@ public class Var extends Value
    }
 
    /**
-    * Append to a binary builder.
-    */
-   @Override
-   public StringValue appendTo(BinaryBuilderValue sb) {
-      return _value.appendTo(sb);
-   }
-
-   /**
     * Append to a string builder.
     */
    @Override
