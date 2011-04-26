@@ -332,7 +332,7 @@ public class MysqlModule extends AbstractQuercusModule {
    public static StringValue mysql_escape_string(Env env, Value val) {
       StringValue unescapedString = val.toStringValue();
 
-      StringValue sb = unescapedString.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       int len = unescapedString.length();
 

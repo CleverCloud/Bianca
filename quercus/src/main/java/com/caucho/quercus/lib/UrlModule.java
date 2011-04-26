@@ -179,17 +179,17 @@ public class UrlModule
          }
 
          if (url.getQuery() != null) {
-            request.append("?" + url.getQuery());
+            request.append("?").append(url.getQuery());
          }
 
          if (url.getRef() != null) {
-            request.append("#" + url.getRef());
+            request.append("#").append(url.getRef());
          }
 
          request.append(" HTTP/1.0\r\n");
 
          if (url.getHost() != null) {
-            request.append("Host: " + url.getHost() + "\r\n");
+            request.append("Host: ").append(url.getHost()).append("\r\n");
          }
 
          request.append("\r\n");
@@ -416,7 +416,7 @@ public class UrlModule
    private static StringValue makeNewPath(StringValue oldPath,
            Value key,
            StringValue numeric_prefix) {
-      StringValue path = oldPath.createStringBuilder();
+      StringValue path = new StringBuilderValue();
 
       if (oldPath.length() != 0) {
          path.append(oldPath);
@@ -818,7 +818,7 @@ public class UrlModule
     * Gets the magic quotes value.
     */
    public static StringValue urlencode(StringValue str) {
-      StringValue sb = str.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       urlencode(sb, str);
 

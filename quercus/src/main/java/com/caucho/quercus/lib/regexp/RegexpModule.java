@@ -502,7 +502,7 @@ public class RegexpModule
          return BooleanValue.FALSE;
       }
 
-      StringValue empty = subject.EMPTY;
+      StringValue empty = StringValue.EMPTY;
 
       RegexpState regexpState = RegexpState.create(env, regexp, subject);
 
@@ -681,7 +681,7 @@ public class RegexpModule
 
       ArrayValue[] matchList = new ArrayValue[groupCount + 1];
 
-      StringValue emptyStr = subject.EMPTY;
+      StringValue emptyStr = StringValue.EMPTY;
 
       for (int j = 0; j < groupCount; j++) {
          ArrayValue values = new ArrayValueImpl();
@@ -762,7 +762,7 @@ public class RegexpModule
          return LongValue.ZERO;
       }
 
-      StringValue empty = subject.EMPTY;
+      StringValue empty = StringValue.EMPTY;
 
       int count = 0;
 
@@ -838,7 +838,7 @@ public class RegexpModule
     */
    public static StringValue preg_quote(StringValue string,
            @Optional StringValue delim) {
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       boolean[] extra = null;
 
@@ -1113,7 +1113,7 @@ public class RegexpModule
            long limit,
            Value countV)
            throws IllegalRegexpException {
-      StringValue empty = subject.EMPTY;
+      StringValue empty = StringValue.EMPTY;
 
       long numberOfMatches = 0;
 
@@ -1125,7 +1125,7 @@ public class RegexpModule
 
       regexpState.setSubject(env, subject);
 
-      StringValue result = subject.createStringBuilder();
+      StringValue result = new StringBuilderValue();
       int tail = 0;
 
       while (regexpState.find() && numberOfMatches < limit) {
@@ -1327,7 +1327,7 @@ public class RegexpModule
          limit = LONG_MAX;
       }
 
-      StringValue result = subject.createStringBuilder();
+      StringValue result = new StringBuilderValue();
 
       int tail = 0;
       boolean isMatched = false;
@@ -1351,7 +1351,7 @@ public class RegexpModule
          // if isEval then append replacement evaluated as PHP code
          // else append replacement string
          if (isEval) {
-            StringValue evalString = subject.createStringBuilder();
+            StringValue evalString = new StringBuilderValue();
 
             try {
                for (int i = 0; i < replacementLen; i++) {
@@ -1723,7 +1723,7 @@ public class RegexpModule
     * Makes a regexp for a case-insensitive match.
     */
    public static StringValue sql_regcase(StringValue string) {
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       int len = string.length();
       for (int i = 0; i < len; i++) {
@@ -1878,7 +1878,7 @@ public class RegexpModule
            StringValue str,
            String startDelim,
            String endDelim) {
-      StringValue sb = str.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       sb = sb.appendBytes(startDelim);
       sb = sb.append(str);
@@ -1981,7 +1981,7 @@ public class RegexpModule
            boolean isComments) {
       int len = regexp.length();
 
-      StringValue sb = regexp.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
       char quote = 0;
 
       for (int i = 0; i < len; i++) {

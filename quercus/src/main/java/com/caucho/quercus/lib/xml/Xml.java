@@ -28,7 +28,6 @@
  */
 package com.caucho.quercus.lib.xml;
 
-import com.caucho.quercus.QuercusException;
 import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.annotation.Reference;
 import com.caucho.quercus.env.*;
@@ -41,7 +40,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -337,7 +335,7 @@ public class Xml {
            @Optional("true") boolean isFinal)
            throws Exception {
       if (_xmlString == null) {
-         _xmlString = data.createStringBuilder();
+         _xmlString = new StringBuilderValue();
       }
 
       _xmlString.append(data);
@@ -493,6 +491,7 @@ public class Xml {
       }
    }
 
+   @Override
    public String toString() {
       return "Xml[]";
    }
@@ -529,6 +528,7 @@ public class Xml {
          _indexArray = indexArray;
       }
 
+      @Override
       public void setDocumentLocator(Locator locator) {
          _locator = locator;
       }
@@ -573,6 +573,7 @@ public class Xml {
          return result;
       }
 
+      @Override
       public void endDocument()
               throws SAXException {
          for (StringValue sv : _indexArrayKeys) {
@@ -580,6 +581,7 @@ public class Xml {
          }
       }
 
+      @Override
       public void startElement(String namespaceURI,
               String lName,
               String qName,
@@ -615,6 +617,7 @@ public class Xml {
          _isOutside = false;
       }
 
+      @Override
       public void endElement(String namespaceURI,
               String sName,
               String qName)
@@ -662,6 +665,7 @@ public class Xml {
          _indexArrayHashMap.put(key, indexArray);
       }
 
+      @Override
       public void characters(char[] ch,
               int start,
               int length)
@@ -703,6 +707,7 @@ public class Xml {
          _env = env;
       }
 
+      @Override
       public void setDocumentLocator(Locator locator) {
          _locator = locator;
       }
@@ -732,6 +737,7 @@ public class Xml {
        * @param attrs
        * @throws SAXException
        */
+      @Override
       public void startElement(String namespaceURI,
               String lName,
               String qName,
@@ -784,7 +790,7 @@ public class Xml {
                _startElementHandler.call(_env, args);
             } else {
                if (log.isLoggable(Level.FINER)) {
-                  log.finer(this + " startElement " + qName);
+                  log.log(Level.FINER, "{0} startElement {1}", new Object[]{this, qName});
                }
             }
          } catch (Exception t) {
@@ -801,6 +807,7 @@ public class Xml {
        * @param qName
        * @throws SAXException
        */
+      @Override
       public void endElement(String namespaceURI,
               String sName,
               String qName)
@@ -818,7 +825,7 @@ public class Xml {
                _endElementHandler.call(_env, _parser, _env.createString(eName));
             } else {
                if (log.isLoggable(Level.FINER)) {
-                  log.finer(this + " endElement " + sName);
+                  log.log(Level.FINER, "{0} endElement {1}", new Object[]{this, sName});
                }
             }
          } catch (Exception t) {
@@ -835,6 +842,7 @@ public class Xml {
        * @param length
        * @throws SAXException
        */
+      @Override
       public void characters(char[] buf,
               int start,
               int length)
@@ -850,7 +858,7 @@ public class Xml {
                _defaultHandler.call(_env, _parser, value);
             } else {
                if (log.isLoggable(Level.FINER)) {
-                  log.finer(this + " characters '" + value + "'");
+                  log.log(Level.FINER, "{0} characters ''{1}''", new Object[]{this, value});
                }
             }
          } catch (Exception t) {
@@ -865,6 +873,7 @@ public class Xml {
        * @param data
        * @throws SAXException
        */
+      @Override
       public void processingInstruction(String target,
               String data)
               throws SAXException {
@@ -875,7 +884,7 @@ public class Xml {
                        _env.createString(data));
             } else {
                if (log.isLoggable(Level.FINER)) {
-                  log.finer(this + " processingInstruction " + target);
+                  log.log(Level.FINER, "{0} processingInstruction {1}", new Object[]{this, target});
                }
             }
          } catch (Exception t) {
@@ -890,6 +899,7 @@ public class Xml {
        * @param uri
        * @throws SAXException
        */
+      @Override
       public void startPrefixMapping(String prefix,
               String uri)
               throws SAXException {
@@ -901,7 +911,7 @@ public class Xml {
                        _env.createString(uri));
             } else {
                if (log.isLoggable(Level.FINER)) {
-                  log.finer(this + " startPrefixMapping " + prefix + " " + uri);
+                  log.log(Level.FINER, "{0} startPrefixMapping {1} {2}", new Object[]{this, prefix, uri});
                }
             }
          } catch (Exception t) {
@@ -916,6 +926,7 @@ public class Xml {
        * @param prefix
        * @throws SAXException
        */
+      @Override
       public void endPrefixMapping(String prefix)
               throws SAXException {
          try {
@@ -923,7 +934,7 @@ public class Xml {
                _endNamespaceDeclHandler.call(_env, _env.createString(prefix));
             } else {
                if (log.isLoggable(Level.FINER)) {
-                  log.finer(this + " endPrefixMapping");
+                  log.log(Level.FINER, "{0} endPrefixMapping", this);
                }
             }
          } catch (Exception t) {
@@ -932,6 +943,7 @@ public class Xml {
          }
       }
 
+      @Override
       public void notationDecl(String name,
               String publicId,
               String systemId)
@@ -946,7 +958,7 @@ public class Xml {
                        _env.createString(publicId));
             } else {
                if (log.isLoggable(Level.FINER)) {
-                  log.finer(this + " notation " + name);
+                  log.log(Level.FINER, "{0} notation {1}", new Object[]{this, name});
                }
             }
          } catch (Exception t) {
@@ -983,7 +995,7 @@ public class Xml {
                _unparsedEntityDeclHandler.call(_env, args);
             } else {
                if (log.isLoggable(Level.FINER)) {
-                  log.finer(this + " unparsedEntity " + name);
+                  log.log(Level.FINER, "{0} unparsedEntity {1}", new Object[]{this, name});
                }
             }
          } catch (Exception t) {

@@ -34,7 +34,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.caucho.quercus.QuercusModuleException;
@@ -49,8 +48,6 @@ import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
-import com.caucho.vfs.Encoding;
-import com.caucho.vfs.i18n.EncodingWriter;
 
 /**
  * PHP functions implementing html code.
@@ -152,7 +149,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional("ENT_COMPAT") int quoteStyle) {
       int len = str.length();
 
-      StringValue sb = str.createStringBuilder(len * 4 / 5);
+      StringValue sb = new StringBuilderValue(len * 4 / 5);
 
       for (int i = 0; i < len; i++) {
          char ch = str.charAt(i);
@@ -250,7 +247,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional String charset) {
       int len = string.length();
 
-      StringValue sb = string.createStringBuilder(len * 5 / 4);
+      StringValue sb = new StringBuilderValue(len * 5 / 4);
 
       for (int i = 0; i < len; i++) {
          char ch = string.charAt(i);
@@ -315,7 +312,7 @@ public class HtmlModule extends AbstractQuercusModule {
          reader = new StringReader(string.toString());
       }
 
-      StringValue sb = string.createStringBuilder(string.length() * 5 / 4);
+      StringValue sb = new StringBuilderValue(string.length() * 5 / 4);
 
       int ch;
       try {

@@ -377,25 +377,6 @@ public class LargeStringBuilderValue
       return string;
    }
 
-   //
-   // append code
-   //
-   /**
-    * Creates a string builder of the same type.
-    */
-   @Override
-   public StringValue createStringBuilder() {
-      return new StringBuilderValue();
-   }
-
-   /**
-    * Creates a string builder of the same type.
-    */
-   @Override
-   public StringValue createStringBuilder(int length) {
-      return new StringBuilderValue(length);
-   }
-
    /**
     * Converts to a string builder
     */

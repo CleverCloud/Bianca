@@ -301,12 +301,12 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
    }
 
    protected void setText(StringValue text) {
-      _text = text.createStringBuilder().append(text);
+      _text = new StringBuilderValue().append(text);
    }
 
    protected void addText(StringValue text) {
       if (_text == null) {
-         _text = text.createStringBuilder();
+         _text = new StringBuilderValue();
       }
 
       _text = _text.append(text);

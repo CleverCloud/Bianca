@@ -64,16 +64,6 @@ abstract public class StringValue
    protected static final int IS_DOUBLE = 2;
 
    /**
-    * Creates a string builder of the same type.
-    */
-   abstract public StringValue createStringBuilder();
-
-   /**
-    * Creates a string builder of the same type.
-    */
-   abstract public StringValue createStringBuilder(int length);
-
-   /**
     * Creates the string.
     */
    public static Value create(String value) {
@@ -123,7 +113,7 @@ abstract public class StringValue
     */
    public StringValue create(Env env, StringValue unicodeStr, String charset) {
       try {
-         StringValue sb = createStringBuilder();
+         StringValue sb = new StringBuilderValue();
 
          byte[] bytes = unicodeStr.toString().getBytes(charset);
 
@@ -950,7 +940,7 @@ abstract public class StringValue
       if (index < 0 || len <= index) {
          return this;
       } else {
-         return (createStringBuilder().append(this, 0, (int) index).append(value).append(this, (int) (index + 1), length()));
+         return (new StringBuilderValue().append(this, 0, (int) index).append(value).append(this, (int) (index + 1), length()));
       }
    }
 
@@ -962,7 +952,7 @@ abstract public class StringValue
       // php/03i6
       if (length() == 0) {
          if (incr == 1) {
-            return createStringBuilder().append("1");
+            return new StringBuilderValue().append("1");
          } else {
             return LongValue.MINUS_ONE;
          }
@@ -976,26 +966,26 @@ abstract public class StringValue
 
             if (ch == 'z') {
                if (i == 0) {
-                  return createStringBuilder().append("aa").append(tail);
+                  return new StringBuilderValue().append("aa").append(tail);
                } else {
                   tail.insert(0, 'a');
                }
             } else if ('a' <= ch && ch < 'z') {
-               return (createStringBuilder().append(this, 0, i).append((char) (ch + 1)).append(tail));
+               return (new StringBuilderValue().append(this, 0, i).append((char) (ch + 1)).append(tail));
             } else if (ch == 'Z') {
                if (i == 0) {
-                  return createStringBuilder().append("AA").append(tail);
+                  return new StringBuilderValue().append("AA").append(tail);
                } else {
                   tail.insert(0, 'A');
                }
             } else if ('A' <= ch && ch < 'Z') {
-               return (createStringBuilder().append(this, 0, i).append((char) (ch + 1)).append(tail));
+               return (new StringBuilderValue().append(this, 0, i).append((char) (ch + 1)).append(tail));
             } else if ('0' <= ch && ch <= '9' && i == length() - 1) {
                return LongValue.create(toLong() + incr);
             }
          }
 
-         return createStringBuilder().append(tail.toString());
+         return new StringBuilderValue().append(tail.toString());
       } else if (getValueType().isLongAdd()) {
          return LongValue.create(toLong() + incr);
       } else {
@@ -1036,7 +1026,7 @@ abstract public class StringValue
          StringValue rStr = (StringValue) rValue;
 
          int len = Math.min(length(), rValue.length());
-         StringValue sb = createStringBuilder();
+         StringValue sb = new StringBuilderValue();
 
          for (int i = 0; i < len; i++) {
             char l = charAt(i);
@@ -1060,7 +1050,7 @@ abstract public class StringValue
          StringValue rStr = (StringValue) rValue;
 
          int len = Math.min(length(), rValue.length());
-         StringValue sb = createStringBuilder();
+         StringValue sb = new StringBuilderValue();
 
          for (int i = 0; i < len; i++) {
             char l = charAt(i);
@@ -1090,7 +1080,7 @@ abstract public class StringValue
          StringValue rStr = rValue.toStringValue();
 
          int len = Math.min(length(), rValue.length());
-         StringValue sb = createStringBuilder();
+         StringValue sb = new StringBuilderValue();
 
          for (int i = 0; i < len; i++) {
             char l = charAt(i);
@@ -2189,7 +2179,7 @@ abstract public class StringValue
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return createStringBuilder().append(this);
+      return new StringBuilderValue().append(this);
    }
 
    /**

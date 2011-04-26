@@ -90,6 +90,7 @@ public class XmlModule extends AbstractQuercusModule {
    public static final int XML_ERROR_FINISHED = 36;
    public static final int XML_ERROR_SUSPEND_PE = 37;
 
+   @Override
    public String[] getLoadedExtensions() {
       return new String[]{"xml"};
    }
@@ -98,7 +99,7 @@ public class XmlModule extends AbstractQuercusModule {
     * Converts from iso-8859-1 to utf8
     */
    public static Value utf8_encode(Env env, StringValue str) {
-      StringValue sb = str.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       int len = str.length();
       for (int i = 0; i < len; i++) {

@@ -184,7 +184,7 @@ public class StringModule extends AbstractQuercusModule {
 
       int length = source.length();
 
-      StringValue sb = source.createStringBuilder(length * 5 / 4);
+      StringValue sb = new StringBuilderValue(length * 5 / 4);
 
       for (int i = 0; i < length; i++) {
          char ch = source.charAt(i);
@@ -289,7 +289,7 @@ public class StringModule extends AbstractQuercusModule {
     * @return the escaped string
     */
    public static StringValue addslashes(StringValue source) {
-      StringValue sb = source.createStringBuilder(source.length() * 5 / 4);
+      StringValue sb = new StringBuilderValue(source.length() * 5 / 4);
 
       int length = source.length();
       for (int i = 0; i < length; i++) {
@@ -491,7 +491,7 @@ public class StringModule extends AbstractQuercusModule {
          return BooleanValue.FALSE;
       }
 
-      StringValue result = source.createStringBuilder();
+      StringValue result = new StringBuilderValue();
 
       int i = 0;
       int length = source.length();
@@ -581,7 +581,7 @@ public class StringModule extends AbstractQuercusModule {
          }
 
          case 3: {
-            StringValue sb = data.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
 
             for (int i = 0; i < count.length; i++) {
                if (count[i] > 0) {
@@ -593,7 +593,7 @@ public class StringModule extends AbstractQuercusModule {
          }
 
          case 4: {
-            StringValue sb = data.createStringBuilder();
+            StringValue sb = new StringBuilderValue();
 
             for (int i = 0; i < count.length; i++) {
                if (count[i] == 0) {
@@ -735,7 +735,7 @@ public class StringModule extends AbstractQuercusModule {
          return NullValue.NULL;
       }
 
-      StringValue sb = glue.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
       boolean isFirst = true;
 
       Iterator<Value> iter = pieces.getValueIterator(env);
@@ -779,7 +779,7 @@ public class StringModule extends AbstractQuercusModule {
          return string;
       }
 
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       sb = sb.append(Character.toLowerCase(string.charAt(0)));
       sb = sb.append(string, 1, string.length());
@@ -1622,7 +1622,7 @@ public class StringModule extends AbstractQuercusModule {
    public static Value quotemeta(StringValue string) {
       int len = string.length();
 
-      StringValue sb = string.createStringBuilder(len * 5 / 4);
+      StringValue sb = new StringBuilderValue(len * 5 / 4);
 
       for (int i = 0; i < len; i++) {
          char ch = string.charAt(i);
@@ -1980,7 +1980,7 @@ public class StringModule extends AbstractQuercusModule {
          return BooleanValue.FALSE;
       }
 
-      StringValue result = string.createStringBuilder();
+      StringValue result = new StringBuilderValue();
 
       int count = 0;
       char lastCode = 0;
@@ -2022,7 +2022,7 @@ public class StringModule extends AbstractQuercusModule {
    public static Value sprintf(Env env, StringValue format, Value[] args) {
       ArrayList<PrintfSegment> segments = parsePrintfFormat(env, format);
 
-      StringValue sb = format.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       for (PrintfSegment segment : segments) {
          if (!segment.apply(env, sb, args)) {
@@ -2881,7 +2881,7 @@ public class StringModule extends AbstractQuercusModule {
          maxLen = Integer.MAX_VALUE;
       }
 
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       for (; sIndex < strlen && maxLen-- > 0; sIndex++) {
          char ch = string.charAt(sIndex);
@@ -3158,7 +3158,7 @@ public class StringModule extends AbstractQuercusModule {
 
       int padStringLen = pad.length();
 
-      StringValue sb = string.createStringBuilder(string.length() + padLen);
+      StringValue sb = new StringBuilderValue(string.length() + padLen);
 
       for (int i = 0; i < leftPad; i++) {
          sb.append(pad.charAt(i % padStringLen));
@@ -3180,7 +3180,7 @@ public class StringModule extends AbstractQuercusModule {
     * @param count number of times to repeat
     */
    public static Value str_repeat(StringValue string, int count) {
-      StringValue sb = string.createStringBuilder(count * string.length());
+      StringValue sb = new StringBuilderValue(count * string.length());
 
       for (int i = 0; i < count; i++) {
          sb = sb.append(string);
@@ -3364,7 +3364,7 @@ public class StringModule extends AbstractQuercusModule {
 
       while (head <= (next = indexOf(subject, search, head, isInsensitive))) {
          if (result == null) {
-            result = subject.createStringBuilder();
+            result = new StringBuilderValue();
          }
 
          result = result.append(subject, head, next);
@@ -3439,7 +3439,7 @@ public class StringModule extends AbstractQuercusModule {
          return NullValue.NULL;
       }
 
-      StringValue sb = string.createStringBuilder(string.length());
+      StringValue sb = new StringBuilderValue(string.length());
 
       int len = string.length();
       for (int i = 0; i < len; i++) {
@@ -3737,7 +3737,7 @@ public class StringModule extends AbstractQuercusModule {
     */
    public static StringValue strip_tags(StringValue string,
            @Optional Value allowTags) {
-      StringValue result = string.createStringBuilder(string.length());
+      StringValue result = new StringBuilderValue(string.length());
 
       HashSet<StringValue> allowedTagMap = null;
 
@@ -4003,7 +4003,7 @@ public class StringModule extends AbstractQuercusModule {
     * @param string the string to clean
     */
    public static StringValue stripslashes(StringValue string) {
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
       int len = string.length();
 
       for (int i = 0; i < len; i++) {
@@ -4334,7 +4334,7 @@ public class StringModule extends AbstractQuercusModule {
     *
     */
    public static Value strrev(StringValue string) {
-      StringValue sb = string.createStringBuilder(string.length());
+      StringValue sb = new StringBuilderValue(string.length());
 
       for (int i = string.length() - 1; i >= 0; i--) {
          sb.append(string.charAt(i));
@@ -4703,7 +4703,7 @@ public class StringModule extends AbstractQuercusModule {
          map[from.charAt(i)] = to.charAt(i);
       }
 
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       len = string.length();
       for (int i = 0; i < len; i++) {
@@ -4750,7 +4750,7 @@ public class StringModule extends AbstractQuercusModule {
          charSet[fromList[i].charAt(0)] = true;
       }
 
-      StringValue result = string.createStringBuilder();
+      StringValue result = new StringBuilderValue();
       int len = string.length();
       int head = 0;
 
@@ -4839,7 +4839,7 @@ public class StringModule extends AbstractQuercusModule {
       if (lenV.isDefault()) {
          return string.substring(start);
       } else if (len == 0) {
-         return string.EMPTY;
+         return StringValue.EMPTY;
       } else {
          int end;
 
@@ -5033,7 +5033,7 @@ public class StringModule extends AbstractQuercusModule {
       }
 
 
-      StringValue result = string.createStringBuilder();
+      StringValue result = new StringBuilderValue();
 
       result = result.append(string.substring(0, start));
       result = result.append(replacement);
@@ -5099,7 +5099,7 @@ public class StringModule extends AbstractQuercusModule {
          return string;
       }
 
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringBuilderValue();
 
       sb = sb.append(Character.toUpperCase(string.charAt(0)));
       sb = sb.append(string, 1, string.length());
@@ -6156,7 +6156,7 @@ public class StringModule extends AbstractQuercusModule {
               int sIndex,
               Value var,
               boolean isReturnArray) {
-         StringValue sb = string.createStringBuilder();
+         StringValue sb = new StringBuilderValue();
 
          for (; sIndex < strlen; sIndex++) {
             char ch = string.charAt(sIndex);
@@ -6197,7 +6197,7 @@ public class StringModule extends AbstractQuercusModule {
               int sIndex,
               Value var,
               boolean isReturnArray) {
-         StringValue sb = string.createStringBuilder();
+         StringValue sb = new StringBuilderValue();
 
          for (; sIndex < strlen; sIndex++) {
             char ch = string.charAt(sIndex);
@@ -6518,7 +6518,7 @@ public class StringModule extends AbstractQuercusModule {
             return sIndex;
          }
 
-         StringValue sb = string.createStringBuilder();
+         StringValue sb = new StringBuilderValue();
 
          int maxLen = _maxLen;
 

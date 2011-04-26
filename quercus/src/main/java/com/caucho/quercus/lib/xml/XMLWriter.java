@@ -211,7 +211,7 @@ public class XMLWriter {
          endAttribute();
       }
 
-      if (_elementStack.size() == 0) {
+      if (_elementStack.isEmpty()) {
          return false;
       } else if (_state == WriterState.ELEMENT_HEADER) {
          popElement();
@@ -245,7 +245,7 @@ public class XMLWriter {
          endAttribute();
       }
 
-      if (_elementStack.size() == 0) {
+      if (_elementStack.isEmpty()) {
          return false;
       }
 
@@ -425,7 +425,7 @@ public class XMLWriter {
 
       _s.append("<").append(env, prefix).append(":").append(env, name);
 
-      StringValue endName = prefix.createStringBuilder();
+      StringValue endName = new StringBuilderValue();
       endName.append(prefix).append(":").append(name);
 
       _elementStack.add(endName);
