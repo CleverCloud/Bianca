@@ -44,13 +44,13 @@ import java.util.Iterator;
 @ClassImplementation
 public class ExceptionClass {
 
-   private static final StringValue MESSAGE = new ConstStringValue("message");
-   private static final StringValue FUNCTION = new ConstStringValue("function");
-   private static final StringValue FILE = new ConstStringValue("file");
-   private static final StringValue LINE = new ConstStringValue("line");
-   private static final StringValue CODE = new ConstStringValue("code");
-   private static final StringValue TRACE = new ConstStringValue("trace");
-   private static final StringValue JAVA_EXCEPTION = new ConstStringValue("__javaException");
+   private static final StringValue MESSAGE = new StringBuilderValue("message");
+   private static final StringValue FUNCTION = new StringBuilderValue("function");
+   private static final StringValue FILE = new StringBuilderValue("file");
+   private static final StringValue LINE = new StringBuilderValue("line");
+   private static final StringValue CODE = new StringBuilderValue("code");
+   private static final StringValue TRACE = new StringBuilderValue("trace");
+   private static final StringValue JAVA_EXCEPTION = new StringBuilderValue("__javaException");
 
    /**
     * Create a new exception API object.

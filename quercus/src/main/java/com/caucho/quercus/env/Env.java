@@ -125,14 +125,14 @@ public class Env {
    private static final int HTTP_SERVER_VARS = 15;
    private static final int HTTP_RAW_POST_DATA = 16;
    private static final IntMap SPECIAL_VARS = new IntMap();
-   private static final StringValue PHP_SELF_STRING = new ConstStringValue("PHP_SELF");
-   private static final StringValue UTF8_STRING = new ConstStringValue("utf-8");
-   private static final StringValue S_GET = new ConstStringValue("_GET");
-   private static final StringValue S_POST = new ConstStringValue("_POST");
-   private static final StringValue S_SESSION = new ConstStringValue("_SESSION");
-   private static final StringValue S_SERVER = new ConstStringValue("_SERVER");
-   private static final StringValue S_COOKIE = new ConstStringValue("_COOKIE");
-   private static final StringValue S_FILES = new ConstStringValue("_FILES");
+   private static final StringValue PHP_SELF_STRING = new StringBuilderValue("PHP_SELF");
+   private static final StringValue UTF8_STRING = new StringBuilderValue("utf-8");
+   private static final StringValue S_GET = new StringBuilderValue("_GET");
+   private static final StringValue S_POST = new StringBuilderValue("_POST");
+   private static final StringValue S_SESSION = new StringBuilderValue("_SESSION");
+   private static final StringValue S_SERVER = new StringBuilderValue("_SERVER");
+   private static final StringValue S_COOKIE = new StringBuilderValue("_COOKIE");
+   private static final StringValue S_FILES = new StringBuilderValue("_FILES");
    public static final Value[] EMPTY_VALUE = new Value[0];
    private static ThreadLocal<Env> _threadEnv = new ThreadLocal<Env>();
    private static final FreeList<AbstractFunction[]> _freeFunList = new FreeList<AbstractFunction[]>(256);
@@ -344,13 +344,13 @@ public class Env {
       addConstant("PHP_VERSION", OptionsModule.phpversion(this, null), true);
 
       // Define the constant string PHP_SAPI
-      addConstant("PHP_SAPI", new ConstStringValue(OptionsModule.php_sapi_name(this)), true);
+      addConstant("PHP_SAPI", new StringBuilderValue(OptionsModule.php_sapi_name(this)), true);
 
-      addConstant("PEAR_EXTENSION_DIR", new ConstStringValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_EXTENSION_DIR", new ConstStringValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_LIBDIR", new ConstStringValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_CONFIG_FILE_PATH", new ConstStringValue(getPwd() + "WEB-INF/"), true);
-      addConstant("PHP_CONFIG_FILE_SCAN_DIR", new ConstStringValue(getPwd() + "WEB-INF/"), true);
+      addConstant("PEAR_EXTENSION_DIR", new StringBuilderValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_EXTENSION_DIR", new StringBuilderValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_LIBDIR", new StringBuilderValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_CONFIG_FILE_PATH", new StringBuilderValue(getPwd() + "WEB-INF/"), true);
+      addConstant("PHP_CONFIG_FILE_SCAN_DIR", new StringBuilderValue(getPwd() + "WEB-INF/"), true);
 
       // c#0004403 - #27
       String _authHeader = request.getHeader("authorization");
@@ -359,8 +359,8 @@ public class Env {
          if (_authRequest[0].equals("Basic")) {
             // BASIC auth
             String[] _auth64 = Base64.decode(_authRequest[1]).split(":");
-            getGlobalVar("_SERVER").put(new ConstStringValue("PHP_AUTH_USER"), new ConstStringValue(_auth64[0]));
-            getGlobalVar("_SERVER").put(new ConstStringValue("PHP_AUTH_PW"), new ConstStringValue(_auth64[1]));
+            getGlobalVar("_SERVER").put(new StringBuilderValue("PHP_AUTH_USER"), new StringBuilderValue(_auth64[0]));
+            getGlobalVar("_SERVER").put(new StringBuilderValue("PHP_AUTH_PW"), new StringBuilderValue(_auth64[1]));
          }
       }
 

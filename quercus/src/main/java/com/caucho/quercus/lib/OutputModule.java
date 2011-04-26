@@ -52,7 +52,7 @@ public class OutputModule extends AbstractQuercusModule
    private static final L10N L = new L10N(OutputModule.class);
    private static final Logger log = Logger.getLogger(
            OutputModule.class.getName());
-   private static final StringValue HTTP_ACCEPT_ENCODING = new ConstStringValue("HTTP_ACCEPT_ENCODING");
+   private static final StringValue HTTP_ACCEPT_ENCODING = new StringBuilderValue("HTTP_ACCEPT_ENCODING");
    private static final IniDefinitions _iniDefinitions = new IniDefinitions();
 
    // ob_gzhandler related variables/types

@@ -167,7 +167,7 @@ public class StringBuilderValue
    }
 
    private void init(StringBuilderValue v) {
-      if (v._isCopy || v instanceof ConstStringValue) {
+      if (v._isCopy) {
          _buffer = new byte[v._buffer.length];
          System.arraycopy(v._buffer, 0, _buffer, 0, v._length);
          _length = v._length;

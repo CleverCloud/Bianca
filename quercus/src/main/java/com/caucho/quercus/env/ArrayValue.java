@@ -46,11 +46,11 @@ import java.util.logging.Logger;
 abstract public class ArrayValue extends Value {
 
    private static final Logger log = Logger.getLogger(ArrayValue.class.getName());
-   protected static final StringValue KEY = new ConstStringValue("key");
-   protected static final StringValue VALUE = new ConstStringValue("value");
+   protected static final StringValue KEY = new StringBuilderValue("key");
+   protected static final StringValue VALUE = new StringBuilderValue("value");
    public static final GetKey GET_KEY = new GetKey();
    public static final GetValue GET_VALUE = new GetValue();
-   public static final StringValue ARRAY = new ConstStringValue("Array");
+   public static final StringValue ARRAY = new StringBuilderValue("Array");
    private Entry _current;
 
    protected ArrayValue() {

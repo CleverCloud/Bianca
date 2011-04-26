@@ -41,7 +41,7 @@ public final class MethodIntern {
       StringValue internName = _internMap.get(name);
 
       if (internName == null) {
-         StringValue string = new CompiledConstStringValue(name);
+         StringValue string = new StringBuilderValue(name);
 
          internName = _internMap.putIfAbsent(name, string);
 

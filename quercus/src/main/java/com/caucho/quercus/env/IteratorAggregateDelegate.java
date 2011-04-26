@@ -42,7 +42,7 @@ public class IteratorAggregateDelegate
         implements TraversableDelegate {
 
    private static final L10N L = new L10N(IteratorAggregateDelegate.class);
-   private static final StringBuilderValue GET_ITERATOR = new ConstStringValue("getIterator");
+   private static final StringBuilderValue GET_ITERATOR = new StringBuilderValue("getIterator");
    private static final IteratorDelegate _iteratorDelegate = new IteratorDelegate();
 
    @Override

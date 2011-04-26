@@ -68,13 +68,13 @@ public class ErrorModule extends AbstractQuercusModule {
    public static final int E_RECOVERABLE_ERROR = Env.E_RECOVERABLE_ERROR;
    public static final int E_DEPRECATED = Env.E_DEPRECATED;
    public static final int E_USER_DEPRECATED = Env.E_USER_DEPRECATED;
-   public static final StringValue ARGS = new ConstStringValue("args");
-   public static final StringValue CLASS = new ConstStringValue("class");
-   public static final StringValue FILE = new ConstStringValue("file");
-   public static final StringValue FUNCTION = new ConstStringValue("function");
-   public static final StringValue LINE = new ConstStringValue("line");
-   public static final StringValue TYPE = new ConstStringValue("type");
-   public static final StringValue OBJECT = new ConstStringValue("object");
+   public static final StringValue ARGS = new StringBuilderValue("args");
+   public static final StringValue CLASS = new StringBuilderValue("class");
+   public static final StringValue FILE = new StringBuilderValue("file");
+   public static final StringValue FUNCTION = new StringBuilderValue("function");
+   public static final StringValue LINE = new StringBuilderValue("line");
+   public static final StringValue TYPE = new StringBuilderValue("type");
+   public static final StringValue OBJECT = new StringBuilderValue("object");
 
    /**
     * Returns the default php.ini values.

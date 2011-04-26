@@ -42,22 +42,14 @@ import java.io.UnsupportedEncodingException;
  */
 public class WrappedStream implements BinaryInput, BinaryOutput {
 
-   private static final ConstStringValue STREAM_CLOSE = new ConstStringValue("stream_close");
-   private static final ConstStringValue STREAM_EOF = new ConstStringValue("stream_eof");
-   private static final ConstStringValue STREAM_FLUSH = new ConstStringValue("stream_flush");
-   private static final ConstStringValue STREAM_OPEN = new ConstStringValue("stream_open");
-   private static final ConstStringValue STREAM_READ = new ConstStringValue("stream_read");
-   private static final ConstStringValue STREAM_SEEK = new ConstStringValue("stream_seek");
-   private static final ConstStringValue STREAM_TELL = new ConstStringValue("stream_tell");
-   private static final ConstStringValue STREAM_WRITE = new ConstStringValue("stream_write");
-   private static final StringBuilderValue STREAM_CLOSE_U = new StringBuilderValue("stream_close");
-   private static final StringBuilderValue STREAM_EOF_U = new StringBuilderValue("stream_eof");
-   private static final StringBuilderValue STREAM_FLUSH_U = new StringBuilderValue("stream_flush");
-   private static final StringBuilderValue STREAM_OPEN_U = new StringBuilderValue("stream_open");
-   private static final StringBuilderValue STREAM_READ_U = new StringBuilderValue("stream_read");
-   private static final StringBuilderValue STREAM_SEEK_U = new StringBuilderValue("stream_seek");
-   private static final StringBuilderValue STREAM_TELL_U = new StringBuilderValue("stream_tell");
-   private static final StringBuilderValue STREAM_WRITE_U = new StringBuilderValue("stream_write");
+   private static final StringBuilderValue STREAM_CLOSE = new StringBuilderValue("stream_close");
+   private static final StringBuilderValue STREAM_EOF = new StringBuilderValue("stream_eof");
+   private static final StringBuilderValue STREAM_FLUSH = new StringBuilderValue("stream_flush");
+   private static final StringBuilderValue STREAM_OPEN = new StringBuilderValue("stream_open");
+   private static final StringBuilderValue STREAM_READ = new StringBuilderValue("stream_read");
+   private static final StringBuilderValue STREAM_SEEK = new StringBuilderValue("stream_seek");
+   private static final StringBuilderValue STREAM_TELL = new StringBuilderValue("stream_tell");
+   private static final StringBuilderValue STREAM_WRITE = new StringBuilderValue("stream_write");
    private byte[] printBuffer = new byte[1];
    private Env _env;
    private Value _wrapper;
@@ -87,7 +79,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
 
       _wrapper = qClass.callNew(_env, new Value[0]);
 
-      _wrapper.callMethod(_env, STREAM_OPEN_U,
+      _wrapper.callMethod(_env, STREAM_OPEN,
               path, mode, options, NullValue.NULL);
    }
 
@@ -140,7 +132,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
 
    @Override
    public void close() {
-      _wrapper.callMethod(_env, STREAM_CLOSE_U);
+      _wrapper.callMethod(_env, STREAM_CLOSE);
    }
 
    /**
@@ -156,7 +148,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
       } else {
          Value output;
 
-         output = _wrapper.callMethod(_env, STREAM_READ_U, LongValue.ONE);
+         output = _wrapper.callMethod(_env, STREAM_READ, LongValue.ONE);
 
          _buffer = (int) output.toLong();
 
@@ -179,7 +171,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
 
       Value output;
 
-      output = _wrapper.callMethod(_env, STREAM_READ_U,
+      output = _wrapper.callMethod(_env, STREAM_READ,
               LongValue.create(length));
 
       // XXX "0"?
@@ -204,7 +196,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
 
       Value output;
 
-      output = _wrapper.callMethod(_env, STREAM_READ_U,
+      output = _wrapper.callMethod(_env, STREAM_READ,
               LongValue.create(length));
 
       // XXX "0"?
@@ -250,7 +242,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
            throws IOException {
       Value output;
 
-      output = _wrapper.callMethod(_env, STREAM_READ_U,
+      output = _wrapper.callMethod(_env, STREAM_READ,
               LongValue.create(length));
 
       return output.toStringValue(_env);
@@ -288,7 +280,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
 
       Value output;
 
-      output = _wrapper.callMethod(_env, STREAM_WRITE_U, bb);
+      output = _wrapper.callMethod(_env, STREAM_WRITE, bb);
 
       _writeLength = (int) output.toLong();
    }
@@ -368,7 +360,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
     */
    @Override
    public boolean isEOF() {
-      return _wrapper.callMethod(_env, STREAM_EOF_U).toBoolean();
+      return _wrapper.callMethod(_env, STREAM_EOF).toBoolean();
    }
 
    /**
@@ -376,7 +368,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
     */
    @Override
    public long getPosition() {
-      return _wrapper.callMethod(_env, STREAM_TELL_U).toLong();
+      return _wrapper.callMethod(_env, STREAM_TELL).toLong();
    }
 
    /**
@@ -387,7 +379,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
       LongValue offsetValue = LongValue.create(offset);
       LongValue whenceValue = LongValue.create(SEEK_SET);
 
-      return _wrapper.callMethod(_env, STREAM_SEEK_U,
+      return _wrapper.callMethod(_env, STREAM_SEEK,
               offsetValue, whenceValue).toBoolean();
    }
 
@@ -396,7 +388,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
       LongValue offsetValue = LongValue.create(offset);
       LongValue whenceValue = LongValue.create(whence);
 
-      return _wrapper.callMethod(_env, STREAM_SEEK_U,
+      return _wrapper.callMethod(_env, STREAM_SEEK,
               offsetValue, whenceValue).toLong();
    }
 
@@ -405,7 +397,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
            throws IOException {
       boolean result;
 
-      result = _wrapper.callMethod(_env, STREAM_FLUSH_U).toBoolean();
+      result = _wrapper.callMethod(_env, STREAM_FLUSH).toBoolean();
 
       if (!result) {
          throw new IOException(); // Get around java.io.Flushable
@@ -414,7 +406,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
 
    @Override
    public Value stat() {
-      return _wrapper.callMethod(_env, STREAM_FLUSH_U);
+      return _wrapper.callMethod(_env, STREAM_FLUSH);
    }
 
    private class WrappedInputStream extends InputStream {
@@ -431,7 +423,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
       @Override
       public void write(int b)
               throws IOException {
-         _wrapper.callMethod(_env, STREAM_WRITE_U, LongValue.create(b));
+         _wrapper.callMethod(_env, STREAM_WRITE, LongValue.create(b));
       }
    }
 }

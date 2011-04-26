@@ -1755,8 +1755,7 @@ public class QuercusContext {
               || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
-         // TODO: i18n
-         return new ConstStringValue((String) obj);
+         return new StringBuilderValue((String) obj);
       } else {
          // TODO: unknown types, e.g. Character?
 

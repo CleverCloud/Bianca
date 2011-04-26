@@ -36,9 +36,9 @@ import com.caucho.quercus.QuercusException;
  */
 public class QuercusLanguageException extends QuercusException {
 
-   private static final StringValue FILE = new ConstStringValue("file");
-   private static final StringValue LINE = new ConstStringValue("line");
-   private static final StringValue MESSAGE = new ConstStringValue("message");
+   private static final StringValue FILE = new StringBuilderValue("file");
+   private static final StringValue LINE = new StringBuilderValue("line");
+   private static final StringValue MESSAGE = new StringBuilderValue("message");
    private Value _value;
 
    public QuercusLanguageException(Value value) {

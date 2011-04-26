@@ -57,7 +57,7 @@ abstract public class StringValue
         extends Value
         implements CharSequence, ByteAppendable {
 
-   public static final StringValue EMPTY = new ConstStringValue("");
+   public static final StringValue EMPTY = new StringBuilderValue("");
    protected static final int MIN_LENGTH = 128;
    protected static final int IS_STRING = 0;
    protected static final int IS_LONG = 1;
@@ -67,12 +67,10 @@ abstract public class StringValue
     * Creates the string.
     */
    public static Value create(String value) {
-      // TODO: needs updating for i18n, currently php5 only
-
       if (value == null) {
          return NullValue.NULL;
       } else {
-         return new ConstStringValue(value);
+         return new StringBuilderValue(value);
       }
    }
 
@@ -80,9 +78,7 @@ abstract public class StringValue
     * Creates the string.
     */
    public static StringValue create(char value) {
-      // TODO: needs updating for i18n, currently php5 only
-
-      return ConstStringValue.create(value);
+      return StringBuilderValue.create(value);
 
       /*
       if (value < CHAR_STRINGS.length)

@@ -156,7 +156,7 @@ public class IniDefinition {
     * Set the ini value for the given scope.
     */
    public void set(QuercusContext quercus, String value) {
-      set(quercus, new ConstStringValue(value));
+      set(quercus, new StringBuilderValue(value));
    }
 
    /**
