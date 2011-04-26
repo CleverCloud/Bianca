@@ -240,7 +240,6 @@ public class ModuleInfo {
               || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
-         // TODO: need unicode semantics check
          return new StringBuilderValue((String) obj);
       } else {
          // TODO: unknown types, e.g. Character?

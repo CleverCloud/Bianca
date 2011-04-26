@@ -175,17 +175,7 @@ public class Regexp {
       }
 
       _flags = flags;
-
-      // TODO: what if unicode.semantics='true'?
-
-      if ((flags & Regcomp.UTF8) != 0) {
-         _pattern = fromUtf8(pattern);
-
-         if (pattern == null) {
-            throw new QuercusException(
-                    L.l("Regexp: error converting subject to utf8"));
-         }
-      }
+      _pattern = pattern;
    }
 
    public StringValue getRawRegexp() {

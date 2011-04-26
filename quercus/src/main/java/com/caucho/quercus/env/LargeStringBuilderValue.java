@@ -35,13 +35,12 @@ import com.caucho.vfs.*;
 import com.caucho.quercus.QuercusRuntimeException;
 
 /**
- * Represents a 8-bit PHP 5 style binary builder (unicode.semantics = off),
+ * Represents a 8-bit PHP 5 style binary builder,
  * used for large data like file reads.
  */
 public class LargeStringBuilderValue
         extends StringValue {
 
-   public static final StringValue EMPTY = StringBuilderValue.EMPTY;
    public static final int SIZE = 4 * 1024;
    protected byte[][] _bufferList;
    protected int _length;

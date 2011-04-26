@@ -1574,8 +1574,6 @@ public class MiscModule extends AbstractQuercusModule {
          for (int j = 0; j < _length; j++) {
             Value key;
 
-            // TODO: check key type with unicode semantics
-
             if (_name.length() == 0) {
                key = LongValue.create(j + 1);
             } else if (_length == 1) {

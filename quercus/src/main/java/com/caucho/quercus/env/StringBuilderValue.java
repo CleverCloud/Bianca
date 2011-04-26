@@ -38,7 +38,7 @@ import java.util.IdentityHashMap;
 import java.util.zip.CRC32;
 
 /**
- * Represents a PHP 5 style string builder (unicode.semantics = off)
+ * Represents a PHP String
  */
 public class StringBuilderValue
         extends StringValue {

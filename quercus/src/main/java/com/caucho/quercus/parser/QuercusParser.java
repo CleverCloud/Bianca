@@ -4784,7 +4784,6 @@ public class QuercusParser {
 
    /**
     * Parses the next string
-    * XXX: parse as Unicode if and only if unicode.semantics is on.
     */
    private Expr parseEscapedString(String prefix, int token, boolean isSystem)
            throws IOException {

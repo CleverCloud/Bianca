@@ -1956,7 +1956,6 @@ public class QuercusContext {
    public static final IniDefinition INI_ALWAYS_POPULATE_RAW_POST_DATA = _ini.add(
            "always_populate_raw_post_data", false, IniDefinition.PHP_INI_PERDIR);
    // unicode ini
-   public static final IniDefinition INI_UNICODE_SEMANTICS = _ini.add("unicode.semantics", false, IniDefinition.PHP_INI_SYSTEM);
    public static final IniDefinition INI_UNICODE_FALLBACK_ENCODING = _ini.add("unicode.fallback_encoding", "utf-8", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_MODE = _ini.add("unicode.from_error_mode", "2", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_SUBST_CHAR = _ini.add(

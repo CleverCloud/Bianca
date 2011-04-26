@@ -550,7 +550,6 @@ public class Env {
 
    /**
     * Returns the encoding used for runtime conversions, e.g. files
-    * XXX: ISO-8859-1 when unicode.semantics is OFF
     */
    public String getRuntimeEncoding() {
       StringValue encoding = getIni("unicode.runtime_encoding");
@@ -583,7 +582,6 @@ public class Env {
 
    /**
     * Returns the encoding used for input, i.e. post,
-    * null if unicode.semantics is off.
     */
    public String getHttpInputEncoding() {
       StringValue encoding = getIni("unicode.http_input_encoding");
@@ -600,7 +598,7 @@ public class Env {
    }
 
    /**
-    * Returns the encoding used for output, null if unicode.semantics is off.
+    * Returns the encoding used for output.
     */
    public String getOutputEncoding() {
       String encoding = QuercusContext.INI_UNICODE_OUTPUT_ENCODING.getAsString(this);
