@@ -364,7 +364,7 @@ public class HashModule extends AbstractQuercusModule {
    private static Value hashToValue(Env env, byte[] bytes, boolean isBinary) {
       if (isBinary) {
          StringValue v = new StringBuilderValue();
-         v.append(bytes, 0, bytes.length);
+         v.append(new String(bytes));
          return v;
       } else {
          StringValue v = new StringBuilderValue();

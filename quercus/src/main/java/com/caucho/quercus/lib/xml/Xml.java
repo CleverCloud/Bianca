@@ -341,7 +341,7 @@ public class Xml {
       _xmlString.append(data);
 
       if (isFinal) {
-         InputSource is = new InputSource(_xmlString.toReader("utf-8"));
+         InputSource is = new InputSource(_xmlString.toReader());
 
          _xmlOptionTargetEncoding = is.getEncoding();
 
@@ -407,7 +407,7 @@ public class Xml {
          _xmlString = data.toStringBuilder(env);
       }
 
-      InputSource is = new InputSource(_xmlString.toReader("utf-8"));
+      InputSource is = new InputSource(_xmlString.toReader());
 
       try {
          SAXParser saxParser = _factory.newSAXParser();
@@ -849,7 +849,7 @@ public class Xml {
               throws SAXException {
          StringValue value;
 
-         value = _env.createString(buf, start, length);
+         value = _env.createString(new String(buf).substring(start, start+length));
 
          try {
             if (_characterDataHandler != null) {

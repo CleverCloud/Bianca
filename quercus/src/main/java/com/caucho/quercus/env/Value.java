@@ -833,21 +833,21 @@ abstract public class Value implements java.io.Serializable {
     * Converts to a string builder
     */
    public StringValue toStringBuilder(Env env) {
-      return new StringBuilderValue().appendUnicode(this);
+      return new StringBuilderValue().append(this);
    }
 
    /**
     * Converts to a string builder
     */
    public StringValue toStringBuilder(Env env, Value value) {
-      return toStringBuilder(env).appendUnicode(value);
+      return toStringBuilder(env).append(value);
    }
 
    /**
     * Converts to a string builder
     */
    public StringValue toStringBuilder(Env env, StringValue value) {
-      return toStringBuilder(env).appendUnicode(value);
+      return toStringBuilder(env).append(value);
    }
 
    /**
@@ -902,13 +902,6 @@ abstract public class Value implements java.io.Serializable {
     * Append to a binary builder.
     */
    public StringValue appendTo(StringBuilderValue sb) {
-      return sb.append(toString());
-   }
-
-   /**
-    * Append to a binary builder.
-    */
-   public StringValue appendTo(LargeStringBuilderValue sb) {
       return sb.append(toString());
    }
 

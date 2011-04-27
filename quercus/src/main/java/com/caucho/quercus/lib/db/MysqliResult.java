@@ -949,10 +949,7 @@ public class MysqliResult extends JdbcResultResource {
 
          // TODO: i18n
          StringBuilderValue sb = new StringBuilderValue();
-         sb.ensureAppendCapacity(length);
-
-         qRs.getString(column, sb.getBuffer(), sb.getOffset());
-         sb.setOffset(sb.getOffset() + length);
+         qRs.getString(column, sb.toString().getBytes(), sb.length());
 
          return sb;
       }
@@ -992,7 +989,7 @@ public class MysqliResult extends JdbcResultResource {
 
          StringValue bb = new StringBuilderValue();
 
-         bb.appendUtf8(bytes);
+         bb.append(bytes);
 
          /*
          while (offset < length) {

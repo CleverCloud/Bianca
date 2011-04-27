@@ -100,7 +100,7 @@ public class JMSQueue {
 
          for (Map.Entry<Value, Value> entry : entrySet) {
             if (entry.getValue() instanceof StringValue) {
-               byte[] bytes = ((StringValue) entry.getValue()).toBytes();
+               byte[] bytes = ((StringValue) entry.getValue()).toString().getBytes();
 
                ((MapMessage) message).setBytes(entry.getKey().toString(), bytes);
             } else {
@@ -113,7 +113,7 @@ public class JMSQueue {
          message = _session.createBytesMessage();
 
 
-         byte[] bytes = ((StringValue) value).toBytes();
+         byte[] bytes = ((StringValue) value).toString().getBytes();
 
          ((BytesMessage) message).writeBytes(bytes);
       } else if (value.isLongConvertible()) {
@@ -167,7 +167,7 @@ public class JMSQueue {
          BytesMessage bytesMessage = (BytesMessage) message;
          int length = (int) bytesMessage.getBodyLength();
 
-         StringValue bb = new StringBuilderValue(length);
+         StringValue bb = new StringBuilderValue();
 
          TempBuffer tempBuffer = TempBuffer.allocate();
          int sublen;
@@ -176,7 +176,7 @@ public class JMSQueue {
             sublen = bytesMessage.readBytes(tempBuffer.getBuffer());
 
             if (sublen > 0) {
-               bb.append(tempBuffer.getBuffer(), 0, sublen);
+               bb.append(new String(tempBuffer.getBuffer()));
             } else {
                break;
             }

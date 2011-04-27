@@ -41,7 +41,7 @@ public class JavaCharacterArrayMarshal extends JavaArrayMarshal {
       char[] buffer = (char[]) value;
 
       if (buffer != null) {
-         return env.createString(buffer, 0, buffer.length);
+         return env.createString(new String(buffer));
       } else {
          return NullValue.NULL;
       }

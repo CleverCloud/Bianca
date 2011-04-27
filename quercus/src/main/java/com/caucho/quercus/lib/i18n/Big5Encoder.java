@@ -68,7 +68,7 @@ public class Big5Encoder
       if (len > 0) {
          int offset = out.arrayOffset();
 
-         sb.appendBytes(out.array(), offset, offset + len);
+         sb.append(new String(out.array()), offset, offset + len);
       }
 
       if (coder.isMalformed() || coder.isUnmappable()) {

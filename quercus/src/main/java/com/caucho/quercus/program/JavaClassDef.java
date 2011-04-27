@@ -1136,8 +1136,7 @@ public class JavaClassDef extends ClassDef {
     */
    private StringValue javaToQuercusConvert(String s) {
       if (s.length() == 1) {
-         return new StringBuilderValue(
-                 new char[]{Character.toLowerCase(s.charAt(0))});
+         return new StringBuilderValue(s.toLowerCase());
       }
 
       if (Character.isUpperCase(s.charAt(1))) {

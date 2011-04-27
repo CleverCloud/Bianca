@@ -118,12 +118,12 @@ public class OutputBuffer {
       try {
          _out.flush();
 
-         StringValue bb = new StringBuilderValue(_tempStream.getLength());
+         StringValue bb = new StringBuilderValue();
 
          for (TempBuffer ptr = _tempStream.getHead();
                  ptr != null;
                  ptr = ptr.getNext()) {
-            bb.append(ptr.getBuffer(), 0, ptr.getLength());
+            bb.append(new String(ptr.getBuffer()), 0, ptr.getLength());
          }
 
          return bb;

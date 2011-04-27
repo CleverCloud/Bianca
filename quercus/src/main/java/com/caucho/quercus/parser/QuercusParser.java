@@ -3250,7 +3250,7 @@ public class QuercusParser {
 
          case BINARY:
             try {
-               return createBinary(_lexeme.getBytes("iso-8859-1"));
+               return createBinary(_lexeme);
             } catch (Exception e) {
                throw new QuercusParseException(e);
             }
@@ -4803,7 +4803,7 @@ public class QuercusParser {
          expr = createString(prefix);
       } else {
          // TODO: getBytes isn't correct
-         expr = createBinary(prefix.getBytes("iso-8859-1"));
+         expr = createBinary(prefix);
       }
 
       while (true) {
@@ -4878,7 +4878,7 @@ public class QuercusParser {
             if (isUnicode) {
                string = createString(_sb.toString());
             } else {
-               string = createBinary(_sb.toString().getBytes("iso-8859-1"));
+               string = createBinary(_sb.toString());
             }
 
             expr = _factory.createAppend(expr, string);
@@ -4944,7 +4944,7 @@ public class QuercusParser {
       return _factory.createUnicode(lexeme);
    }
 
-   private Expr createBinary(byte[] bytes)
+   private Expr createBinary(String bytes)
            throws IOException {
       // TODO: see QuercusParser.parseDefault for _quercus == null
       // php/0ch1, php/0350

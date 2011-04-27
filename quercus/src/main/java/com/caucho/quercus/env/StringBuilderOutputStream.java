@@ -43,13 +43,13 @@ public class StringBuilderOutputStream
    @Override
    public void write(byte[] buffer, int offset, int length)
            throws IOException {
-      _sb.append(buffer, offset, length);
+      _sb.append(new String(buffer), offset, length);
    }
 
    @Override
    public void write(int ch)
            throws IOException {
-      _sb.appendByte(ch);
+      _sb.append(ch);
    }
 
    public void setStringBuilder(StringValue sb) {

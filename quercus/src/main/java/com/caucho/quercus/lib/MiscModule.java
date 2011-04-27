@@ -1234,11 +1234,11 @@ public class MiscModule extends AbstractQuercusModule {
             int ch = is.read();
 
             if (ch >= 0) {
-               bb.appendByte(ch);
+               bb.append(ch);
             } else if (length == Integer.MAX_VALUE) {
                return i;
             } else {
-               bb.appendByte(_pad);
+               bb.append(_pad);
             }
          }
 
@@ -1399,13 +1399,13 @@ public class MiscModule extends AbstractQuercusModule {
 
             d += hexToDigit(env, ch);
 
-            bb.appendByte(d);
+            bb.append(d);
          }
 
          if ((strlen & 1) == 1) {
             int d = 16 * hexToDigit(env, s.charAt(strlen - 1));
 
-            bb.appendByte(d);
+            bb.append(d);
          }
 
          return i;
@@ -1485,13 +1485,13 @@ public class MiscModule extends AbstractQuercusModule {
 
             d += 16 * hexToDigit(env, ch);
 
-            bb.appendByte(d);
+            bb.append(d);
          }
 
          if ((strlen & 1) == 1) {
             int d = hexToDigit(env, s.charAt(strlen - 1));
 
-            bb.appendByte(d);
+            bb.append(d);
          }
 
          return i;
@@ -1559,7 +1559,7 @@ public class MiscModule extends AbstractQuercusModule {
             long v = arg.toLong();
 
             for (int k = 0; k < _bytes; k++) {
-               bb.appendByte((int) (v >> (8 * k)));
+               bb.append((int) (v >> (8 * k)));
             }
          }
 
@@ -1658,7 +1658,7 @@ public class MiscModule extends AbstractQuercusModule {
             long v = arg.toLong();
 
             for (int k = 0; k < _bytes; k++) {
-               bb.appendByte((int) (v >> (8 * k)));
+               bb.append((int) (v >> (8 * k)));
             }
          }
 
@@ -1740,7 +1740,7 @@ public class MiscModule extends AbstractQuercusModule {
             long v = Double.doubleToLongBits(d);
 
             for (int k = 7; k >= 0; k--) {
-               bb.appendByte((int) (v >> (8 * k) & 0xff));
+               bb.append((int) (v >> (8 * k) & 0xff));
             }
          }
 
@@ -1822,7 +1822,7 @@ public class MiscModule extends AbstractQuercusModule {
             int v = Float.floatToIntBits((float) d);
 
             for (int k = 3; k >= 0; k--) {
-               bb.appendByte((int) (v >> (8 * k) & 0xff));
+               bb.append((int) (v >> (8 * k) & 0xff));
             }
          }
 
@@ -1892,7 +1892,7 @@ public class MiscModule extends AbstractQuercusModule {
       public int pack(Env env, StringValue bb, int i, Value[] args)
               throws IOException {
          for (int j = 0; j < _length; j++) {
-            bb.appendByte(0);
+            bb.append(0);
          }
 
          return i;
@@ -1925,7 +1925,7 @@ public class MiscModule extends AbstractQuercusModule {
       public int pack(Env env, StringValue bb, int i, Value[] args)
               throws IOException {
          while (bb.length() < _length) {
-            bb.appendByte(0);
+            bb.append(0);
          }
 
          return i;

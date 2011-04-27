@@ -184,7 +184,7 @@ public class StringModule extends AbstractQuercusModule {
 
       int length = source.length();
 
-      StringValue sb = new StringBuilderValue(length * 5 / 4);
+      StringValue sb = new StringBuilderValue();
 
       for (int i = 0; i < length; i++) {
          char ch = source.charAt(i);
@@ -289,7 +289,7 @@ public class StringModule extends AbstractQuercusModule {
     * @return the escaped string
     */
    public static StringValue addslashes(StringValue source) {
-      StringValue sb = new StringBuilderValue(source.length() * 5 / 4);
+      StringValue sb = new StringBuilderValue();
 
       int length = source.length();
       for (int i = 0; i < length; i++) {
@@ -670,7 +670,7 @@ public class StringModule extends AbstractQuercusModule {
             break;
          }
 
-         if (string.regionMatches(i, separator, 0, separatorLength)) {
+         if (string.regionMatches(i, separator.toString(), 0)) {
 
             StringValue chunk = string.substring(head, i);
             array.append(chunk);
@@ -1622,7 +1622,7 @@ public class StringModule extends AbstractQuercusModule {
    public static Value quotemeta(StringValue string) {
       int len = string.length();
 
-      StringValue sb = new StringBuilderValue(len * 5 / 4);
+      StringValue sb = new StringBuilderValue();
 
       for (int i = 0; i < len; i++) {
          char ch = string.charAt(i);
@@ -1944,7 +1944,7 @@ public class StringModule extends AbstractQuercusModule {
    private static Value hashToValue(byte[] bytes, boolean isBinary) {
       if (isBinary) {
          StringValue v = new StringBuilderValue();
-         v.append(bytes, 0, bytes.length);
+         v.append(new String(bytes), 0, bytes.length);
          return v;
       } else {
          StringValue v = new StringBuilderValue();
@@ -3158,7 +3158,7 @@ public class StringModule extends AbstractQuercusModule {
 
       int padStringLen = pad.length();
 
-      StringValue sb = new StringBuilderValue(string.length() + padLen);
+      StringValue sb = new StringBuilderValue();
 
       for (int i = 0; i < leftPad; i++) {
          sb.append(pad.charAt(i % padStringLen));
@@ -3180,7 +3180,7 @@ public class StringModule extends AbstractQuercusModule {
     * @param count number of times to repeat
     */
    public static Value str_repeat(StringValue string, int count) {
-      StringValue sb = new StringBuilderValue(count * string.length());
+      StringValue sb = new StringBuilderValue();
 
       for (int i = 0; i < count; i++) {
          sb = sb.append(string);
@@ -3439,7 +3439,7 @@ public class StringModule extends AbstractQuercusModule {
          return NullValue.NULL;
       }
 
-      StringValue sb = new StringBuilderValue(string.length());
+      StringValue sb = new StringBuilderValue();
 
       int len = string.length();
       for (int i = 0; i < len; i++) {
@@ -3737,7 +3737,7 @@ public class StringModule extends AbstractQuercusModule {
     */
    public static StringValue strip_tags(StringValue string,
            @Optional Value allowTags) {
-      StringValue result = new StringBuilderValue(string.length());
+      StringValue result = new StringBuilderValue();
 
       HashSet<StringValue> allowedTagMap = null;
 
@@ -4334,7 +4334,7 @@ public class StringModule extends AbstractQuercusModule {
     *
     */
    public static Value strrev(StringValue string) {
-      StringValue sb = new StringBuilderValue(string.length());
+      StringValue sb = new StringBuilderValue();
 
       for (int i = string.length() - 1; i >= 0; i--) {
          sb.append(string.charAt(i));

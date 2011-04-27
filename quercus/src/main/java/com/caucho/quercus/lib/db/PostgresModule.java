@@ -869,7 +869,7 @@ public class PostgresModule extends AbstractQuercusModule {
          Method method = cl.getDeclaredMethod(
                  "toPGString", new Class[]{byte[].class});
 
-         String s = (String) method.invoke(cl, new Object[]{data.toBytes()});
+         String s = (String) method.invoke(cl, new Object[]{data.toString().getBytes()});
 
          return Postgres.pgRealEscapeString(env.createString(s));
 

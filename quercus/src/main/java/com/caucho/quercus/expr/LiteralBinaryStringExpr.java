@@ -36,16 +36,16 @@ import com.caucho.quercus.env.StringBuilderValue;
  */
 public class LiteralBinaryStringExpr extends LiteralStringExpr {
 
-   public LiteralBinaryStringExpr(Location location, byte[] bytes) {
-      super(location, new StringBuilderValue(bytes));
+   public LiteralBinaryStringExpr(Location location, String str) {
+      super(location, new StringBuilderValue(str));
    }
 
    public LiteralBinaryStringExpr(Location location, StringBuilderValue value) {
       super(location, value);
    }
 
-   public LiteralBinaryStringExpr(byte[] bytes) {
-      this(Location.UNKNOWN, bytes);
+   public LiteralBinaryStringExpr(String str) {
+      this(Location.UNKNOWN, str);
    }
 
    public LiteralBinaryStringExpr(StringBuilderValue value) {

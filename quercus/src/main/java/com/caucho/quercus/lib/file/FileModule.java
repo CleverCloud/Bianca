@@ -484,7 +484,7 @@ public class FileModule extends AbstractQuercusModule {
          int ch = is.read();
 
          if (ch >= 0) {
-            StringValue v = new StringBuilderValue(1);
+            StringValue v = new StringBuilderValue();
 
             v.append((char) ch);
 
@@ -697,22 +697,22 @@ public class FileModule extends AbstractQuercusModule {
 
                for (int ch = is.read(); ch >= 0; ch = is.read()) {
                   if (ch == '\n') {
-                     bb.appendByte(ch);
+                     bb.append(ch);
                      break;
                   } else if (ch == '\r') {
-                     bb.appendByte('\r');
+                     bb.append('\r');
 
                      int ch2 = is.read();
 
                      if (ch2 == '\n') {
-                        bb.appendByte('\n');
+                        bb.append('\n');
                      } else {
                         is.unread();
                      }
 
                      break;
                   } else {
-                     bb.appendByte(ch);
+                     bb.append(ch);
                   }
                }
 

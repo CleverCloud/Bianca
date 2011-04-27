@@ -1122,9 +1122,9 @@ public class Env {
    /**
     * Prints a byte buffer.
     */
-   public final void write(byte[] buffer, int offset, int length) {
+   public final void write(String buffer, int offset) {
       try {
-         getOut().write(buffer, offset, length);
+         getOut().print(buffer.substring(offset));
       } catch (IOException e) {
          throw new QuercusModuleException(e);
       }
@@ -4066,20 +4066,6 @@ public class Env {
    }
 
    /**
-    * Creates a PHP string from a byte buffer.
-    */
-   public StringValue createString(char[] buffer, int length) {
-      return new StringBuilderValue(buffer, length);
-   }
-
-   /**
-    * Creates a PHP string from a char buffer.
-    */
-   public StringValue createString(char[] buffer, int offset, int length) {
-      return new StringBuilderValue(buffer, offset, length);
-   }
-
-   /**
     * Creates a PHP string from a java String.
     */
    public StringValue createString(String s) {
@@ -4099,7 +4085,7 @@ public class Env {
       StringValue string = new StringBuilderValue();
 
       for (; head != null; head = head.getNext()) {
-         string.append(head.getBuffer(), 0, head.getLength());
+         string.append(new String(head.getBuffer()));
       }
 
       return string;

@@ -31,7 +31,6 @@ package com.caucho.vfs;
 
 import com.caucho.util.FreeList;
 
-import java.io.IOException;
 import java.util.logging.*;
 
 /**

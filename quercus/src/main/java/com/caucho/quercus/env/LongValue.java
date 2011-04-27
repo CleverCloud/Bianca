@@ -467,14 +467,6 @@ public class LongValue extends NumberValue {
    }
 
    /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(LargeStringBuilderValue sb) {
-      return sb.append(_value);
-   }
-
-   /**
     * Serializes the value.
     */
    @Override

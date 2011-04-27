@@ -95,7 +95,7 @@ public class ExprFactory {
    /**
     * Creates a binary literal expression.
     */
-   public Expr createBinary(byte[] bytes) {
+   public Expr createBinary(String bytes) {
       return new LiteralBinaryStringExpr(bytes);
    }
 
@@ -547,10 +547,10 @@ public class ExprFactory {
     /*
       if (left instanceof ToStringExpr)
       left = ((ToStringExpr) left).getExpr();
-
+      
       if (left instanceof StringLiteralExpr) {
       StringLiteralExpr string = (StringLiteralExpr) left;
-
+      
       if (string.evalConstant().length() == 0)
       return ToStringExpr.create(right);
       }
@@ -567,10 +567,10 @@ public class ExprFactory {
       /*
       if (right instanceof ToStringExpr)
       right = ((ToStringExpr) right).getExpr();
-
+      
       if (right instanceof StringLiteralExpr) {
       StringLiteralExpr string = (StringLiteralExpr) right;
-
+      
       if (string.evalConstant().length() == 0)
       return ToStringExpr.create(left);
       }
@@ -607,16 +607,12 @@ public class ExprFactory {
          LiteralBinaryStringExpr leftString = (LiteralBinaryStringExpr) left.getValue();
          LiteralBinaryStringExpr rightString = (LiteralBinaryStringExpr) tail.getValue();
 
-         try {
-            byte[] bytes = (leftString.evalConstant().toString()
-                    + rightString.evalConstant().toString()).getBytes("ISO-8859-1");
+         String bytes = (leftString.evalConstant().toString()
+                 + rightString.evalConstant().toString());
 
-            Expr value = createBinary(bytes);
+         Expr value = createBinary(bytes);
 
-            return createAppendImpl(value, tail.getNext());
-         } catch (java.io.UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-         }
+         return createAppendImpl(value, tail.getNext());
       } else if (left.getValue() instanceof LiteralBinaryStringExpr
               || tail.getValue() instanceof LiteralBinaryStringExpr) {
          left.setNext(tail);

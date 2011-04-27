@@ -38,7 +38,7 @@ public class JavaByteArrayMarshal extends JavaArrayMarshal {
 
    @Override
    public Value unmarshal(Env env, Object value) {
-      return new StringBuilderValue((byte[]) value);
+      return new StringBuilderValue(new String((byte[])value));
    }
 
    @Override

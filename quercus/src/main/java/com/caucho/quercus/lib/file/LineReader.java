@@ -63,7 +63,7 @@ public class LineReader {
       for (; length > 0 && (ch = input.read()) >= 0; length--) {
          // php/161[pq] newlines
          if (ch == '\n') {
-            sb.appendByte((byte) ch);
+            sb.append((byte) ch);
 
             if (_isMacLineEnding == null) {
                _isMacLineEnding = false;
@@ -73,7 +73,7 @@ public class LineReader {
                break;
             }
          } else if (ch == '\r') {
-            sb.appendByte((byte) '\r');
+            sb.append((byte) '\r');
 
             int ch2 = input.read();
 
@@ -86,7 +86,7 @@ public class LineReader {
                   input.unread();
                   break;
                } else {
-                  sb.appendByte((byte) '\n');
+                  sb.append((byte) '\n');
                   break;
                }
             } else {
@@ -102,7 +102,7 @@ public class LineReader {
             }
 
          } else {
-            sb.appendByte((byte) ch);
+            sb.append((byte) ch);
          }
       }
 

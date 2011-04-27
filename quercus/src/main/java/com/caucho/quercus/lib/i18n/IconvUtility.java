@@ -31,6 +31,7 @@ package com.caucho.quercus.lib.i18n;
 import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.UnimplementedException;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.vfs.*;
 
 import javax.mail.internet.MimeUtility;
@@ -78,22 +79,19 @@ public class IconvUtility {
          Reader in;
 
          try {
-            in = str.toReader(inCharset);
+            in = str.toReader();
          } catch (IOException e) {
             log.log(Level.WARNING, e.toString(), e);
-
-            in = str.toReader("utf-8");
+            return StringValue.EMPTY;
          }
 
          TempStream ts = new TempStream();
          WriteStream out = new WriteStream(ts);
 
          try {
-            out.setEncoding(outCharset);
+            out.setEncoding("utf-8");
          } catch (IOException e) {
             log.log(Level.WARNING, e.toString(), e);
-
-            out.setEncoding("utf-8");
          }
 
          while (offset > 0) {
@@ -118,7 +116,7 @@ public class IconvUtility {
 
          StringValue sb = new StringBuilderValue();
          for (TempBuffer ptr = ts.getHead(); ptr != null; ptr = ptr.getNext()) {
-            sb.append(ptr.getBuffer(), 0, ptr.getLength());
+            sb.append(new String(ptr.getBuffer()));
          }
 
          return sb;

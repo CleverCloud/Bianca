@@ -183,26 +183,28 @@ public class MathModule extends AbstractQuercusModule {
       }
 
       int bufLen = 64;
-      char[] buffer = new char[bufLen];
+      String buffer = new String();
 
       int i = bufLen;
       while (num != 0 && i > 0) {
          int d = (int) (num % base);
 
          if (d < 10) {
-            buffer[--i] = (char) (d + '0');
+            buffer = (char) (d + '0') + buffer;
          } else {
-            buffer[--i] = (char) (d + 'a' - 10);
+            buffer = (char) (d + 'a' - 10) + buffer;
          }
+         --i;
 
          num = num / base;
       }
 
+      StringBuilder tmp = new StringBuilder(buffer);
       for (int j = i; j < bufLen; j++) {
-         buffer[j - i] = buffer[j];
+         tmp.setCharAt(j-i, buffer.charAt(j));
       }
 
-      return env.createString(buffer, bufLen - i);
+      return new StringBuilderValue(tmp.toString().substring(0, bufLen-i));
    }
 
    private static StringValue intToBase(Env env, BigInteger num, int base) {

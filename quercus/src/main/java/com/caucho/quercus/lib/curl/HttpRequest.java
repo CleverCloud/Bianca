@@ -407,7 +407,7 @@ public class HttpRequest
 
       try {
          while ((ch = in.read()) >= 0) {
-            bb.appendByte(ch);
+            bb.append(ch);
          }
       } catch (IOException e) {
          throw new QuercusModuleException(e);

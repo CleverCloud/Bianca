@@ -149,7 +149,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional("ENT_COMPAT") int quoteStyle) {
       int len = str.length();
 
-      StringValue sb = new StringBuilderValue(len * 4 / 5);
+      StringValue sb = new StringBuilderValue();
 
       for (int i = 0; i < len; i++) {
          char ch = str.charAt(i);
@@ -247,7 +247,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional String charset) {
       int len = string.length();
 
-      StringValue sb = new StringBuilderValue(len * 5 / 4);
+      StringValue sb = new StringBuilderValue();
 
       for (int i = 0; i < len; i++) {
          char ch = string.charAt(i);
@@ -296,23 +296,19 @@ public class HtmlModule extends AbstractQuercusModule {
     */
    public static Value htmlentities(Env env,
            StringValue string,
-           @Optional("ENT_COMPAT") int quoteStyle,
-           @Optional String charset) {
-      if (charset == null || charset.length() == 0) {
-         charset = "ISO-8859-1";
-      }
+           @Optional("ENT_COMPAT") int quoteStyle) {
 
       Reader reader;
 
       try {
-         reader = string.toReader(charset);
+         reader = string.toReader();
       } catch (UnsupportedEncodingException e) {
          env.warning(e);
 
          reader = new StringReader(string.toString());
       }
 
-      StringValue sb = new StringBuilderValue(string.length() * 5 / 4);
+      StringValue sb = new StringBuilderValue();
 
       int ch;
       try {

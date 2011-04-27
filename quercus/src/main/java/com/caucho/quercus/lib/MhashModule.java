@@ -150,7 +150,7 @@ public class MhashModule extends AbstractQuercusModule {
          return BooleanValue.FALSE;
       }
 
-      byte[] result = messageDigest.digest(data.toBytes());
+      String result = new String(messageDigest.digest(data.toString().getBytes()));
 
       return new StringBuilderValue(result);
    }

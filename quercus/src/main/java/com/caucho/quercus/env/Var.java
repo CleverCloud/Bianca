@@ -569,14 +569,6 @@ public class Var extends Value
    }
 
    /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(LargeStringBuilderValue sb) {
-      return _value.appendTo(sb);
-   }
-
-   /**
     * Returns to the value value.
     */
    public final Value getRawValue() {

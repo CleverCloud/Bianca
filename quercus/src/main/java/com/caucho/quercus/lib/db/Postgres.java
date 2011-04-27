@@ -247,7 +247,7 @@ public class Postgres extends JdbcConnectionResource {
    }
 
    static public StringValue pgRealEscapeString(StringValue str) {
-      StringValue buf = new StringBuilderValue(str.length());
+      StringValue buf = new StringBuilderValue();
 
       final int strLength = str.length();
 

@@ -565,14 +565,6 @@ public class NullValue extends Value
       return sb;
    }
 
-   /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(LargeStringBuilderValue sb) {
-      return sb;
-   }
-
    //
    // Java generator code
    //

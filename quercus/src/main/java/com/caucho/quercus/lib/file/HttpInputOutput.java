@@ -65,7 +65,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
    private HttpStreamWrapper _httpStream;
    private Reader _readEncoding;
    private String _readEncodingName;
-   private byte[] _bodyStart;
+   private String _bodyStart;
 
    public HttpInputOutput(Env env, Path path, StreamContextResource context)
            throws IOException {
@@ -100,8 +100,8 @@ public class HttpInputOutput extends AbstractBinaryOutput
 
          setOptions(env, options);
 
-         if (_os != null && _bodyStart != null && _bodyStart.length > 0) {
-            _os.write(_bodyStart, 0, _bodyStart.length);
+         if (_os != null && _bodyStart != null && _bodyStart.length() > 0) {
+            _os.write(_bodyStart.getBytes(), 0, _bodyStart.length());
          }
       } else {
          _is = path.openRead();
@@ -153,7 +153,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
          } else if (optionName.equals("user_agent")) {
             _httpStream.setAttribute("User-Agent", optionValue.toString());
          } else if (optionName.equals("content")) {
-            _bodyStart = optionValue.toStringValue(env).toBytes();
+            _bodyStart = optionValue.toStringValue(env).toString();
          } else if (optionName.equals("proxy")) {
             env.stub("StreamContextResource::proxy option");
          } else if (optionName.equals("request_fulluri")) {
@@ -276,7 +276,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
             sublen = read(buffer, 0, sublen);
 
             if (sublen > 0) {
-               bb.append(buffer, 0, sublen);
+               bb.append(new String(buffer), 0, sublen);
                length -= sublen;
             } else {
                break;

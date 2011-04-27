@@ -239,7 +239,7 @@ public class FileInputOutput extends AbstractBinaryOutput
             sublen = read(buffer, 0, sublen);
 
             if (sublen > 0) {
-               bb.append(buffer, 0, sublen);
+               bb.append(new String(buffer), 0, sublen);
                length -= sublen;
             } else {
                break;

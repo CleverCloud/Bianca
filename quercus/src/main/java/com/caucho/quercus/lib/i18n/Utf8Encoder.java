@@ -75,7 +75,7 @@ public class Utf8Encoder
          char ch = str.charAt(i);
 
          if (ch <= 0x7F) {
-            sb.appendByte(ch);
+            sb.append(ch);
             continue;
          }
 
@@ -103,17 +103,17 @@ public class Utf8Encoder
          }
 
          if (0x80 <= code && code <= 0x7FF) {
-            sb.appendByte(0xC0 | (code >> 6));
-            sb.appendByte(0x80 | (code & 0x3F));
+            sb.append(0xC0 | (code >> 6));
+            sb.append(0x80 | (code & 0x3F));
          } else if (0x800 <= code && code <= 0xFFFF) {
-            sb.appendByte(0xE0 | (code >> 12));
-            sb.appendByte(0x80 | ((code >> 6) & 0x3F));
-            sb.appendByte(0x80 | (code & 0x3F));
+            sb.append(0xE0 | (code >> 12));
+            sb.append(0x80 | ((code >> 6) & 0x3F));
+            sb.append(0x80 | (code & 0x3F));
          } else {
-            sb.appendByte(0xF0 | (code >> 18));
-            sb.appendByte(0x80 | ((code >> 12) & 0x3F));
-            sb.appendByte(0x80 | ((code >> 6) & 0x3F));
-            sb.appendByte(0x80 | (code & 0x3F));
+            sb.append(0xF0 | (code >> 18));
+            sb.append(0x80 | ((code >> 12) & 0x3F));
+            sb.append(0x80 | ((code >> 6) & 0x3F));
+            sb.append(0x80 | (code & 0x3F));
          }
       }
 

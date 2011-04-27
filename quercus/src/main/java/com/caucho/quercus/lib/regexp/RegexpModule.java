@@ -1880,9 +1880,9 @@ public class RegexpModule
            String endDelim) {
       StringValue sb = new StringBuilderValue();
 
-      sb = sb.appendBytes(startDelim);
+      sb = sb.append(startDelim);
       sb = sb.append(str);
-      sb = sb.appendBytes(endDelim);
+      sb = sb.append(endDelim);
 
       return sb;
    }
@@ -1990,8 +1990,8 @@ public class RegexpModule
          switch (ch) {
             case '\\':
                if (quote == '[') {
-                  sb = sb.appendByte('\\');
-                  sb = sb.appendByte('\\');
+                  sb = sb.append('\\');
+                  sb = sb.append('\\');
                   continue;
                }
 
@@ -2007,11 +2007,11 @@ public class RegexpModule
                           && ch <= '7') {
                      // Java's regexp requires \0 for octal
 
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('0');
-                     sb = sb.appendByte(ch);
+                     sb = sb.append('\\');
+                     sb = sb.append('0');
+                     sb = sb.append(ch);
                   } else if (ch == 'x' && i + 1 < len && regexp.charAt(i + 1) == '{') {
-                     sb = sb.appendByte('\\');
+                     sb = sb.append('\\');
 
                      int tail = regexp.indexOf('}', i + 1);
 
@@ -2021,21 +2021,21 @@ public class RegexpModule
                         int length = hex.length();
 
                         if (length == 1) {
-                           sb = sb.appendBytes("x0" + hex);
+                           sb = sb.append("x0" + hex);
                         } else if (length == 2) {
-                           sb = sb.appendBytes("x" + hex);
+                           sb = sb.append("x" + hex);
                         } else if (length == 3) {
-                           sb = sb.appendBytes("u0" + hex);
+                           sb = sb.append("u0" + hex);
                         } else if (length == 4) {
-                           sb = sb.appendBytes("u" + hex);
+                           sb = sb.append("u" + hex);
                         } else {
                            throw new QuercusRuntimeException(L.l("illegal hex escape"));
                         }
 
                         i = tail;
                      } else {
-                        sb = sb.appendByte('\\');
-                        sb = sb.appendByte('x');
+                        sb = sb.append('\\');
+                        sb = sb.append('x');
                      }
                   } else if (Character.isLetter(ch)) {
                      switch (ch) {
@@ -2063,36 +2063,36 @@ public class RegexpModule
                         case 'P': //XXX: need to translate PHP properties to Java ones
                         case 'X':
                            //case 'C': byte matching, not supported
-                           sb = sb.appendByte('\\');
-                           sb = sb.appendByte(ch);
+                           sb = sb.append('\\');
+                           sb = sb.append(ch);
                            break;
                         default:
-                           sb = sb.appendByte(ch);
+                           sb = sb.append(ch);
                      }
                   } else {
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte(ch);
+                     sb = sb.append('\\');
+                     sb = sb.append(ch);
                   }
                } else {
-                  sb = sb.appendByte('\\');
+                  sb = sb.append('\\');
                }
                break;
 
             case '[':
                if (quote == '[') {
                   if (i + 1 < len && regexp.charAt(i + 1) == ':') {
-                     sb = sb.appendByte('[');
+                     sb = sb.append('[');
                   } else {
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('[');
+                     sb = sb.append('\\');
+                     sb = sb.append('[');
                   }
                } else if (i + 1 < len && regexp.charAt(i + 1) == '['
                        && !(i + 2 < len && regexp.charAt(i + 2) == ':')) {
                   // TODO: check regexp grammar
                   // php/151n
-                  sb = sb.appendByte('[');
-                  sb = sb.appendByte('\\');
-                  sb = sb.appendByte('[');
+                  sb = sb.append('[');
+                  sb = sb.append('\\');
+                  sb = sb.append('[');
                   i += 1;
                } /*
                else if (i + 2 < len &&
@@ -2102,7 +2102,7 @@ public class RegexpModule
                i += 2;
                }
                 */ else {
-                  sb = sb.appendByte('[');
+                  sb = sb.append('[');
                }
 
                if (quote == 0) {
@@ -2112,28 +2112,28 @@ public class RegexpModule
 
             case '#':
                if (quote == '[') {
-                  sb = sb.appendByte('\\');
-                  sb = sb.appendByte('#');
+                  sb = sb.append('\\');
+                  sb = sb.append('#');
                } else if (isComments) {
-                  sb = sb.appendByte(ch);
+                  sb = sb.append(ch);
 
                   for (i++; i < len; i++) {
                      ch = regexp.charAt(i);
 
-                     sb = sb.appendByte(ch);
+                     sb = sb.append(ch);
 
                      if (ch == '\n' || ch == '\r') {
                         break;
                      }
                   }
                } else {
-                  sb = sb.appendByte(ch);
+                  sb = sb.append(ch);
                }
 
                break;
 
             case ']':
-               sb = sb.appendByte(ch);
+               sb = sb.append(ch);
 
                if (quote == '[') {
                   quote = 0;
@@ -2145,34 +2145,34 @@ public class RegexpModule
                        && ('0' <= (ch = regexp.charAt(i + 1))
                        && ch <= '9'
                        || ch == ',')) {
-                  sb = sb.appendByte('{');
+                  sb = sb.append('{');
                   for (i++;
                           i < len
                           && ('0' <= (ch = regexp.charAt(i)) && ch <= '9' || ch == ',');
                           i++) {
-                     sb = sb.appendByte(ch);
+                     sb = sb.append(ch);
                   }
 
                   if (i < len) {
-                     sb = sb.appendByte(regexp.charAt(i));
+                     sb = sb.append(regexp.charAt(i));
                   }
                } else {
-                  sb = sb.appendByte('\\');
-                  sb = sb.appendByte('{');
+                  sb = sb.append('\\');
+                  sb = sb.append('{');
                }
                break;
 
             case '}':
-               sb = sb.appendByte('\\');
-               sb = sb.appendByte('}');
+               sb = sb.append('\\');
+               sb = sb.append('}');
                break;
 
             case '|':
-               sb = sb.appendByte('|');
+               sb = sb.append('|');
                break;
 
             default:
-               sb = sb.appendByte(ch);
+               sb = sb.append(ch);
          }
       }
 
@@ -2208,7 +2208,7 @@ public class RegexpModule
       StringValue eval(Env env,
               StringValue sb,
               RegexpState regexpState) {
-         return sb.appendBytes(_text, 0, _text.length);
+         return sb.append(_text);
       }
 
       @Override
@@ -2277,23 +2277,23 @@ public class RegexpModule
 
                switch (ch) {
                   case '\'':
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('\'');
+                     sb = sb.append('\\');
+                     sb = sb.append('\'');
                      break;
                   case '"':
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('"');
+                     sb = sb.append('\\');
+                     sb = sb.append('"');
                      break;
                   case '\\':
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('\\');
+                     sb = sb.append('\\');
+                     sb = sb.append('\\');
                      break;
                   case 0:
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('0');
+                     sb = sb.append('\\');
+                     sb = sb.append('0');
                      break;
                   default:
-                     sb = sb.appendByte(ch);
+                     sb = sb.append(ch);
                }
             }
          }

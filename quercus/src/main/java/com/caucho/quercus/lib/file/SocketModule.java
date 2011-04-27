@@ -317,7 +317,7 @@ public class SocketModule extends AbstractQuercusModule {
             length = socket.read(buffer, 0, length);
 
             if (length > 0) {
-               StringValue sb = new StringBuilderValue(buffer, 0, length);
+               StringValue sb = new StringBuilderValue(new String(buffer));
                return sb;
             } else {
                return BooleanValue.FALSE;

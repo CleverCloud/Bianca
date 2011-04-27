@@ -59,7 +59,7 @@ public class GenericDecoder
 
    @Override
    protected StringBuilder decodeImpl(Env env, StringValue str) {
-      ByteBuffer in = ByteBuffer.wrap(str.toBytes());
+      ByteBuffer in = ByteBuffer.wrap(str.toString().getBytes());
 
       TempCharBuffer tempBuf = TempCharBuffer.allocate();
 

@@ -48,7 +48,7 @@ public class JavaByteObjectArrayMarshal extends JavaArrayMarshal {
       byte[] data = new byte[byteValue.length];
       System.arraycopy(byteValue, 0, data, 0, data.length);
 
-      return new StringBuilderValue(data);
+      return new StringBuilderValue(new String(data));
    }
 
    @Override
