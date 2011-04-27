@@ -4071,8 +4071,6 @@ public class Env {
    public StringValue createString(String s) {
       if (s == null || s.length() == 0) {
          return (StringBuilderValue.EMPTY);
-      } else if (s.length() == 1) {
-         return StringBuilderValue.create(s.charAt(0));
       } else {
          return new StringBuilderValue(s);
       }
