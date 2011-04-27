@@ -1568,7 +1568,11 @@ abstract public class StringValue
     * Returns the last index of the match string, starting from the head.
     */
    public int lastIndexOf(char match, int tail) {
-      return toString().substring(0, tail).lastIndexOf(match);
+      String str = toString();
+      if (str.isEmpty())
+         return -1;
+      int max = Math.min(str.length(), tail);
+      return str.substring(0, max).lastIndexOf(match);
    }
 
    /**

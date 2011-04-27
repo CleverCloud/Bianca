@@ -34,6 +34,8 @@ import com.caucho.quercus.QuercusRuntimeException;
 
 import java.io.*;
 import java.util.IdentityHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.CRC32;
 
 /**
@@ -127,14 +129,18 @@ public class StringBuilderValue
     * Creates the string.
     */
    public static StringValue create(byte value) {
-      return CHAR_STRINGS[value];
+      if (value < CHAR_STRINGS.length)
+         return CHAR_STRINGS[value];
+      return new StringBuilderValue();
    }
 
    /**
     * Creates the string.
     */
    public static StringValue create(char value) {
-      return CHAR_STRINGS[value];
+      if (value < CHAR_STRINGS.length)
+         return CHAR_STRINGS[value];
+      return new StringBuilderValue();
    }
 
    /**
@@ -751,18 +757,8 @@ public class StringBuilderValue
     */
    @Override
    public final StringValue append(Value value) {
-      value = value.toValue();
-
-      if (value.isString()) {
-         StringBuilderValue sb = new StringBuilderValue();
-
-         appendTo(sb);
-         sb.append(value);
-
-         return sb;
-      } else {
-         return value.appendTo(this);
-      }
+      append(value.toString());
+      return this;
    }
 
    /**
