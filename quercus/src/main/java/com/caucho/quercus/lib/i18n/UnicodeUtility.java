@@ -152,12 +152,12 @@ public class UnicodeUtility {
       boolean isStartUtf8 = false;
       boolean isEndUtf8 = false;
 
-      if (inCharset.equalsIgnoreCase("utf8")
+      if (inCharset.equalsIgnoreCase("utf-8")
               || inCharset.equalsIgnoreCase("utf-8")) {
          isStartUtf8 = true;
       }
 
-      if (outCharset.equalsIgnoreCase("utf8")
+      if (outCharset.equalsIgnoreCase("utf-8")
               || outCharset.equalsIgnoreCase("utf-8")) {
          isEndUtf8 = true;
       }

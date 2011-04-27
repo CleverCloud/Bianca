@@ -717,8 +717,6 @@ public class MbstringModule
       if (language == null || language.length() == 0) {
          if (encoding.equalsIgnoreCase("ISO-2022-JP")) {
             return env.createString("Japanese");
-         } else if (encoding.equalsIgnoreCase("ISO-8859-1")) {
-            return env.createString("English");
          } else if (encoding.equalsIgnoreCase("UTF-8")) {
             return env.createString("uni");
          } else {
@@ -726,9 +724,7 @@ public class MbstringModule
          }
       } else if (language.equals("Japanese") || language.equals("ja")) {
          setEncodingLanguage(env, "ISO-2022-JP");
-      } else if (language.equals("English") || language.equals("en")) {
-         setEncodingLanguage(env, "ISO-8859-1");
-      } else if (language.equals("uni")) {
+      } else if (language.equals("English") || language.equals("en") || language.equals("uni")) {
          setEncodingLanguage(env, "UTF-8");
       } else {
          return BooleanValue.FALSE;
@@ -741,7 +737,7 @@ public class MbstringModule
       String encoding = (String) env.getSpecialValue("mb.internal_encoding");
 
       if (encoding == null) {
-         return "ISO-8859-1";
+         return "utf-8";
       }
 
       return encoding;

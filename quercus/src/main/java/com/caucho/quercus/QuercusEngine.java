@@ -112,7 +112,7 @@ public class QuercusEngine {
          ws.setNewlineString("\n");
 
          try {
-            ws.setEncoding("iso-8859-1");
+            ws.setEncoding("utf-8");
          } catch (Exception e) {
          }
 

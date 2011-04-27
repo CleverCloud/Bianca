@@ -147,7 +147,7 @@ public class PDO implements EnvCleanup {
    private PDOStatement _lastPDOStatement;
    private String _lastInsertId;
    private boolean _inTransaction;
-   private static String ENCODING = "ISO8859_1";
+   private static String ENCODING = "UTF-8";
    private final static Properties driverList = new Properties();
 
    static {

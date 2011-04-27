@@ -41,7 +41,7 @@ abstract public class Decoder {
    protected boolean _hasError;
 
    public static Decoder create(String charset) {
-      if (charset.equalsIgnoreCase("utf8")
+      if (charset.equalsIgnoreCase("utf-8")
               || charset.equalsIgnoreCase("utf-8")) {
          return new Utf8Decoder();
       } else if (charset.equalsIgnoreCase("big5")

@@ -956,8 +956,6 @@ public class StringModule extends AbstractQuercusModule {
 
          md.reset();
 
-         // TODO: iso-8859-1
-
          int ch;
          while ((ch = is.read()) >= 0) {
             md.update((byte) ch);
@@ -1881,8 +1879,6 @@ public class StringModule extends AbstractQuercusModule {
 
       try {
          MessageDigest md = MessageDigest.getInstance("SHA1");
-
-         // TODO: iso-8859-1
 
          for (int i = 0; i < source.length(); i++) {
             char ch = source.charAt(i);

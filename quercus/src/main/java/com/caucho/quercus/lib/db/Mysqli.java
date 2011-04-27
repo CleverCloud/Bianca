@@ -293,7 +293,7 @@ public class Mysqli extends JdbcConnectionResource {
          urlBuilder.append(encoding);
 
          // Sets useUnicode to true if using utf8
-         if (encoding.equals("utf8")) {
+         if (encoding.equals("utf-8")) {
             urlBuilder.append("&useUnicode=true");
          }
       }

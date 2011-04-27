@@ -405,7 +405,7 @@ public class Env {
       String encoding = getHttpInputEncoding();
 
       if (encoding == null)
-      encoding = "iso-8859-1";
+      encoding = "utf-8";
 
       _request.setCharacterEncoding(encoding);
       } catch (Exception e) {
