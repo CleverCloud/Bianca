@@ -1592,7 +1592,8 @@ abstract public class StringValue
     */
    public boolean regionMatches(int offset,
            String mBuffer, int mOffset) {
-      return toString().substring(offset).equals(mBuffer.substring(mOffset));
+      int length = mBuffer.length();
+      return toString().substring(offset, offset+length).equals(mBuffer.substring(mOffset, mOffset+length));
    }
 
    /**
@@ -1600,7 +1601,8 @@ abstract public class StringValue
     */
    public boolean regionMatchesIgnoreCase(int offset,
            String mBuffer, int mOffset) {
-      return toString().toLowerCase().substring(offset).equals(mBuffer.substring(mOffset).toLowerCase());
+      int length = mBuffer.length();
+      return toString().toLowerCase().substring(offset, offset+length).equals(mBuffer.substring(mOffset, mOffset+length).toLowerCase());
    }
 
    /**
