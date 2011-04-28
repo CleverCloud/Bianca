@@ -183,10 +183,9 @@ public class MathModule extends AbstractQuercusModule {
          num = num ^ Long.MAX_VALUE + 1;
       }
 
-      int bufLen = 64;
       String buffer = new String();
 
-      int i = bufLen;
+      int i = 64;
       while (num != 0 && i > 0) {
          int d = (int) (num % base);
 
@@ -200,6 +199,7 @@ public class MathModule extends AbstractQuercusModule {
          num = num / base;
       }
 
+      int bufLen = buffer.length();
       StringBuilder tmp = new StringBuilder(buffer);
       for (int j = i; j < bufLen; j++) {
          tmp.setCharAt(j-i, buffer.charAt(j));
