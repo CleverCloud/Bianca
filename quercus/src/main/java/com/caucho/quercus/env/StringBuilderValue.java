@@ -34,8 +34,6 @@ import com.caucho.quercus.QuercusRuntimeException;
 
 import java.io.*;
 import java.util.IdentityHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.CRC32;
 
 /**
@@ -46,7 +44,6 @@ public class StringBuilderValue
 
    private static final StringBuilderValue[] CHAR_STRINGS;
    private StringBuilder _buffer;
-   private boolean _isCopy;
    private int _hashCode;
 
    public StringBuilderValue() {
@@ -83,7 +80,7 @@ public class StringBuilderValue
 
    public StringBuilderValue(Value v1) {
       if (v1 instanceof StringBuilderValue) {
-         init((StringBuilderValue) v1);
+         _buffer = new StringBuilder((StringBuilderValue) v1);
       } else {
          _buffer = new StringBuilder();
          v1.appendTo(this);
@@ -91,16 +88,7 @@ public class StringBuilderValue
    }
 
    public StringBuilderValue(StringBuilderValue v) {
-      init(v);
-   }
-
-   private void init(StringBuilderValue v) {
-      if (v._isCopy) {
-         _buffer = new StringBuilder(v._buffer);
-      } else {
-         _buffer = v._buffer;
-         v._isCopy = true;
-      }
+      _buffer = new StringBuilder(v._buffer);
    }
 
    public StringBuilderValue(Value v1, Value v2) {
