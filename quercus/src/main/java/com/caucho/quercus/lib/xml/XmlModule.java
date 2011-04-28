@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.xml;
 
