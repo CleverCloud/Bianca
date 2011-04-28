@@ -291,13 +291,13 @@ public class UnicodeModule extends AbstractQuercusModule {
       boolean isStartUtf8 = false;
       boolean isEndUtf8 = false;
 
-      if (inCharset.equalsIgnoreCase("utf-8")
-              || inCharset.equalsIgnoreCase("utf-8")) {
+      if (inCharset.equalsIgnoreCase("utf8")
+              || inCharset.equalsIgnoreCase("utf8")) {
          isStartUtf8 = true;
       }
 
-      if (outCharset.equalsIgnoreCase("utf-8")
-              || outCharset.equalsIgnoreCase("utf-8")) {
+      if (outCharset.equalsIgnoreCase("utf8")
+              || outCharset.equalsIgnoreCase("utf8")) {
          isEndUtf8 = true;
       }
 
@@ -570,7 +570,7 @@ public class UnicodeModule extends AbstractQuercusModule {
          return BooleanValue.FALSE;
       }
    }
-   static final IniDefinition INI_ICONV_INPUT_ENCODING = _iniDefinitions.add("iconv.input_encoding", "utf-8", PHP_INI_ALL);
-   static final IniDefinition INI_ICONV_OUTPUT_ENCODING = _iniDefinitions.add("iconv.output_encoding", "utf-8", PHP_INI_ALL);
-   static final IniDefinition INI_ICONV_INTERNAL_ENCODING = _iniDefinitions.add("iconv.internal_encoding", "utf-8", PHP_INI_ALL);
+   static final IniDefinition INI_ICONV_INPUT_ENCODING = _iniDefinitions.add("iconv.input_encoding", "utf8", PHP_INI_ALL);
+   static final IniDefinition INI_ICONV_OUTPUT_ENCODING = _iniDefinitions.add("iconv.output_encoding", "utf8", PHP_INI_ALL);
+   static final IniDefinition INI_ICONV_INTERNAL_ENCODING = _iniDefinitions.add("iconv.internal_encoding", "utf8", PHP_INI_ALL);
 }

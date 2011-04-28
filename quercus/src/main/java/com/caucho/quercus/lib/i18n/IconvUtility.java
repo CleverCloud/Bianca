@@ -90,7 +90,7 @@ public class IconvUtility {
          WriteStream out = new WriteStream(ts);
 
          try {
-            out.setEncoding("utf-8");
+            out.setEncoding("utf8");
          } catch (IOException e) {
             log.log(Level.WARNING, e.toString(), e);
          }

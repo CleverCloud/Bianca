@@ -86,7 +86,7 @@ public class CgiQuercus
       WriteStream os = new WriteStream(StdoutStream.create());
 
       os.setNewlineString("\n");
-      os.setEncoding("utf-8");
+      os.setEncoding("utf8");
 
       Env env = createEnv(page, os, null, null);
       env.start();

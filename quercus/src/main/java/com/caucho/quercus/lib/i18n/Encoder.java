@@ -40,8 +40,8 @@ abstract public class Encoder {
    protected boolean _isReplaceUnicode = false;
 
    public static Encoder create(String charset) {
-      if (charset.equalsIgnoreCase("utf-8")
-              || charset.equalsIgnoreCase("utf-8")) {
+      if (charset.equalsIgnoreCase("utf8")
+              || charset.equalsIgnoreCase("utf8")) {
          return new Utf8Encoder();
       } else if (charset.equalsIgnoreCase("big5")
               || charset.equalsIgnoreCase("big-5")) {

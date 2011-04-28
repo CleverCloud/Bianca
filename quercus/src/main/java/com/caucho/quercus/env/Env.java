@@ -127,7 +127,7 @@ public class Env {
    private static final int HTTP_RAW_POST_DATA = 16;
    private static final IntMap SPECIAL_VARS = new IntMap();
    private static final StringValue PHP_SELF_STRING = new StringBuilderValue("PHP_SELF");
-   private static final StringValue UTF8_STRING = new StringBuilderValue("utf-8");
+   private static final StringValue UTF8_STRING = new StringBuilderValue("utf8");
    private static final StringValue S_GET = new StringBuilderValue("_GET");
    private static final StringValue S_POST = new StringBuilderValue("_POST");
    private static final StringValue S_SESSION = new StringBuilderValue("_SESSION");
@@ -406,7 +406,7 @@ public class Env {
       String encoding = getHttpInputEncoding();
 
       if (encoding == null)
-      encoding = "utf-8";
+      encoding = "utf8";
 
       _request.setCharacterEncoding(encoding);
       } catch (Exception e) {
@@ -609,7 +609,7 @@ public class Env {
       }
 
       if (encoding == null) {
-         encoding = "utf-8";
+         encoding = "utf8";
       }
 
       return encoding;

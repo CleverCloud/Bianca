@@ -738,7 +738,7 @@ public class MbstringModule
       String encoding = (String) env.getSpecialValue("mb.internal_encoding");
 
       if (encoding == null) {
-         return "utf-8";
+         return "utf8";
       }
 
       return encoding;

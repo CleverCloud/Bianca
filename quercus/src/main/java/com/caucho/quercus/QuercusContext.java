@@ -118,7 +118,7 @@ public class QuercusContext {
    private String _scriptEncoding;
    private String _phpVersion = QuercusVersion.getVersionNumber();
    private String _mySqlVersion;
-   private String _jdbcEncoding = "utf-8";
+   private String _jdbcEncoding = "utf8";
    private StringValue _phpVersionValue;
    private boolean _isStrict;
    private boolean _isLooseParse;
@@ -363,7 +363,7 @@ public class QuercusContext {
       if (_scriptEncoding != null) {
          return _scriptEncoding;
       }
-      return "utf-8";
+      return "utf8";
    }
 
    /*
@@ -1956,7 +1956,7 @@ public class QuercusContext {
    public static final IniDefinition INI_ALWAYS_POPULATE_RAW_POST_DATA = _ini.add(
            "always_populate_raw_post_data", false, IniDefinition.PHP_INI_PERDIR);
    // unicode ini
-   public static final IniDefinition INI_UNICODE_FALLBACK_ENCODING = _ini.add("unicode.fallback_encoding", "utf-8", IniDefinition.PHP_INI_ALL);
+   public static final IniDefinition INI_UNICODE_FALLBACK_ENCODING = _ini.add("unicode.fallback_encoding", "utf8", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_MODE = _ini.add("unicode.from_error_mode", "2", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_SUBST_CHAR = _ini.add(
            "unicode.from_error_subst_char", "3f", IniDefinition.PHP_INI_ALL);
