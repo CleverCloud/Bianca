@@ -277,7 +277,7 @@ public class MbstringModule
             parseCommaSeparatedList(list, encodings);
          } else {
             list.add("ASCII");
-            list.add("UTF-8");
+            list.add("utf8");
          }
       } else if (encodingV.isArray()) {
          Iterator<Value> iter = encodingV.getValueIterator(env);
@@ -291,7 +291,7 @@ public class MbstringModule
          if (encodings.equalsIgnoreCase("auto")) {
             list.add("ASCII");
             list.add("JIS");
-            list.add("UTF-8");
+            list.add("utf8");
             list.add("EUC-JP");
             list.add("SJIS");
          } else {
@@ -718,7 +718,7 @@ public class MbstringModule
       if (language == null || language.length() == 0) {
          if (encoding.equalsIgnoreCase("ISO-2022-JP")) {
             return env.createString("Japanese");
-         } else if (encoding.equalsIgnoreCase("UTF-8")) {
+         } else if (encoding.equalsIgnoreCase("utf8")) {
             return env.createString("uni");
          } else {
             return env.createString(encoding);
@@ -726,7 +726,7 @@ public class MbstringModule
       } else if (language.equals("Japanese") || language.equals("ja")) {
          setEncodingLanguage(env, "ISO-2022-JP");
       } else if (language.equals("English") || language.equals("en") || language.equals("uni")) {
-         setEncodingLanguage(env, "UTF-8");
+         setEncodingLanguage(env, "utf8");
       } else {
          return BooleanValue.FALSE;
       }
@@ -1231,7 +1231,7 @@ public class MbstringModule
          if (encodings.equals("auto")) {
             list.add("ASCII");
             list.add("JIS");
-            list.add("UTF-8");
+            list.add("utf8");
             list.add("EUC-JP");
             list.add("SJIS");
          } else {

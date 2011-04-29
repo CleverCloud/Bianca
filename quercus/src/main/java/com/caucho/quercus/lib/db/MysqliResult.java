@@ -981,7 +981,7 @@ public class MysqliResult extends JdbcResultResource {
       // get bytes directly.  Also, getBytes is faster for MySQL since
       // getString converts from bytes to string.
 
-      if ("UTF-8".equals(encoding)) {
+      if ("utf8".equals(encoding)) {
          byte[] bytes = rs.getBytes(column);
 
          if (bytes == null) {
