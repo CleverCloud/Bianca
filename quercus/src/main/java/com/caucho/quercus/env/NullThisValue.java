@@ -32,7 +32,7 @@ package com.caucho.quercus.env;
 import java.io.Serializable;
 
 /**
- * Represents a PHP null value, used for 
+ * Represents a PHP null value, used for
  */
 public class NullThisValue extends NullValue
         implements Serializable {

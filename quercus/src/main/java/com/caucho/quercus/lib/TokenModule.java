@@ -44,7 +44,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
- * Quercus tokenizer 
+ * Quercus tokenizer
  */
 public class TokenModule extends AbstractQuercusModule {
 

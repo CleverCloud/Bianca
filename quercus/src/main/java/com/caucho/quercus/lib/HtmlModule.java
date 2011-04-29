@@ -111,7 +111,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional("ENT_COMPAT") int quoteStyle) {
       Value result;
 
-      
+
       if (table == HTML_ENTITIES) {
          if (HTML_ENTITIES_ARRAY_UNICODE == null) {
             HTML_ENTITIES_ARRAY_UNICODE = toUnicodeArray(

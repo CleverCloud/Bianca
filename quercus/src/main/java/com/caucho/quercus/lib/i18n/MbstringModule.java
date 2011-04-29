@@ -221,10 +221,10 @@ public class MbstringModule
       // TODO: strict
 
       ArrayList<String> encodingList = getDetectOrderList(env, encodingV);
-      
+
       if (encodingList.isEmpty())
          return BooleanValue.FALSE;
-      
+
       return env.createString(encodingList.get(0));
    }
 

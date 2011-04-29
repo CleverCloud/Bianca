@@ -507,14 +507,14 @@ public class StringBuilderValue
    public Value setCharAt(long index, String value)
    {
    int len = _length;
-   
+
    if (index < 0 || len <= index)
    return this;
    else {
    StringBuilderValue sb = new StringBuilderValue(_buffer, 0, (int) index);
    sb.append(value);
    sb.append(_buffer, (int) (index + 1), (int) (len - index - 1));
-   
+
    return sb;
    }
    }

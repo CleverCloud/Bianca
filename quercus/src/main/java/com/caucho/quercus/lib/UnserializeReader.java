@@ -93,7 +93,7 @@ public final class UnserializeReader {
          }
 
          case 's':
-         case 'S': 
+         case 'S':
          case 'u':
          case 'U':{
             expect(':');

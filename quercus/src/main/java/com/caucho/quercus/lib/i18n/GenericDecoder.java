@@ -41,7 +41,7 @@ import com.caucho.vfs.TempCharBuffer;
 
 public class GenericDecoder
         extends Decoder {
-   
+
    private Charset _charset;
    protected CharsetDecoder _decoder;
 

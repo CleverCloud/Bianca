@@ -548,10 +548,10 @@ public class ExprFactory {
     /*
       if (left instanceof ToStringExpr)
       left = ((ToStringExpr) left).getExpr();
-      
+
       if (left instanceof StringLiteralExpr) {
       StringLiteralExpr string = (StringLiteralExpr) left;
-      
+
       if (string.evalConstant().length() == 0)
       return ToStringExpr.create(right);
       }
@@ -568,10 +568,10 @@ public class ExprFactory {
       /*
       if (right instanceof ToStringExpr)
       right = ((ToStringExpr) right).getExpr();
-      
+
       if (right instanceof StringLiteralExpr) {
       StringLiteralExpr string = (StringLiteralExpr) right;
-      
+
       if (string.evalConstant().length() == 0)
       return ToStringExpr.create(left);
       }

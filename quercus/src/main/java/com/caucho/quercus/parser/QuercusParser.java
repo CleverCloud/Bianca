@@ -3571,7 +3571,7 @@ public class QuercusParser {
       if (name.equals("each")) {
       if (args.size() != 1)
       throw error(L.l("each requires a single expression"));
-      
+
       // php/1721
       // we should let ArrayModule.each() handle it
       //return _factory.createEach(args.get(0));

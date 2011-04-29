@@ -40,7 +40,7 @@ import java.io.IOException;
 /**
  * Input from a compressed stream.
  *
- * 
+ *
  */
 public class ZlibInputStream extends ReadStreamInput {
 
