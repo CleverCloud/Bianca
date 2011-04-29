@@ -36,7 +36,6 @@ import com.caucho.quercus.env.StringValue;
 
 class RegexpNode {
 
-   private static final L10N L = new L10N(RegexpNode.class);
    static final int RC_END = 0;
    static final int RC_NULL = 1;
    static final int RC_STRING = 2;
@@ -2377,7 +2376,7 @@ class RegexpNode {
       }
 
       StringNode(String buffer, int length) {
-         _buffer = buffer;
+         _buffer = buffer.substring(0, length);
 
          if (_buffer.isEmpty()) {
             throw new IllegalStateException("empty string");
