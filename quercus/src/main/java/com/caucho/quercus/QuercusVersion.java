@@ -25,17 +25,16 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
- * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus;
 
 public class QuercusVersion {
 
     public static String getVersionNumber() {
-	return "6.0.x-dev";
+	return "@@Version@@";
     }
 
     public static String getVersionDate() {
-	return "20110426";
+	return "@@VersionDate@@";
     }
 }
