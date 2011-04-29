@@ -403,8 +403,7 @@ public class HtmlModule extends AbstractQuercusModule {
             }
 
             htmlEntityStart = -1;
-         } else if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z')) {
-         } else {
+         } else if (!(('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))) {
             result.append('&');
             i = htmlEntityStart;
             htmlEntityStart = -1;
