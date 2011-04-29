@@ -34,6 +34,7 @@ import com.caucho.quercus.annotation.ResourceType;
 import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.env.*;
 import com.caucho.util.L10N;
+import java.io.UnsupportedEncodingException;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
@@ -981,61 +982,12 @@ public class MysqliResult extends JdbcResultResource {
       // get bytes directly.  Also, getBytes is faster for MySQL since
       // getString converts from bytes to string.
 
-      if ("utf8".equals(encoding)) {
-         byte[] bytes = rs.getBytes(column);
+      String value = rs.getString(column);
 
-         if (bytes == null) {
-            return NullValue.NULL;
-         }
-
-         StringValue bb = new StringBuilderValue();
-
-         bb.append(bytes);
-
-         /*
-         while (offset < length) {
-         int ch = bytes[offset++] & 0xff;
-
-         if (ch < 0x80) {
-         bb.append((char) ch);
-         }
-         else if (ch < 0xe0) {
-         int ch2 = bytes[offset++] & 0xff;
-         int v = ((ch & 0x1f) << 6) + ((ch2 & 0x3f));
-
-         bb.append((char) MysqlLatin1Utility.decode(v));
-         }
-         else {
-         int ch2 = bytes[offset++] & 0xff;
-         int ch3 = bytes[offset++] & 0xff;
-         int v = ((ch & 0xf) << 12) + ((ch2 & 0x3f) << 6) + ((ch3 & 0x3f));
-
-         bb.append((char) MysqlLatin1Utility.decode(v));
-         }
-         }
-          */
-
-         return bb;
-      } else if ("Cp1252".equals(encoding) || "LATIN1".equals(encoding)) {
-         byte[] bytes = rs.getBytes(column);
-
-         if (bytes == null) {
-            return NullValue.NULL;
-         }
-
-         StringValue bb = new StringBuilderValue();
-
-         bb.append(bytes);
-
-         return bb;
+      if (value != null) {
+         return env.createString(value);
       } else {
-         String value = rs.getString(column);
-
-         if (value != null) {
-            return env.createString(value);
-         } else {
-            return NullValue.NULL;
-         }
+         return NullValue.NULL;
       }
    }
 
