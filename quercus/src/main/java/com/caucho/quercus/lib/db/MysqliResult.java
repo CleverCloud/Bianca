@@ -949,11 +949,7 @@ public class MysqliResult extends JdbcResultResource {
             return NullValue.NULL;
          }
 
-         // TODO: i18n
-         StringBuilderValue sb = new StringBuilderValue();
-         qRs.getString(column, sb.toString().getBytes(), sb.length());
-
-         return sb;
+         return new StringBuilderValue(qRs.getString(column));
       }
 
       Method getColumnCharacterSetMethod = mysqli.getColumnCharacterSetMethod(md.getClass());
