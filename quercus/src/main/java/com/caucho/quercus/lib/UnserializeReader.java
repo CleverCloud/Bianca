@@ -561,14 +561,14 @@ public final class UnserializeReader {
             StringValue v;
 
             if (len < 32) {
-               _key.init(_buffer, _index, len);
+               _key.init(_buffer, _index);
 
                v = _keyCache.get(_key);
 
                if (v != null) {
                   _index += len;
                } else {
-                  StringKey key = new StringKey(_buffer, _index, len);
+                  StringKey key = new StringKey(_buffer, _index);
 
                   v = readStringValue(env, len);
 
@@ -715,28 +715,25 @@ public final class UnserializeReader {
 
       String _buffer;
       int _offset;
-      int _length;
 
       StringKey() {
       }
 
-      StringKey(String buffer, int offset, int length) {
+      StringKey(String buffer, int offset) {
          _buffer = buffer;
          _offset = 0;
-         _length = length;
       }
 
-      void init(String buffer, int offset, int length) {
+      void init(String buffer, int offset) {
          _buffer = buffer;
          _offset = offset;
-         _length = length;
       }
 
       @Override
       public int hashCode() {
          String buffer = _buffer;
          int offset = _offset;
-         int end = offset + _length;
+         int end = offset + _buffer.length();
          int hash = 17;
 
          for (; offset < end; offset++) {
@@ -754,9 +751,9 @@ public final class UnserializeReader {
 
          StringKey key = (StringKey) o;
 
-         int length = _length;
+         int length = _buffer.length();
 
-         if (length != key._length) {
+         if (length != key._buffer.length()) {
             return false;
          }
 

@@ -1595,9 +1595,7 @@ public class MiscModule extends AbstractQuercusModule {
 
                char ch = s.charAt(offset++);
 
-               long d = ch & 0xff;
-
-               v = (v << 8) + d;
+               v = (v << 8) + ch;
             }
 
             if (_isSigned) {
