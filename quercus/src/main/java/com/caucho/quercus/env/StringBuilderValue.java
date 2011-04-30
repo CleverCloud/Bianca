@@ -940,7 +940,7 @@ public class StringBuilderValue
       out.print(length);
       out.print(") \"");
 
-      for (int i = 0; i < length; i++) {
+      /*for (int i = 0; i < length; i++) {
          char ch = charAt(i);
 
          if (0x20 <= ch && ch <= 0x7f || ch == '\t' || ch == '\r' || ch == '\n') {
@@ -956,7 +956,8 @@ public class StringBuilderValue
                     + Integer.toHexString((ch >> 4) & 0xf)
                     + Integer.toHexString((ch) & 0xf));
          }
-      }
+      }*/
+      out.print(toString());
 
       out.print("\"");
    }

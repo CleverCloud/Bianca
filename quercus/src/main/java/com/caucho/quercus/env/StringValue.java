@@ -1946,14 +1946,10 @@ abstract public class StringValue
          length = 0;
       }
 
-      out.print("unicode(");
+      out.print("string(");
       out.print(length);
       out.print(") \"");
-
-      for (int i = 0; i < length; i++) {
-         out.print(charAt(i));
-      }
-
+      out.print(toString());
       out.print("\"");
    }
 
