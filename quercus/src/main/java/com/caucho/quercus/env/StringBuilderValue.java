@@ -697,6 +697,7 @@ public class StringBuilderValue
     */
    @Override
    public final StringValue append(String s, int start, int end) {
+      if (start < 0) start = 0;
       _buffer.append(s.substring(Math.min(start, s.length()), Math.min(end, s.length())));
       return this;
    }

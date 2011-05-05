@@ -627,7 +627,7 @@ abstract public class StringValue
       } else if (i == len && start == 0) {
          return Double.parseDouble(s);
       } else {
-         return Double.parseDouble(s.substring(start, i));
+         return Double.parseDouble(s.substring(Math.max(0, start), i));
       }
    }
 
@@ -1593,6 +1593,7 @@ abstract public class StringValue
    public boolean regionMatches(int offset,
                                 String mBuffer, int mOffset) {
       int length = mBuffer.length();
+      if (offset < 0) offset = 0;
       return substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length));
    }
 
@@ -1602,6 +1603,7 @@ abstract public class StringValue
    public boolean regionMatchesIgnoreCase(int offset,
                                           String mBuffer, int mOffset) {
       int length = mBuffer.length();
+      if (offset < 0) offset = 0;
       return toString().toLowerCase().substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length).toLowerCase());
    }
 
@@ -1625,6 +1627,7 @@ abstract public class StringValue
     */
    public StringValue substring(int head) {
       String thisVal = toString();
+      if (head < 0) head = 0;
       return new StringBuilderValue(thisVal.substring(Math.min(head, thisVal.length())));
    }
 
@@ -1640,7 +1643,8 @@ abstract public class StringValue
     */
    public String stringSubstring(int begin, int end) {
       String thisVal = toString();
-      return thisVal.substring(begin, end);
+      if (begin < 0) begin = 0;
+      return thisVal.substring(Math.max(begin, 0), end);
    }
 
    /**
