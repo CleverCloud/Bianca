@@ -52,7 +52,10 @@ public class StringBuilderValue
    }
 
    public StringBuilderValue(String buffer, int offset, int length) {
-      _buffer = new StringBuilder(buffer.substring(offset, offset + length));
+      if (offset < buffer.length())
+         _buffer = new StringBuilder(buffer.substring(offset, Math.max(offset + length, buffer.length())));
+      else
+         _buffer = new StringBuilder();
    }
 
    /**
@@ -356,7 +359,7 @@ public class StringBuilderValue
       }
 
       try {
-         return Double.parseDouble(buffer.substring(start, i - start));
+         return Double.parseDouble(buffer.substring(Math.max(start, buffer.length()), Math.max(i - start, buffer.length())));
       } catch (NumberFormatException e) {
          return 0;
       }
@@ -613,7 +616,7 @@ public class StringBuilderValue
          return CHAR_STRINGS[_buffer.charAt(start)];
       }
 
-      return new StringBuilderValue(toString().substring(start, end));
+      return substring(start, end);
    }
 
    /**
@@ -621,7 +624,7 @@ public class StringBuilderValue
     */
    @Override
    public String stringSubstring(int start, int end) {
-      return toString().substring(start, end);
+      return substring(start, end).toString();
    }
 
    /**
@@ -705,7 +708,8 @@ public class StringBuilderValue
     */
    @Override
    public final StringValue append(String s, int start, int end) {
-      _buffer.append(s.substring(start, end));
+      if (0 < start && start < end && end < s.length())
+         _buffer.append(s.substring(start, end));
       return this;
    }
 
@@ -792,7 +796,9 @@ public class StringBuilderValue
     */
    @Override
    public final int indexOf(CharSequence match, int head) {
-      return _buffer.toString().substring(head).indexOf(match.toString());
+      if (head < _buffer.length())
+         return _buffer.toString().substring(head).indexOf(match.toString());
+      return -1;
    }
 
    /**
