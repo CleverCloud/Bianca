@@ -1632,7 +1632,7 @@ abstract public class StringValue
     * Returns a StringValue substring.
     */
    public StringValue substring(int begin, int end) {
-      return new StringBuilderValue(substring(begin, end));
+      return new StringBuilderValue(stringSubstring(begin, end));
    }
 
    /**
