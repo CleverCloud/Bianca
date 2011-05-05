@@ -1595,7 +1595,7 @@ abstract public class StringValue
       int length = mBuffer.length();
       if (offset < 0) offset = 0;
       if (mOffset < 0) mOffset = 0;
-      return substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length));
+      return toString().substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length));
    }
 
    /**
