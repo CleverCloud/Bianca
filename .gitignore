@@ -5,3 +5,5 @@ dist/
 /nbproject/
 /.gradle/
 build.xml
+*.iml
+.idea
