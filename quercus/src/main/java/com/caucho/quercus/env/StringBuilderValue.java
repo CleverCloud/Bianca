@@ -718,11 +718,6 @@ public class StringBuilderValue
       return this;
    }
 
-   @Override
-   public final void write(int ch) {
-      _buffer.append((char) ch);
-   }
-
    /**
     * Append a Java buffer to the value.
     */
