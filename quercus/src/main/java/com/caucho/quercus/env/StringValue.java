@@ -29,31 +29,23 @@
  */
 package com.caucho.quercus.env;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.util.IdentityHashMap;
-import java.util.zip.CRC32;
-
 import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.lib.file.BinaryInput;
 import com.caucho.quercus.marshal.Marshal;
-import com.caucho.util.ByteAppendable;
 import com.caucho.vfs.ReadStream;
 import com.caucho.vfs.TempBuffer;
 import com.caucho.vfs.WriteStream;
+
+import java.io.*;
+import java.util.IdentityHashMap;
+import java.util.zip.CRC32;
 
 /**
  * Represents a Quercus string value.
  */
 abstract public class StringValue
-        extends Value
-        implements CharSequence, ByteAppendable {
+   extends Value
+   implements CharSequence {
 
    public static final StringValue EMPTY = new StringBuilderValue("");
    protected static final int IS_STRING = 0;
@@ -123,6 +115,7 @@ abstract public class StringValue
    //
    // Predicates and relations
    //
+
    /**
     * Returns the type.
     */
@@ -198,6 +191,7 @@ abstract public class StringValue
    //
    // marshal cost
    //
+
    /**
     * Cost to convert to a double
     */
@@ -392,6 +386,7 @@ abstract public class StringValue
    }
 
    // Conversions
+
    /**
     * Converts to a string value.
     */
@@ -441,7 +436,7 @@ abstract public class StringValue
       int ch;
 
       if (offset + 1 < end && buffer.charAt(offset) == '0'
-              && ((ch = buffer.charAt(offset + 1)) == 'x' || ch == 'X')) {
+         && ((ch = buffer.charAt(offset + 1)) == 'x' || ch == 'X')) {
 
          for (offset += 2; offset < end; offset++) {
             ch = buffer.charAt(offset);
@@ -579,7 +574,7 @@ abstract public class StringValue
       }
 
       if (i + 1 < len && s.charAt(i) == '0'
-              && ((ch = s.charAt(i)) == 'x' || ch == 'X')) {
+         && ((ch = s.charAt(i)) == 'x' || ch == 'X')) {
 
          double value = 0;
 
@@ -750,9 +745,9 @@ abstract public class StringValue
          return byteObjects;
       } else {
          env.error(L.l("Can't assign {0} with type {1} to {2}",
-                 this,
-                 this.getClass(),
-                 elementType));
+            this,
+            this.getClass(),
+            elementType));
          return null;
       }
    }
@@ -781,7 +776,7 @@ abstract public class StringValue
 
          if (cl == null) {
             env.warning(L.l("can't find class {0}",
-                    className));
+               className));
 
             return super.toCallable(env);
          }
@@ -805,6 +800,7 @@ abstract public class StringValue
    }
 
    // Operations
+
    /**
     * Returns the character at an index
     */
@@ -1152,6 +1148,7 @@ abstract public class StringValue
    //
    // append code
    //
+
    /**
     * Append a Java string to the value.
     */
@@ -1273,7 +1270,7 @@ abstract public class StringValue
     * Append from a read stream
     */
    public StringValue append(Reader reader)
-           throws IOException {
+      throws IOException {
       int ch;
 
       while ((ch = reader.read()) >= 0) {
@@ -1287,7 +1284,7 @@ abstract public class StringValue
     * Append from a read stream
     */
    public StringValue append(Reader reader, long length)
-           throws IOException {
+      throws IOException {
       int ch;
 
       while (length-- > 0 && (ch = reader.read()) >= 0) {
@@ -1501,6 +1498,7 @@ abstract public class StringValue
    //
    // CharSequence
    //
+
    /**
     * Returns the length of the string.
     */
@@ -1528,6 +1526,7 @@ abstract public class StringValue
    //
    // java.lang.String methods
    //
+
    /**
     * Returns the first index of the match string, starting from the head.
     */
@@ -1592,25 +1591,25 @@ abstract public class StringValue
     * Returns true if the region matches
     */
    public boolean regionMatches(int offset,
-           String mBuffer, int mOffset) {
+                                String mBuffer, int mOffset) {
       int length = mBuffer.length();
-      return toString().substring(offset, offset+length).equals(mBuffer.substring(mOffset, mOffset+length));
+      return toString().substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length));
    }
 
    /**
     * Returns true if the region matches
     */
    public boolean regionMatchesIgnoreCase(int offset,
-           String mBuffer, int mOffset) {
+                                          String mBuffer, int mOffset) {
       int length = mBuffer.length();
-      return toString().toLowerCase().substring(offset, offset+length).equals(mBuffer.substring(mOffset, mOffset+length).toLowerCase());
+      return toString().toLowerCase().substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length).toLowerCase());
    }
 
    /**
     * Returns true if the region matches
     */
    public boolean regionMatches(int offset,
-           StringValue match, int mOffset) {
+                                StringValue match, int mOffset) {
       return regionMatches(offset, match.toString(), mOffset);
    }
 
@@ -1679,7 +1678,7 @@ abstract public class StringValue
    }
 
    public Reader toSimpleReader()
-           throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
       return new SimpleStringValueReader(this);
    }
 
@@ -1687,7 +1686,7 @@ abstract public class StringValue
     * Returns a char stream.
     */
    public Reader toReader()
-           throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
       return new InputStreamReader(toInputStream());
    }
 
@@ -1741,24 +1740,9 @@ abstract public class StringValue
    }
 
    //
-   // ByteAppendable methods
-   //
-   @Override
-   public void write(int value) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   /**
-    * Appends buffer to the ByteAppendable.
-    */
-   @Override
-   public void write(byte[] buffer, int offset, int len) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   //
    // java.lang.Object methods
    //
+
    /**
     * Returns the hash code.
     */
@@ -1870,6 +1854,7 @@ abstract public class StringValue
    //
    // Java generator code
    //
+
    /**
     * Generates code to recreate the expression.
     *
@@ -1877,7 +1862,7 @@ abstract public class StringValue
     */
    @Override
    public void generate(PrintWriter out)
-           throws IOException {
+      throws IOException {
       // max JVM constant string length
       int maxSublen = 0xFFFE;
 
@@ -1936,10 +1921,10 @@ abstract public class StringValue
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       int length = length();
 
       if (length < 0) {
@@ -2039,7 +2024,7 @@ abstract public class StringValue
 
       @Override
       public void close()
-              throws IOException {
+         throws IOException {
       }
    }
 }
