@@ -617,14 +617,6 @@ public class StringBuilderValue
    }
 
    /**
-    * Returns a subsequence
-    */
-   @Override
-   public String stringSubstring(int start, int end) {
-      return substring(start, end).toString();
-   }
-
-   /**
     * Convert to lower case.
     */
    @Override
