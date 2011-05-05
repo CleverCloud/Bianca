@@ -1594,6 +1594,7 @@ abstract public class StringValue
                                 String mBuffer, int mOffset) {
       int length = mBuffer.length();
       if (offset < 0) offset = 0;
+      if (mOffset < 0) mOffset = 0;
       return substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length));
    }
 
@@ -1604,6 +1605,7 @@ abstract public class StringValue
                                           String mBuffer, int mOffset) {
       int length = mBuffer.length();
       if (offset < 0) offset = 0;
+      if (mOffset < 0) mOffset = 0;
       return toString().toLowerCase().substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length).toLowerCase());
    }
 
@@ -1644,7 +1646,8 @@ abstract public class StringValue
    public String stringSubstring(int begin, int end) {
       String thisVal = toString();
       if (begin < 0) begin = 0;
-      return thisVal.substring(Math.max(begin, 0), end);
+      if (end < begin) return "";
+      return thisVal.substring(begin, end);
    }
 
    /**

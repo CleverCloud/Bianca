@@ -52,6 +52,7 @@ public class StringBuilderValue
    }
 
    public StringBuilderValue(String buffer, int offset, int length) {
+      if (offset < 0) offset = 0;
       _buffer = new StringBuilder(buffer.substring(Math.min(offset, buffer.length()), Math.min(offset + length, buffer.length())));
    }
 
@@ -355,6 +356,7 @@ public class StringBuilderValue
          return 0;
       }
 
+      if (start < 0) start = 0;
       try {
          return Double.parseDouble(buffer.substring(Math.min(start, buffer.length()), Math.min(i - start, buffer.length())));
       } catch (NumberFormatException e) {
@@ -698,7 +700,8 @@ public class StringBuilderValue
    @Override
    public final StringValue append(String s, int start, int end) {
       if (start < 0) start = 0;
-      _buffer.append(s.substring(Math.min(start, s.length()), Math.min(end, s.length())));
+      if (end > start)
+         _buffer.append(s.substring(Math.min(start, s.length()), Math.min(end, s.length())));
       return this;
    }
 
