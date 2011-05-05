@@ -1625,21 +1625,14 @@ abstract public class StringValue
     */
    public StringValue substring(int head) {
       String thisVal = toString();
-      if (thisVal.length() < head)
-         return new StringBuilderValue(thisVal.substring(head));
-      else
-         return StringValue.EMPTY;
+      return new StringBuilderValue(thisVal.substring(Math.min(head, thisVal.length())));
    }
 
    /**
     * Returns a StringValue substring.
     */
    public StringValue substring(int begin, int end) {
-      String thisVal = toString();
-      if (0 < begin && begin < end && thisVal.length() < end)
-         return new StringBuilderValue(thisVal.substring(begin, end));
-      else
-         return StringValue.EMPTY;
+      return new StringBuilderValue(substring(begin, end));
    }
 
    /**
@@ -1647,10 +1640,7 @@ abstract public class StringValue
     */
    public String stringSubstring(int begin, int end) {
       String thisVal = toString();
-      if (0 < begin && begin < end && thisVal.length() < end)
-         return thisVal.substring(begin, end);
-      else
-         return "";
+      return thisVal.substring(begin, end);
    }
 
    /**
