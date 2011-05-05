@@ -1520,7 +1520,7 @@ abstract public class StringValue
     */
    @Override
    public CharSequence subSequence(int start, int end) {
-      return new StringBuilderValue(toString().substring(start, end));
+      return substring(start, end);
    }
 
    //
@@ -1538,7 +1538,7 @@ abstract public class StringValue
     * Returns the first index of the match string, starting from the head.
     */
    public int indexOf(CharSequence match, int head) {
-      return toString().substring(head).indexOf(match.toString());
+      return substring(head).indexOf(match.toString());
    }
 
    /**
@@ -1552,7 +1552,7 @@ abstract public class StringValue
     * Returns the last index of the match string, starting from the head.
     */
    public int indexOf(char match, int head) {
-      return toString().substring(head).indexOf(match);
+      return substring(head).indexOf(match);
    }
 
    /**
@@ -1584,7 +1584,7 @@ abstract public class StringValue
     * Returns the last index of the match string, starting from the tail.
     */
    public int lastIndexOf(CharSequence match, int tail) {
-      return toString().substring(0, tail).lastIndexOf(match.toString());
+      return substring(0, tail).lastIndexOf(match.toString());
    }
 
    /**
@@ -1593,7 +1593,7 @@ abstract public class StringValue
    public boolean regionMatches(int offset,
                                 String mBuffer, int mOffset) {
       int length = mBuffer.length();
-      return toString().substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length));
+      return substring(offset, offset + length).equals(mBuffer.substring(mOffset, mOffset + length));
    }
 
    /**
@@ -1624,21 +1624,33 @@ abstract public class StringValue
     * Returns a StringValue substring.
     */
    public StringValue substring(int head) {
-      return new StringBuilderValue(toString().substring(head));
+      String thisVal = toString();
+      if (thisVal.length() < head)
+         return new StringBuilderValue(thisVal.substring(head));
+      else
+         return StringValue.EMPTY;
    }
 
    /**
     * Returns a StringValue substring.
     */
    public StringValue substring(int begin, int end) {
-      return new StringBuilderValue(toString().substring(begin, end));
+      String thisVal = toString();
+      if (0 < begin && begin < end && thisVal.length() < end)
+         return new StringBuilderValue(thisVal.substring(begin, end));
+      else
+         return StringValue.EMPTY;
    }
 
    /**
     * Returns a String substring
     */
    public String stringSubstring(int begin, int end) {
-      return toString().substring(begin, end);
+      String thisVal = toString();
+      if (0 < begin && begin < end && thisVal.length() < end)
+         return thisVal.substring(begin, end);
+      else
+         return "";
    }
 
    /**
