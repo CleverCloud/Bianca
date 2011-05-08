@@ -1166,7 +1166,7 @@ public class StringBuilderValue
    }
 
    static {
-      CHAR_STRINGS = new StringBuilderValue[256];
+      CHAR_STRINGS = new StringBuilderValue[Character.MAX_VALUE];
       for (char i = 0; i < CHAR_STRINGS.length; ++i) {
          CHAR_STRINGS[i] = new StringBuilderValue(i);
       }
