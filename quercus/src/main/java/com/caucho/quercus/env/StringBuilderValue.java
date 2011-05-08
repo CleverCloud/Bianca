@@ -896,7 +896,7 @@ public class StringBuilderValue
 
       int length = length();
 
-      sb.append("binary(");
+      sb.append("string(");
       sb.append(length);
       sb.append(") \"");
 
