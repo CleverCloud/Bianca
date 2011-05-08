@@ -826,7 +826,7 @@ abstract public class StringValue
       int len = length();
 
       if (index < 0 || len <= index) {
-         return UnsetStringValue.UNSET;
+         return StringValue.EMPTY;
       } else {
          return StringValue.create(charAt((int) index));
       }

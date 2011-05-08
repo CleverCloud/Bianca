@@ -550,7 +550,7 @@ public class StringBuilderValue
    @Override
    public Value charValueAt(long index) {
       if (index < 0 || length() <= index) {
-         return UnsetStringValue.UNSET;
+         return StringValue.EMPTY;
       } else {
          return StringBuilderValue.create(toString().charAt((int) index));
       }
