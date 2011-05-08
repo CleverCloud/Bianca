@@ -148,11 +148,9 @@ public class StringBuilderValue
    }
 
    public static StringValue create(int value) {
-      if (value < CHAR_STRINGS.length) {
+      if (value < CHAR_STRINGS.length)
          return CHAR_STRINGS[value];
-      } else {
-         return new StringBuilderValue();
-      }
+      return new StringBuilderValue();
    }
 
    /**
@@ -1169,8 +1167,8 @@ public class StringBuilderValue
 
    static {
       CHAR_STRINGS = new StringBuilderValue[256];
-      for (int i = 0; i < CHAR_STRINGS.length; ++i) {
-         CHAR_STRINGS[i] = new StringBuilderValue((byte) i);
+      for (char i = 0; i < CHAR_STRINGS.length; ++i) {
+         CHAR_STRINGS[i] = new StringBuilderValue(i);
       }
    }
 }
