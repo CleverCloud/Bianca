@@ -115,7 +115,7 @@ public class IconvUtility {
 
          out.flush();
 
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
          for (TempBuffer ptr = ts.getHead(); ptr != null; ptr = ptr.getNext()) {
             sb.append(new String(ptr.getBuffer()));
          }
@@ -177,7 +177,7 @@ public class IconvUtility {
            String lineBreakChars,
            int lineLength)
            throws UnsupportedEncodingException {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
       sb.append(name);
       sb.append(':');
       sb.append(' ');

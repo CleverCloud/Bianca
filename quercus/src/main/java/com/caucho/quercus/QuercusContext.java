@@ -73,7 +73,7 @@ public class QuercusContext {
    private final QuercusSessionManager _sessionManager;
    private final ClassLoader _loader;
    private ModuleContext _moduleContext;
-   private static LruCache<String, StringBuilderValue> _stringMap = new LruCache<String, StringBuilderValue>(8 * 1024);
+   private static LruCache<String, StringValue> _stringMap = new LruCache<String, StringValue>(8 * 1024);
    private HashMap<String, ModuleInfo> _modules = new HashMap<String, ModuleInfo>();
    private HashSet<ModuleStartupListener> _moduleStartupListeners = new HashSet<ModuleStartupListener>();
    private HashSet<String> _extensionSet = new HashSet<String>();
@@ -1321,7 +1321,7 @@ public class QuercusContext {
     */
    public int getConstantId(String name) {
       // php/3j12
-      return getConstantId(new StringBuilderValue(name));
+      return getConstantId(new StringValue(name));
    }
 
    /**
@@ -1627,11 +1627,11 @@ public class QuercusContext {
     * Creates a string.  Because these strings are typically Java
     * constants, they fit into a lru cache.
     */
-   public StringBuilderValue createUnicodeString(String name) {
-      StringBuilderValue value = _stringMap.get(name);
+   public StringValue createUnicodeString(String name) {
+      StringValue value = _stringMap.get(name);
 
       if (value == null) {
-         value = new StringBuilderValue(name);
+         value = new StringValue(name);
 
          _stringMap.put(name, value);
       }
@@ -1644,10 +1644,10 @@ public class QuercusContext {
     * constants, they fit into a lru cache.
     */
    private StringValue createString(String name) {
-      StringBuilderValue value = _stringMap.get(name);
+      StringValue value = _stringMap.get(name);
 
       if (value == null) {
-         value = new StringBuilderValue(name);
+         value = new StringValue(name);
 
          _stringMap.put(name, value);
       }
@@ -1675,7 +1675,7 @@ public class QuercusContext {
    if (value == null) {
    name = name.intern();
 
-   value = new StringBuilderValue(name);
+   value = new StringValue(name);
    _internMap.put(name, value);
    }
 
@@ -1756,7 +1756,7 @@ public class QuercusContext {
               || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
-         return new StringBuilderValue((String) obj);
+         return new StringValue((String) obj);
       } else {
          // TODO: unknown types, e.g. Character?
 

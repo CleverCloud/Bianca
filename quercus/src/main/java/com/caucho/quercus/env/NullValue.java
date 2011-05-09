@@ -192,7 +192,7 @@ public class NullValue extends Value
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return new StringBuilderValue();
+      return new StringValue();
    }
 
    /**
@@ -414,7 +414,7 @@ public class NullValue extends Value
     */
    @Override
    public StringValue toStringValue() {
-      return StringBuilderValue.EMPTY;
+      return StringValue.EMPTY;
    }
 
    @Override
@@ -562,7 +562,7 @@ public class NullValue extends Value
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(StringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return sb;
    }
 

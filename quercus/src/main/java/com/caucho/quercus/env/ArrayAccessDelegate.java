@@ -36,10 +36,10 @@ package com.caucho.quercus.env;
  */
 public class ArrayAccessDelegate implements ArrayDelegate {
 
-   private static final StringValue OFFSET_GET = new StringBuilderValue("offsetGet");
-   private static final StringValue OFFSET_SET = new StringBuilderValue("offsetSet");
-   private static final StringValue OFFSET_UNSET = new StringBuilderValue("offsetUnset");
-   private static final StringValue OFFSET_EXISTS = new StringBuilderValue("offsetExists");
+   private static final StringValue OFFSET_GET = new StringValue("offsetGet");
+   private static final StringValue OFFSET_SET = new StringValue("offsetSet");
+   private static final StringValue OFFSET_UNSET = new StringValue("offsetUnset");
+   private static final StringValue OFFSET_EXISTS = new StringValue("offsetExists");
 
    @Override
    public Value get(ObjectValue qThis, Value index) {

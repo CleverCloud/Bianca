@@ -145,7 +145,7 @@ public class ModuleInfo {
          Value value = objectToValue(obj);
 
          if (value != null) {
-            _unicodeConstMap.put(new StringBuilderValue(field.getName()),
+            _unicodeConstMap.put(new StringValue(field.getName()),
                     value);
          }
       }
@@ -240,7 +240,7 @@ public class ModuleInfo {
               || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
-         return new StringBuilderValue((String) obj);
+         return new StringValue((String) obj);
       } else {
          // TODO: unknown types, e.g. Character?
 

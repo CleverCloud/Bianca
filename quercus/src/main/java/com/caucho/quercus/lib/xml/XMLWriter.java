@@ -69,7 +69,7 @@ public class XMLWriter {
     * Opens the writer for a memory target
     */
    public boolean openMemory(Env env) {
-      StringValue s = new StringBuilderValue();
+      StringValue s = new StringValue();
 
       _s = new MemoryXMLWriterStream(s);
 
@@ -426,7 +426,7 @@ public class XMLWriter {
 
       _s.append("<").append(env, prefix).append(":").append(env, name);
 
-      StringValue endName = new StringBuilderValue();
+      StringValue endName = new StringValue();
       endName.append(prefix).append(":").append(name);
 
       _elementStack.add(endName);

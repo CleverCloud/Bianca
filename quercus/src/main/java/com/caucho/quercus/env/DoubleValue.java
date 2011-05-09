@@ -216,7 +216,7 @@ public class DoubleValue extends NumberValue
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return new StringBuilderValue().append(toString());
+      return new StringValue().append(toString());
    }
 
    /**

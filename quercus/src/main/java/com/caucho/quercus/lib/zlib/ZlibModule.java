@@ -265,7 +265,7 @@ public class ZlibModule extends AbstractQuercusModule {
          if (ch < 0) {
             return BooleanValue.FALSE;
          } else {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
 
             sb.append(ch);
 
@@ -439,7 +439,7 @@ public class ZlibModule extends AbstractQuercusModule {
 
          boolean isFinished = false;
 
-         StringValue out = new StringBuilderValue();
+         StringValue out = new StringValue();
 
          buffer[0] = (byte) 0x78;
 
@@ -515,7 +515,7 @@ public class ZlibModule extends AbstractQuercusModule {
 
          in = new InflaterInputStream(is);
 
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
 
          int len;
          while ((len = in.read(buffer, 0, buffer.length)) >= 0) {
@@ -605,7 +605,7 @@ public class ZlibModule extends AbstractQuercusModule {
 
       try {
          inflater = new Inflater(true);
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
 
          while (true) {
             int sublen = Math.min(length, buffer.length);
@@ -673,7 +673,7 @@ public class ZlibModule extends AbstractQuercusModule {
          }
          gzOut.close();
 
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
          for (TempBuffer ptr = ts.getHead(); ptr != null; ptr = ptr.getNext()) {
             sb.append(new String(ptr.getBuffer()));
          }

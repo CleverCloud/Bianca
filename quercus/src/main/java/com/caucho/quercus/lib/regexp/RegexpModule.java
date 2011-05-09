@@ -839,7 +839,7 @@ public class RegexpModule
     */
    public static StringValue preg_quote(StringValue string,
            @Optional StringValue delim) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       boolean[] extra = null;
 
@@ -1126,7 +1126,7 @@ public class RegexpModule
 
       regexpState.setSubject(env, subject);
 
-      StringValue result = new StringBuilderValue();
+      StringValue result = new StringValue();
       int tail = 0;
 
       while (regexpState.find() && numberOfMatches < limit) {
@@ -1221,7 +1221,7 @@ public class RegexpModule
       StringValue regexpStr;
 
       if (regexpValue.isLong()) {
-         regexpStr = new StringBuilderValue((char) regexpValue.toInt());
+         regexpStr = new StringValue((char) regexpValue.toInt());
       } else {
          regexpStr = regexpValue.toStringValue(env);
       }
@@ -1246,7 +1246,7 @@ public class RegexpModule
       StringValue regexpStr;
 
       if (regexpValue.isLong()) {
-         regexpStr = new StringBuilderValue((char) regexpValue.toInt());
+         regexpStr = new StringValue((char) regexpValue.toInt());
       } else {
          regexpStr = regexpValue.toStringValue(env);
       }
@@ -1328,7 +1328,7 @@ public class RegexpModule
          limit = LONG_MAX;
       }
 
-      StringValue result = new StringBuilderValue();
+      StringValue result = new StringValue();
 
       int tail = 0;
       boolean isMatched = false;
@@ -1352,7 +1352,7 @@ public class RegexpModule
          // if isEval then append replacement evaluated as PHP code
          // else append replacement string
          if (isEval) {
-            StringValue evalString = new StringBuilderValue();
+            StringValue evalString = new StringValue();
 
             try {
                for (int i = 0; i < replacementLen; i++) {
@@ -1724,7 +1724,7 @@ public class RegexpModule
     * Makes a regexp for a case-insensitive match.
     */
    public static StringValue sql_regcase(StringValue string) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       int len = string.length();
       for (int i = 0; i < len; i++) {
@@ -1879,7 +1879,7 @@ public class RegexpModule
            StringValue str,
            String startDelim,
            String endDelim) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       sb = sb.append(startDelim);
       sb = sb.append(str);
@@ -1982,7 +1982,7 @@ public class RegexpModule
            boolean isComments) {
       int len = regexp.length();
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
       char quote = 0;
 
       for (int i = 0; i < len; i++) {

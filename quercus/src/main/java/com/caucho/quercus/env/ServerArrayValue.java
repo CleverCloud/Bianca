@@ -46,33 +46,33 @@ import java.util.Set;
  */
 public class ServerArrayValue extends ArrayValueImpl {
 
-   private static final StringValue SERVER_ADDR_V = new StringBuilderValue("SERVER_ADDR");
-   private static final StringValue SERVER_NAME_V = new StringBuilderValue("SERVER_NAME");
-   private static final StringValue SERVER_PORT_V = new StringBuilderValue("SERVER_PORT");
-   private static final StringValue REMOTE_HOST_V = new StringBuilderValue("REMOTE_HOST");
-   private static final StringValue REMOTE_ADDR_V = new StringBuilderValue("REMOTE_ADDR");
-   private static final StringValue REMOTE_PORT_V = new StringBuilderValue("REMOTE_PORT");
-   private static final StringValue DOCUMENT_ROOT_V = new StringBuilderValue("DOCUMENT_ROOT");
-   private static final StringValue SERVER_SOFTWARE_V = new StringBuilderValue("SERVER_SOFTWARE");
-   private static final StringValue SERVER_PROTOCOL_V = new StringBuilderValue("SERVER_PROTOCOL");
-   private static final StringValue REQUEST_METHOD_V = new StringBuilderValue("REQUEST_METHOD");
-   private static final StringValue QUERY_STRING_V = new StringBuilderValue("QUERY_STRING");
-   private static final StringValue REQUEST_URI_V = new StringBuilderValue("REQUEST_URI");
-   private static final StringValue REQUEST_TIME_V = new StringBuilderValue("REQUEST_TIME");
-   private static final StringValue SCRIPT_URL_V = new StringBuilderValue("SCRIPT_URL");
-   private static final StringValue SCRIPT_NAME_V = new StringBuilderValue("SCRIPT_NAME");
-   private static final StringValue SCRIPT_FILENAME_V = new StringBuilderValue("SCRIPT_FILENAME");
-   private static final StringValue PATH_INFO_V = new StringBuilderValue("PATH_INFO");
-   private static final StringValue PATH_TRANSLATED_V = new StringBuilderValue("PATH_TRANSLATED");
-   private static final StringValue PHP_SELF_V = new StringBuilderValue("PHP_SELF");
-   private static final StringValue PHP_AUTH_USER_V = new StringBuilderValue("PHP_AUTH_USER");
-   private static final StringValue PHP_AUTH_PW_V = new StringBuilderValue("PHP_AUTH_PW");
-   private static final StringValue PHP_AUTH_DIGEST_V = new StringBuilderValue("PHP_AUTH_DIGEST");
-   private static final StringValue AUTH_TYPE_V = new StringBuilderValue("AUTH_TYPE");
-   private static final StringValue HTTPS_V = new StringBuilderValue("HTTPS");
-   private static final StringValue HTTP_HOST_V = new StringBuilderValue("HTTP_HOST");
-   private static final StringValue CONTENT_LENGTH_V = new StringBuilderValue("CONTENT_LENGTH");
-   private static final StringValue CONTENT_TYPE_V = new StringBuilderValue("CONTENT_TYPE");
+   private static final StringValue SERVER_ADDR_V = new StringValue("SERVER_ADDR");
+   private static final StringValue SERVER_NAME_V = new StringValue("SERVER_NAME");
+   private static final StringValue SERVER_PORT_V = new StringValue("SERVER_PORT");
+   private static final StringValue REMOTE_HOST_V = new StringValue("REMOTE_HOST");
+   private static final StringValue REMOTE_ADDR_V = new StringValue("REMOTE_ADDR");
+   private static final StringValue REMOTE_PORT_V = new StringValue("REMOTE_PORT");
+   private static final StringValue DOCUMENT_ROOT_V = new StringValue("DOCUMENT_ROOT");
+   private static final StringValue SERVER_SOFTWARE_V = new StringValue("SERVER_SOFTWARE");
+   private static final StringValue SERVER_PROTOCOL_V = new StringValue("SERVER_PROTOCOL");
+   private static final StringValue REQUEST_METHOD_V = new StringValue("REQUEST_METHOD");
+   private static final StringValue QUERY_STRING_V = new StringValue("QUERY_STRING");
+   private static final StringValue REQUEST_URI_V = new StringValue("REQUEST_URI");
+   private static final StringValue REQUEST_TIME_V = new StringValue("REQUEST_TIME");
+   private static final StringValue SCRIPT_URL_V = new StringValue("SCRIPT_URL");
+   private static final StringValue SCRIPT_NAME_V = new StringValue("SCRIPT_NAME");
+   private static final StringValue SCRIPT_FILENAME_V = new StringValue("SCRIPT_FILENAME");
+   private static final StringValue PATH_INFO_V = new StringValue("PATH_INFO");
+   private static final StringValue PATH_TRANSLATED_V = new StringValue("PATH_TRANSLATED");
+   private static final StringValue PHP_SELF_V = new StringValue("PHP_SELF");
+   private static final StringValue PHP_AUTH_USER_V = new StringValue("PHP_AUTH_USER");
+   private static final StringValue PHP_AUTH_PW_V = new StringValue("PHP_AUTH_PW");
+   private static final StringValue PHP_AUTH_DIGEST_V = new StringValue("PHP_AUTH_DIGEST");
+   private static final StringValue AUTH_TYPE_V = new StringValue("AUTH_TYPE");
+   private static final StringValue HTTPS_V = new StringValue("HTTPS");
+   private static final StringValue HTTP_HOST_V = new StringValue("HTTP_HOST");
+   private static final StringValue CONTENT_LENGTH_V = new StringValue("CONTENT_LENGTH");
+   private static final StringValue CONTENT_TYPE_V = new StringValue("CONTENT_TYPE");
    private final Env _env;
    private boolean _isFilled;
 
@@ -393,7 +393,7 @@ public class ServerArrayValue extends ArrayValueImpl {
     * Converts a header key to HTTP_
     */
    private StringValue convertHttpKey(String key) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       sb.append("HTTP_");
 

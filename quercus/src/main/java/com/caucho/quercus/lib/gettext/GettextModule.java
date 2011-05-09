@@ -412,7 +412,7 @@ public class GettextModule
 
       StringValue sb;
 
-      sb = new StringBuilderValue();
+      sb = new StringValue();
 
       return formatImpl(env, msg, args, sb);
    }
@@ -423,7 +423,7 @@ public class GettextModule
    Value []args,
    String charset)
    {
-   StringValue sb = new StringBuilderValue();
+   StringValue sb = new StringValue();
 
    byte []bytes = null;
 

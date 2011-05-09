@@ -336,7 +336,7 @@ public class Xml {
            @Optional("true") boolean isFinal)
            throws Exception {
       if (_xmlString == null) {
-         _xmlString = new StringBuilderValue();
+         _xmlString = new StringValue();
       }
 
       _xmlString.append(data);

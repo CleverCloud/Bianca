@@ -149,7 +149,7 @@ public class UrlRewriterCallback extends CallbackFunction {
          _input = input;
          _env = env;
          _index = 0;
-         _output = new StringBuilderValue();
+         _output = new StringValue();
       }
 
       public Value parse() {

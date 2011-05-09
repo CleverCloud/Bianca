@@ -37,7 +37,7 @@ import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
@@ -103,7 +103,7 @@ public class McryptModule extends AbstractQuercusModule {
             result = mcrypt.decrypt(data);
          }
 
-         return new StringBuilderValue(new String(result));
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -131,7 +131,7 @@ public class McryptModule extends AbstractQuercusModule {
             result = mcrypt.decrypt(data);
          }
 
-         return new StringBuilderValue(new String(result));
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -143,7 +143,7 @@ public class McryptModule extends AbstractQuercusModule {
    public static StringValue mcrypt_create_iv(Env env,
            int size,
            @Optional int randomMode) {
-      StringValue bb = new StringBuilderValue();
+      StringValue bb = new StringValue();
 
       for (int i = 0; i < size; i++) {
          bb.append((byte) RandomUtil.nextInt(256));
@@ -168,7 +168,7 @@ public class McryptModule extends AbstractQuercusModule {
 
          byte[] result = mcrypt.decrypt(data);
 
-         return new StringBuilderValue(new String(result));
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -196,7 +196,7 @@ public class McryptModule extends AbstractQuercusModule {
             result = mcrypt.decrypt(data);
          }
 
-         return new StringBuilderValue(new String(result));
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -326,7 +326,7 @@ public class McryptModule extends AbstractQuercusModule {
 
          mcrypt.init(key, iv);
 
-         return new StringBuilderValue(new String(mcrypt.encrypt(data)));
+         return new StringValue(new String(mcrypt.encrypt(data)));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -339,7 +339,7 @@ public class McryptModule extends AbstractQuercusModule {
       if (mcrypt == null) {
          return null;
       } else {
-         return new StringBuilderValue(new String(mcrypt.encrypt(data)));
+         return new StringValue(new String(mcrypt.encrypt(data)));
       }
    }
 
@@ -658,7 +658,7 @@ public class McryptModule extends AbstractQuercusModule {
             result = mcrypt.decrypt(data);
          }
 
-         return new StringBuilderValue(new String(result));
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -671,7 +671,7 @@ public class McryptModule extends AbstractQuercusModule {
       if (mcrypt == null) {
          return BooleanValue.FALSE;
       } else {
-         return new StringBuilderValue(new String(mcrypt.decrypt(data)));
+         return new StringValue(new String(mcrypt.decrypt(data)));
       }
    }
 }

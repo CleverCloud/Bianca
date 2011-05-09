@@ -36,10 +36,10 @@ import com.caucho.quercus.env.*;
  */
 public class WrappedDirectoryValue extends DirectoryValue {
 
-   private static final StringBuilderValue DIR_CLOSEDIR_U = new StringBuilderValue("dir_closedir");
-   private static final StringBuilderValue DIR_OPENDIR_U = new StringBuilderValue("dir_opendir");
-   private static final StringBuilderValue DIR_READDIR_U = new StringBuilderValue("dir_readdir");
-   private static final StringBuilderValue DIR_REWINDDIR_U = new StringBuilderValue("dir_rewinddir");
+   private static final StringValue DIR_CLOSEDIR_U = new StringValue("dir_closedir");
+   private static final StringValue DIR_OPENDIR_U = new StringValue("dir_opendir");
+   private static final StringValue DIR_READDIR_U = new StringValue("dir_readdir");
+   private static final StringValue DIR_REWINDDIR_U = new StringValue("dir_rewinddir");
    private Env _env;
    private Value _wrapper;
 

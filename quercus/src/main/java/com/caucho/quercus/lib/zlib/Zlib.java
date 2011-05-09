@@ -231,7 +231,7 @@ public class Zlib {
          return null;
       }
 
-      StringBuilderValue sbv = new StringBuilderValue();
+      StringValue sbv = new StringValue();
       int readChar;
 
       try {
@@ -292,7 +292,7 @@ public class Zlib {
     * @throws DataFormatException
     */
    public StringValue gzread(Env env, int length) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       if (_in == null) {
          return sb;
@@ -338,7 +338,7 @@ public class Zlib {
             return null;
          }
 
-         StringBuilderValue sbv = new StringBuilderValue();
+         StringValue sbv = new StringValue();
          int readChar;
          for (int i = 0; i < length; i++) {
             readChar = _in.read();

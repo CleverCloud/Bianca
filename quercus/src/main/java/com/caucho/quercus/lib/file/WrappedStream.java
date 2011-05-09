@@ -43,14 +43,14 @@ import java.io.UnsupportedEncodingException;
  */
 public class WrappedStream implements BinaryInput, BinaryOutput {
 
-   private static final StringBuilderValue STREAM_CLOSE = new StringBuilderValue("stream_close");
-   private static final StringBuilderValue STREAM_EOF = new StringBuilderValue("stream_eof");
-   private static final StringBuilderValue STREAM_FLUSH = new StringBuilderValue("stream_flush");
-   private static final StringBuilderValue STREAM_OPEN = new StringBuilderValue("stream_open");
-   private static final StringBuilderValue STREAM_READ = new StringBuilderValue("stream_read");
-   private static final StringBuilderValue STREAM_SEEK = new StringBuilderValue("stream_seek");
-   private static final StringBuilderValue STREAM_TELL = new StringBuilderValue("stream_tell");
-   private static final StringBuilderValue STREAM_WRITE = new StringBuilderValue("stream_write");
+   private static final StringValue STREAM_CLOSE = new StringValue("stream_close");
+   private static final StringValue STREAM_EOF = new StringValue("stream_eof");
+   private static final StringValue STREAM_FLUSH = new StringValue("stream_flush");
+   private static final StringValue STREAM_OPEN = new StringValue("stream_open");
+   private static final StringValue STREAM_READ = new StringValue("stream_read");
+   private static final StringValue STREAM_SEEK = new StringValue("stream_seek");
+   private static final StringValue STREAM_TELL = new StringValue("stream_tell");
+   private static final StringValue STREAM_WRITE = new StringValue("stream_write");
    private byte[] printBuffer = new byte[1];
    private Env _env;
    private Value _wrapper;
@@ -277,7 +277,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
    @Override
    public void write(byte[] buffer, int offset, int length)
            throws IOException {
-      StringValue bb = new StringBuilderValue(new String(buffer), offset, length);
+      StringValue bb = new StringValue(new String(buffer), offset, length);
 
       Value output;
 

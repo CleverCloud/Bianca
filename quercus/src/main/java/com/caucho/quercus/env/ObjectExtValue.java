@@ -1110,7 +1110,7 @@ public class ObjectExtValue extends ObjectValue
     * Append to a binary builder.
     */
    @Override
-   public StringValue appendTo(StringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return sb.append(toString(Env.getInstance()));
    }
 

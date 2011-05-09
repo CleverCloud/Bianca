@@ -565,7 +565,7 @@ public class Var extends Value
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(StringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return _value.appendTo(sb);
    }
 

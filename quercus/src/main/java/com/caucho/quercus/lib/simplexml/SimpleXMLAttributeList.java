@@ -118,7 +118,7 @@ public class SimpleXMLAttributeList extends SimpleXMLElement {
     */
    @Override
    public StringValue asXML(Env env) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       if (_attributes != null) {
          for (SimpleXMLElement attr : _attributes) {

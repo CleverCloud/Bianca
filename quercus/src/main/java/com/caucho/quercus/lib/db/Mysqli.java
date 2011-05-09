@@ -36,7 +36,7 @@ import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.ConnectionEntry;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.util.L10N;
@@ -623,7 +623,7 @@ public class Mysqli extends JdbcConnectionResource {
       try {
          return env.createString(validateConnection().getServerInfo());
       } catch (SQLException e) {
-         return new StringBuilderValue();
+         return new StringValue();
       }
    }
 

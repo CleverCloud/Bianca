@@ -37,7 +37,7 @@ public class UnicodeUtility {
            StringValue str,
            String replacement,
            boolean isIgnore) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       int len = str.length();
 

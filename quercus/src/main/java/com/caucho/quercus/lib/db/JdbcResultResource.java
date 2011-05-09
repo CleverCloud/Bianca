@@ -485,17 +485,17 @@ public class JdbcResultResource {
                if (rs.wasNull()) {
                   return NullValue.NULL;
                } else if (metaData.isCurrency(column)) {
-                  StringValue sb = new StringBuilderValue();
+                  StringValue sb = new StringValue();
 
                   sb.append("$");
 
                   return sb.append(value);
                } else if (value == 0.0) {
-                  StringValue sb = new StringBuilderValue();
+                  StringValue sb = new StringValue();
 
                   return sb.append("0");
                } else {
-                  StringValue sb = new StringBuilderValue();
+                  StringValue sb = new StringValue();
 
                   return sb.append(value);
                }
@@ -526,7 +526,7 @@ public class JdbcResultResource {
             case Types.LONGVARBINARY:
             case Types.VARBINARY:
             case Types.BINARY: {
-               StringValue bb = new StringBuilderValue();
+               StringValue bb = new StringValue();
 
                InputStream is = rs.getBinaryStream(column);
 
@@ -594,7 +594,7 @@ public class JdbcResultResource {
          return NullValue.NULL;
       }
 
-      StringValue bb = new StringBuilderValue();
+      StringValue bb = new StringValue();
 
       bb.append(reader);
 

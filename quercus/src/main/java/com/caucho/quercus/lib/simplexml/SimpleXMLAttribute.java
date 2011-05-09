@@ -102,7 +102,7 @@ public class SimpleXMLAttribute extends SimpleXMLElement {
     */
    @Override
    public StringValue asXML(Env env) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       toXMLImpl(sb);
 

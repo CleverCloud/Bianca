@@ -119,7 +119,7 @@ public class OutputBuffer {
       try {
          _out.flush();
 
-         StringValue bb = new StringBuilderValue();
+         StringValue bb = new StringValue();
 
          for (TempBuffer ptr = _tempStream.getHead();
                  ptr != null;

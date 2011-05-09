@@ -904,7 +904,7 @@ public class ModuleContext {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
          // TODO: i18n
-         return new StringBuilderValue((String) obj);
+         return new StringValue((String) obj);
       } else {
          // TODO: unknown types, e.g. Character?
 

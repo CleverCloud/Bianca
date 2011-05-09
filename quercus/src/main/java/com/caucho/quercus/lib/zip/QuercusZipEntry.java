@@ -32,7 +32,7 @@ import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.file.BinaryInput;
 import com.caucho.util.L10N;
 
@@ -122,7 +122,7 @@ public class QuercusZipEntry {
          return null;
       }
 
-      StringValue bb = new StringBuilderValue();
+      StringValue bb = new StringValue();
 
       bb.appendReadAll((InputStream) _in, length);
 

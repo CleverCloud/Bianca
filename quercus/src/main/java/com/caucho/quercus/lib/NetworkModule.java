@@ -225,7 +225,7 @@ public class NetworkModule extends AbstractQuercusModule {
          return env.createString("255.255.255.255");
       }
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       sb.append((address & 0xFF000000L) >> 24);
       sb.append('.');

@@ -42,7 +42,7 @@ public final class MethodIntern {
       StringValue internName = _internMap.get(name);
 
       if (internName == null) {
-         StringValue string = new StringBuilderValue(name);
+         StringValue string = new StringValue(name);
 
          internName = _internMap.putIfAbsent(name, string);
 

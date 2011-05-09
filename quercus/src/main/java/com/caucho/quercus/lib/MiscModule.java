@@ -165,7 +165,7 @@ public class MiscModule extends AbstractQuercusModule {
          quote = '\'';
       }
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       sb.append(quote);
 
@@ -523,7 +523,7 @@ public class MiscModule extends AbstractQuercusModule {
             return BooleanValue.FALSE;
          }
 
-         StringValue bb = new StringBuilderValue();
+         StringValue bb = new StringValue();
 
          int i = 0;
          for (PackSegment segment : segments) {
@@ -633,7 +633,7 @@ public class MiscModule extends AbstractQuercusModule {
          OutputStream os = process.getOutputStream();
          os.close();
 
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
 
          int ch;
          while ((ch = is.read()) >= 0) {
@@ -1253,7 +1253,7 @@ public class MiscModule extends AbstractQuercusModule {
             return offset;
          }
 
-         StringValue bb = new StringBuilderValue();
+         StringValue bb = new StringValue();
 
          int j = offset;
 
@@ -1319,7 +1319,7 @@ public class MiscModule extends AbstractQuercusModule {
       @Override
       public int unpack(Env env, ArrayValue result,
               StringValue s, int offset, int strLen) {
-         StringValue bb = new StringBuilderValue();
+         StringValue bb = new StringValue();
 
          int j = offset;
 
@@ -1419,7 +1419,7 @@ public class MiscModule extends AbstractQuercusModule {
             return offset;
          }
 
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
          for (int i = _length / 2 - 1; i >= 0; i--) {
             char ch = s.charAt(offset++);
 
@@ -1443,7 +1443,7 @@ public class MiscModule extends AbstractQuercusModule {
       }
 
       RevHexPackSegment(String name, int length) {
-         _name = new StringBuilderValue(name);
+         _name = new StringValue(name);
          _length = length;
       }
 
@@ -1505,7 +1505,7 @@ public class MiscModule extends AbstractQuercusModule {
             return offset;
          }
 
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
          for (int i = _length / 2 - 1; i >= 0; i--) {
             char ch = s.charAt(offset++);
 
@@ -1579,7 +1579,7 @@ public class MiscModule extends AbstractQuercusModule {
             } else if (_length == 1) {
                key = env.createString(_name);
             } else {
-               StringValue sb = new StringBuilderValue();
+               StringValue sb = new StringValue();
                sb.append(_name);
                sb.append(j + 1);
 
@@ -1676,7 +1676,7 @@ public class MiscModule extends AbstractQuercusModule {
             } else if (_length == 1) {
                key = env.createString(_name);
             } else {
-               StringValue sb = new StringBuilderValue();
+               StringValue sb = new StringValue();
                sb.append(_name);
                sb.append(j + 1);
 
@@ -1758,7 +1758,7 @@ public class MiscModule extends AbstractQuercusModule {
             } else if (_length == 1) {
                key = env.createString(_name);
             } else {
-               StringValue sb = new StringBuilderValue();
+               StringValue sb = new StringValue();
                sb.append(_name);
                sb.append(j + 1);
 
@@ -1840,7 +1840,7 @@ public class MiscModule extends AbstractQuercusModule {
             } else if (_length == 1) {
                key = env.createString(_name);
             } else {
-               StringValue sb = new StringBuilderValue();
+               StringValue sb = new StringValue();
                sb.append(_name);
                sb.append(j + 1);
 

@@ -33,7 +33,7 @@ import java.util.*;
 import java.util.logging.*;
 
 import com.caucho.quercus.QuercusException;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.util.*;
 
@@ -242,7 +242,7 @@ public class Regexp {
    }
 
    static StringValue fromUtf8(StringValue source) {
-      StringValue target = new StringBuilderValue();
+      StringValue target = new StringValue();
       int len = source.length();
 
       for (int i = 0; i < len; i++) {

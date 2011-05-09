@@ -31,7 +31,7 @@ package com.caucho.quercus.lib.gettext;
 
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.gettext.expr.PluralExpr;
 import com.caucho.util.L10N;
 import com.caucho.vfs.Path;
@@ -172,7 +172,7 @@ class MOFileParser extends GettextParser {
     */
    private StringValue readOriginalString()
            throws IOException {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       for (int ch = _in.read(); ch > 0; ch = _in.read()) {
          sb.append((char) ch);
@@ -187,7 +187,7 @@ class MOFileParser extends GettextParser {
    private ArrayList<StringValue> readPluralForms(int length)
            throws IOException {
       ArrayList<StringValue> list = new ArrayList<StringValue>();
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       for (; length > 0; length--) {
          int ch = _in.readChar();
@@ -196,7 +196,7 @@ class MOFileParser extends GettextParser {
             sb.append((char) ch);
          } else if (ch == 0) {
             list.add(sb);
-            sb = new StringBuilderValue();
+            sb = new StringValue();
          } else {
             break;
          }

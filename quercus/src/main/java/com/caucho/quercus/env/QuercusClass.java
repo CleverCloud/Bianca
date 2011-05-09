@@ -128,7 +128,7 @@ public final class QuercusClass extends NullValue {
          AbstractFunction cons = cls.getConstructor();
 
          if (cons != null) {
-            addMethod(new StringBuilderValue(cls.getName()), cons);
+            addMethod(new StringValue(cls.getName()), cons);
          }
       }
 
@@ -187,8 +187,8 @@ public final class QuercusClass extends NullValue {
       // php/093n
       if (_constructor != null
               && !_constructor.getName().equals("__construct")) {
-         addMethodIfNotExist(new StringBuilderValue("__construct"), _constructor);
-         addMethodIfNotExist(new StringBuilderValue(_className), _constructor);
+         addMethodIfNotExist(new StringValue("__construct"), _constructor);
+         addMethodIfNotExist(new StringValue(_className), _constructor);
       }
 
       if (_destructor == null && parent != null) {
@@ -564,7 +564,7 @@ public final class QuercusClass extends NullValue {
     * Adds a method.
     */
    public void addMethod(String name, AbstractFunction fun) {
-      addMethod(new StringBuilderValue(name), fun);
+      addMethod(new StringValue(name), fun);
    }
 
    /**
@@ -619,8 +619,8 @@ public final class QuercusClass extends NullValue {
       }
 
       fieldList.add(new StaticField(name, value));
-      _staticFieldNameMap.put(new StringBuilderValue(name),
-              new StringBuilderValue(className + "::" + name));
+      _staticFieldNameMap.put(new StringValue(name),
+              new StringValue(className + "::" + name));
    }
 
    /**
@@ -714,7 +714,7 @@ public final class QuercusClass extends NullValue {
                val = expr.eval(env);
             }
 
-            StringValue fullName = new StringBuilderValue();
+            StringValue fullName = new StringValue();
             fullName.append(_className);
             fullName.append("::");
             fullName.append(field._name);
@@ -1143,7 +1143,7 @@ public final class QuercusClass extends NullValue {
     */
    @Override
    public final AbstractFunction findFunction(String methodName) {
-      return _methodMap.getRaw(new StringBuilderValue(methodName));
+      return _methodMap.getRaw(new StringValue(methodName));
    }
 
    /**

@@ -485,7 +485,7 @@ public class FileModule extends AbstractQuercusModule {
          int ch = is.read();
 
          if (ch >= 0) {
-            StringValue v = new StringBuilderValue();
+            StringValue v = new StringValue();
 
             v.append((char) ch);
 
@@ -562,7 +562,7 @@ public class FileModule extends AbstractQuercusModule {
                }
             }
 
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
 
             if (ch == quote) {
                for (ch = is.read(); ch >= 0; ch = is.read()) {
@@ -694,7 +694,7 @@ public class FileModule extends AbstractQuercusModule {
 
          try {
             while (true) {
-               StringValue bb = new StringBuilderValue();
+               StringValue bb = new StringValue();
 
                for (int ch = is.read(); ch >= 0; ch = is.read()) {
                   if (ch == '\n') {
@@ -942,7 +942,7 @@ public class FileModule extends AbstractQuercusModule {
 
       BinaryInput is = (BinaryInput) s;
 
-      StringValue bb = new StringBuilderValue();
+      StringValue bb = new StringValue();
       bb.appendReadAll(is, maxLen);
 
       s.close();
@@ -1614,7 +1614,7 @@ public class FileModule extends AbstractQuercusModule {
          length = Integer.MAX_VALUE;
       }
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       sb.appendRead(is, length);
 
@@ -1802,7 +1802,7 @@ public class FileModule extends AbstractQuercusModule {
          Matcher matcher = compiledGlobRegex.matcher(entry);
 
          if (matcher.matches()) {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
 
             if (prefix.length() > 0) {
                sb.append(prefix);
@@ -2394,7 +2394,7 @@ public class FileModule extends AbstractQuercusModule {
       }
 
       if (ch == '"') {
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
 
          for (ch = is.read(); ch >= 0 && ch != '"'; ch = is.read()) {
             sb.append((char) ch);
@@ -2404,7 +2404,7 @@ public class FileModule extends AbstractQuercusModule {
 
          return sb;
       } else if (ch == '\'') {
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
 
          for (ch = is.read(); ch >= 0 && ch != '\''; ch = is.read()) {
             sb.append((char) ch);
@@ -2446,7 +2446,7 @@ public class FileModule extends AbstractQuercusModule {
                }
 
             } else if (ch == '"') {
-               StringValue result = new StringBuilderValue();
+               StringValue result = new StringValue();
 
                String value = sb.toString().trim();
 
@@ -2702,7 +2702,7 @@ public class FileModule extends AbstractQuercusModule {
          pathStr = path.getFullPath();
       }
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       // php/164c
       if (pathStr.endsWith("/")) {
@@ -3075,11 +3075,11 @@ public class FileModule extends AbstractQuercusModule {
 
    static {
       ProtocolWrapper zlibProtocolWrapper = new ZlibProtocolWrapper();
-      StreamModule.stream_wrapper_register(new StringBuilderValue("compress.zlib"),
+      StreamModule.stream_wrapper_register(new StringValue("compress.zlib"),
               zlibProtocolWrapper);
-      StreamModule.stream_wrapper_register(new StringBuilderValue("zlib"),
+      StreamModule.stream_wrapper_register(new StringValue("zlib"),
               zlibProtocolWrapper);
-      StreamModule.stream_wrapper_register(new StringBuilderValue("php"),
+      StreamModule.stream_wrapper_register(new StringValue("php"),
               new PhpProtocolWrapper());
 
       addConstant(_constMap, "SEEK_SET", SEEK_SET);

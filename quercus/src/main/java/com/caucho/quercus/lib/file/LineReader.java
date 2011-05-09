@@ -30,7 +30,7 @@
 package com.caucho.quercus.lib.file;
 
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class LineReader {
     */
    public StringValue readLine(Env env, BinaryInput input, long length)
            throws IOException {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       int ch;
 

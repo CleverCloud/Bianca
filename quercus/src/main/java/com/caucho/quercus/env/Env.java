@@ -126,14 +126,14 @@ public class Env {
    private static final int HTTP_SERVER_VARS = 15;
    private static final int HTTP_RAW_POST_DATA = 16;
    private static final IntMap SPECIAL_VARS = new IntMap();
-   private static final StringValue PHP_SELF_STRING = new StringBuilderValue("PHP_SELF");
-   private static final StringValue UTF8_STRING = new StringBuilderValue("utf8");
-   private static final StringValue S_GET = new StringBuilderValue("_GET");
-   private static final StringValue S_POST = new StringBuilderValue("_POST");
-   private static final StringValue S_SESSION = new StringBuilderValue("_SESSION");
-   private static final StringValue S_SERVER = new StringBuilderValue("_SERVER");
-   private static final StringValue S_COOKIE = new StringBuilderValue("_COOKIE");
-   private static final StringValue S_FILES = new StringBuilderValue("_FILES");
+   private static final StringValue PHP_SELF_STRING = new StringValue("PHP_SELF");
+   private static final StringValue UTF8_STRING = new StringValue("utf8");
+   private static final StringValue S_GET = new StringValue("_GET");
+   private static final StringValue S_POST = new StringValue("_POST");
+   private static final StringValue S_SESSION = new StringValue("_SESSION");
+   private static final StringValue S_SERVER = new StringValue("_SERVER");
+   private static final StringValue S_COOKIE = new StringValue("_COOKIE");
+   private static final StringValue S_FILES = new StringValue("_FILES");
    public static final Value[] EMPTY_VALUE = new Value[0];
    private static ThreadLocal<Env> _threadEnv = new ThreadLocal<Env>();
    private static final FreeList<AbstractFunction[]> _freeFunList = new FreeList<AbstractFunction[]>(256);
@@ -345,13 +345,13 @@ public class Env {
       addConstant("PHP_VERSION", OptionsModule.phpversion(this, null), true);
 
       // Define the constant string PHP_SAPI
-      addConstant("PHP_SAPI", new StringBuilderValue(OptionsModule.php_sapi_name(this)), true);
+      addConstant("PHP_SAPI", new StringValue(OptionsModule.php_sapi_name(this)), true);
 
-      addConstant("PEAR_EXTENSION_DIR", new StringBuilderValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_EXTENSION_DIR", new StringBuilderValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_LIBDIR", new StringBuilderValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_CONFIG_FILE_PATH", new StringBuilderValue(getPwd() + "WEB-INF/"), true);
-      addConstant("PHP_CONFIG_FILE_SCAN_DIR", new StringBuilderValue(getPwd() + "WEB-INF/"), true);
+      addConstant("PEAR_EXTENSION_DIR", new StringValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_EXTENSION_DIR", new StringValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_LIBDIR", new StringValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_CONFIG_FILE_PATH", new StringValue(getPwd() + "WEB-INF/"), true);
+      addConstant("PHP_CONFIG_FILE_SCAN_DIR", new StringValue(getPwd() + "WEB-INF/"), true);
 
       // c#0004403 - #27
       if (request != null) {
@@ -361,8 +361,8 @@ public class Env {
             if (_authRequest[0].equals("Basic")) {
                // BASIC auth
                String[] _auth64 = Base64.decode(_authRequest[1]).split(":");
-               getGlobalVar("_SERVER").put(new StringBuilderValue("PHP_AUTH_USER"), new StringBuilderValue(_auth64[0]));
-               getGlobalVar("_SERVER").put(new StringBuilderValue("PHP_AUTH_PW"), new StringBuilderValue(_auth64[1]));
+               getGlobalVar("_SERVER").put(new StringValue("PHP_AUTH_USER"), new StringValue(_auth64[0]));
+               getGlobalVar("_SERVER").put(new StringValue("PHP_AUTH_PW"), new StringValue(_auth64[1]));
             }
          }
       }
@@ -483,7 +483,7 @@ public class Env {
             warning(e);
          }
 
-         StringValue bb = new StringBuilderValue();
+         StringValue bb = new StringValue();
          bb.appendReadAll(is, Integer.MAX_VALUE);
 
          setInputData(bb);
@@ -3138,7 +3138,7 @@ public class Env {
       int id;
 
       if (isCaseInsensitive) {
-         StringValue newname = new StringBuilderValue(name);
+         StringValue newname = new StringValue(name);
          id = _quercus.addLowerConstantId(newname);
       } else {
          id = _quercus.getConstantId(name);
@@ -4065,7 +4065,7 @@ public class Env {
     * Creates a PHP string from a byte buffer.
     */
    public StringValue createString(byte[] buffer, int offset, int length) {
-      return new StringBuilderValue(new String(buffer, offset, length));
+      return new StringValue(new String(buffer, offset, length));
    }
 
    /**
@@ -4073,9 +4073,9 @@ public class Env {
     */
    public StringValue createString(String s) {
       if (s == null || s.length() == 0) {
-         return (StringBuilderValue.EMPTY);
+         return (StringValue.EMPTY);
       } else {
-         return new StringBuilderValue(s);
+         return new StringValue(s);
       }
    }
 
@@ -4083,7 +4083,7 @@ public class Env {
     * Creates a PHP string from a buffer.
     */
    public StringValue createBinaryString(TempBuffer head) {
-      StringValue string = new StringBuilderValue();
+      StringValue string = new StringValue();
 
       for (; head != null; head = head.getNext()) {
          string.append(new String(head.getBuffer()));
@@ -4678,7 +4678,7 @@ public class Env {
       }
 
       if (url != null) {
-         includeOnce(new StringBuilderValue(url.toString()));
+         includeOnce(new StringValue(url.toString()));
          return true;
       } else {
          return false;

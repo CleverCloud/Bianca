@@ -44,7 +44,7 @@ import com.caucho.quercus.env.ArrayValueImpl;
 import com.caucho.quercus.env.ConstArrayValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
@@ -150,7 +150,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional("ENT_COMPAT") int quoteStyle) {
       int len = str.length();
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       for (int i = 0; i < len; i++) {
          char ch = str.charAt(i);
@@ -248,7 +248,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional String charset) {
       int len = string.length();
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       for (int i = 0; i < len; i++) {
          char ch = string.charAt(i);
@@ -309,7 +309,7 @@ public class HtmlModule extends AbstractQuercusModule {
          reader = new StringReader(string.toString());
       }
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       int ch;
       try {
@@ -378,7 +378,7 @@ public class HtmlModule extends AbstractQuercusModule {
 
       int len = string.length();
       int htmlEntityStart = -1;
-      StringValue result = new StringBuilderValue();
+      StringValue result = new StringValue();
 
       // Loop through each character
       for (int i = 0; i < len; i++) {
@@ -442,7 +442,7 @@ public class HtmlModule extends AbstractQuercusModule {
            ArrayValue revMap, int ch, String entity) {
       // TODO: i18n and optimize static variables usage
       array.put("" + (char) ch, entity);
-      StringValue entityValue = new StringBuilderValue(entity);
+      StringValue entityValue = new StringValue(entity);
       map[ch & 0xffff] = entityValue;
       revMap.put(entityValue, LongValue.create(ch));
    }

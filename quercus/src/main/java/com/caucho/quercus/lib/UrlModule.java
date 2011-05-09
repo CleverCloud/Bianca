@@ -69,14 +69,14 @@ public class UrlModule
    public static final int PHP_URL_PATH = 5;
    public static final int PHP_URL_QUERY = 6;
    public static final int PHP_URL_FRAGMENT = 7;
-   private static final StringValue SCHEME_U = new StringBuilderValue("scheme");
-   private static final StringValue USER_U = new StringBuilderValue("user");
-   private static final StringValue PASS_U = new StringBuilderValue("pass");
-   private static final StringValue HOST_U = new StringBuilderValue("host");
-   private static final StringValue PORT_U = new StringBuilderValue("port");
-   private static final StringValue PATH_U = new StringBuilderValue("path");
-   private static final StringValue QUERY_U = new StringBuilderValue("query");
-   private static final StringValue FRAGMENT_U = new StringBuilderValue("fragment");
+   private static final StringValue SCHEME_U = new StringValue("scheme");
+   private static final StringValue USER_U = new StringValue("user");
+   private static final StringValue PASS_U = new StringValue("pass");
+   private static final StringValue HOST_U = new StringValue("host");
+   private static final StringValue PORT_U = new StringValue("port");
+   private static final StringValue PATH_U = new StringValue("path");
+   private static final StringValue QUERY_U = new StringValue("query");
+   private static final StringValue FRAGMENT_U = new StringValue("fragment");
 
    /**
     * Encodes base64
@@ -122,7 +122,7 @@ public class UrlModule
          return str;
       }
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       OutputStream os = new StringBuilderOutputStream(sb);
 
@@ -350,7 +350,7 @@ public class UrlModule
            Value formdata,
            @Optional StringValue numeric_prefix,
            @Optional("'&'") StringValue separator) {
-      StringValue result = new StringBuilderValue();
+      StringValue result = new StringValue();
 
       httpBuildQueryImpl(env,
               result,
@@ -417,7 +417,7 @@ public class UrlModule
    private static StringValue makeNewPath(StringValue oldPath,
            Value key,
            StringValue numeric_prefix) {
-      StringValue path = new StringBuilderValue();
+      StringValue path = new StringValue();
 
       if (oldPath.length() != 0) {
          path.append(oldPath);
@@ -569,7 +569,7 @@ public class UrlModule
                }
             }
 
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
             sb.append(str, 0, colon);
             array.put(SCHEME_U, sb);
 
@@ -577,7 +577,7 @@ public class UrlModule
          } else if (colon + 1 == strlen
                  || (ch = str.charAt(colon + 1)) <= '0'
                  || '9' <= ch) {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
             sb.append(str, 0, colon);
             array.put(SCHEME_U, sb);
 
@@ -597,12 +597,12 @@ public class UrlModule
       if (0 <= atSign && hasHost) {
          if (0 <= colon && colon < atSign) {
             if (i < colon) {
-               user = new StringBuilderValue();
+               user = new StringValue();
                user.append(str, i, colon);
             }
 
             if (colon + 1 < atSign) {
-               pass = new StringBuilderValue();
+               pass = new StringValue();
                pass.append(str, colon + 1, atSign);
             }
 
@@ -610,7 +610,7 @@ public class UrlModule
 
             colon = str.indexOf(':', i);
          } else {
-            user = new StringBuilderValue();
+            user = new StringValue();
             user.append(str, i, atSign);
 
             i = atSign + 1;
@@ -624,7 +624,7 @@ public class UrlModule
          int slash = str.indexOf('/', i);
 
          if (i < colon) {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
             sb.append(str, i, colon);
             array.put(HOST_U, sb);
 
@@ -657,25 +657,25 @@ public class UrlModule
 
             i = end;
          } else if (i < question && (slash < i || question < slash)) {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
             sb.append(str, i, question);
             array.put(HOST_U, sb);
 
             i = question + 1;
          } else if (i < slash) {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
             sb.append(str, i, slash);
             array.put(HOST_U, sb);
 
             i = slash;
          } else if (i < pound) {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
             sb.append(str, i, pound);
             array.put(HOST_U, sb);
 
             i = pound + 1;
          } else {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
             sb.append(str, i, strlen);
             array.put(HOST_U, sb);
 
@@ -693,7 +693,7 @@ public class UrlModule
       }
 
       if (i < question) {
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
          sb.append(str, i, question);
          array.put(PATH_U, sb);
 
@@ -702,7 +702,7 @@ public class UrlModule
 
       if (0 <= pound) {
          if (i < pound) {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
 
             sb.append(str, i, pound);
 
@@ -714,12 +714,12 @@ public class UrlModule
          }
 
          if (pound + 1 < strlen) {
-            StringValue sb = new StringBuilderValue();
+            StringValue sb = new StringValue();
             sb.append(str, pound + 1, strlen);
             array.put(FRAGMENT_U, sb);
          }
       } else if (i < strlen) {
-         StringValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
          sb.append(str, i, strlen);
 
          if (0 <= question) {
@@ -819,7 +819,7 @@ public class UrlModule
     * Gets the magic quotes value.
     */
    public static StringValue urlencode(StringValue str) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       urlencode(sb, str);
 

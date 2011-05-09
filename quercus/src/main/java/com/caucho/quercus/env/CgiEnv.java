@@ -143,7 +143,7 @@ public class CgiEnv
    private StringValue cleanCookieName(CharSequence name) {
       int len = name.length();
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       int i = 0;
       while (i < len) {
@@ -322,7 +322,7 @@ public class CgiEnv
                  isMagicQuotes,
                  getIniBoolean("file_uploads"));
       } else if (!method.equals("GET")) {
-         StringValue bb = new StringBuilderValue();
+         StringValue bb = new StringValue();
          //bb.appendReadAll(is, contentLength);
 
          setInputData(bb);

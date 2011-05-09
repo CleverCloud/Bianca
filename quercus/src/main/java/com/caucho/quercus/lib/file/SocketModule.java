@@ -35,7 +35,7 @@ import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
@@ -318,7 +318,7 @@ public class SocketModule extends AbstractQuercusModule {
             length = socket.read(buffer, 0, length);
 
             if (length > 0) {
-               StringValue sb = new StringBuilderValue(new String(buffer));
+               StringValue sb = new StringValue(new String(buffer));
                return sb;
             } else {
                return BooleanValue.FALSE;

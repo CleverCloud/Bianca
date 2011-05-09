@@ -688,7 +688,7 @@ public final class UnserializeReader {
    }
 
    public final StringValue readStringValue(Env env, int len) {
-      return new StringBuilderValue(readString(len));
+      return new StringValue(readString(len));
    }
 
    public final int read() {

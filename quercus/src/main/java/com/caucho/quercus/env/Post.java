@@ -53,7 +53,7 @@ import java.util.Map;
 public class Post {
 
    private static final L10N L = new L10N(Post.class);
-   private static StringValue MAX_FILE_SIZE = new StringBuilderValue("MAX_FILE_SIZE");
+   private static StringValue MAX_FILE_SIZE = new StringValue("MAX_FILE_SIZE");
 
    static void fillPost(Env env,
            ArrayValue postArray,
@@ -148,7 +148,7 @@ public class Post {
                return;
             }
          } else {
-            StringValue bb = new StringBuilderValue();
+            StringValue bb = new StringValue();
 
             bb.appendReadAll(is, Integer.MAX_VALUE);
 
@@ -213,7 +213,7 @@ public class Post {
          if (bracketIndex >= 0 && bracketIndex < name.length() - 1) {
             // php/085c
          } else if (filename == null) {
-            StringValue value = new StringBuilderValue();
+            StringValue value = new StringValue();
 
             value.appendReadAll(is, Integer.MAX_VALUE);
 

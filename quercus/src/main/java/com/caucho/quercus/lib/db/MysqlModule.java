@@ -58,19 +58,19 @@ public class MysqlModule extends AbstractQuercusModule {
    public static final int MYSQL_BOTH = JdbcResultResource.FETCH_BOTH;
    public static final int MYSQL_USE_RESULT = 0x0;
    public static final int MYSQL_STORE_RESULT = 0x1;
-   private static final StringValue SV_NAME = new StringBuilderValue("name");
-   private static final StringValue SV_TABLE = new StringBuilderValue("table");
-   private static final StringValue SV_DEF = new StringBuilderValue("def");
-   private static final StringValue SV_MAX_LENGTH = new StringBuilderValue("max_length");
-   private static final StringValue SV_NOT_NULL = new StringBuilderValue("not_null");
-   private static final StringValue SV_PRIMARY_KEY = new StringBuilderValue("primary_key");
-   private static final StringValue SV_MULTIPLE_KEY = new StringBuilderValue("multiple_key");
-   private static final StringValue SV_UNIQUE_KEY = new StringBuilderValue("unique_key");
-   private static final StringValue SV_NUMERIC = new StringBuilderValue("numeric");
-   private static final StringValue SV_BLOB = new StringBuilderValue("blob");
-   private static final StringValue SV_TYPE = new StringBuilderValue("type");
-   private static final StringValue SV_UNSIGNED = new StringBuilderValue("unsigned");
-   private static final StringValue SV_ZEROFILL = new StringBuilderValue("zerofill");
+   private static final StringValue SV_NAME = new StringValue("name");
+   private static final StringValue SV_TABLE = new StringValue("table");
+   private static final StringValue SV_DEF = new StringValue("def");
+   private static final StringValue SV_MAX_LENGTH = new StringValue("max_length");
+   private static final StringValue SV_NOT_NULL = new StringValue("not_null");
+   private static final StringValue SV_PRIMARY_KEY = new StringValue("primary_key");
+   private static final StringValue SV_MULTIPLE_KEY = new StringValue("multiple_key");
+   private static final StringValue SV_UNIQUE_KEY = new StringValue("unique_key");
+   private static final StringValue SV_NUMERIC = new StringValue("numeric");
+   private static final StringValue SV_BLOB = new StringValue("blob");
+   private static final StringValue SV_TYPE = new StringValue("type");
+   private static final StringValue SV_UNSIGNED = new StringValue("unsigned");
+   private static final StringValue SV_ZEROFILL = new StringValue("zerofill");
 
    public MysqlModule() {
    }
@@ -333,7 +333,7 @@ public class MysqlModule extends AbstractQuercusModule {
    public static StringValue mysql_escape_string(Env env, Value val) {
       StringValue unescapedString = val.toStringValue();
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       int len = unescapedString.length();
 

@@ -2158,7 +2158,7 @@ public class QuercusParser {
             expr = _factory.createNull();
          }
 
-         StringValue nameV = new StringBuilderValue(name);
+         StringValue nameV = new StringValue(name);
 
          if ((modifiers & M_STATIC) != 0) {
             ((ClassScope) _scope).addStaticVar(nameV, expr, _comment);
@@ -3206,7 +3206,7 @@ public class QuercusParser {
          _peekToken = token;
          name = parseIdentifier();
 
-         return term.createFieldGet(_factory, new StringBuilderValue(name));
+         return term.createFieldGet(_factory, new StringValue(name));
       }
    }
 
@@ -4851,7 +4851,7 @@ public class QuercusParser {
                      }
 
                      tail = tail.createFieldGet(_factory,
-                             new StringBuilderValue(_sb.toString()));
+                             new StringValue(_sb.toString()));
                   } else {
                      tail = _factory.createAppend(tail, createString("->"));
                   }

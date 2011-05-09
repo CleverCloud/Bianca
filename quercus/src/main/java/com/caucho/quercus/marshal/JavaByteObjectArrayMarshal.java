@@ -31,7 +31,7 @@ package com.caucho.quercus.marshal;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.NullValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 
 public class JavaByteObjectArrayMarshal extends JavaArrayMarshal {
@@ -49,7 +49,7 @@ public class JavaByteObjectArrayMarshal extends JavaArrayMarshal {
       byte[] data = new byte[byteValue.length];
       System.arraycopy(byteValue, 0, data, 0, data.length);
 
-      return new StringBuilderValue(new String(data));
+      return new StringValue(new String(data));
    }
 
    @Override

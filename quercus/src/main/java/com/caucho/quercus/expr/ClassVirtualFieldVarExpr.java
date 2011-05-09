@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
 import com.caucho.quercus.Location;
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Var;
@@ -89,7 +89,7 @@ public class ClassVirtualFieldVarExpr extends AbstractVarExpr {
       String className = env.getThis().getQuercusClass().getName();
       StringValue varName = _varName.evalStringValue(env);
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
       sb.append(className);
       sb.append("::");
       sb.append(varName);
@@ -109,7 +109,7 @@ public class ClassVirtualFieldVarExpr extends AbstractVarExpr {
       String className = env.getThis().getQuercusClass().getName();
       StringValue varName = _varName.evalStringValue(env);
 
-      StringValue var = new StringBuilderValue();
+      StringValue var = new StringValue();
       var.append(className);
       var.append("::");
       var.append(varName);
@@ -129,7 +129,7 @@ public class ClassVirtualFieldVarExpr extends AbstractVarExpr {
       String className = env.getThis().getQuercusClass().getName();
       StringValue varName = _varName.evalStringValue(env);
 
-      StringValue var = new StringBuilderValue();
+      StringValue var = new StringValue();
       var.append(className);
       var.append("::");
       var.append(varName);

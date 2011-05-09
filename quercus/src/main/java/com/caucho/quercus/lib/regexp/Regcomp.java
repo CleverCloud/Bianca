@@ -38,7 +38,7 @@ import java.util.concurrent.*;
 import java.util.logging.*;
 
 import com.caucho.quercus.env.StringValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.util.*;
 
 /**
@@ -515,7 +515,7 @@ class Regcomp {
 
          String name = sb.toString();
 
-         Integer v = _groupNameReverseMap.get(new StringBuilderValue(name));
+         Integer v = _groupNameReverseMap.get(new StringValue(name));
 
          if (v != null) {
             RegexpNode next = new RegexpNode.GroupRef(v);
@@ -539,8 +539,8 @@ class Regcomp {
 
          int group = _nGroup++;
 
-         _groupNameMap.put(group, new StringBuilderValue(name));
-         _groupNameReverseMap.put(new StringBuilderValue(name), group);
+         _groupNameMap.put(group, new StringValue(name));
+         _groupNameReverseMap.put(new StringValue(name), group);
 
          return parseGroup(pattern, tail, group, _flags);
       } else {

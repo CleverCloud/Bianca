@@ -32,7 +32,7 @@ package com.caucho.quercus.module;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.LongValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,16 +71,16 @@ public class AbstractQuercusModule implements QuercusModule {
 
    protected static void addConstant(Map<StringValue, Value> map,
            String name, Value value) {
-      map.put(new StringBuilderValue(name), value);
+      map.put(new StringValue(name), value);
    }
 
    protected static void addConstant(Map<StringValue, Value> map,
            String name, long value) {
-      map.put(new StringBuilderValue(name), LongValue.create(value));
+      map.put(new StringValue(name), LongValue.create(value));
    }
 
    protected static void addConstant(Map<StringValue, Value> map,
            String name, String value) {
-      map.put(new StringBuilderValue(name), StringValue.create(value));
+      map.put(new StringValue(name), StringValue.create(value));
    }
 }

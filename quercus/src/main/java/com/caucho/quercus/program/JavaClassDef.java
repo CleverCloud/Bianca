@@ -692,16 +692,16 @@ public class JavaClassDef extends ClassDef {
 
       if (_cons != null) {
          cl.setConstructor(_cons);
-         cl.addMethod(new StringBuilderValue("__construct"), _cons);
+         cl.addMethod(new StringValue("__construct"), _cons);
       }
 
       if (__construct != null) {
          cl.setConstructor(__construct);
-         cl.addMethod(new StringBuilderValue("__construct"), __construct);
+         cl.addMethod(new StringValue("__construct"), __construct);
       }
 
       for (AbstractJavaMethod value : _functionMap.values()) {
-         cl.addMethod(new StringBuilderValue(value.getName()), value);
+         cl.addMethod(new StringValue(value.getName()), value);
       }
 
       if (__fieldGet != null) {
@@ -717,7 +717,7 @@ public class JavaClassDef extends ClassDef {
       }
 
       if (__toString != null) {
-         cl.addMethod(new StringBuilderValue("__toString"), __toString);
+         cl.addMethod(new StringValue("__toString"), __toString);
       }
 
       if (_arrayDelegate != null) {
@@ -1121,7 +1121,7 @@ public class JavaClassDef extends ClassDef {
          MarshalFactory factory = moduleContext.getMarshalFactory();
          Marshal marshal = factory.create(field.getType(), false);
 
-         _fieldMap.put(new StringBuilderValue(field.getName()),
+         _fieldMap.put(new StringValue(field.getName()),
                  new FieldMarshalPair(field, marshal));
       }
 
@@ -1137,13 +1137,13 @@ public class JavaClassDef extends ClassDef {
     */
    private StringValue javaToQuercusConvert(String s) {
       if (s.length() == 1) {
-         return new StringBuilderValue(s.toLowerCase());
+         return new StringValue(s.toLowerCase());
       }
 
       if (Character.isUpperCase(s.charAt(1))) {
-         return new StringBuilderValue(s);
+         return new StringValue(s);
       } else {
-         StringBuilderValue sb = new StringBuilderValue();
+         StringValue sb = new StringValue();
          sb.append(Character.toLowerCase(s.charAt(0)));
 
          int length = s.length();
@@ -1259,7 +1259,7 @@ public class JavaClassDef extends ClassDef {
             }
 
             JavaMethod newFun = new JavaMethod(moduleContext, method);
-            StringValue funName = new StringBuilderValue(newFun.getName());
+            StringValue funName = new StringValue(newFun.getName());
             AbstractJavaMethod fun = _functionMap.getRaw(funName);
 
             if (fun != null) {

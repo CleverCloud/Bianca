@@ -156,7 +156,7 @@ abstract public class AbstractBinaryInputOutput
          return null;
       }
 
-      StringValue bb = new StringBuilderValue();
+      StringValue bb = new StringValue();
 
       if (bb.appendRead(_is, length) > 0) {
          return bb;

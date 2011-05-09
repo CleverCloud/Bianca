@@ -834,7 +834,7 @@ abstract public class Value implements java.io.Serializable {
     * Converts to a string builder
     */
    public StringValue toStringBuilder(Env env) {
-      return new StringBuilderValue().append(this);
+      return new StringValue().append(this);
    }
 
    /**
@@ -902,7 +902,7 @@ abstract public class Value implements java.io.Serializable {
    /**
     * Append to a binary builder.
     */
-   public StringValue appendTo(StringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return sb.append(toString());
    }
 

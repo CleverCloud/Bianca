@@ -31,7 +31,7 @@ package com.caucho.quercus.lib.i18n;
 
 
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 
 public class Utf8Encoder
@@ -69,7 +69,7 @@ public class Utf8Encoder
 
    @Override
    public StringValue encode(Env env, CharSequence str) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       int len = str.length();
       for (int i = 0; i < len; i++) {

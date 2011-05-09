@@ -157,7 +157,7 @@ public class BooleanValue extends Value
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       if (_value) {
          sb.append("1");

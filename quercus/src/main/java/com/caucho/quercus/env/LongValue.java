@@ -213,7 +213,7 @@ public class LongValue extends NumberValue {
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return new StringBuilderValue().append(_value);
+      return new StringValue().append(_value);
    }
 
    /**
@@ -463,7 +463,7 @@ public class LongValue extends NumberValue {
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(StringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return sb.append(_value);
    }
 

@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.EnvCleanup;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.resources.StreamContextResource;
@@ -261,7 +261,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
    @Override
    public StringValue read(int length)
            throws IOException {
-      StringValue bb = new StringBuilderValue();
+      StringValue bb = new StringValue();
       TempBuffer temp = TempBuffer.allocate();
 
       try {

@@ -203,14 +203,14 @@ public class MathModule extends AbstractQuercusModule {
          buffer.append(reverseBuffer.charAt(j));
       }
 
-      return new StringBuilderValue(buffer.toString());
+      return new StringValue(buffer.toString());
    }
 
    private static StringValue intToBase(Env env, BigInteger num, int base) {
       BigInteger toBaseBig = BigInteger.valueOf(base);
       BigInteger zero = BigInteger.valueOf(0);
 
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       do {
          BigInteger[] resultArray = num.divideAndRemainder(toBaseBig);
@@ -226,7 +226,7 @@ public class MathModule extends AbstractQuercusModule {
 
       } while (num.compareTo(zero) != 0);
 
-      StringValue toReturn = new StringBuilderValue();
+      StringValue toReturn = new StringValue();
 
       int len = sb.length();
       for (int i = len - 1; i >= 0; i--) {

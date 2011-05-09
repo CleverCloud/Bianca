@@ -168,7 +168,7 @@ public class JMSQueue {
          BytesMessage bytesMessage = (BytesMessage) message;
          int length = (int) bytesMessage.getBodyLength();
 
-         StringValue bb = new StringBuilderValue();
+         StringValue bb = new StringValue();
 
          TempBuffer tempBuffer = TempBuffer.allocate();
          int sublen;

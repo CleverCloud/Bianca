@@ -53,7 +53,7 @@ public class JsonModule
     * @return String JSON-encoded String
     */
    public StringValue json_encode(Env env, Value val) {
-      StringValue sb = new StringBuilderValue();
+      StringValue sb = new StringValue();
 
       val.jsonEncode(env, sb);
 

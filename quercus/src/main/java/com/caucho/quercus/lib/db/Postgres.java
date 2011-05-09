@@ -34,7 +34,7 @@ import com.caucho.quercus.annotation.ResourceType;
 import com.caucho.quercus.env.ConnectionEntry;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.util.L10N;
 
@@ -248,7 +248,7 @@ public class Postgres extends JdbcConnectionResource {
    }
 
    static public StringValue pgRealEscapeString(StringValue str) {
-      StringValue buf = new StringBuilderValue();
+      StringValue buf = new StringValue();
 
       final int strLength = str.length();
 

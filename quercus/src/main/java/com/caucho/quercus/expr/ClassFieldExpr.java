@@ -37,7 +37,7 @@ import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.MethodIntern;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Var;
 import com.caucho.quercus.parser.QuercusParser;
 import com.caucho.util.L10N;
@@ -56,7 +56,7 @@ public class ClassFieldExpr extends AbstractVarExpr {
       _className = className;
       _varName = MethodIntern.intern(varName);
 
-      _var = new StringBuilderValue(className + "::" + varName);
+      _var = new StringValue(className + "::" + varName);
    }
 
    //
