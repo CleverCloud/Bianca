@@ -23,166 +23,103 @@
 
 /* compute yyleng before each rule */
 
+| [0-9]+    { LNUM }
+| ([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)    { DNUM }
+| (({LNUM}|{DNUM})[eE][+-]?{LNUM})    { EXPONENT_DNUM }
+| "0x"[0-9a-fA-F]+    { HNUM }
+| [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*    { LABEL }
+| [ \n\r\t]+    { WHITESPACE }
+| [ \t]*    { TABS_AND_SPACES }
+| [;:,.\[\]()|^&+-/*=%!~$<>?@]    { TOKENS }
+| [^]    { ANY_CHAR }
+| ("\r"|"\n"|"\r\n"    { NEWLINE }
 
-<ST_IN_SCRIPTING>"exit" {
-	return T_EXIT;
-}
 
-<ST_IN_SCRIPTING>"die" {
-	return T_EXIT;
-}
+(*TODO : gérer ça*)
+#define IS_LABEL_START(c) (((c) >= 'a' && (c) <= 'z') || ((c) >= 'A' && (c) <= 'Z') || (c) == '_' || (c) >= 0x7F)
 
-<ST_IN_SCRIPTING>"function" {
-	return T_FUNCTION;
-}
+#define ZEND_IS_OCT(c)  ((c)>='0' && (c)<='7')
+#define ZEND_IS_HEX(c)  (((c)>='0' && (c)<='9') || ((c)>='a' && (c)<='f') || ((c)>='A' && (c)<='F'))
 
-<ST_IN_SCRIPTING>"const" {
-	return T_CONST;
-}
+| "exit"	{T_EXIT}
 
-<ST_IN_SCRIPTING>"return" {
-	return T_RETURN;
-}
+| "die"	{T_EXIT}
 
-<ST_IN_SCRIPTING>"try" {
-	return T_TRY;
-}
+| "function"	{T_FUNCTION}
 
-<ST_IN_SCRIPTING>"catch" {
-	return T_CATCH;
-}
+| "const"	{T_CONST}
 
-<ST_IN_SCRIPTING>"throw" {
-	return T_THROW;
-}
+| "return"	{T_RETURN}
 
-<ST_IN_SCRIPTING>"if" {
-	return T_IF;
-}
+| "try"	{T_TRY}
 
-<ST_IN_SCRIPTING>"elseif" {
-	return T_ELSEIF;
-}
+| "catch"	{T_CATCH}
 
-<ST_IN_SCRIPTING>"endif" {
-	return T_ENDIF;
-}
+| "throw"	{T_THROW}
 
-<ST_IN_SCRIPTING>"else" {
-	return T_ELSE;
-}
+| "if"	{T_IF}
 
-<ST_IN_SCRIPTING>"while" {
-	return T_WHILE;
-}
+| "elseif"	{T_ELSEIF}
 
-<ST_IN_SCRIPTING>"endwhile" {
-	return T_ENDWHILE;
-}
+| "endif"	{T_ENDIF}
 
-<ST_IN_SCRIPTING>"do" {
-	return T_DO;
-}
+| "else"	{T_ELSE}
 
-<ST_IN_SCRIPTING>"for" {
-	return T_FOR;
-}
+| "while"	{T_WHILE}
 
-<ST_IN_SCRIPTING>"endfor" {
-	return T_ENDFOR;
-}
+| "endwhile"	{T_ENDWHILE}
 
-<ST_IN_SCRIPTING>"foreach" {
-	return T_FOREACH;
-}
+| "do"	{T_DO}
 
-<ST_IN_SCRIPTING>"endforeach" {
-	return T_ENDFOREACH;
-}
+| "for"	{T_FOR}
 
-<ST_IN_SCRIPTING>"declare" {
-	return T_DECLARE;
-}
+| "endfor"	{T_ENDFOR}
 
-<ST_IN_SCRIPTING>"enddeclare" {
-	return T_ENDDECLARE;
-}
+| "foreach"	{T_FOREACH}
 
-<ST_IN_SCRIPTING>"instanceof" {
-	return T_INSTANCEOF;
-}
+| "endforeach"	{T_ENDFOREACH}
 
-<ST_IN_SCRIPTING>"as" {
-	return T_AS;
-}
+| "declare"	{T_DECLARE}
 
-<ST_IN_SCRIPTING>"switch" {
-	return T_SWITCH;
-}
+| "enddeclare"	{T_ENDDECLARE}
 
-<ST_IN_SCRIPTING>"endswitch" {
-	return T_ENDSWITCH;
-}
+| "instanceof"	{T_INSTANCEOF}
 
-<ST_IN_SCRIPTING>"case" {
-	return T_CASE;
-}
+| "as"	{T_AS}
 
-<ST_IN_SCRIPTING>"default" {
-	return T_DEFAULT;
-}
+| "switch"	{T_SWITCH}
 
-<ST_IN_SCRIPTING>"break" {
-	return T_BREAK;
-}
+| "endswitch"	{T_ENDSWITCH}
 
-<ST_IN_SCRIPTING>"continue" {
-	return T_CONTINUE;
-}
+| "case"	{T_CASE}
 
-<ST_IN_SCRIPTING>"goto" {
-	return T_GOTO;
-}
+| "default"	{T_DEFAULT}
 
-<ST_IN_SCRIPTING>"echo" {
-	return T_ECHO;
-}
+| "break"	{T_BREAK}
 
-<ST_IN_SCRIPTING>"print" {
-	return T_PRINT;
-}
+| "continue"	{T_CONTINUE}
 
-<ST_IN_SCRIPTING>"class" {
-	return T_CLASS;
-}
+| "goto"	{T_GOTO}
 
-<ST_IN_SCRIPTING>"interface" {
-	return T_INTERFACE;
-}
+| "echo"	{T_ECHO}
 
-<ST_IN_SCRIPTING>"extends" {
-	return T_EXTENDS;
-}
+| "print"	{T_PRINT}
 
-<ST_IN_SCRIPTING>"implements" {
-	return T_IMPLEMENTS;
-}
+| "class"	{T_CLASS}
 
-<ST_IN_SCRIPTING>"->" {
-	return T_OBJECT_OPERATOR;
-}
+| "interface"	{T_INTERFACE}
 
-<ST_IN_SCRIPTING,ST_LOOKING_FOR_PROPERTY>{WHITESPACE}+ {
-	zendlval->value.str.val = yytext; /* no copying - intentional */
-	zendlval->value.str.len = yyleng;
-	zendlval->type = IS_STRING;
-	HANDLE_NEWLINES(yytext, yyleng);
-	return T_WHITESPACE;
-}
+| "extends"	{T_EXTENDS}
 
-<ST_LOOKING_FOR_PROPERTY>"->" {
-	return T_OBJECT_OPERATOR;
-}
+| "implements"	{T_IMPLEMENTS}
+
+| "->"	{T_OBJECT_OPERATOR}
+
+
+  |  '#' [^'\n']* '\n' { incr_linenum lexbuf; token lexbuf }
+  | '\n'            { incr_linenum lexbuf; token lexbuf }
+  | [' ' '\t']      { token lexbuf }
+| "->"	{T_OBJECT_OPERATOR}
 
 <ST_LOOKING_FOR_PROPERTY>{LABEL} {
 	zendlval->type = IS_STRING;
@@ -190,268 +127,141 @@
 }
 
 <ST_LOOKING_FOR_PROPERTY>{ANY_CHAR} {
-	goto restart;
+	goto restart; //TODO : ATTENTION A CA !!!!
 }
 
-<ST_IN_SCRIPTING>"::" {
-	return T_PAAMAYIM_NEKUDOTAYIM;
-}
+| "::"	{T_PAAMAYIM_NEKUDOTAYIM}
 
-<ST_IN_SCRIPTING>"\\" {
-	return T_NS_SEPARATOR;
-}
+| "\\"	{T_NS_SEPARATOR}
 
-<ST_IN_SCRIPTING>"new" {
-	return T_NEW;
-}
+| "new"	{T_NEW}
 
-<ST_IN_SCRIPTING>"clone" {
-	return T_CLONE;
-}
+| "clone"	{T_CLONE}
 
-<ST_IN_SCRIPTING>"var" {
-	return T_VAR;
-}
+| "var"	{T_VAR}
+//TODO : CHECKER SI CA PASSE
+| "("{TABS_AND_SPACES}("int"|"integer"){TABS_AND_SPACES}")"	{T_INT_CAST}
 
-<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}("int"|"integer"){TABS_AND_SPACES}")" {
-	return T_INT_CAST;
-}
+| "("{TABS_AND_SPACES}("real"|"double"|"float"){TABS_AND_SPACES}")"	{T_DOUBLE_CAST}
 
-<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}("real"|"double"|"float"){TABS_AND_SPACES}")" {
-	return T_DOUBLE_CAST;
-}
+| "("{TABS_AND_SPACES}"string"{TABS_AND_SPACES}")"	{T_STRING_CAST}
 
-<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}"string"{TABS_AND_SPACES}")" {
-	return T_STRING_CAST;
-}
+| "("{TABS_AND_SPACES}"binary"{TABS_AND_SPACES}")"	{T_STRING_CAST}
 
-<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}"binary"{TABS_AND_SPACES}")" {
-	return T_STRING_CAST;
-}
+| "("{TABS_AND_SPACES}"array"{TABS_AND_SPACES}")"	{T_ARRAY_CAST}
 
-<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}"array"{TABS_AND_SPACES}")" {
-	return T_ARRAY_CAST;
-}
+| "("{TABS_AND_SPACES}"object"{TABS_AND_SPACES}")"	{T_OBJECT_CAST}
 
-<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}"object"{TABS_AND_SPACES}")" {
-	return T_OBJECT_CAST;
-}
+| "("{TABS_AND_SPACES}("bool"|"boolean"){TABS_AND_SPACES}")"	{T_BOOL_CAST}
 
-<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}("bool"|"boolean"){TABS_AND_SPACES}")" {
-	return T_BOOL_CAST;
-}
+| "("{TABS_AND_SPACES}("unset"){TABS_AND_SPACES}")"	{T_UNSET_CAST}
 
-<ST_IN_SCRIPTING>"("{TABS_AND_SPACES}("unset"){TABS_AND_SPACES}")" {
-	return T_UNSET_CAST;
-}
+| "eval"	{T_EVAL}
 
-<ST_IN_SCRIPTING>"eval" {
-	return T_EVAL;
-}
+| "include"	{T_INCLUDE}
 
-<ST_IN_SCRIPTING>"include" {
-	return T_INCLUDE;
-}
+| "include_once"	{T_INCLUDE_ONCE}
 
-<ST_IN_SCRIPTING>"include_once" {
-	return T_INCLUDE_ONCE;
-}
+| "require"	{T_REQUIRE}
 
-<ST_IN_SCRIPTING>"require" {
-	return T_REQUIRE;
-}
+| "require_once"	{T_REQUIRE_ONCE}
 
-<ST_IN_SCRIPTING>"require_once" {
-	return T_REQUIRE_ONCE;
-}
+| "namespace"	{T_NAMESPACE}
 
-<ST_IN_SCRIPTING>"namespace" {
-	return T_NAMESPACE;
-}
+| "use"	{T_USE}
 
-<ST_IN_SCRIPTING>"use" {
-	return T_USE;
-}
+| "global"	{T_GLOBAL}
 
-<ST_IN_SCRIPTING>"global" {
-	return T_GLOBAL;
-}
+| "isset"	{T_ISSET}
 
-<ST_IN_SCRIPTING>"isset" {
-	return T_ISSET;
-}
+| "empty"	{T_EMPTY}
 
-<ST_IN_SCRIPTING>"empty" {
-	return T_EMPTY;
-}
+| "__halt_compiler"	{T_HALT_COMPILER}
 
-<ST_IN_SCRIPTING>"__halt_compiler" {
-	return T_HALT_COMPILER;
-}
+| "static"	{T_STATIC}
 
-<ST_IN_SCRIPTING>"static" {
-	return T_STATIC;
-}
+| "abstract"	{T_ABSTRACT}
 
-<ST_IN_SCRIPTING>"abstract" {
-	return T_ABSTRACT;
-}
+| "final"	{T_FINAL}
 
-<ST_IN_SCRIPTING>"final" {
-	return T_FINAL;
-}
+| "private"	{T_PRIVATE}
 
-<ST_IN_SCRIPTING>"private" {
-	return T_PRIVATE;
-}
+| "protected"	{T_PROTECTED}
 
-<ST_IN_SCRIPTING>"protected" {
-	return T_PROTECTED;
-}
+| "public"	{T_PUBLIC}
 
-<ST_IN_SCRIPTING>"public" {
-	return T_PUBLIC;
-}
+| "unset"	{T_UNSET}
 
-<ST_IN_SCRIPTING>"unset" {
-	return T_UNSET;
-}
+| "=>"	{T_DOUBLE_ARROW}
 
-<ST_IN_SCRIPTING>"=>" {
-	return T_DOUBLE_ARROW;
-}
+| "list"	{T_LIST}
 
-<ST_IN_SCRIPTING>"list" {
-	return T_LIST;
-}
+| "array"	{T_ARRAY}
 
-<ST_IN_SCRIPTING>"array" {
-	return T_ARRAY;
-}
+| "++"	{T_INC}
 
-<ST_IN_SCRIPTING>"++" {
-	return T_INC;
-}
+| "--"	{T_DEC}
 
-<ST_IN_SCRIPTING>"--" {
-	return T_DEC;
-}
+| "==="	{T_IS_IDENTICAL}
 
-<ST_IN_SCRIPTING>"===" {
-	return T_IS_IDENTICAL;
-}
+| "!=="	{T_IS_NOT_IDENTICAL}
 
-<ST_IN_SCRIPTING>"!==" {
-	return T_IS_NOT_IDENTICAL;
-}
+| "=="	{T_IS_EQUAL}
 
-<ST_IN_SCRIPTING>"==" {
-	return T_IS_EQUAL;
-}
+| "!="|"<>"	{T_IS_NOT_EQUAL}
 
-<ST_IN_SCRIPTING>"!="|"<>" {
-	return T_IS_NOT_EQUAL;
-}
+| "<="	{T_IS_SMALLER_OR_EQUAL}
 
-<ST_IN_SCRIPTING>"<=" {
-	return T_IS_SMALLER_OR_EQUAL;
-}
+| ">="	{T_IS_GREATER_OR_EQUAL}
 
-<ST_IN_SCRIPTING>">=" {
-	return T_IS_GREATER_OR_EQUAL;
-}
+| "+="	{T_PLUS_EQUAL}
 
-<ST_IN_SCRIPTING>"+=" {
-	return T_PLUS_EQUAL;
-}
+| "-="	{T_MINUS_EQUAL}
 
-<ST_IN_SCRIPTING>"-=" {
-	return T_MINUS_EQUAL;
-}
+| "*="	{T_MUL_EQUAL}
 
-<ST_IN_SCRIPTING>"*=" {
-	return T_MUL_EQUAL;
-}
+| "/="	{T_DIV_EQUAL}
 
-<ST_IN_SCRIPTING>"/=" {
-	return T_DIV_EQUAL;
-}
+| ".="	{T_CONCAT_EQUAL}
 
-<ST_IN_SCRIPTING>".=" {
-	return T_CONCAT_EQUAL;
-}
+| "%="	{T_MOD_EQUAL}
 
-<ST_IN_SCRIPTING>"%=" {
-	return T_MOD_EQUAL;
-}
+| "<<="	{T_SL_EQUAL}
 
-<ST_IN_SCRIPTING>"<<=" {
-	return T_SL_EQUAL;
-}
+| ">>="	{T_SR_EQUAL}
 
-<ST_IN_SCRIPTING>">>=" {
-	return T_SR_EQUAL;
-}
+| "&="	{T_AND_EQUAL}
 
-<ST_IN_SCRIPTING>"&=" {
-	return T_AND_EQUAL;
-}
+| "|="	{T_OR_EQUAL}
 
-<ST_IN_SCRIPTING>"|=" {
-	return T_OR_EQUAL;
-}
+| "^="	{T_XOR_EQUAL}
 
-<ST_IN_SCRIPTING>"^=" {
-	return T_XOR_EQUAL;
-}
+| "||"	{T_BOOLEAN_OR}
 
-<ST_IN_SCRIPTING>"||" {
-	return T_BOOLEAN_OR;
-}
+| "&&"	{T_BOOLEAN_AND}
 
-<ST_IN_SCRIPTING>"&&" {
-	return T_BOOLEAN_AND;
-}
+| "OR"	{T_LOGICAL_OR}
 
-<ST_IN_SCRIPTING>"OR" {
-	return T_LOGICAL_OR;
-}
+| "AND"	{T_LOGICAL_AND}
 
-<ST_IN_SCRIPTING>"AND" {
-	return T_LOGICAL_AND;
-}
+| "XOR"	{T_LOGICAL_XOR}
 
-<ST_IN_SCRIPTING>"XOR" {
-	return T_LOGICAL_XOR;
-}
+| "<<"	{T_SL}
 
-<ST_IN_SCRIPTING>"<<" {
-	return T_SL;
-}
-
-<ST_IN_SCRIPTING>">>" {
-	return T_SR;
-}
+| ">>"	{T_SR}
 
 <ST_IN_SCRIPTING>{TOKENS} {
 	return yytext[0];
 }
 
 
-<ST_IN_SCRIPTING>"{" {
-	return '{';
-}
+| '{'	{ LBRACKET}
 
 
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"${" {
-	return T_DOLLAR_OPEN_CURLY_BRACES;
-}
+| "${"	{T_DOLLAR_OPEN_CURLY_BRACES}
 
 
-<ST_IN_SCRIPTING>"}" {
-	RESET_DOC_COMMENT();
-	return '}';
-}
+| '}' { RBRACKET }
 
 
 <ST_LOOKING_FOR_VARNAME>{LABEL} {
@@ -470,6 +280,7 @@
 	return T_LNUMBER;
 }
 
+//TODO faire 2 regexp, une pour les petit hex, une pout les plus gros, qui vont du coup se retrouver être des doubles
 <ST_IN_SCRIPTING>{HNUM} {/*0x[0-9a-fA-F]+*/
 	char *hex = yytext + 2; /* Skip "0x" */
 	int len = yyleng - 2;
@@ -491,11 +302,9 @@
 	}
 }
 
-<ST_VAR_OFFSET>[0]|([1-9][0-9]*) { /* Offset could be treated as a long */
 
-	}
-	return T_NUM_STRING;
-}
+let tnum_string = [0]|([1-9][0-9]*
+| tnum_string { T_NUM_STRING }
 
 <ST_VAR_OFFSET>{LNUM}|{HNUM} { /* Offset must be treated as a string */
 
@@ -507,116 +316,20 @@
 	return T_DNUMBER;
 }
 
-<ST_IN_SCRIPTING>"__CLASS__" {
-// On dirait qu'il prend le nom de classe avec....
-	char *class_name = NULL;
+| "__CLASS__" { T_CLASS_C };
 
-	if (CG(active_class_entry)) {
-		class_name = CG(active_class_entry)->name;
-	}
 
-	if (!class_name) {
-		class_name = "";
-	}
-	zendlval->value.str.len = strlen(class_name);
-	zendlval->value.str.val = estrndup(class_name, zendlval->value.str.len);
-	zendlval->type = IS_STRING;
-	return T_CLASS_C;
-}
+| "__FUNCTION__" { T_FUNC_C }
 
-<ST_IN_SCRIPTING>"__FUNCTION__" {
-// On dirait qu'il prend le nom de la fonction avec....
-	char *func_name = NULL;
+"__METHOD__" { T_METHOD_C }
 
-	if (CG(active_op_array)) {
-		func_name = CG(active_op_array)->function_name;
-	}
+"__LINE__" { 	 T_LINE }
 
-	if (!func_name) {
-		func_name = "";
-	}
-	zendlval->value.str.len = strlen(func_name);
-	zendlval->value.str.val = estrndup(func_name, zendlval->value.str.len);
-	zendlval->type = IS_STRING;
-	return T_FUNC_C;
-}
+"__FILE__" { T_FILE }
 
-<ST_IN_SCRIPTING>"__METHOD__" {
-// On dirait qu'il prend le nom de la méthode avec....
+"__DIR__" { T_DIR }
 
-	char *class_name = CG(active_class_entry) ? CG(active_class_entry)->name : NULL;
-	char *func_name = CG(active_op_array)? CG(active_op_array)->function_name : NULL;
-	size_t len = 0;
-
-	if (class_name) {
-		len += strlen(class_name) + 2;
-	}
-	if (func_name) {
-		len += strlen(func_name);
-	}
-
-	zendlval->value.str.len = zend_spprintf(&zendlval->value.str.val, 0, "%s%s%s", 
-		class_name ? class_name : "",
-		class_name && func_name ? "::" : "",
-		func_name ? func_name : ""
-		);
-	zendlval->type = IS_STRING;
-	return T_METHOD_C;
-}
-
-<ST_IN_SCRIPTING>"__LINE__" {
-
-	return T_LINE;
-}
-
-<ST_IN_SCRIPTING>"__FILE__" {
-	char *filename = zend_get_compiled_filename(TSRMLS_C);
-
-	if (!filename) {
-		filename = "";
-	}
-	zendlval->value.str.len = strlen(filename);
-	zendlval->value.str.val = estrndup(filename, zendlval->value.str.len);
-	zendlval->type = IS_STRING;
-	return T_FILE;
-}
-
-<ST_IN_SCRIPTING>"__DIR__" {
-	char *filename = zend_get_compiled_filename(TSRMLS_C);
-	const size_t filename_len = strlen(filename);
-	char *dirname;
-
-	if (!filename) {
-		filename = "";
-	}
-
-	dirname = estrndup(filename, filename_len);
-	zend_dirname(dirname, filename_len);
-
-	if (strcmp(dirname, ".") == 0) {
-		dirname = erealloc(dirname, MAXPATHLEN);
-#if HAVE_GETCWD
-		VCWD_GETCWD(dirname, MAXPATHLEN);
-#elif HAVE_GETWD
-		VCWD_GETWD(dirname);
-#endif
-	}
-
-	zendlval->value.str.len = strlen(dirname);
-	zendlval->value.str.val = dirname;
-	zendlval->type = IS_STRING;
-	return T_DIR;
-}
-
-<ST_IN_SCRIPTING>"__NAMESPACE__" {
-	if (CG(current_namespace)) {
-		*zendlval = *CG(current_namespace);
-		zval_copy_ctor(zendlval);
-	} else {
-		ZVAL_EMPTY_STRING(zendlval);
-	}
-	return T_NS_C;
-}
+"__NAMESPACE__" { T_NS_C }
 
 <INITIAL>"<script"{WHITESPACE}+"language"{WHITESPACE}*"="{WHITESPACE}*("php"|"\"php\""|"'php'"){WHITESPACE}*">" {
 	YYCTYPE *bracket = zend_memrchr(yytext, '<', yyleng - (sizeof("script language=php>") - 1));
