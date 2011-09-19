@@ -55,7 +55,7 @@ open Syntax
 %right '!'
 %nonassoc T_INSTANCEOF
 %right '~' T_INC T_DEC T_INT_CAST T_DOUBLE_CAST T_STRING_CAST T_ARRAY_CAST T_OBJECT_CAST T_BOOL_CAST T_UNSET_CAST '@'
-%right '['
+%right GCROCHET
 %nonassoc T_NEW T_CLONE
 %token T_EXIT
 %token T_IF
@@ -158,8 +158,8 @@ top_statement:
 	|	class_declaration_statement		{ print_endline "node"}
 	|	T_HALT_COMPILER '(' ')' ';'		{ print_endline "node"}
 	|	T_NAMESPACE namespace_name ';'	{ print_endline "node"}
-	|	T_NAMESPACE namespace_name '{' { print_endline "node"}	   
-	|	T_NAMESPACE '{'			{ print_endline "node"}
+	|	T_NAMESPACE namespace_name LBRACKET { print_endline "node"}	   
+	|	T_NAMESPACE LBRACKET			{ print_endline "node"}
 	|	T_USE use_declarations ';'     { print_endline "node"} 
 	|	constant_declaration ';'		{ print_endline "node"};
 
@@ -265,8 +265,8 @@ unticked_function_declaration_statement:
 ;
 
 unticked_class_declaration_statement:
-		class_entry_type T_STRING extends_from	implements_list			'{'				class_statement_list	'}' { print_endline "node"}
-	|	interface_entry T_STRING						interface_extends_list			'{' class_statement_list'}' { print_endline "node"} ;
+		class_entry_type T_STRING extends_from	implements_list			LBRACKET				class_statement_list	RBRACKET { print_endline "node"}
+	|	interface_entry T_STRING						interface_extends_list			LBRACKET class_statement_listRBRACKET { print_endline "node"} ;
 
 
 class_entry_type:
@@ -737,7 +737,7 @@ base_variable:
 	|	static_member { print_endline "node"}
 
 reference_variable:
-		reference_variable '[' dim_offset ']'	{ print_endline "node"}
+		reference_variable GCROCHET dim_offset DCROCHET	{ print_endline "node"}
 	|	reference_variable ''		{ print_endline "node"}
 	|	compound_variable			{ print_endline "node"}
 
@@ -756,7 +756,7 @@ object_property:
 	|	variable_without_objects  { print_endline "node"}
 
 object_dim_list:
-		object_dim_list '[' dim_offset ']'	{ print_endline "node"}
+		object_dim_list GCROCHET dim_offset DCROCHET	{ print_endline "node"}
 	|	object_dim_list ''		{ print_endline "node"}
 	|	variable_name { print_endline "node"}
 
@@ -803,11 +803,11 @@ encaps_list:
 
 encaps_var:
 		T_VARIABLE 	{ print_endline "node"} 
-	|	T_VARIABLE '['  encaps_var_offset ']'	{ print_endline "node"}
+	|	T_VARIABLE GCROCHET  encaps_var_offset DCROCHET	{ print_endline "node"}
 	|	T_VARIABLE T_OBJECT_OPERATOR T_STRING { print_endline "node"}
-	|	T_DOLLAR_OPEN_CURLY_BRACES expr '}' { print_endline "node"}
-	|	T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}' { print_endline "node"}
-	|	T_CURLY_OPEN variable '}' { print_endline "node"}
+	|	T_DOLLAR_OPEN_CURLY_BRACES expr RBRACKET { print_endline "node"}
+	|	T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME GCROCHET expr DCROCHET RBRACKET { print_endline "node"}
+	|	T_CURLY_OPEN variable RBRACKET { print_endline "node"}
 
 
 encaps_var_offset:
