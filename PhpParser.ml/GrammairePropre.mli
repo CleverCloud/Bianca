@@ -1,6 +1,10 @@
 type token =
+  | GCROCHET
   | T_EXIT
   | T_IF
+  | LBRACKET
+  | RBRACKET
+  | DCROCHET
   | T_LNUMBER
   | T_DNUMBER
   | T_STRING

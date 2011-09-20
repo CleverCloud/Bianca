@@ -62,6 +62,7 @@ open Syntax
 %left T_ELSEIF
 %left T_ELSE
 %left T_ENDIF
+%token LBRACKET RBRACKET GCROCHET DCROCHET
 %token T_LNUMBER
 %token T_DNUMBER
 %token T_STRING
@@ -266,7 +267,7 @@ unticked_function_declaration_statement:
 
 unticked_class_declaration_statement:
 		class_entry_type T_STRING extends_from	implements_list			LBRACKET				class_statement_list	RBRACKET { print_endline "node"}
-	|	interface_entry T_STRING						interface_extends_list			LBRACKET class_statement_listRBRACKET { print_endline "node"} ;
+	|	interface_entry T_STRING						interface_extends_list			LBRACKET class_statement_list RBRACKET { print_endline "node"} ;
 
 
 class_entry_type:
