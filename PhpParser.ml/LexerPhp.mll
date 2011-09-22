@@ -20,6 +20,19 @@
    |          Zeev Suraski <zeev@zend.com>                                |
    +----------------------------------------------------------------------+
 *)
+
+{
+  open GrammairePhp
+  open Lexing
+
+  let incr_linenum lexbuf =
+    let pos = lexbuf.lex_curr_p in
+    lexbuf.lex_curr_p <- { pos with
+      pos_lnum = pos.pos_lnum + 1;
+      pos_bol = pos.pos_cnum;
+    }
+}
+
 let tabs_and_space = [ '\t']*
 let lnum = ['0'-'9']+
 let hnum =  "0x" ['0'-'9' 'a'-'f' 'A'-'F']+  
@@ -81,7 +94,7 @@ rule token = parse
 | '\n'            { incr_linenum lexbuf; token lexbuf }
 | [' ' '\t']      { token lexbuf }
 | "->"	{T_OBJECT_OPERATOR}
-| ['a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '0'-'9' '_']*  { T_STRING}
+(*| ['a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '0'-'9' '_']*  { T_STRING} *)
 | "::"	{T_PAAMAYIM_NEKUDOTAYIM}
 | "\\"	{T_NS_SEPARATOR}
 | "new"	{T_NEW}
@@ -143,10 +156,22 @@ rule token = parse
 | "XOR"	{T_LOGICAL_XOR}
 | "<<"	{T_SL}
 | ">>"	{T_SR}
-| '{'	{ LBRACKET}
+| '{'	  { LBRACKET}
 | "${"	{T_DOLLAR_OPEN_CURLY_BRACES}
-| '}' { RBRACKET }
+| '}'   { RBRACKET }
 | label { T_STRING_VARNAME }
+| ';'   { POINT_VIRGULE }
+| "{$"  { T_CURLY_OPEN}
+| '\''  {QUOTE}
+| '"'   {DOUBLEQUOTE}
+| '\"' [^'\"']* '\"' { let str = lexeme lexbuf in T_STRING (String.sub str 1 (String.length str - 2)) }
+| '\'' [^'\'']* '\'' { let str = lexeme lexbuf in T_STRING (String.sub str 1 (String.length str - 2)) }
+| ',' {VIRGULE}
+(*| '"' { DOUBLE_QUOTE }
+| '`'   { QUOTEINVERSE }*)
+
+
+
 (*TODO séparer les DOUBLE et les LONG en fonction de la taille
 --> Faire une fonction caml pour ça*)
 | lnum {T_LNUMBER}
@@ -234,8 +259,8 @@ TODO : on verra après pour les doubles
 | "$" label { T_VARIABLE }
 | "]" {	 DCROCHET }
 (*$| tokens|['{' '}' '"' '`'] { ????}*)
-| [ '\n' '\r' '\t' '\\' '\'' '#'] { T_ENCAPSED_AND_WHITESPACE }
-| label { T_STRING }
+| [ '\n' '\r' '\t' '\\'  '#'] { T_ENCAPSED_AND_WHITESPACE }
+(*| label { T_STRING }*)
 | "#"|"//" {	 T_COMMENT}
 | "/*"|"/**" whitespace { T_COMMENT }
 | ("?>"|"</script"whitespace*">") newline? {T_CLOSE_TAG }
@@ -255,7 +280,4 @@ TODO : on verra après pour les doubles
 	return T_START_HEREDOC;
 }
 *)
-|"{$" { T_CURLY_OPEN}
-| ['"'] { DOUBLE_QUOTE }
-| ['`']   { QUOTEINVERSE }
 
