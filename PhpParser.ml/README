@@ -1,0 +1,5 @@
+Qq commandes utiles :
+ocamlbuild    parse.byte
+ocaml -init parse.ml -I _build/ message.cmo LexerPhp.cmo GrammairePhp.cmo Syntax.cmo 
+menhir --dump GrammairePhp.mly 
+menhir --explain GrammairePhp.mly
