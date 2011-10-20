@@ -1,0 +1,13 @@
+Qq commandes utiles :
+
+#build :
+ocamlbuild    parse.byte
+
+# pour jouer avec le parser avec le caml en ligne
+ocaml -init parse.ml -I _build/ message.cmo LexerPhp.cmo GrammairePhp.cmo Syntax.cmo 
+
+#Produit un gros fichier de 2Mo qui décrit la grammaire
+menhir --dump GrammairePhp.mly 
+
+#Produit un fichier qui explique pourquoi la grammaire est m****dique
+menhir --explain GrammairePhp.mly
