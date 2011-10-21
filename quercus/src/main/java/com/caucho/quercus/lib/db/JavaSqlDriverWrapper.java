@@ -32,6 +32,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 import java.util.Properties;
 
 /*
@@ -84,6 +85,11 @@ public class JavaSqlDriverWrapper implements javax.sql.DataSource {
 
    @Override
    public PrintWriter getLogWriter() {
+      throw new UnsupportedOperationException();
+   }
+
+   //@Override TODO: Uncomment when switching to java7
+   public Logger getParentLogger() {
       throw new UnsupportedOperationException();
    }
 
