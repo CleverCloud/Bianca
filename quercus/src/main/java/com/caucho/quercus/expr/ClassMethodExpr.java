@@ -112,8 +112,6 @@ public class ClassMethodExpr extends AbstractMethodExpr {
       // QuercusClass oldClass = env.setCallingClass(cl);
 
       try {
-         env.checkTimeout();
-
          return cl.callMethod(env, qThis, _methodName, _hash, values);
       } finally {
          env.popCall();

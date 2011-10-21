@@ -88,8 +88,6 @@ public class ObjectNewExpr extends Expr {
       try {
          QuercusClass cl = env.findAbstractClass(_name);
 
-         env.checkTimeout();
-
          return cl.callNew(env, args);
       } finally {
          env.popCall();

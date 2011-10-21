@@ -180,21 +180,6 @@ public class QuercusProgram {
    }
 
    /*
-    * Set to true if this page is being compiled.
-    */
-   public void waitForCompile() {
-      synchronized (this) {
-         if (_isCompiling.get()) {
-            try {
-               wait(120000);
-            } catch (Exception e) {
-               log.log(Level.WARNING, e.toString(), e);
-            }
-         }
-      }
-   }
-
-   /*
     * Returns true if this page is being compiled.
     */
    public boolean isCompiling() {
@@ -398,20 +383,6 @@ public class QuercusProgram {
 
    public AbstractFunction[] getRuntimeFunctionList() {
       return _runtimeFunList;
-   }
-
-   public void waitForRuntimeFunctionList(long timeout) {
-      synchronized (this) {
-         if (_runtimeFunList == null) {
-            try {
-               if (timeout > 0) {
-                  wait(timeout);
-               }
-            } catch (Exception e) {
-               log.log(Level.FINER, e.toString(), e);
-            }
-         }
-      }
    }
 
    /**

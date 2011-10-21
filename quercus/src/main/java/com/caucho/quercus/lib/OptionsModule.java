@@ -735,8 +735,6 @@ public class OptionsModule extends AbstractQuercusModule {
    public static Value set_time_limit(Env env, long seconds) {
       env.setTimeLimit(seconds * 1000L);
 
-      env.resetTimeout();
-
       return NullValue.NULL;
    }
 

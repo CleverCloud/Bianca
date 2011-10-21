@@ -68,8 +68,6 @@ public class WhileStatement extends Statement {
          env.setLocation(getLocation());
 
          while (_test.evalBoolean(env)) {
-            env.checkTimeout();
-
             Value value = _block.execute(env);
 
             if (value == null) {

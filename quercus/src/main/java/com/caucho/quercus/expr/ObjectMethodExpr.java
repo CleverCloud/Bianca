@@ -78,8 +78,6 @@ public class ObjectMethodExpr extends AbstractMethodExpr {
     */
    @Override
    public Value eval(Env env) {
-      env.checkTimeout();
-
       Value obj = _objExpr.eval(env);
 
       StringValue methodName = _methodName;

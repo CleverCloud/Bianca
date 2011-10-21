@@ -240,7 +240,6 @@ public class Env {
    private QDate _gmtDate;
    private Object _gzStream;
    private Env _oldThreadEnv;
-   private boolean _isTimeout;
    private long _firstMicroTime;
    private long _firstNanoTime;
    private RegexpState _freeRegexpState;
@@ -1024,35 +1023,6 @@ public class Env {
       }
 
       _timeLimit = ms;
-   }
-
-   /**
-    * Checks for the program timeout.
-    */
-   public void checkTimeout() {
-      /*
-      long now = Alarm.getCurrentTime();
-
-      if (_endTime < now)
-      throw new QuercusRuntimeException(L.l("script timed out"));
-       */
-      if (_isTimeout) {
-         throw new QuercusRuntimeException(L.l("script timed out"));
-      }
-   }
-
-   public void updateTimeout() {
-      long now = _quercus.getCurrentTime();
-
-      if (_endTime < now) {
-         _isTimeout = true;
-      }
-   }
-
-   public void resetTimeout() {
-      _startTime = _quercus.getCurrentTime();
-      _endTime = _startTime + _timeLimit;
-      _isTimeout = false;
    }
 
    public long getStartTime() {

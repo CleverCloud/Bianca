@@ -82,8 +82,6 @@ abstract public class AbstractMethodExpr extends Expr {
       env.pushCall(this, qThis, args);
 
       try {
-         env.checkTimeout();
-
          return qThis.callMethod(env, methodName, hashCode, args);
       } finally {
          env.popCall();

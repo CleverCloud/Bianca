@@ -204,8 +204,6 @@ public class CallExpr extends Expr {
 
       // TODO: qa/1d14 Value oldThis = env.setThis(UnsetValue.NULL);
       try {
-         env.checkTimeout();
-
          /*
          if (isRef)
          return fun.callRef(env, args);

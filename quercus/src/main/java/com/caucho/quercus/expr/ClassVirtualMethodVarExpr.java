@@ -127,8 +127,6 @@ public class ClassVirtualMethodVarExpr extends Expr {
       env.pushCall(this, cls, values);
 
       try {
-         env.checkTimeout();
-
          return cls.callMethod(env, qThis, methodName, hash, values);
       } finally {
          env.popCall();

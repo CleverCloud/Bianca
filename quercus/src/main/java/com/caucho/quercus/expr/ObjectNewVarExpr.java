@@ -92,8 +92,6 @@ public class ObjectNewVarExpr extends Expr {
       env.pushCall(this, NullValue.NULL, args);
 
       try {
-         env.checkTimeout();
-
          return cl.callNew(env, args);
       } finally {
          env.popCall();
