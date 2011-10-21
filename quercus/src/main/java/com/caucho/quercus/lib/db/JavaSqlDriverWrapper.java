@@ -88,7 +88,7 @@ public class JavaSqlDriverWrapper implements javax.sql.DataSource {
       throw new UnsupportedOperationException();
    }
 
-   @Override
+   //@Override TODO: Uncomment when switching to java7
    public Logger getParentLogger() {
       throw new UnsupportedOperationException();
    }
