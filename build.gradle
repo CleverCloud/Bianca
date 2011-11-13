@@ -32,11 +32,13 @@ project(':quercus') {
     }
 
     task prepareJava << {
-	String buildV = ["./bin/prepareJava.sh", "$projectDir/src/main/java/com/caucho/quercus/QuercusVersion.java"].execute().text
+        String versionFile = "quercus/src/main/java/com/caucho/quercus/QuercusVersion.java"
+	String buildV = ["./bin/prepareJava.sh", versionFile].execute().text
     }
 
     task cleanJava << {
-	String cleanV = ["./bin/cleanJava.sh", "$projectDir/src/main/java/com/caucho/quercus/QuercusVersion.java"].execute().text
+        String versionFile = "quercus/src/main/java/com/caucho/quercus/QuercusVersion.java"
+	String cleanV = ["./bin/cleanJava.sh", versionFile].execute().text
     }
 
     compileJava.dependsOn prepareJava
