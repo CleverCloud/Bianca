@@ -66,8 +66,6 @@ public class DoStatement extends Statement {
    public Value execute(Env env) {
       try {
          do {
-            env.checkTimeout();
-
             Value value = _block.execute(env);
 
             if (value == null) {

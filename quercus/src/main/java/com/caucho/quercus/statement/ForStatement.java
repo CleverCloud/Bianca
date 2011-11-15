@@ -73,8 +73,6 @@ public class ForStatement extends Statement {
          }
 
          while (_test == null || _test.evalBoolean(env)) {
-            env.checkTimeout();
-
             Value value = _block.execute(env);
 
             if (value == null) {

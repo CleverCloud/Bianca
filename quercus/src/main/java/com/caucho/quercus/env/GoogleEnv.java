@@ -40,8 +40,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GoogleEnv extends Env {
 
-   private int _timeoutCount;
-
    public GoogleEnv(QuercusContext quercus,
            QuercusPage page,
            WriteStream out,
@@ -52,29 +50,5 @@ public class GoogleEnv extends Env {
 
    public GoogleEnv(QuercusContext quercus) {
       super(quercus);
-   }
-
-   /**
-    * Checks for the program timeout.
-    */
-   @Override
-   public void checkTimeout() {
-      // since GoogleAppEngine doesn't allow Threads, the normal Alarm
-      // optimization doesn't work.  Instead use a timeout count to limit
-      // the calls
-      if (_timeoutCount-- > 0) {
-         return;
-      }
-
-      _timeoutCount = 8192;
-
-      super.checkTimeout();
-   }
-
-   @Override
-   public void resetTimeout() {
-      super.resetTimeout();
-
-      _timeoutCount = 8192;
    }
 }

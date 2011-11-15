@@ -100,8 +100,6 @@ public class ObjectMethodVarExpr extends Expr {
       env.pushCall(this, obj, values);
 
       try {
-         env.checkTimeout();
-
          return obj.callMethod(env, methodName, values);
       } finally {
          env.popCall();

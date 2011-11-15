@@ -100,8 +100,6 @@ public class ClassConstructorExpr extends Expr {
       env.pushCall(this, qThis, values);
 
       try {
-         env.checkTimeout();
-
          return cl.callMethod(env, qThis, _name, _name.hashCode(), values);
       } finally {
          env.popCall();

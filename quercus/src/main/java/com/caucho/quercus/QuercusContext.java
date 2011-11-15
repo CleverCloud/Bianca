@@ -133,8 +133,6 @@ public class QuercusContext {
    private Path _workDir;
    private ServletContext _servletContext;
    private QuercusTimer _quercusTimer;
-   private EnvTimeoutThread _envTimeoutThread;
-   protected long _envTimeout = 60000L;
    // how long to sleep the env timeout thread,
    // for fast, complete tomcat undeploys
    protected static final long ENV_TIMEOUT_UPDATE_INTERVAL = 1000L;
@@ -1733,9 +1731,6 @@ public class QuercusContext {
       return null;
    }
 
-   public void setSessionTimeout(long sessionTimeout) {
-   }
-
    /**
     * Loads the session from the backing.
     */
@@ -1825,9 +1820,6 @@ public class QuercusContext {
    public void start() {
       try {
          _quercusTimer = new QuercusTimer();
-
-         _envTimeoutThread = new EnvTimeoutThread();
-         _envTimeoutThread.start();
       } catch (Exception e) {
          log.log(Level.FINE, e.getMessage(), e);
       }
@@ -1861,10 +1853,6 @@ public class QuercusContext {
 
       _sessionManager.close();
       _pageManager.close();
-
-      if (_envTimeoutThread != null) {
-         _envTimeoutThread.shutdown();
-      }
 
       if (_quercusTimer != null) {
          _quercusTimer.shutdown();
@@ -1912,49 +1900,6 @@ public class QuercusContext {
                  && _includePath.equals(key._includePath)
                  && _pwd.equals(key._pwd)
                  && _scriptPwd.equals(key._scriptPwd));
-      }
-   }
-
-   class EnvTimeoutThread extends Thread {
-
-      private volatile boolean _isRunnable = true;
-      private final long _timeout = _envTimeout;
-      private long _quantumCount;
-
-      EnvTimeoutThread() {
-         super("quercus-env-timeout");
-
-         setDaemon(true);
-         //setPriority(Thread.MAX_PRIORITY);
-      }
-
-      public void shutdown() {
-         _isRunnable = false;
-
-         LockSupport.unpark(this);
-      }
-
-      @Override
-      public void run() {
-         while (_isRunnable) {
-            if (_quantumCount >= _timeout) {
-               _quantumCount = 0;
-
-               try {
-                  ArrayList<Env> activeEnv = new ArrayList<Env>(_activeEnvSet.keySet());
-
-                  for (Env env : activeEnv) {
-                     env.updateTimeout();
-                  }
-
-               } catch (Throwable e) {
-               }
-            } else {
-               _quantumCount += ENV_TIMEOUT_UPDATE_INTERVAL;
-            }
-
-            LockSupport.parkNanos(ENV_TIMEOUT_UPDATE_INTERVAL * 1000000L);
-         }
       }
    }
 

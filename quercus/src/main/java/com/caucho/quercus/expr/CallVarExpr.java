@@ -117,8 +117,6 @@ public class CallVarExpr extends Expr {
       env.pushCall(this, NullValue.NULL, null);
 
       try {
-         env.checkTimeout();
-
          if (isRef) {
             return value.callRef(env, args);
          } else if (isCopy) {
