@@ -58,7 +58,6 @@ public class CgiQuercus
       quercus.parseArgs(args);
 
       quercus.init();
-      quercus.start();
 
       if (quercus.getFileName() != null) {
          quercus.execute();

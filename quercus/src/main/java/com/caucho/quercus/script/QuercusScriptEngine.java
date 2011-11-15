@@ -67,7 +67,6 @@ public class QuercusScriptEngine
       QuercusContext quercus = new QuercusContext();
 
       quercus.init();
-      quercus.start();
 
       return quercus;
    }

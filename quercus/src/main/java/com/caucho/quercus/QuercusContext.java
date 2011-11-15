@@ -132,7 +132,6 @@ public class QuercusContext {
    private Path _pwd;
    private Path _workDir;
    private ServletContext _servletContext;
-   private QuercusTimer _quercusTimer;
    // how long to sleep the env timeout thread,
    // for fast, complete tomcat undeploys
    protected static final long ENV_TIMEOUT_UPDATE_INTERVAL = 1000L;
@@ -160,21 +159,21 @@ public class QuercusContext {
     * Returns the current time.
     */
    public long getCurrentTime() {
-      return _quercusTimer.getCurrentTime();
+      return System.currentTimeMillis();
    }
 
    /**
     * Returns the current time in nanoseconds.
     */
    public long getExactTimeNanoseconds() {
-      return _quercusTimer.getExactTimeNanoseconds();
+      return System.nanoTime();
    }
 
    /**
     * Returns the exact current time in milliseconds.
     */
    public long getExactTime() {
-      return _quercusTimer.getExactTime();
+      return System.currentTimeMillis();
    }
 
    /**
@@ -1817,14 +1816,6 @@ public class QuercusContext {
       setIni("include_path", sb.toString());
    }
 
-   public void start() {
-      try {
-         _quercusTimer = new QuercusTimer();
-      } catch (Exception e) {
-         log.log(Level.FINE, e.getMessage(), e);
-      }
-   }
-
    public Env createEnv(QuercusPage page,
            WriteStream out,
            HttpServletRequest request,
@@ -1853,10 +1844,6 @@ public class QuercusContext {
 
       _sessionManager.close();
       _pageManager.close();
-
-      if (_quercusTimer != null) {
-         _quercusTimer.shutdown();
-      }
    }
 
    static class IncludeKey {

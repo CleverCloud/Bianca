@@ -91,7 +91,6 @@ public class QuercusServletImpl extends HttpServlet {
       }
 
       getQuercus().init();
-      getQuercus().start();
    }
 
    protected void initImpl(ServletConfig config)
