@@ -66,7 +66,6 @@ public class Quercus
       }
 
       quercus.init();
-      quercus.start();
 
       if (quercus.getFileName() != null) {
          quercus.execute();
