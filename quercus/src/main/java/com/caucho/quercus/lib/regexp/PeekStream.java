@@ -44,7 +44,7 @@ class PeekStream {
    }
 
    StringValue createStringBuilder() {
-      return new StringBuilderValue();
+      return new StringValue();
    }
 
    String getPattern() {

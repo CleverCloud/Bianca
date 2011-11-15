@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.regexp;
 
@@ -32,10 +33,8 @@ import java.util.*;
 import java.util.logging.*;
 
 import com.caucho.quercus.QuercusException;
-import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.quercus.env.UnicodeBuilderValue;
-import com.caucho.quercus.lib.i18n.Utf8Encoder;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.util.*;
 
 public class Regexp {
@@ -176,17 +175,7 @@ public class Regexp {
       }
 
       _flags = flags;
-
-      // TODO: what if unicode.semantics='true'?
-
-      if ((flags & Regcomp.UTF8) != 0) {
-         _pattern = fromUtf8(pattern);
-
-         if (pattern == null) {
-            throw new QuercusException(
-                    L.l("Regexp: error converting subject to utf8"));
-         }
-      }
+      _pattern = pattern;
    }
 
    public StringValue getRawRegexp() {
@@ -203,22 +192,6 @@ public class Regexp {
 
    public boolean isEval() {
       return _isEval;
-   }
-
-   public StringValue convertSubject(Env env, StringValue subject) {
-      if (isUTF8()) {
-         return fromUtf8(subject);
-      } else {
-         return subject;
-      }
-   }
-
-   public StringValue convertResult(Env env, StringValue result) {
-      if (isUTF8()) {
-         return toUtf8(env, result);
-      } else {
-         return result;
-      }
    }
 
    private void compile(RegexpNode prog, Regcomp comp) {
@@ -252,12 +225,6 @@ public class Regexp {
       _groupNames = new StringValue[_nGroup + 1];
       for (Map.Entry<Integer, StringValue> entry : comp._groupNameMap.entrySet()) {
          StringValue groupName = entry.getValue();
-
-         if (_isUnicode) {
-         } else if (isUTF8()) {
-            groupName.toBinaryValue("UTF-8");
-         }
-
          _groupNames[entry.getKey().intValue()] = groupName;
       }
    }
@@ -275,7 +242,7 @@ public class Regexp {
    }
 
    static StringValue fromUtf8(StringValue source) {
-      StringValue target = new UnicodeBuilderValue();
+      StringValue target = new StringValue();
       int len = source.length();
 
       for (int i = 0; i < len; i++) {
@@ -329,12 +296,6 @@ public class Regexp {
       }
 
       return target;
-   }
-
-   static StringValue toUtf8(Env env, StringValue source) {
-      Utf8Encoder encoder = new Utf8Encoder();
-
-      return encoder.encode(env, source);
    }
 
    @Override

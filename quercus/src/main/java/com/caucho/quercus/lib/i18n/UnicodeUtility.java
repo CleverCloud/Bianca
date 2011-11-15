@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
@@ -36,7 +37,7 @@ public class UnicodeUtility {
            StringValue str,
            String replacement,
            boolean isIgnore) {
-      StringValue sb = str.createStringBuilder();
+      StringValue sb = new StringValue();
 
       int len = str.length();
 
@@ -153,12 +154,12 @@ public class UnicodeUtility {
       boolean isEndUtf8 = false;
 
       if (inCharset.equalsIgnoreCase("utf8")
-              || inCharset.equalsIgnoreCase("utf-8")) {
+              || inCharset.equalsIgnoreCase("utf8")) {
          isStartUtf8 = true;
       }
 
       if (outCharset.equalsIgnoreCase("utf8")
-              || outCharset.equalsIgnoreCase("utf-8")) {
+              || outCharset.equalsIgnoreCase("utf8")) {
          isEndUtf8 = true;
       }
 
@@ -172,7 +173,7 @@ public class UnicodeUtility {
 
       Decoder decoder;
       if (isStartUtf8) {
-         decoder = new Utf8Decoder(inCharset);
+         decoder = new Utf8Decoder();
       } else {
          decoder = new GenericDecoder(inCharset);
       }

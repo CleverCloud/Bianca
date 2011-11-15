@@ -25,12 +25,13 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
 import java.util.Locale;
 
-public class LocaleInfo {
+public final class LocaleInfo {
 
    private QuercusLocale _collate;
    private QuercusLocale _ctype;

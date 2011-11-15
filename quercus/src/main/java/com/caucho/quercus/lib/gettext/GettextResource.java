@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.gettext;
 
@@ -170,7 +171,7 @@ class GettextResource {
 
       ArrayList<StringValue> pluralForms = _translations.get(key);
 
-      if (pluralForms == null || pluralForms.size() == 0) {
+      if (pluralForms == null || pluralForms.isEmpty()) {
          return null;
       }
 

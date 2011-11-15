@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.file;
 
@@ -155,7 +156,7 @@ abstract public class AbstractBinaryInputOutput
          return null;
       }
 
-      StringValue bb = _env.createBinaryBuilder();
+      StringValue bb = new StringValue();
 
       if (bb.appendRead(_is, length) > 0) {
          return bb;
@@ -180,7 +181,7 @@ abstract public class AbstractBinaryInputOutput
 
          log.log(Level.FINER, e.toString(), e);
 
-         return _env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 

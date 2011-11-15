@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -84,7 +85,7 @@ public class OutputBuffer {
                log.log(Level.WARNING, e.toString(), e);
             }
             try {
-               _out.setEncoding("UTF-8");
+               _out.setEncoding("utf8");
             } catch (UnsupportedEncodingException e2) {
                if (log.isLoggable(Level.WARNING)) {
                   log.log(Level.WARNING, e.toString(), e2);
@@ -118,12 +119,12 @@ public class OutputBuffer {
       try {
          _out.flush();
 
-         StringValue bb = _env.createBinaryBuilder(_tempStream.getLength());
+         StringValue bb = new StringValue();
 
          for (TempBuffer ptr = _tempStream.getHead();
                  ptr != null;
                  ptr = ptr.getNext()) {
-            bb.append(ptr.getBuffer(), 0, ptr.getLength());
+            bb.append(new String(ptr.getBuffer()), 0, ptr.getLength());
          }
 
          return bb;

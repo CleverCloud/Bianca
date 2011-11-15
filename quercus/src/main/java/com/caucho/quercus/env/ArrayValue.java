@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -46,11 +47,11 @@ import java.util.logging.Logger;
 abstract public class ArrayValue extends Value {
 
    private static final Logger log = Logger.getLogger(ArrayValue.class.getName());
-   protected static final StringValue KEY = new ConstStringValue("key");
-   protected static final StringValue VALUE = new ConstStringValue("value");
+   protected static final StringValue KEY = new StringValue("key");
+   protected static final StringValue VALUE = new StringValue("value");
    public static final GetKey GET_KEY = new GetKey();
    public static final GetValue GET_VALUE = new GetValue();
-   public static final StringValue ARRAY = new ConstStringValue("Array");
+   public static final StringValue ARRAY = new StringValue("Array");
    private Entry _current;
 
    protected ArrayValue() {
@@ -92,26 +93,10 @@ abstract public class ArrayValue extends Value {
    }
 
    /**
-    * Cost to convert to a binary value
-    */
-   @Override
-   public int toBinaryValueMarshalCost() {
-      return Marshal.COST_INCOMPATIBLE;
-   }
-
-   /**
     * Cost to convert to a StringValue
     */
    @Override
    public int toStringValueMarshalCost() {
-      return Marshal.COST_INCOMPATIBLE;
-   }
-
-   /**
-    * Cost to convert to a UnicodeValue
-    */
-   @Override
-   public int toUnicodeValueMarshalCost() {
       return Marshal.COST_INCOMPATIBLE;
    }
 
@@ -258,8 +243,6 @@ abstract public class ArrayValue extends Value {
          list = new ArrayList();
       } else if (type.isAssignableFrom(LinkedList.class)) {
          list = new LinkedList();
-      } else if (type.isAssignableFrom(Vector.class)) {
-         list = new Vector();
       } else {
          try {
             list = (List) type.newInstance();
@@ -637,20 +620,6 @@ abstract public class ArrayValue extends Value {
       append(key, value);
 
       return value;
-   }
-
-   /**
-    * Adds a new value.
-    */
-   public final void put(StringValue keyBinary,
-           StringValue keyUnicode,
-           Value value,
-           boolean isUnicode) {
-      if (isUnicode) {
-         append(keyUnicode, value);
-      } else {
-         append(keyBinary, value);
-      }
    }
 
    /**

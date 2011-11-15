@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.expr;
 
@@ -83,7 +84,7 @@ public class BinaryAppendExpr extends Expr {
       for (BinaryAppendExpr ptr = _next; ptr != null; ptr = ptr._next) {
          Value ptrValue = ptr._value.eval(env);
 
-         sb = sb.appendUnicode(ptrValue);
+         sb = sb.append(ptrValue);
       }
 
       return sb;
@@ -96,7 +97,7 @@ public class BinaryAppendExpr extends Expr {
       StringValue sb = value.toStringBuilder(env);
 
       for (BinaryAppendExpr ptr = _next; ptr != null; ptr = ptr._next) {
-         sb = sb.appendUnicode(ptr._value.eval(env));
+         sb = sb.append(ptr._value.eval(env));
       }
 
       return sb.toString();

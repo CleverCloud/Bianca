@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.curl;
 
@@ -32,6 +33,7 @@ import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.EnvCleanup;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.util.L10N;
@@ -174,7 +176,7 @@ public class HttpRequest
 
       _curl.setResponseCode(_conn.getResponseCode());
 
-      Value header = getHeader(env, env.createBinaryBuilder());
+      Value header = getHeader(env, new StringValue());
 
       if (header == BooleanValue.FALSE) {
          return false;
@@ -182,7 +184,7 @@ public class HttpRequest
 
       _curl.setHeader(header.toStringValue());
 
-      Value body = getBody(env, env.createBinaryBuilder());
+      Value body = getBody(env, new StringValue());
 
       if (body == BooleanValue.FALSE) {
          return false;
@@ -307,7 +309,7 @@ public class HttpRequest
       bb.append("\r\n");
 
       if (_curl.getHeaderCallback() != null) {
-         StringValue sb = env.createUnicodeBuilder();
+         StringValue sb = new StringValue();
 
          sb.append(_conn.getHeaderField(0));
          sb.append("\r\n");
@@ -330,7 +332,7 @@ public class HttpRequest
          bb.append("\r\n");
 
          if (_curl.getHeaderCallback() != null) {
-            StringValue sb = env.createUnicodeBuilder();
+            StringValue sb = new StringValue();
 
             sb.append(key);
             sb.append(": ");
@@ -353,7 +355,7 @@ public class HttpRequest
       bb.append("\r\n");
 
       if (_curl.getHeaderCallback() != null) {
-         StringValue sb = env.createUnicodeBuilder();
+         StringValue sb = new StringValue();
 
          sb.append("\r\n");
 
@@ -406,7 +408,7 @@ public class HttpRequest
 
       try {
          while ((ch = in.read()) >= 0) {
-            bb.appendByte(ch);
+            bb.append(ch);
          }
       } catch (IOException e) {
          throw new QuercusModuleException(e);

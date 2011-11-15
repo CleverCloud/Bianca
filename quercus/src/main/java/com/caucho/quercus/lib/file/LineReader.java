@@ -25,10 +25,12 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Sam
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.file;
 
 import com.caucho.quercus.env.Env;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 
 import java.io.IOException;
@@ -55,14 +57,14 @@ public class LineReader {
     */
    public StringValue readLine(Env env, BinaryInput input, long length)
            throws IOException {
-      StringValue sb = env.createBinaryBuilder();
+      StringValue sb = new StringValue();
 
       int ch;
 
       for (; length > 0 && (ch = input.read()) >= 0; length--) {
          // php/161[pq] newlines
          if (ch == '\n') {
-            sb.appendByte((byte) ch);
+            sb.append((byte) ch);
 
             if (_isMacLineEnding == null) {
                _isMacLineEnding = false;
@@ -72,7 +74,7 @@ public class LineReader {
                break;
             }
          } else if (ch == '\r') {
-            sb.appendByte((byte) '\r');
+            sb.append((byte) '\r');
 
             int ch2 = input.read();
 
@@ -85,7 +87,7 @@ public class LineReader {
                   input.unread();
                   break;
                } else {
-                  sb.appendByte((byte) '\n');
+                  sb.append((byte) '\n');
                   break;
                }
             } else {
@@ -101,7 +103,7 @@ public class LineReader {
             }
 
          } else {
-            sb.appendByte((byte) ch);
+            sb.append((byte) ch);
          }
       }
 

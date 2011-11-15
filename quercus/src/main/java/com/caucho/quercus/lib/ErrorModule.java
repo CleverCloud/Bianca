@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -68,13 +69,13 @@ public class ErrorModule extends AbstractQuercusModule {
    public static final int E_RECOVERABLE_ERROR = Env.E_RECOVERABLE_ERROR;
    public static final int E_DEPRECATED = Env.E_DEPRECATED;
    public static final int E_USER_DEPRECATED = Env.E_USER_DEPRECATED;
-   public static final StringValue ARGS = new ConstStringValue("args");
-   public static final StringValue CLASS = new ConstStringValue("class");
-   public static final StringValue FILE = new ConstStringValue("file");
-   public static final StringValue FUNCTION = new ConstStringValue("function");
-   public static final StringValue LINE = new ConstStringValue("line");
-   public static final StringValue TYPE = new ConstStringValue("type");
-   public static final StringValue OBJECT = new ConstStringValue("object");
+   public static final StringValue ARGS = new StringValue("args");
+   public static final StringValue CLASS = new StringValue("class");
+   public static final StringValue FILE = new StringValue("file");
+   public static final StringValue FUNCTION = new StringValue("function");
+   public static final StringValue LINE = new StringValue("line");
+   public static final StringValue TYPE = new StringValue("type");
+   public static final StringValue OBJECT = new StringValue("object");
 
    /**
     * Returns the default php.ini values.

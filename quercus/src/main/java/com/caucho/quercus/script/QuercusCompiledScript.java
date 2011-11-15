@@ -74,7 +74,7 @@ public class QuercusCompiledScript extends CompiledScript {
             os.setNewlineString("\n");
 
             try {
-               os.setEncoding("utf-8");
+               os.setEncoding("utf8");
             } catch (Exception e) {
             }
 

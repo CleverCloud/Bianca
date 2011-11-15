@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Sam
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -34,6 +35,7 @@ import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.LongValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
@@ -149,9 +151,9 @@ public class MhashModule extends AbstractQuercusModule {
          return BooleanValue.FALSE;
       }
 
-      byte[] result = messageDigest.digest(data.toBytes());
+      String result = new String(messageDigest.digest(data.toString().getBytes()));
 
-      return env.createBinaryBuilder(result);
+      return new StringValue(result);
    }
 
    /**

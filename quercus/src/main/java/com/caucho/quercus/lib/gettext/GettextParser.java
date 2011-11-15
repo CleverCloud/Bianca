@@ -59,7 +59,7 @@ abstract class GettextParser {
       int i = metadata.indexOf(header);
 
       if (i < 0) {
-         return "UTF-8";
+         return "utf8";
       }
 
       i = i + header.length();

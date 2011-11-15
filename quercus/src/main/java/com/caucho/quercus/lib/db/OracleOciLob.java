@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Rodrigo Westrupp
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -34,6 +35,7 @@ import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.annotation.Name;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.util.L10N;
 import com.caucho.vfs.Path;
@@ -887,7 +889,7 @@ public class OracleOciLob {
 
    private StringValue readInternalBlob(Env env, long length) {
       try {
-         StringValue bb = env.createBinaryBuilder();
+         StringValue bb = new StringValue();
 
          Blob blob = (Blob) _lob;
          InputStream is = blob.getBinaryStream();
@@ -911,7 +913,7 @@ public class OracleOciLob {
    private StringValue readInternalClob(Env env,
            long length) {
       try {
-         StringValue sb = env.createUnicodeBuilder();
+         StringValue sb = new StringValue();
 
          Clob clob = (Clob) _lob;
          Reader reader = clob.getCharacterStream();

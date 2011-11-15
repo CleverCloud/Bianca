@@ -25,23 +25,19 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CoderResult;
-import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.util.L10N;
 
 public class Big5Encoder
         extends GenericEncoder {
-
-   private static final Logger log = Logger.getLogger(GenericEncoder.class.getName());
-   private static final L10N L = new L10N(Big5Encoder.class);
 
    public Big5Encoder(String charsetName) {
       super(charsetName);
@@ -73,7 +69,7 @@ public class Big5Encoder
       if (len > 0) {
          int offset = out.arrayOffset();
 
-         sb.appendBytes(out.array(), offset, offset + len);
+         sb.append(new String(out.array()), offset, offset + len);
       }
 
       if (coder.isMalformed() || coder.isUnmappable()) {

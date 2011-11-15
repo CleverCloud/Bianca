@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Emil Ong
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.file;
 
@@ -35,7 +36,7 @@ import com.caucho.quercus.env.*;
  */
 public class StreamBucket extends Value {
 
-   public StreamBucket(Env env, BinaryValue data) {
+   public StreamBucket(Env env, StringValue data) {
       putField(env, "data", data);
       putField(env, "datalen", LongValue.create(data.length()));
    }

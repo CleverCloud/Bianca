@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.marshal;
 
@@ -63,12 +64,8 @@ public class CharacterObjectMarshal extends Marshal {
 
    @Override
    protected int getMarshalingCostImpl(Value argValue) {
-      if (argValue.isUnicode() && argValue.length() == 1) {
+      if (argValue.length() == 1) {
          return Marshal.ONE;
-      } else if (argValue.isString()
-              && !argValue.isBinary()
-              && argValue.length() == 1) {
-         return Marshal.ONE; // php/0ch1
       } else if (argValue.isLongConvertible()) {
          return Marshal.THREE;
       } else {

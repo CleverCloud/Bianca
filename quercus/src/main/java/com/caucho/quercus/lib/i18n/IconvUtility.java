@@ -25,12 +25,14 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
 import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.UnimplementedException;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.vfs.*;
 
 import javax.mail.internet.MimeUtility;
@@ -78,22 +80,19 @@ public class IconvUtility {
          Reader in;
 
          try {
-            in = str.toReader(inCharset);
+            in = str.toReader();
          } catch (IOException e) {
             log.log(Level.WARNING, e.toString(), e);
-
-            in = str.toReader("utf-8");
+            return StringValue.EMPTY;
          }
 
          TempStream ts = new TempStream();
          WriteStream out = new WriteStream(ts);
 
          try {
-            out.setEncoding(outCharset);
+            out.setEncoding("utf8");
          } catch (IOException e) {
             log.log(Level.WARNING, e.toString(), e);
-
-            out.setEncoding("utf-8");
          }
 
          while (offset > 0) {
@@ -116,9 +115,9 @@ public class IconvUtility {
 
          out.flush();
 
-         StringValue sb = env.createBinaryBuilder();
+         StringValue sb = new StringValue();
          for (TempBuffer ptr = ts.getHead(); ptr != null; ptr = ptr.getNext()) {
-            sb.append(ptr.getBuffer(), 0, ptr.getLength());
+            sb.append(new String(ptr.getBuffer()));
          }
 
          return sb;
@@ -136,10 +135,8 @@ public class IconvUtility {
            CharSequence word,
            String charset)
            throws UnsupportedEncodingException {
-      StringValue str = env.createString(
+      return env.createString(
               MimeUtility.unfold(MimeUtility.decodeText(word.toString())));
-
-      return str.toBinaryValue(charset);
    }
 
    public static Value encodeMime(Env env,
@@ -180,10 +177,7 @@ public class IconvUtility {
            String lineBreakChars,
            int lineLength)
            throws UnsupportedEncodingException {
-      name = name.toUnicodeValue(env, inCharset);
-      value = value.toUnicodeValue(env, inCharset);
-
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
       sb.append(name);
       sb.append(':');
       sb.append(' ');

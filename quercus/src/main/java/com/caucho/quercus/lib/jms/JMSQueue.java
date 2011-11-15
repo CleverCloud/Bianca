@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Emil Ong
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.jms;
 
@@ -99,8 +100,8 @@ public class JMSQueue {
          Set<Map.Entry<Value, Value>> entrySet = array.entrySet();
 
          for (Map.Entry<Value, Value> entry : entrySet) {
-            if (entry.getValue() instanceof BinaryValue) {
-               byte[] bytes = ((BinaryValue) entry.getValue()).toBytes();
+            if (entry.getValue() instanceof StringValue) {
+               byte[] bytes = ((StringValue) entry.getValue()).toString().getBytes();
 
                ((MapMessage) message).setBytes(entry.getKey().toString(), bytes);
             } else {
@@ -109,11 +110,11 @@ public class JMSQueue {
                        entry.getValue().toString());
             }
          }
-      } else if (value instanceof BinaryValue) {
+      } else if (value instanceof StringValue) {
          message = _session.createBytesMessage();
 
 
-         byte[] bytes = ((BinaryValue) value).toBytes();
+         byte[] bytes = ((StringValue) value).toString().getBytes();
 
          ((BytesMessage) message).writeBytes(bytes);
       } else if (value.isLongConvertible()) {
@@ -167,7 +168,7 @@ public class JMSQueue {
          BytesMessage bytesMessage = (BytesMessage) message;
          int length = (int) bytesMessage.getBodyLength();
 
-         StringValue bb = env.createBinaryBuilder(length);
+         StringValue bb = new StringValue();
 
          TempBuffer tempBuffer = TempBuffer.allocate();
          int sublen;
@@ -176,7 +177,7 @@ public class JMSQueue {
             sublen = bytesMessage.readBytes(tempBuffer.getBuffer());
 
             if (sublen > 0) {
-               bb.append(tempBuffer.getBuffer(), 0, sublen);
+               bb.append(new String(tempBuffer.getBuffer()));
             } else {
                break;
             }

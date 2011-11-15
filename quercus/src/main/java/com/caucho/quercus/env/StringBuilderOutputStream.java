@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -43,13 +44,13 @@ public class StringBuilderOutputStream
    @Override
    public void write(byte[] buffer, int offset, int length)
            throws IOException {
-      _sb.append(buffer, offset, length);
+      _sb.append(new String(buffer), offset, length);
    }
 
    @Override
    public void write(int ch)
            throws IOException {
-      _sb.appendByte(ch);
+      _sb.append(ch);
    }
 
    public void setStringBuilder(StringValue sb) {

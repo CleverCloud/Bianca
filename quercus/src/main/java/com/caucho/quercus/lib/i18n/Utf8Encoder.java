@@ -25,24 +25,17 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
-import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.util.L10N;
+import com.caucho.quercus.env.StringValue;
 
 public class Utf8Encoder
         extends Encoder {
-
-   private static final Logger log = Logger.getLogger(Utf8Encoder.class.getName());
-   private static final L10N L = new L10N(Utf8Encoder.class);
-
-   public Utf8Encoder() {
-      super("utf-8");
-   }
 
    @Override
    public boolean isUtf8() {
@@ -76,14 +69,14 @@ public class Utf8Encoder
 
    @Override
    public StringValue encode(Env env, CharSequence str) {
-      StringValue sb = env.createBinaryBuilder();
+      StringValue sb = new StringValue();
 
       int len = str.length();
       for (int i = 0; i < len; i++) {
          char ch = str.charAt(i);
 
          if (ch <= 0x7F) {
-            sb.appendByte(ch);
+            sb.append(ch);
             continue;
          }
 
@@ -111,17 +104,17 @@ public class Utf8Encoder
          }
 
          if (0x80 <= code && code <= 0x7FF) {
-            sb.appendByte(0xC0 | (code >> 6));
-            sb.appendByte(0x80 | (code & 0x3F));
+            sb.append(0xC0 | (code >> 6));
+            sb.append(0x80 | (code & 0x3F));
          } else if (0x800 <= code && code <= 0xFFFF) {
-            sb.appendByte(0xE0 | (code >> 12));
-            sb.appendByte(0x80 | ((code >> 6) & 0x3F));
-            sb.appendByte(0x80 | (code & 0x3F));
+            sb.append(0xE0 | (code >> 12));
+            sb.append(0x80 | ((code >> 6) & 0x3F));
+            sb.append(0x80 | (code & 0x3F));
          } else {
-            sb.appendByte(0xF0 | (code >> 18));
-            sb.appendByte(0x80 | ((code >> 12) & 0x3F));
-            sb.appendByte(0x80 | ((code >> 6) & 0x3F));
-            sb.appendByte(0x80 | (code & 0x3F));
+            sb.append(0xF0 | (code >> 18));
+            sb.append(0x80 | ((code >> 12) & 0x3F));
+            sb.append(0x80 | ((code >> 6) & 0x3F));
+            sb.append(0x80 | (code & 0x3F));
          }
       }
 

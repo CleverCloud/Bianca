@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -248,16 +249,6 @@ public class ArgRef extends Value
    @Override
    public StringValue toStringValue() {
       return _var.toStringValue();
-   }
-
-   @Override
-   public StringValue toBinaryValue(Env env) {
-      return _var.toBinaryValue(env);
-   }
-
-   @Override
-   public StringValue toUnicodeValue(Env env) {
-      return _var.toUnicodeValue(env);
    }
 
    @Override

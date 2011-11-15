@@ -25,63 +25,111 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.util.IdentityHashMap;
-import java.util.zip.CRC32;
 
 import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.QuercusRuntimeException;
 import com.caucho.quercus.lib.file.BinaryInput;
-import com.caucho.quercus.lib.i18n.Decoder;
 import com.caucho.quercus.marshal.Marshal;
-import com.caucho.util.ByteAppendable;
 import com.caucho.vfs.ReadStream;
 import com.caucho.vfs.TempBuffer;
 import com.caucho.vfs.WriteStream;
 
-/**
- * Represents a Quercus string value.
- */
-abstract public class StringValue
-        extends Value
-        implements CharSequence, ByteAppendable {
+import java.io.*;
+import java.util.IdentityHashMap;
+import java.util.zip.CRC32;
 
-   public static final StringValue EMPTY = new ConstStringValue("");
-   protected static final int MIN_LENGTH = 32;
+/**
+ * Represents a PHP string
+ */
+public class StringValue
+   extends Value
+   implements CharSequence {
+
+   public static final StringValue EMPTY = new StringValue("");
+   private static final StringValue[] CHAR_STRINGS;
    protected static final int IS_STRING = 0;
    protected static final int IS_LONG = 1;
    protected static final int IS_DOUBLE = 2;
 
-   /**
-    * Creates a string builder of the same type.
-    */
-   abstract public StringValue createStringBuilder();
+   private StringBuilder _buffer;
+
+   public StringValue() {
+      _buffer = new StringBuilder();
+   }
+
+   public StringValue(String buffer, int offset, int length) {
+      if (offset < 0) offset = 0;
+      _buffer = new StringBuilder(buffer.substring(Math.min(offset, buffer.length()), Math.min(offset + length, buffer.length())));
+   }
 
    /**
-    * Creates a string builder of the same type.
+    * Creates a new StringValue with the buffer without copying.
     */
-   abstract public StringValue createStringBuilder(int length);
+   public StringValue(String buffer, int length) {
+      this(buffer, 0, length);
+   }
+
+   public StringValue(char ch) {
+      _buffer = new StringBuilder().append(ch);
+   }
+
+   public StringValue(byte ch) {
+      _buffer = new StringBuilder().append(ch);
+   }
+
+   public StringValue(String s) {
+      _buffer = new StringBuilder(s);
+   }
+
+   public StringValue(String s, Value v1) {
+      _buffer = new StringBuilder(s);
+      v1.appendTo(this);
+   }
+
+   public StringValue(Value v1) {
+      if (v1 instanceof StringValue) {
+         _buffer = new StringBuilder(((StringValue) v1)._buffer);
+      } else {
+         _buffer = new StringBuilder();
+         v1.appendTo(this);
+      }
+   }
+
+   public StringValue(Value v1, Value v2) {
+      _buffer = new StringBuilder();
+
+      v1.appendTo(this);
+      v2.appendTo(this);
+   }
+
+   public StringValue(Value v1, Value v2, Value v3) {
+      _buffer = new StringBuilder();
+
+      v1.appendTo(this);
+      v2.appendTo(this);
+      v3.appendTo(this);
+   }
+
+   public StringValue(TempBuffer head) {
+      this();
+
+      // php/0c4l
+      append(head);
+   }
 
    /**
     * Creates the string.
     */
    public static Value create(String value) {
-      // TODO: needs updating for i18n, currently php5 only
-
       if (value == null) {
          return NullValue.NULL;
+      } else if (value.length() == 0) {
+         return StringValue.EMPTY;
       } else {
-         return new ConstStringValue(value);
+         return new StringValue(value);
       }
    }
 
@@ -89,28 +137,19 @@ abstract public class StringValue
     * Creates the string.
     */
    public static StringValue create(char value) {
-      // TODO: needs updating for i18n, currently php5 only
-
-      return ConstStringValue.create(value);
-
-      /*
       if (value < CHAR_STRINGS.length)
-      return CHAR_STRINGS[value];
-      else
-      return new StringBuilderValue(String.valueOf(value));
-       */
+         return CHAR_STRINGS[value];
+      return new StringValue();
    }
 
    /**
     * Creates the string.
     */
    public static Value create(Object value) {
-      // TODO: needs updating for i18n, currently php5 only
-
       if (value == null) {
          return NullValue.NULL;
       } else {
-         return new StringBuilderValue(value.toString());
+         return new StringValue(value.toString());
       }
    }
 
@@ -121,12 +160,8 @@ abstract public class StringValue
     * @param charset to decode string from
     */
    public StringValue create(Env env, StringValue unicodeStr, String charset) {
-      if (!unicodeStr.isUnicode()) {
-         return unicodeStr;
-      }
-
       try {
-         StringValue sb = createStringBuilder();
+         StringValue sb = new StringValue();
 
          byte[] bytes = unicodeStr.toString().getBytes(charset);
 
@@ -143,6 +178,7 @@ abstract public class StringValue
    //
    // Predicates and relations
    //
+
    /**
     * Returns the type.
     */
@@ -156,7 +192,80 @@ abstract public class StringValue
     */
    @Override
    public ValueType getValueType() {
-      return ValueType.STRING;
+      return getValueType(_buffer.toString(), 0, _buffer.length());
+   }
+
+   public static ValueType getValueType(String buffer,
+                                        int offset,
+                                        int len) {
+      if (len == 0) {
+         // php/0307
+         return ValueType.LONG_ADD;
+      }
+
+      int i = offset;
+      int ch = 0;
+
+      while (i < len && Character.isWhitespace(buffer.charAt(i))) {
+         i++;
+      }
+
+      if (i + 1 < len && buffer.charAt(i) == '0' && buffer.charAt(i + 1) == 'x') {
+         return ValueType.LONG_EQ;
+      }
+
+      if (i < len && ((ch = buffer.charAt(i)) == '+' || ch == '-')) {
+         i++;
+      }
+
+      if (len <= i) {
+         return ValueType.STRING;
+      }
+
+      ch = buffer.charAt(i);
+
+      if (ch == '.') {
+         for (i++; i < len && '0' <= (ch = buffer.charAt(i)) && ch <= '9'; i++) {
+            return ValueType.DOUBLE_CMP;
+         }
+
+         return ValueType.STRING;
+      } else if (!('0' <= ch && ch <= '9')) {
+         return ValueType.STRING;
+      }
+
+      for (; i < len && '0' <= (ch = buffer.charAt(i)) && ch <= '9'; i++) {
+      }
+
+      while (i < len && Character.isWhitespace(buffer.charAt(i))) {
+         i++;
+      }
+
+      if (len <= i) {
+         return ValueType.LONG_EQ;
+      } else if (ch == '.' || ch == 'e' || ch == 'E') {
+         for (i++;
+              i < len
+                 && ('0' <= (ch = buffer.charAt(i)) && ch <= '9'
+                 || ch == '+'
+                 || ch == '-'
+                 || ch == 'e'
+                 || ch == 'E');
+              i++) {
+         }
+
+         while (i < len && Character.isWhitespace(buffer.charAt(i))) {
+            i++;
+         }
+
+         if (i < len) {
+            return ValueType.STRING;
+         } else {
+            return ValueType.DOUBLE_CMP;
+         }
+      } else {
+         return ValueType.STRING;
+      }
    }
 
    /**
@@ -207,13 +316,6 @@ abstract public class StringValue
       return true;
    }
 
-   /*
-    * Returns true if this is a PHP5 string.
-    */
-   public boolean isPHP5String() {
-      return false;
-   }
-
    /**
     * Returns true if the value is empty
     */
@@ -225,6 +327,7 @@ abstract public class StringValue
    //
    // marshal cost
    //
+
    /**
     * Cost to convert to a double
     */
@@ -316,6 +419,10 @@ abstract public class StringValue
          return Marshal.COST_TO_CHAR_ARRAY + 30;
       } else if (valueType.isNumberCmp()) {
          return Marshal.COST_TO_CHAR_ARRAY + 50;
+      } else if (isLongConvertible()) {
+         return Marshal.COST_NUMERIC_LOSSLESS;
+      } else if (isDoubleConvertible()) {
+         return Marshal.COST_NUMERIC_LOSSY;
       } else {
          return Marshal.COST_STRING_TO_BYTE;
       }
@@ -351,14 +458,6 @@ abstract public class StringValue
    @Override
    public int toStringValueMarshalCost() {
       return Marshal.COST_IDENTICAL;
-   }
-
-   /**
-    * Cost to convert to a binary value
-    */
-   @Override
-   public int toBinaryValueMarshalCost() {
-      return Marshal.COST_STRING_TO_BINARY;
    }
 
    /**
@@ -423,6 +522,7 @@ abstract public class StringValue
    }
 
    // Conversions
+
    /**
     * Converts to a string value.
     */
@@ -439,9 +539,15 @@ abstract public class StringValue
       return this;
    }
 
+
    /**
     * Converts to a long.
     */
+   @Override
+   public long toLong() {
+      return toLong(_buffer.toString());
+   }
+
    public static long toLong(String string) {
       return parseLong(string);
    }
@@ -453,7 +559,7 @@ abstract public class StringValue
     * The 3 implementations should be identical except for the
     * char data source.
     */
-   static long parseLong(char[] buffer, int offset, int len) {
+   static long parseLong(String buffer, int offset, int len) {
       if (len == 0) {
          return 0;
       }
@@ -465,17 +571,17 @@ abstract public class StringValue
 
       int end = offset + len;
 
-      while (offset < end && Character.isWhitespace(buffer[offset])) {
+      while (offset < end && Character.isWhitespace(buffer.charAt(offset))) {
          offset++;
       }
 
       int ch;
 
-      if (offset + 1 < end && buffer[offset] == '0'
-              && ((ch = buffer[offset + 1]) == 'x' || ch == 'X')) {
+      if (offset + 1 < end && buffer.charAt(offset) == '0'
+         && ((ch = buffer.charAt(offset + 1)) == 'x' || ch == 'X')) {
 
          for (offset += 2; offset < end; offset++) {
-            ch = buffer[offset] & 0xFF;
+            ch = buffer.charAt(offset);
 
             long oldValue = value;
 
@@ -497,100 +603,22 @@ abstract public class StringValue
          return value;
       }
 
-      if (offset < end && buffer[offset] == '-') {
+      if (offset < end && buffer.charAt(offset) == '-') {
          sign = -1;
          offset++;
-      } else if (offset < end && buffer[offset] == '+') {
+      } else if (offset < end && buffer.charAt(offset) == '+') {
          sign = +1;
          offset++;
       }
 
       while (offset < end) {
-         ch = buffer[offset++];
+         ch = buffer.charAt(offset++);
 
          if ('0' <= ch && ch <= '9') {
             long newValue = 10 * value + ch - '0';
             if (newValue < value) {
                // php/0143
                // long value overflowed
-               result = Integer.MAX_VALUE;
-               isResultSet = true;
-               break;
-            }
-            value = newValue;
-         } else {
-            result = sign * value;
-            isResultSet = true;
-            break;
-         }
-      }
-
-      if (!isResultSet) {
-         result = sign * value;
-      }
-
-      return result;
-   }
-
-   static long parseLong(byte[] buffer, int offset, int len) {
-      if (len == 0) {
-         return 0;
-      }
-
-      long value = 0;
-      long sign = 1;
-      boolean isResultSet = false;
-      long result = 0;
-
-      int end = offset + len;
-
-      while (offset < end && Character.isWhitespace(buffer[offset])) {
-         offset++;
-      }
-
-      int ch;
-
-      if (offset + 1 < end && buffer[offset] == '0'
-              && ((ch = buffer[offset + 1]) == 'x' || ch == 'X')) {
-
-         for (offset += 2; offset < end; offset++) {
-            ch = buffer[offset] & 0xFF;
-
-            long oldValue = value;
-
-            if ('0' <= ch && ch <= '9') {
-               value = value * 16 + ch - '0';
-            } else if ('a' <= ch && ch <= 'z') {
-               value = value * 16 + ch - 'a' + 10;
-            } else if ('A' <= ch && ch <= 'Z') {
-               value = value * 16 + ch - 'A' + 10;
-            } else {
-               return value;
-            }
-
-            if (value < oldValue) {
-               return Integer.MAX_VALUE;
-            }
-         }
-
-         return value;
-      }
-
-      if (offset < end && buffer[offset] == '-') {
-         sign = -1;
-         offset++;
-      } else if (offset < end && buffer[offset] == '+') {
-         sign = +1;
-         offset++;
-      }
-
-      while (offset < end) {
-         ch = buffer[offset++];
-
-         if ('0' <= ch && ch <= '9') {
-            long newValue = 10 * value + ch - '0';
-            if (newValue < value) {
-               // long value overflowed, set result to integer max
                result = Integer.MAX_VALUE;
                isResultSet = true;
                break;
@@ -688,7 +716,7 @@ abstract public class StringValue
       }
 
       if (i + 1 < len && s.charAt(i) == '0'
-              && ((ch = s.charAt(i)) == 'x' || ch == 'X')) {
+         && ((ch = s.charAt(i)) == 'x' || ch == 'X')) {
 
          double value = 0;
 
@@ -741,7 +769,84 @@ abstract public class StringValue
       } else if (i == len && start == 0) {
          return Double.parseDouble(s);
       } else {
-         return Double.parseDouble(s.substring(start, i));
+         return Double.parseDouble(s.substring(Math.max(0, start), i));
+      }
+   }
+
+   public static double toDouble(String buffer, int offset, int len) {
+      int start = offset;
+      int i = offset;
+      int ch = 0;
+
+      while (i < len && Character.isWhitespace(buffer.charAt(i))) {
+         start++;
+         i++;
+      }
+
+      int end = offset + len;
+
+      if (offset + 1 < end && buffer.charAt(offset) == '0'
+         && ((ch = buffer.charAt(offset + 1)) == 'x' || ch == 'X')) {
+
+         double value = 0;
+
+         for (offset += 2; offset < end; offset++) {
+            ch = buffer.charAt(offset);
+
+            if ('0' <= ch && ch <= '9') {
+               value = value * 16 + ch - '0';
+            } else if ('a' <= ch && ch <= 'z') {
+               value = value * 16 + ch - 'a' + 10;
+            } else if ('A' <= ch && ch <= 'Z') {
+               value = value * 16 + ch - 'A' + 10;
+            } else {
+               return value;
+            }
+         }
+
+         return value;
+      }
+
+      if (i < len && ((ch = buffer.charAt(i)) == '+' || ch == '-')) {
+         i++;
+      }
+
+      for (; i < len && '0' <= (ch = buffer.charAt(i)) && ch <= '9'; i++) {
+      }
+
+      if (ch == '.') {
+         for (i++; i < len && '0' <= (ch = buffer.charAt(i)) && ch <= '9'; i++) {
+         }
+
+         if (i == 1) {
+            return 0;
+         }
+      }
+
+      if (ch == 'e' || ch == 'E') {
+         int e = i++;
+
+         if (i < len && (ch = buffer.charAt(i)) == '+' || ch == '-') {
+            i++;
+         }
+
+         for (; i < len && '0' <= (ch = buffer.charAt(i)) && ch <= '9'; i++) {
+         }
+
+         if (i == e + 1) {
+            i = e;
+         }
+      }
+
+      if (i == 0) {
+         return 0;
+      }
+
+      if (start < 0) start = 0;
+      try {
+         return Double.parseDouble(buffer.substring(Math.min(start, buffer.length()), Math.min(i - start, buffer.length())));
+      } catch (NumberFormatException e) {
+         return 0;
       }
    }
 
@@ -749,15 +854,11 @@ abstract public class StringValue
     * Converts to a boolean.
     */
    @Override
-   public boolean toBoolean() {
-      int length = length();
-
-      if (length == 0) {
+   public final boolean toBoolean() {
+      if (_buffer.length() == 0) {
          return false;
-      } else if (length > 1) {
-         return true;
       } else {
-         return charAt(0) != '0';
+         return (_buffer.length() != 1 || _buffer.charAt(0) != '0');
       }
    }
 
@@ -774,12 +875,16 @@ abstract public class StringValue
 
       int sign = 1;
       long value = 0;
+      String buffer = toString();
 
       int i = 0;
-      char ch = charAt(i);
+      char ch = buffer.charAt(i++);
       if (ch == '-') {
          sign = -1;
-         i++;
+      } else if ('0' <= ch && ch <= '9') {
+         value = ch - '0';
+      } else {
+         return this;
       }
 
       for (; i < len; i++) {
@@ -830,9 +935,9 @@ abstract public class StringValue
    @Override
    public Object valuesToArray(Env env, Class elementType) {
       if (char.class.equals(elementType)) {
-         return toUnicode(env).toCharArray();
+         return toCharArray();
       } else if (Character.class.equals(elementType)) {
-         char[] chars = toUnicode(env).toCharArray();
+         char[] chars = toCharArray();
 
          int length = chars.length;
 
@@ -844,9 +949,9 @@ abstract public class StringValue
 
          return charObjects;
       } else if (byte.class.equals(elementType)) {
-         return toBinaryValue(env).toBytes();
+         return toStringValue(env).toString().getBytes();
       } else if (Byte.class.equals(elementType)) {
-         byte[] bytes = toBinaryValue(env).toBytes();
+         byte[] bytes = toStringValue(env).toString().getBytes();
 
          int length = bytes.length;
 
@@ -859,9 +964,9 @@ abstract public class StringValue
          return byteObjects;
       } else {
          env.error(L.l("Can't assign {0} with type {1} to {2}",
-                 this,
-                 this.getClass(),
-                 elementType));
+            this,
+            this.getClass(),
+            elementType));
          return null;
       }
    }
@@ -890,7 +995,7 @@ abstract public class StringValue
 
          if (cl == null) {
             env.warning(L.l("can't find class {0}",
-                    className));
+               className));
 
             return super.toCallable(env);
          }
@@ -906,20 +1011,28 @@ abstract public class StringValue
     */
    @Override
    public Value append(Value index, Value value) {
-      if (length() == 0) {
-         return new ArrayValueImpl().append(index, value);
+      if (_buffer.length() > 0) {
+         return setCharValueAt(index.toLong(), value);
       } else {
-         return this;
+         return new ArrayValueImpl().append(index, value);
       }
    }
 
    // Operations
+
    /**
     * Returns the character at an index
     */
    @Override
    public Value get(Value key) {
       return charValueAt(key.toLong());
+   }
+
+   @Override
+   public Value put(Value index, Value value) {
+      setCharValueAt(index.toLong(), value);
+
+      return value;
    }
 
    /**
@@ -939,7 +1052,7 @@ abstract public class StringValue
       int len = length();
 
       if (index < 0 || len <= index) {
-         return UnsetUnicodeValue.UNSET;
+         return StringValue.EMPTY;
       } else {
          return StringValue.create(charAt((int) index));
       }
@@ -949,17 +1062,58 @@ abstract public class StringValue
     * sets the character at an index
     */
    @Override
-   public Value setCharValueAt(long index, Value value) {
-      //XXX: need to double-check this for non-string values
+   public Value setCharValueAt(long indexL, Value value) {
+      int len = _buffer.length();
 
-      int len = length();
-
-      if (index < 0 || len <= index) {
+      if (indexL < 0) {
          return this;
+      } else if (indexL < len) {
+         StringValue sb = new StringValue(_buffer.toString());
+
+         StringValue str = value.toStringValue();
+
+         int index = (int) indexL;
+
+         if (value.length() == 0) {
+            sb._buffer.setCharAt(index, (char) 0);
+         } else {
+            sb._buffer.setCharAt(index, str.charAt(0));
+         }
+
+         return sb;
       } else {
-         return (createStringBuilder().append(this, 0, (int) index).append(value).append(this, (int) (index + 1), length()));
+         // php/03mg, #2940
+
+         int index = (int) indexL;
+
+         StringValue sb = new StringValue(this);
+
+         int padLen = index - len;
+
+         for (int i = 0; i <= padLen; i++) {
+            sb._buffer.append(' ');
+         }
+
+         StringValue str = value.toStringValue();
+
+         if (value.length() == 0) {
+            sb._buffer.setCharAt(index, (char) 0);
+         } else {
+            sb._buffer.setCharAt(index, str.charAt(0));
+         }
+
+         return sb;
       }
    }
+
+   /**
+    * Converts to a string.
+    */
+   @Override
+   public String toString() {
+      return _buffer.toString();
+   }
+
 
    /**
     * Increment the following value.
@@ -969,7 +1123,7 @@ abstract public class StringValue
       // php/03i6
       if (length() == 0) {
          if (incr == 1) {
-            return createStringBuilder().append("1");
+            return new StringValue().append("1");
          } else {
             return LongValue.MINUS_ONE;
          }
@@ -983,26 +1137,26 @@ abstract public class StringValue
 
             if (ch == 'z') {
                if (i == 0) {
-                  return createStringBuilder().append("aa").append(tail);
+                  return new StringValue().append("aa").append(tail);
                } else {
                   tail.insert(0, 'a');
                }
             } else if ('a' <= ch && ch < 'z') {
-               return (createStringBuilder().append(this, 0, i).append((char) (ch + 1)).append(tail));
+               return (new StringValue().append(this, 0, i).append((char) (ch + 1)).append(tail));
             } else if (ch == 'Z') {
                if (i == 0) {
-                  return createStringBuilder().append("AA").append(tail);
+                  return new StringValue().append("AA").append(tail);
                } else {
                   tail.insert(0, 'A');
                }
             } else if ('A' <= ch && ch < 'Z') {
-               return (createStringBuilder().append(this, 0, i).append((char) (ch + 1)).append(tail));
+               return (new StringValue().append(this, 0, i).append((char) (ch + 1)).append(tail));
             } else if ('0' <= ch && ch <= '9' && i == length() - 1) {
                return LongValue.create(toLong() + incr);
             }
          }
 
-         return createStringBuilder().append(tail.toString());
+         return new StringValue().append(tail.toString());
       } else if (getValueType().isLongAdd()) {
          return LongValue.create(toLong() + incr);
       } else {
@@ -1043,13 +1197,13 @@ abstract public class StringValue
          StringValue rStr = (StringValue) rValue;
 
          int len = Math.min(length(), rValue.length());
-         StringValue sb = createStringBuilder();
+         StringValue sb = new StringValue();
 
          for (int i = 0; i < len; i++) {
             char l = charAt(i);
             char r = rStr.charAt(i);
 
-            sb.appendByte(l & r);
+            sb.append(l & r);
          }
 
          return sb;
@@ -1067,13 +1221,13 @@ abstract public class StringValue
          StringValue rStr = (StringValue) rValue;
 
          int len = Math.min(length(), rValue.length());
-         StringValue sb = createStringBuilder();
+         StringValue sb = new StringValue();
 
          for (int i = 0; i < len; i++) {
             char l = charAt(i);
             char r = rStr.charAt(i);
 
-            sb.appendByte(l | r);
+            sb.append(l | r);
          }
 
          if (len != length()) {
@@ -1097,13 +1251,13 @@ abstract public class StringValue
          StringValue rStr = rValue.toStringValue();
 
          int len = Math.min(length(), rValue.length());
-         StringValue sb = createStringBuilder();
+         StringValue sb = new StringValue();
 
          for (int i = 0; i < len; i++) {
             char l = charAt(i);
             char r = rStr.charAt(i);
 
-            sb.appendByte(l ^ r);
+            sb.append(l ^ r);
          }
 
          return sb;
@@ -1251,7 +1405,7 @@ abstract public class StringValue
    md.update(buffer, 0, buffer.length);
 
    //XXX: create a special serialize type?
-   return new StringBuilderValue(md.digest());
+   return new StringValue(md.digest());
 
    } catch (NoSuchAlgorithmException e) {
    throw new QuercusException(e);
@@ -1261,84 +1415,62 @@ abstract public class StringValue
    //
    // append code
    //
-   /**
-    * Append a Java string to the value.
-    */
-   public StringValue append(String s) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
 
    /**
     * Append a Java string to the value.
     */
-   public StringValue append(String s, int start, int end) {
-      throw new UnsupportedOperationException(getClass().getName());
+   public final StringValue append(String s) {
+      _buffer.append(s);
+      return this;
+   }
+
+   /**
+    * Append a Java string to the value.
+    */
+   public final StringValue append(String s, int start, int end) {
+      if (start < 0) start = 0;
+      if (end > start)
+         _buffer.append(s.substring(Math.min(start, s.length()), Math.min(end, s.length())));
+      return this;
    }
 
    /**
     * Append a Java buffer to the value.
     */
-   public StringValue append(char[] buf, int offset, int length) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   /**
-    * Append a Java double to the value.
-    */
-   public StringValue append(char[] buf) {
-      return append(buf, 0, buf.length);
+   public final StringValue append(char[] buf, int offset, int length) {
+      _buffer.append(buf, offset, length);
+      return this;
    }
 
    /**
     * Append a Java buffer to the value.
     */
-   public StringValue append(CharSequence buf, int head, int tail) {
-      throw new UnsupportedOperationException(getClass().getName());
+   public final StringValue append(char[] buf) {
+      _buffer.append(buf);
+      return this;
    }
 
    /**
     * Append a Java buffer to the value.
     */
-   public StringValue append(StringBuilderValue sb, int head, int tail) {
+   public final StringValue append(CharSequence buf, int head, int tail) {
+      _buffer.append(buf, head, tail);
+      return this;
+   }
+
+   /**
+    * Append a Java buffer to the value.
+    */
+   public StringValue append(StringValue sb, int head, int tail) {
       return append((CharSequence) sb, head, tail);
-   }
-
-   /**
-    * Append a Java buffer to the value.
-    */
-   public StringValue append(UnicodeBuilderValue sb, int head, int tail) {
-      return append((CharSequence) sb, head, tail);
-   }
-
-   /*
-    * Appends a Unicode string to the value.
-    *
-    * @param str should be a Unicode string
-    * @param charset to decode string from
-    */
-   public StringValue append(Env env, StringValue unicodeStr, String charset) {
-      if (!unicodeStr.isUnicode()) {
-         return append(unicodeStr);
-      }
-
-      try {
-         byte[] bytes = unicodeStr.toString().getBytes(charset);
-
-         append(bytes);
-         return this;
-
-      } catch (UnsupportedEncodingException e) {
-         env.warning(e);
-
-         return append(unicodeStr);
-      }
    }
 
    /**
     * Append a Java char to the value.
     */
-   public StringValue append(char v) {
-      throw new UnsupportedOperationException(getClass().getName());
+   public final StringValue append(char ch) {
+      _buffer.append(ch);
+      return this;
    }
 
    /**
@@ -1363,221 +1495,51 @@ abstract public class StringValue
    }
 
    /**
-    * Append a Java value to the value.
+    * Append a Java object to the value.
     */
    public StringValue append(Object v) {
-      return append(String.valueOf(v));
+      return append(v.toString());
    }
 
    /**
     * Append a Java value to the value.
     */
    public StringValue append(Value v) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   /**
-    * Ensure enough append capacity.
-    */
-   public void ensureAppendCapacity(int size) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   /**
-    * Append a byte buffer to the value.
-    */
-   public StringValue append(byte[] buf, int offset, int length) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   /**
-    * Append a byte buffer to the value.
-    */
-   public StringValue append(byte[] buf) {
-      return append(buf, 0, buf.length);
-   }
-
-   /**
-    * Append a byte buffer to the value.
-    */
-   public StringValue appendUtf8(byte[] buf, int offset, int length) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   /**
-    * Append a byte buffer to the value.
-    */
-   public StringValue appendUtf8(byte[] buf) {
-      return appendUtf8(buf, 0, buf.length);
+      append(v.toString());
+      return this;
    }
 
    /**
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      int length = length();
-
-      for (int i = 0; i < length; i++) {
-         sb.append(charAt(i));
+   public StringValue appendTo(StringValue sb) {
+      if (length() == 0) {
+         return sb;
       }
 
-      return this;
-   }
+      Env env = Env.getInstance();
 
-   /**
-    * Append a Java boolean to the value.
-    */
-   public StringValue appendUnicode(boolean v) {
-      return append(v ? "true" : "false");
-   }
+      try {
+         Reader reader = env.getRuntimeEncodingFactory().create(toInputStream());
 
-   /**
-    * Append a Java long to the value.
-    */
-   public StringValue appendUnicode(long v) {
-      return append(String.valueOf(v));
-   }
+         if (reader != null) {
+            sb.append(reader);
 
-   /**
-    * Append a Java double to the value.
-    */
-   public StringValue appendUnicode(double v) {
-      return append(String.valueOf(v));
-   }
+            reader.close();
+         }
 
-   /**
-    * Append a Java value to the value.
-    */
-   public StringValue appendUnicode(Object v) {
-      return append(String.valueOf(v));
-   }
-
-   /**
-    * Append a Java char, possibly converting to a unicode string
-    */
-   public StringValue appendUnicode(char v) {
-      return append(v);
-   }
-
-   /**
-    * Append a Java char buffer, possibly converting to a unicode string
-    */
-   public StringValue appendUnicode(char[] buffer, int offset, int length) {
-      return append(buffer, offset, length);
-   }
-
-   /**
-    * Append a Java char buffer, possibly converting to a unicode string
-    */
-   public StringValue appendUnicode(char[] buffer) {
-      return append(buffer);
-   }
-
-   /**
-    * Append a Java char buffer, possibly converting to a unicode string
-    */
-   public StringValue appendUnicode(String value) {
-      return append(value);
-   }
-
-   /**
-    * Append a Java char buffer, possibly converting to a unicode string
-    */
-   public StringValue appendUnicode(String value, int offset, int length) {
-      return append(value, offset, length);
-   }
-
-   /**
-    * Append a Java char buffer, possibly converting to a unicode string
-    */
-   public StringValue appendUnicode(Value value) {
-      return append(value);
-   }
-
-   /**
-    * Append a Java char buffer, possibly converting to a unicode string
-    */
-   public StringValue appendUnicode(Value v1, Value v2) {
-      return append(v1).append(v2);
-   }
-
-   /**
-    * Append a Java byte to the value without conversions.
-    */
-   public StringValue appendByte(int v) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   /**
-    * Append a Java String to the value without conversions.
-    */
-   public StringValue appendBytes(String s) {
-      StringValue sb = this;
-
-      for (int i = 0; i < s.length(); i++) {
-         sb = sb.appendByte(s.charAt(i));
+         return sb;
+      } catch (IOException e) {
+         throw new QuercusRuntimeException(e);
       }
-
-      return sb;
-   }
-
-   /**
-    * Append a Java String to the value without conversions.
-    */
-   public StringValue appendBytes(StringValue s) {
-      StringValue sb = this;
-
-      for (int i = 0; i < s.length(); i++) {
-         sb = sb.appendByte(s.charAt(i));
-      }
-
-      return sb;
-   }
-
-   /**
-    * Append a Java char[] to the value without conversions.
-    */
-   public StringValue appendBytes(char[] buf, int offset, int length) {
-      StringValue sb = this;
-      int end = Math.min(buf.length, offset + length);
-
-      while (offset < end) {
-         sb = sb.appendByte(buf[offset++]);
-      }
-
-      return sb;
-   }
-
-   /**
-    * Append Java bytes to the value without conversions.
-    */
-   public StringValue appendBytes(byte[] bytes, int offset, int end) {
-      StringValue sb = this;
-
-      while (offset < end) {
-         sb = sb.appendByte(bytes[offset++]);
-      }
-
-      return sb;
-   }
-
-   /**
-    * Append from a temp buffer list
-    */
-   public StringValue append(TempBuffer ptr) {
-      for (; ptr != null; ptr = ptr.getNext()) {
-         append(ptr.getBuffer(), 0, ptr.getLength());
-      }
-
-      return this;
    }
 
    /**
     * Append from a read stream
     */
    public StringValue append(Reader reader)
-           throws IOException {
+      throws IOException {
       int ch;
 
       while ((ch = reader.read()) >= 0) {
@@ -1591,7 +1553,7 @@ abstract public class StringValue
     * Append from a read stream
     */
    public StringValue append(Reader reader, long length)
-           throws IOException {
+      throws IOException {
       int ch;
 
       while (length-- > 0 && (ch = reader.read()) >= 0) {
@@ -1607,7 +1569,6 @@ abstract public class StringValue
     */
    public int appendRead(InputStream is, long length) {
       TempBuffer tBuf = TempBuffer.allocate();
-
       try {
          byte[] buffer = tBuf.getBuffer();
          int sublen = buffer.length;
@@ -1618,7 +1579,7 @@ abstract public class StringValue
          sublen = is.read(buffer, 0, sublen);
 
          if (sublen > 0) {
-            append(buffer, 0, sublen);
+            append(new String(buffer), 0, sublen);
          }
 
          return sublen;
@@ -1649,7 +1610,7 @@ abstract public class StringValue
             sublen = is.read(buffer, 0, sublen);
 
             if (sublen > 0) {
-               append(buffer, 0, sublen);
+               append(new String(buffer), 0, sublen);
                length -= sublen;
                readLength += sublen;
             } else {
@@ -1685,7 +1646,7 @@ abstract public class StringValue
             sublen = is.read(buffer, 0, sublen);
 
             if (sublen > 0) {
-               append(buffer, 0, sublen);
+               append(new String(buffer), 0, sublen);
                length -= sublen;
                readLength += sublen;
             } else {
@@ -1721,7 +1682,7 @@ abstract public class StringValue
          sublen = is.read(buffer, 0, sublen);
 
          if (sublen > 0) {
-            append(buffer, 0, sublen);
+            append(new String(buffer), 0, sublen);
          }
 
          return sublen;
@@ -1752,7 +1713,7 @@ abstract public class StringValue
             sublen = is.read(buffer, 0, sublen);
 
             if (sublen > 0) {
-               append(buffer, 0, sublen);
+               append(new String(buffer), 0, sublen);
                length -= sublen;
                readLength += sublen;
             } else {
@@ -1806,12 +1767,13 @@ abstract public class StringValue
    //
    // CharSequence
    //
+
    /**
     * Returns the length of the string.
     */
    @Override
    public int length() {
-      return toString().length();
+      return _buffer.length();
    }
 
    /**
@@ -1819,7 +1781,11 @@ abstract public class StringValue
     */
    @Override
    public char charAt(int index) {
-      return toString().charAt(index);
+      if (index < 0 || _buffer.length() <= index) {
+         return 0;
+      } else {
+         return _buffer.charAt(index);
+      }
    }
 
    /**
@@ -1827,12 +1793,19 @@ abstract public class StringValue
     */
    @Override
    public CharSequence subSequence(int start, int end) {
-      return new StringBuilderValue(toString().substring(start, end));
+      if (end <= start) {
+         return StringValue.EMPTY;
+      } else if (end - start == 1) {
+         return CHAR_STRINGS[charAt(start)];
+      }
+
+      return substring(start, end);
    }
 
    //
    // java.lang.String methods
    //
+
    /**
     * Returns the first index of the match string, starting from the head.
     */
@@ -1844,34 +1817,7 @@ abstract public class StringValue
     * Returns the first index of the match string, starting from the head.
     */
    public int indexOf(CharSequence match, int head) {
-      int length = length();
-      int matchLength = match.length();
-
-      if (matchLength <= 0) {
-         return -1;
-      } else if (head < 0) {
-         return -1;
-      }
-
-      int end = length - matchLength;
-      char first = match.charAt(0);
-
-      loop:
-      for (; head <= end; head++) {
-         if (charAt(head) != first) {
-            continue;
-         }
-
-         for (int i = 1; i < matchLength; i++) {
-            if (charAt(head + i) != match.charAt(i)) {
-               continue loop;
-            }
-         }
-
-         return head;
-      }
-
-      return -1;
+      return substring(head).toString().indexOf(match.toString());
    }
 
    /**
@@ -1885,15 +1831,7 @@ abstract public class StringValue
     * Returns the last index of the match string, starting from the head.
     */
    public int indexOf(char match, int head) {
-      int length = length();
-
-      for (; head < length; head++) {
-         if (charAt(head) == match) {
-            return head;
-         }
-      }
-
-      return -1;
+      return substring(head).toString().indexOf(match);
    }
 
    /**
@@ -1907,19 +1845,11 @@ abstract public class StringValue
     * Returns the last index of the match string, starting from the head.
     */
    public int lastIndexOf(char match, int tail) {
-      int length = length();
-
-      if (tail >= length) {
-         tail = length - 1;
-      }
-
-      for (; tail >= 0; tail--) {
-         if (charAt(tail) == match) {
-            return tail;
-         }
-      }
-
-      return -1;
+      String str = toString();
+      if (str.isEmpty())
+         return -1;
+      int max = Math.min(str.length(), tail);
+      return str.substring(0, max).lastIndexOf(match);
    }
 
    /**
@@ -1933,157 +1863,77 @@ abstract public class StringValue
     * Returns the last index of the match string, starting from the tail.
     */
    public int lastIndexOf(CharSequence match, int tail) {
-      int length = length();
-      int matchLength = match.length();
-
-      if (matchLength <= 0) {
-         return -1;
-      }
-      if (tail < 0) {
-         return -1;
-      }
-
-      if (tail > length - matchLength) {
-         tail = length - matchLength;
-      }
-
-      char first = match.charAt(0);
-
-      loop:
-      for (; tail >= 0; tail--) {
-         if (charAt(tail) != first) {
-            continue;
-         }
-
-         for (int i = 1; i < matchLength; i++) {
-            if (charAt(tail + i) != match.charAt(i)) {
-               continue loop;
-            }
-         }
-
-         return tail;
-      }
-
-      return -1;
+      return substring(0, tail).lastIndexOf(match.toString());
    }
 
    /**
     * Returns true if the region matches
     */
    public boolean regionMatches(int offset,
-           char[] mBuffer, int mOffset, int mLength) {
-      int length = length();
-
-      if (length < offset + mLength) {
-         return false;
-      }
-
-      for (int i = 0; i < mLength; i++) {
-         if (charAt(offset + i) != mBuffer[mOffset + i]) {
-            return false;
-         }
-      }
-
-      return true;
-   }
-
-   /**
-    * Returns true if the region matches
-    */
-   public boolean regionMatches(int offset,
-           StringValue match, int mOffset, int mLength) {
-      int length = length();
-
-      if (length < offset + mLength) {
-         return false;
-      }
-
-      for (int i = 0; i < mLength; i++) {
-         if (charAt(offset + i) != match.charAt(mOffset + i)) {
-            return false;
-         }
-      }
-
-      return true;
+                                String mBuffer, int mOffset) {
+      int length = mBuffer.length();
+      if (offset < 0) offset = 0;
+      if (mOffset < 0) mOffset = 0;
+      return toString().substring(offset, Math.min(offset + length, length())).equals(mBuffer.substring(Math.min(mOffset, length - 1)));
    }
 
    /**
     * Returns true if the region matches
     */
    public boolean regionMatchesIgnoreCase(int offset,
-           char[] match, int mOffset, int mLength) {
-      int length = length();
+                                          String mBuffer, int mOffset) {
+      int length = mBuffer.length();
+      if (offset < 0) offset = 0;
+      if (mOffset < 0) mOffset = 0;
+      return toString().toLowerCase().substring(offset, Math.min(offset + length, length())).equals(mBuffer.substring(Math.min(mOffset, length - 1)).toLowerCase());
+   }
 
-      if (length < offset + mLength) {
-         return false;
-      }
-
-      for (int i = 0; i < mLength; i++) {
-         char a = Character.toLowerCase(charAt(offset + i));
-         char b = Character.toLowerCase(match[mOffset + i]);
-
-         if (a != b) {
-            return false;
-         }
-      }
-
-      return true;
+   /**
+    * Returns true if the region matches
+    */
+   public boolean regionMatches(int offset,
+                                StringValue match, int mOffset) {
+      return regionMatches(offset, match.toString(), mOffset);
    }
 
    /**
     * Returns true if the string ends with another string.
     */
    public boolean endsWith(StringValue tail) {
-      int len = length();
-      int tailLen = tail.length();
-
-      int offset = len - tailLen;
-
-      if (offset < 0) {
-         return false;
-      }
-
-      for (int i = 0; i < tailLen; i++) {
-         if (charAt(offset + i) != tail.charAt(i)) {
-            return false;
-         }
-      }
-
-      return true;
+      return toString().endsWith(tail.toString());
    }
 
    /**
     * Returns a StringValue substring.
     */
    public StringValue substring(int head) {
-      return (StringValue) subSequence(head, length());
+      String thisVal = toString();
+      if (head < 0) head = 0;
+      return new StringValue(thisVal.substring(Math.min(head, thisVal.length())));
    }
 
    /**
     * Returns a StringValue substring.
     */
    public StringValue substring(int begin, int end) {
-      return (StringValue) subSequence(begin, end);
+      return new StringValue(stringSubstring(begin, end));
    }
 
    /**
     * Returns a String substring
     */
    public String stringSubstring(int begin, int end) {
-      return substring(begin, end).toString();
+      String thisVal = toString();
+      if (begin < 0) begin = 0;
+      if (end < begin) return "";
+      return thisVal.substring(begin, end);
    }
 
    /**
     * Returns a character array
     */
    public char[] toCharArray() {
-      int length = length();
-
-      char[] array = new char[length()];
-
-      getChars(0, array, 0, length);
-
-      return array;
+      return toString().toCharArray();
    }
 
    public char[] getRawCharArray() {
@@ -2091,155 +1941,46 @@ abstract public class StringValue
    }
 
    /**
-    * Copies the chars
-    */
-   public void getChars(int stringOffset, char[] buffer, int offset, int length) {
-      for (int i = 0; i < length; i++) {
-         buffer[offset + i] = charAt(stringOffset + i);
-      }
-   }
-
-   /**
     * Convert to lower case.
     */
    public StringValue toLowerCase() {
-      int length = length();
-
-      UnicodeBuilderValue string = new UnicodeBuilderValue(length);
-
-      char[] buffer = string.getBuffer();
-      getChars(0, buffer, 0, length);
-
-      for (int i = 0; i < length; i++) {
-         char ch = buffer[i];
-
-         if ('A' <= ch && ch <= 'Z') {
-            buffer[i] = (char) (ch + 'a' - 'A');
-         } else if (ch < 0x80) {
-         } else if (Character.isUpperCase(ch)) {
-            buffer[i] = Character.toLowerCase(ch);
-         }
-      }
-
-      string.setOffset(length);
-
-      return string;
+      return new StringValue(toString().toLowerCase());
    }
 
    /**
     * Convert to lower case.
     */
    public StringValue toUpperCase() {
-      int length = length();
-
-      UnicodeBuilderValue string = new UnicodeBuilderValue(length);
-
-      char[] buffer = string.getBuffer();
-      getChars(0, buffer, 0, length);
-
-      for (int i = 0; i < length; i++) {
-         char ch = buffer[i];
-
-         if ('a' <= ch && ch <= 'z') {
-            buffer[i] = (char) (ch + 'A' - 'a');
-         } else if (ch < 0x80) {
-         } else if (Character.isLowerCase(ch)) {
-            buffer[i] = Character.toUpperCase(ch);
-         }
-      }
-
-      string.setOffset(length);
-
-      return string;
+      return new StringValue(toString().toUpperCase());
    }
 
    /**
-    * Returns a byteArrayInputStream for the value.
-    * See TempBufferStringValue for how this can be overriden
-    *
-    * @return InputStream
+    * Convert to an input stream.
     */
    @Override
-   public InputStream toInputStream() {
-      try {
-         //XXX: refactor so that env is passed in
-         return toInputStream(Env.getInstance().getRuntimeEncoding());
-      } catch (UnsupportedEncodingException e) {
-         throw new QuercusRuntimeException(e);
-      }
-      //return new StringValueInputStream();
-   }
-
-   /**
-    * Returns a byte stream of chars.
-    * @param charset to encode chars to
-    */
-   public InputStream toInputStream(String charset)
-           throws UnsupportedEncodingException {
-      return new ByteArrayInputStream(toString().getBytes(charset));
+   public final InputStream toInputStream() {
+      return new BuilderInputStream();
    }
 
    public Reader toSimpleReader()
-           throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
       return new SimpleStringValueReader(this);
    }
 
    /**
     * Returns a char stream.
-    * XXX: when decoding fails
-    *
-    * @param charset to decode bytes by
     */
-   public Reader toReader(String charset)
-           throws UnsupportedEncodingException {
-      byte[] bytes = toBytes();
-
-      return new InputStreamReader(new ByteArrayInputStream(bytes), charset);
-   }
-
-   public byte[] toBytes() {
-      throw new UnsupportedOperationException();
+   public Reader toReader()
+      throws UnsupportedEncodingException {
+      return new InputStreamReader(toInputStream());
    }
 
    /**
-    * Converts to a unicode value.
+    * Converts to a string builder
     */
    @Override
-   public StringValue toUnicode(Env env) {
-      return this;
-   }
-
-   /**
-    * Decodes from charset and returns UnicodeValue.
-    *
-    * @param env
-    * @param charset
-    */
-   public StringValue toUnicodeValue(Env env, String charset) {
-      StringValue sb = new UnicodeBuilderValue();
-
-      Decoder decoder = Decoder.create(charset);
-
-      sb.append(decoder.decode(env, this));
-
-      return sb;
-   }
-
-   /**
-    * Decodes from charset and returns UnicodeValue.
-    *
-    * @param env
-    * @param charset
-    */
-   public StringValue convertToUnicode(Env env, String charset) {
-      UnicodeBuilderValue sb = new UnicodeBuilderValue();
-
-      Decoder decoder = Decoder.create(charset);
-      decoder.setAllowMalformedOut(true);
-
-      sb.append(decoder.decode(env, this));
-
-      return sb;
+   public StringValue toStringBuilder() {
+      return new StringValue(this);
    }
 
    /**
@@ -2247,7 +1988,31 @@ abstract public class StringValue
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return createStringBuilder().append(this);
+      return new StringValue(this);
+   }
+
+   /**
+    * Converts to a string builder
+    */
+   @Override
+   public StringValue toStringBuilder(Env env, Value value) {
+      StringValue v = new StringValue(this);
+
+      value.appendTo(v);
+
+      return v;
+   }
+
+   /**
+    * Converts to a string builder
+    */
+   @Override
+   public StringValue toStringBuilder(Env env, StringValue value) {
+      StringValue v = new StringValue(this);
+
+      value.appendTo(v);
+
+      return v;
    }
 
    /**
@@ -2264,13 +2029,9 @@ abstract public class StringValue
    /**
     * Writes to a stream
     */
-   public void writeTo(OutputStream os) {
+   public final void writeTo(OutputStream os) {
       try {
-         int len = length();
-
-         for (int i = 0; i < len; i++) {
-            os.write(charAt(i));
-         }
+         os.write(_buffer.toString().getBytes(), 0, _buffer.length());
       } catch (IOException e) {
          throw new QuercusModuleException(e);
       }
@@ -2282,69 +2043,28 @@ abstract public class StringValue
    public long getCrc32Value() {
       CRC32 crc = new CRC32();
 
-      int length = length();
-
-      for (int i = 0; i < length; i++) {
-         crc.update((byte) charAt(i));
-      }
+      crc.update(_buffer.toString().getBytes(), 0, length());
 
       return crc.getValue() & 0xffffffff;
    }
 
    //
-   // ByteAppendable methods
-   //
-   @Override
-   public void write(int value) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   /**
-    * Appends buffer to the ByteAppendable.
-    */
-   @Override
-   public void write(byte[] buffer, int offset, int len) {
-      throw new UnsupportedOperationException(getClass().getName());
-   }
-
-   //
    // java.lang.Object methods
    //
+
    /**
     * Returns the hash code.
     */
    @Override
    public int hashCode() {
-      int hash = 37;
-
-      int length = length();
-
-      for (int i = 0; i < length; i++) {
-         hash = 65521 * hash + charAt(i);
-      }
-
-      return hash;
+      return toString().hashCode();
    }
 
    /**
     * Returns the case-insensitive hash code
     */
    public int hashCodeCaseInsensitive() {
-      int hash = 37;
-
-      int length = length();
-
-      for (int i = length - 1; i >= 0; i--) {
-         int ch = charAt(i);
-
-         if ('A' <= ch && ch <= 'Z') {
-            ch = ch + 'a' - 'A';
-         }
-
-         hash = 65521 * hash + ch;
-      }
-
-      return hash;
+      return toString().toLowerCase().hashCode();
    }
 
    /**
@@ -2357,27 +2077,17 @@ abstract public class StringValue
       } else if (!(o instanceof StringValue)) {
          return false;
       }
+      return toString().equals(o.toString());
+   }
 
-      StringValue s = (StringValue) o;
-
-      if (s.isUnicode() != isUnicode()) {
+   @Override
+   public boolean eql(Value o) {
+      if (this == o) {
+         return true;
+      } else if (!(o instanceof StringValue)) {
          return false;
       }
-
-      int aLength = length();
-      int bLength = s.length();
-
-      if (aLength != bLength) {
-         return false;
-      }
-
-      for (int i = aLength - 1; i >= 0; i--) {
-         if (charAt(i) != s.charAt(i)) {
-            return false;
-         }
-      }
-
-      return true;
+      return toString().equals(o.toString());
    }
 
    /**
@@ -2391,10 +2101,6 @@ abstract public class StringValue
       }
 
       StringValue s = (StringValue) o;
-
-      if (s.isUnicode() != isUnicode()) {
-         return false;
-      }
 
       int aLength = length();
       int bLength = s.length();
@@ -2429,6 +2135,7 @@ abstract public class StringValue
    //
    // Java generator code
    //
+
    /**
     * Generates code to recreate the expression.
     *
@@ -2436,7 +2143,7 @@ abstract public class StringValue
     */
    @Override
    public void generate(PrintWriter out)
-           throws IOException {
+      throws IOException {
       // max JVM constant string length
       int maxSublen = 0xFFFE;
 
@@ -2469,14 +2176,94 @@ abstract public class StringValue
    }
 
    @Override
-   abstract public String toDebugString();
+   public String toDebugString() {
+      StringBuilder sb = new StringBuilder();
+
+      int length = length();
+
+      sb.append("string(");
+      sb.append(length);
+      sb.append(") \"");
+
+      int appendLength = length < 256 ? length : 256;
+
+      for (int i = 0; i < appendLength; i++) {
+         sb.append(charAt(i));
+      }
+
+      if (length > 256) {
+         sb.append(" ...");
+      }
+
+      sb.append('"');
+
+      return sb.toString();
+   }
+
+   /**
+    * Returns an OutputStream.
+    */
+   public OutputStream getOutputStream() {
+      return new BuilderOutputStream();
+   }
 
    @Override
-   abstract public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException;
+   public void varDumpImpl(Env env,
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
+      int length = length();
+
+      if (length < 0) {
+         length = 0;
+      }
+
+      out.print("string(");
+      out.print(length);
+      out.print(") \"");
+      out.print(toString());
+      out.print("\"");
+   }
+
+   //
+   // Java generator code
+   //
+
+   /**
+    * Prints the value.
+    *
+    * @param env
+    */
+   @Override
+   public void print(Env env) {
+      try {
+         env.getOut().print(toString());
+      } catch (IOException e) {
+         throw new QuercusModuleException(e);
+      }
+   }
+
+   /**
+    * Prints the value.
+    *
+    * @param env
+    */
+   @Override
+   public void print(Env env, WriteStream out) {
+      try {
+         out.print(toString());
+      } catch (IOException e) {
+         throw new QuercusModuleException(e);
+      }
+   }
+
+   static {
+      CHAR_STRINGS = new StringValue[Character.MAX_VALUE];
+      for (char i = 0; i < CHAR_STRINGS.length; ++i) {
+         CHAR_STRINGS[i] = new StringValue(i);
+      }
+   }
 
    class StringValueInputStream extends java.io.InputStream {
 
@@ -2564,7 +2351,61 @@ abstract public class StringValue
 
       @Override
       public void close()
-              throws IOException {
+         throws IOException {
+      }
+   }
+
+   class BuilderInputStream extends InputStream {
+
+      private int _index;
+
+      /**
+       * Reads the next byte.
+       */
+      @Override
+      public int read() {
+         if (_index < _buffer.length()) {
+            return _buffer.charAt(_index++);
+         } else {
+            return -1;
+         }
+      }
+
+      /**
+       * Reads into a buffer.
+       */
+      @Override
+      public int read(byte[] buffer, int offset, int length) {
+         int sublen = Math.min(_buffer.length() - _index, length);
+
+         if (sublen <= 0) {
+            return -1;
+         }
+
+         _buffer = new StringBuilder(_buffer.substring(0, _index)).append(new String(buffer).substring(_index, _index + sublen));
+
+         _index += sublen;
+
+         return sublen;
+      }
+   }
+
+   class BuilderOutputStream extends OutputStream {
+
+      /**
+       * Writes the next byte.
+       */
+      @Override
+      public void write(int ch) {
+         append(ch);
+      }
+
+      /**
+       * Reads into a buffer.
+       */
+      @Override
+      public void write(byte[] buffer, int offset, int length) {
+         append(new String(buffer), offset, length);
       }
    }
 }

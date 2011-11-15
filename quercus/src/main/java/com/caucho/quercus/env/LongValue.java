@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -212,7 +213,7 @@ public class LongValue extends NumberValue {
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return env.createUnicodeBuilder().append(_value);
+      return new StringValue().append(_value);
    }
 
    /**
@@ -459,34 +460,10 @@ public class LongValue extends NumberValue {
    }
 
    /**
-    * Append to a unicode builder.
-    */
-   @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return sb.append(_value);
-   }
-
-   /**
-    * Append to a binary builder.
-    */
-   @Override
-   public StringValue appendTo(BinaryBuilderValue sb) {
-      return sb.append(_value);
-   }
-
-   /**
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(StringBuilderValue sb) {
-      return sb.append(_value);
-   }
-
-   /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(LargeStringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return sb.append(_value);
    }
 

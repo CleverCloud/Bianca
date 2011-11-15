@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.file;
 
@@ -39,6 +40,7 @@ import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.EnvCleanup;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.resources.StreamContextResource;
@@ -64,7 +66,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
    private HttpStreamWrapper _httpStream;
    private Reader _readEncoding;
    private String _readEncodingName;
-   private byte[] _bodyStart;
+   private String _bodyStart;
 
    public HttpInputOutput(Env env, Path path, StreamContextResource context)
            throws IOException {
@@ -99,8 +101,8 @@ public class HttpInputOutput extends AbstractBinaryOutput
 
          setOptions(env, options);
 
-         if (_os != null && _bodyStart != null && _bodyStart.length > 0) {
-            _os.write(_bodyStart, 0, _bodyStart.length);
+         if (_os != null && _bodyStart != null && _bodyStart.length() > 0) {
+            _os.write(_bodyStart.getBytes(), 0, _bodyStart.length());
          }
       } else {
          _is = path.openRead();
@@ -152,7 +154,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
          } else if (optionName.equals("user_agent")) {
             _httpStream.setAttribute("User-Agent", optionValue.toString());
          } else if (optionName.equals("content")) {
-            _bodyStart = optionValue.toBinaryValue(env).toBytes();
+            _bodyStart = optionValue.toStringValue(env).toString();
          } else if (optionName.equals("proxy")) {
             env.stub("StreamContextResource::proxy option");
          } else if (optionName.equals("request_fulluri")) {
@@ -259,7 +261,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
    @Override
    public StringValue read(int length)
            throws IOException {
-      StringValue bb = _env.createBinaryBuilder();
+      StringValue bb = new StringValue();
       TempBuffer temp = TempBuffer.allocate();
 
       try {
@@ -275,7 +277,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
             sublen = read(buffer, 0, sublen);
 
             if (sublen > 0) {
-               bb.append(buffer, 0, sublen);
+               bb.append(new String(buffer), 0, sublen);
                length -= sublen;
             } else {
                break;

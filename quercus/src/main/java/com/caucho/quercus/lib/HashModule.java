@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -55,7 +56,7 @@ public class HashModule extends AbstractQuercusModule {
    private static final L10N L = new L10N(HashModule.class);
    private static final Logger log = Logger.getLogger(HashModule.class.getName());
    public static final int HASH_HMAC = 1;
-   private static HashMap<String, String> _algorithmMap = new HashMap<String, String>();
+   private static final HashMap<String, String> _algorithmMap = new HashMap<String, String>();
 
    public HashModule() {
    }
@@ -363,11 +364,11 @@ public class HashModule extends AbstractQuercusModule {
    // TODO: hash
    private static Value hashToValue(Env env, byte[] bytes, boolean isBinary) {
       if (isBinary) {
-         StringValue v = env.createBinaryBuilder();
-         v.append(bytes, 0, bytes.length);
+         StringValue v = new StringValue();
+         v.append(new String(bytes));
          return v;
       } else {
-         StringValue v = env.createUnicodeBuilder();
+         StringValue v = new StringValue();
 
          for (int i = 0; i < bytes.length; i++) {
             int ch = bytes[i];

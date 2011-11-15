@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Sam
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.module;
 
@@ -156,7 +157,7 @@ public class IniDefinition {
     * Set the ini value for the given scope.
     */
    public void set(QuercusContext quercus, String value) {
-      set(quercus, new ConstStringValue(value));
+      set(quercus, new StringValue(value));
    }
 
    /**

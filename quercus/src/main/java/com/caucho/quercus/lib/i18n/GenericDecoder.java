@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
@@ -33,24 +34,18 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
-import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.util.L10N;
 import com.caucho.vfs.TempCharBuffer;
 
 public class GenericDecoder
         extends Decoder {
 
-   private static final Logger log = Logger.getLogger(GenericDecoder.class.getName());
-   private static final L10N L = new L10N(GenericDecoder.class);
    private Charset _charset;
    protected CharsetDecoder _decoder;
 
    public GenericDecoder(String charsetName) {
-      super(charsetName);
-
       _charset = Charset.forName(charsetName);
 
       _decoder = _charset.newDecoder();
@@ -64,41 +59,8 @@ public class GenericDecoder
    }
 
    @Override
-   public boolean isDecodable(Env env, StringValue str) {
-      if (str.isUnicode()) {
-         return true;
-      }
-
-      ByteBuffer in = ByteBuffer.wrap(str.toBytes());
-      CharBuffer out = CharBuffer.allocate(512);
-
-      while (in.hasRemaining()) {
-         CoderResult coder = _decoder.decode(in, out, false);
-         if (coder.isMalformed()) {
-            return false;
-         }
-
-         out.clear();
-      }
-
-      CoderResult coder = _decoder.decode(in, out, true);
-      if (coder.isMalformed()) {
-         return false;
-      }
-
-      out.clear();
-
-      coder = _decoder.flush(out);
-      if (coder.isMalformed()) {
-         return false;
-      }
-
-      return true;
-   }
-
-   @Override
    protected StringBuilder decodeImpl(Env env, StringValue str) {
-      ByteBuffer in = ByteBuffer.wrap(str.toBytes());
+      ByteBuffer in = ByteBuffer.wrap(str.toString().getBytes());
 
       TempCharBuffer tempBuf = TempCharBuffer.allocate();
 

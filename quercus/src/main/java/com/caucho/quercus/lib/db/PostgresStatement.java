@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Rodrigo Westrupp
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -108,6 +109,7 @@ public class PostgresStatement extends JdbcStatementResource {
     * @param query SQL query
     * @return true on success or false on failure
     */
+   @Override
    public boolean prepare(Env env, StringValue query) {
       try {
          String queryStr = query.toString();

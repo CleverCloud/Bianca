@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.expr;
 
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 
 import com.caucho.quercus.Location;
 import com.caucho.quercus.env.Env;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Var;
@@ -87,7 +89,7 @@ public class ClassVirtualFieldVarExpr extends AbstractVarExpr {
       String className = env.getThis().getQuercusClass().getName();
       StringValue varName = _varName.evalStringValue(env);
 
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringValue();
       sb.append(className);
       sb.append("::");
       sb.append(varName);
@@ -107,7 +109,7 @@ public class ClassVirtualFieldVarExpr extends AbstractVarExpr {
       String className = env.getThis().getQuercusClass().getName();
       StringValue varName = _varName.evalStringValue(env);
 
-      StringValue var = env.createStringBuilder();
+      StringValue var = new StringValue();
       var.append(className);
       var.append("::");
       var.append(varName);
@@ -127,7 +129,7 @@ public class ClassVirtualFieldVarExpr extends AbstractVarExpr {
       String className = env.getThis().getQuercusClass().getName();
       StringValue varName = _varName.evalStringValue(env);
 
-      StringValue var = env.createStringBuilder();
+      StringValue var = new StringValue();
       var.append(className);
       var.append("::");
       var.append(varName);

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -191,7 +192,7 @@ public class NullValue extends Value
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return env.createUnicodeBuilder();
+      return new StringValue();
    }
 
    /**
@@ -413,13 +414,7 @@ public class NullValue extends Value
     */
    @Override
    public StringValue toStringValue() {
-      Env env = Env.getInstance();
-
-      if (env != null && env.isUnicodeSemantics()) {
-         return UnicodeBuilderValue.EMPTY;
-      } else {
-         return StringBuilderValue.EMPTY;
-      }
+      return StringValue.EMPTY;
    }
 
    @Override
@@ -564,34 +559,10 @@ public class NullValue extends Value
    }
 
    /**
-    * Append to a binary builder.
-    */
-   @Override
-   public StringValue appendTo(BinaryBuilderValue sb) {
-      return sb;
-   }
-
-   /**
-    * Append to a unicode builder.
-    */
-   @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return sb;
-   }
-
-   /**
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(StringBuilderValue sb) {
-      return sb;
-   }
-
-   /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(LargeStringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return sb;
    }
 

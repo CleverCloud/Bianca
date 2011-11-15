@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Emil Ong
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.file;
 
@@ -35,14 +36,10 @@ import com.caucho.quercus.env.*;
  */
 public class WrappedDirectoryValue extends DirectoryValue {
 
-   private static final ConstStringValue DIR_CLOSEDIR = new ConstStringValue("dir_closedir");
-   private static final ConstStringValue DIR_OPENDIR = new ConstStringValue("dir_opendir");
-   private static final ConstStringValue DIR_READDIR = new ConstStringValue("dir_readdir");
-   private static final ConstStringValue DIR_REWINDDIR = new ConstStringValue("dir_rewinddir");
-   private static final UnicodeBuilderValue DIR_CLOSEDIR_U = new UnicodeBuilderValue("dir_closedir");
-   private static final UnicodeBuilderValue DIR_OPENDIR_U = new UnicodeBuilderValue("dir_opendir");
-   private static final UnicodeBuilderValue DIR_READDIR_U = new UnicodeBuilderValue("dir_readdir");
-   private static final UnicodeBuilderValue DIR_REWINDDIR_U = new UnicodeBuilderValue("dir_rewinddir");
+   private static final StringValue DIR_CLOSEDIR_U = new StringValue("dir_closedir");
+   private static final StringValue DIR_OPENDIR_U = new StringValue("dir_opendir");
+   private static final StringValue DIR_READDIR_U = new StringValue("dir_readdir");
+   private static final StringValue DIR_REWINDDIR_U = new StringValue("dir_rewinddir");
    private Env _env;
    private Value _wrapper;
 
@@ -54,11 +51,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
    }
 
    public boolean opendir(StringValue path, LongValue flags) {
-      if (_env.isUnicodeSemantics()) {
-         return _wrapper.callMethod(_env, DIR_OPENDIR_U, path, flags).toBoolean();
-      } else {
-         return _wrapper.callMethod(_env, DIR_OPENDIR, path, flags).toBoolean();
-      }
+      return _wrapper.callMethod(_env, DIR_OPENDIR_U, path, flags).toBoolean();
    }
 
    /**
@@ -66,11 +59,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
     */
    @Override
    public Value readdir() {
-      if (_env.isUnicodeSemantics()) {
-         return _wrapper.callMethod(_env, DIR_READDIR_U);
-      } else {
-         return _wrapper.callMethod(_env, DIR_READDIR);
-      }
+      return _wrapper.callMethod(_env, DIR_READDIR_U);
    }
 
    /**
@@ -78,11 +67,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
     */
    @Override
    public void rewinddir() {
-      if (_env.isUnicodeSemantics()) {
-         _wrapper.callMethod(_env, DIR_REWINDDIR_U);
-      } else {
-         _wrapper.callMethod(_env, DIR_REWINDDIR);
-      }
+      _wrapper.callMethod(_env, DIR_REWINDDIR_U);
    }
 
    /**
@@ -90,11 +75,7 @@ public class WrappedDirectoryValue extends DirectoryValue {
     */
    @Override
    public void close() {
-      if (_env.isUnicodeSemantics()) {
-         _wrapper.callMethod(_env, DIR_CLOSEDIR_U);
-      } else {
-         _wrapper.callMethod(_env, DIR_CLOSEDIR);
-      }
+      _wrapper.callMethod(_env, DIR_CLOSEDIR_U);
    }
 
    /**

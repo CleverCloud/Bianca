@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -32,6 +33,7 @@ import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.ConnectionEntry;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.EnvCleanup;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.util.L10N;
@@ -92,7 +94,7 @@ public abstract class JdbcConnectionResource
       if (isConnected()) {
          return env.createString(getErrorMessage());
       } else {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 
@@ -211,7 +213,7 @@ public abstract class JdbcConnectionResource
     * @return the string escaped for SQL statements
     */
    protected StringValue realEscapeString(StringValue str) {
-      StringValue buf = _env.createUnicodeBuilder();
+      StringValue buf = new StringValue();
 
       final int strLength = str.length();
 
@@ -533,7 +535,7 @@ public abstract class JdbcConnectionResource
    @Override
    public void cleanup() {
       if (log.isLoggable(Level.FINER)) {
-         log.finer(this + " cleanup()");
+         log.log(Level.FINER, "{0} cleanup()", this);
       }
 
       try {

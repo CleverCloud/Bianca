@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -41,7 +42,7 @@ public final class MethodIntern {
       StringValue internName = _internMap.get(name);
 
       if (internName == null) {
-         StringValue string = new CompiledConstStringValue(name);
+         StringValue string = new StringValue(name);
 
          internName = _internMap.putIfAbsent(name, string);
 

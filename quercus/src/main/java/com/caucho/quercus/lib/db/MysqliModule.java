@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Charles Reich
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -259,7 +260,7 @@ public class MysqliModule extends AbstractQuercusModule {
       if (error != null) {
          return env.createString(error.toString());
       } else {
-         return env.getEmptyString();
+         return new StringValue();
       }
    }
 
@@ -498,7 +499,7 @@ public class MysqliModule extends AbstractQuercusModule {
    public static StringValue mysqli_stmt_error(Env env,
            @NotNull MysqliStatement stmt) {
       if (stmt == null) {
-         return env.getEmptyString();
+         return new StringValue();
       }
 
       return stmt.error(env);
@@ -957,7 +958,7 @@ public class MysqliModule extends AbstractQuercusModule {
       }
 
       if (unescapedString.length() == 0) {
-         return env.getEmptyString();
+         return new StringValue();
       }
 
       StringBuilder buf = new StringBuilder();

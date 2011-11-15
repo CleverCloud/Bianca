@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.regexp;
 
@@ -35,7 +36,6 @@ import com.caucho.quercus.env.StringValue;
 
 class RegexpNode {
 
-   private static final L10N L = new L10N(RegexpNode.class);
    static final int RC_END = 0;
    static final int RC_NULL = 1;
    static final int RC_STRING = 2;
@@ -1219,7 +1219,7 @@ class RegexpNode {
          int groupBegin = state.getBegin(_group);
          int groupLength = state.getEnd(_group) - groupBegin;
 
-         if (string.regionMatches(offset, string, groupBegin, groupLength)) {
+         if (string.regionMatches(offset, string, groupBegin)) {
             return offset + groupLength;
          } else {
             return -1;
@@ -2365,43 +2365,36 @@ class RegexpNode {
 
    static final class StringNode extends RegexpNode {
 
-      private final char[] _buffer;
-      private final int _length;
+      private final String _buffer;
 
       StringNode(CharBuffer value) {
-         _length = value.length();
-         _buffer = new char[_length];
-
-         if (_length == 0) {
+         if (value.length() == 0) {
             throw new IllegalStateException("empty string");
          }
 
-         System.arraycopy(value.getBuffer(), 0, _buffer, 0, _buffer.length);
+         _buffer = value.toString();
       }
 
-      StringNode(char[] buffer, int length) {
-         _length = length;
-         _buffer = buffer;
+      StringNode(String buffer, int length) {
+         _buffer = buffer.substring(0, length);
 
-         if (_length == 0) {
+         if (_buffer.isEmpty()) {
             throw new IllegalStateException("empty string");
          }
       }
 
       StringNode(char ch) {
-         _length = 1;
-         _buffer = new char[1];
-         _buffer[0] = ch;
+         _buffer = ch + "";
       }
 
       @Override
       RegexpNode createLoop(Regcomp parser, int min, int max) {
-         if (_length == 1) {
+         if (_buffer.length() == 1) {
             return new CharLoop(this, min, max);
          } else {
-            char ch = _buffer[_length - 1];
+            char ch = _buffer.charAt(_buffer.length() - 1);
 
-            RegexpNode head = new StringNode(_buffer, _length - 1);
+            RegexpNode head = new StringNode(_buffer, _buffer.length() - 1);
 
             return head.concat(new CharNode(ch).createLoop(parser, min, max));
          }
@@ -2409,12 +2402,12 @@ class RegexpNode {
 
       @Override
       RegexpNode createLoopUngreedy(Regcomp parser, int min, int max) {
-         if (_length == 1) {
+         if (_buffer.length() == 1) {
             return new CharUngreedyLoop(this, min, max);
          } else {
-            char ch = _buffer[_length - 1];
+            char ch = _buffer.charAt(_buffer.length() - 1);
 
-            RegexpNode head = new StringNode(_buffer, _length - 1);
+            RegexpNode head = new StringNode(_buffer, _buffer.length() - 1);
 
             return head.concat(
                     new CharNode(ch).createLoopUngreedy(parser, min, max));
@@ -2423,12 +2416,12 @@ class RegexpNode {
 
       @Override
       RegexpNode createPossessiveLoop(int min, int max) {
-         if (_length == 1) {
+         if (_buffer.length() == 1) {
             return super.createPossessiveLoop(min, max);
          } else {
-            char ch = _buffer[_length - 1];
+            char ch = _buffer.charAt(_buffer.length() - 1);
 
-            RegexpNode head = new StringNode(_buffer, _length - 1);
+            RegexpNode head = new StringNode(_buffer, _buffer.length() - 1);
 
             return head.concat(new CharNode(ch).createPossessiveLoop(min, max));
          }
@@ -2439,13 +2432,13 @@ class RegexpNode {
       //
       @Override
       int minLength() {
-         return _length;
+         return _buffer.length();
       }
 
       @Override
       int firstChar() {
-         if (_length > 0) {
-            return _buffer[0];
+         if (_buffer.length() > 0) {
+            return _buffer.charAt(0);
          } else {
             return -1;
          }
@@ -2453,8 +2446,8 @@ class RegexpNode {
 
       @Override
       boolean[] firstSet(boolean[] firstSet) {
-         if (firstSet != null && _length > 0 && _buffer[0] < firstSet.length) {
-            firstSet[_buffer[0]] = true;
+         if (firstSet != null && _buffer.length() > 0 && _buffer.charAt(0) < firstSet.length) {
+            firstSet[_buffer.charAt(0)] = true;
 
             return firstSet;
          } else {
@@ -2464,7 +2457,7 @@ class RegexpNode {
 
       @Override
       String prefix() {
-         return new String(_buffer, 0, _length);
+         return _buffer;
       }
 
       //
@@ -2475,8 +2468,8 @@ class RegexpNode {
               int strlen,
               int offset,
               RegexpState state) {
-         if (string.regionMatches(offset, _buffer, 0, _length)) {
-            return offset + _length;
+         if (string.regionMatches(offset, _buffer, 0)) {
+            return offset + _buffer.length();
          } else {
             return -1;
          }
@@ -2486,51 +2479,44 @@ class RegexpNode {
       protected void toString(StringBuilder sb, Map<RegexpNode, Integer> map) {
          sb.append(toStringName());
          sb.append("[");
-         sb.append(_buffer, 0, _length);
+         sb.append(_buffer);
          sb.append("]");
       }
    }
 
    static class StringIgnoreCase extends RegexpNode {
 
-      private final char[] _buffer;
-      private final int _length;
+      private final String _buffer;
 
       StringIgnoreCase(CharBuffer value) {
-         _length = value.length();
-         _buffer = new char[_length];
-
-         if (_length == 0) {
+         if (value.length() == 0) {
             throw new IllegalStateException("empty string");
          }
 
-         System.arraycopy(value.getBuffer(), 0, _buffer, 0, _buffer.length);
+         _buffer = value.toString();
       }
 
-      StringIgnoreCase(char[] buffer, int length) {
-         _length = length;
+      StringIgnoreCase(String buffer) {
          _buffer = buffer;
 
-         if (_length == 0) {
+         if (_buffer.length() == 0) {
             throw new IllegalStateException("empty string");
          }
       }
 
       StringIgnoreCase(char ch) {
-         _length = 1;
-         _buffer = new char[1];
-         _buffer[0] = ch;
+         _buffer = ch + "";
       }
 
       @Override
       RegexpNode createLoop(Regcomp parser, int min, int max) {
-         if (_length == 1) {
+         if (_buffer.length() == 1) {
             return new CharLoop(this, min, max);
          } else {
-            char ch = _buffer[_length - 1];
+            char ch = _buffer.charAt(_buffer.length() - 1);
 
-            RegexpNode head = new StringIgnoreCase(_buffer, _length - 1);
-            RegexpNode tail = new StringIgnoreCase(new char[]{ch}, 1);
+            RegexpNode head = new StringIgnoreCase(_buffer);
+            RegexpNode tail = new StringIgnoreCase(ch + "");
 
             return head.concat(tail.createLoop(parser, min, max));
          }
@@ -2538,13 +2524,13 @@ class RegexpNode {
 
       @Override
       RegexpNode createLoopUngreedy(Regcomp parser, int min, int max) {
-         if (_length == 1) {
+         if (_buffer.length() == 1) {
             return new CharUngreedyLoop(this, min, max);
          } else {
-            char ch = _buffer[_length - 1];
+            char ch = _buffer.charAt(_buffer.length() - 1);
 
-            RegexpNode head = new StringIgnoreCase(_buffer, _length - 1);
-            RegexpNode tail = new StringIgnoreCase(new char[]{ch}, 1);
+            RegexpNode head = new StringIgnoreCase(_buffer);
+            RegexpNode tail = new StringIgnoreCase(ch + "");
 
             return head.concat(tail.createLoopUngreedy(parser, min, max));
          }
@@ -2552,13 +2538,13 @@ class RegexpNode {
 
       @Override
       RegexpNode createPossessiveLoop(int min, int max) {
-         if (_length == 1) {
+         if (_buffer.length() == 1) {
             return super.createPossessiveLoop(min, max);
          } else {
-            char ch = _buffer[_length - 1];
+            char ch = _buffer.charAt(_buffer.length() - 1);
 
-            RegexpNode head = new StringIgnoreCase(_buffer, _length - 1);
-            RegexpNode tail = new StringIgnoreCase(new char[]{ch}, 1);
+            RegexpNode head = new StringIgnoreCase(_buffer);
+            RegexpNode tail = new StringIgnoreCase(ch + "");
 
             return head.concat(tail.createPossessiveLoop(min, max));
          }
@@ -2569,15 +2555,15 @@ class RegexpNode {
       //
       @Override
       int minLength() {
-         return _length;
+         return _buffer.length();
       }
 
       @Override
       int firstChar() {
-         if (_length > 0
-                 && (Character.toLowerCase(_buffer[0])
-                 == Character.toUpperCase(_buffer[0]))) {
-            return _buffer[0];
+         if (_buffer.length() > 0
+                 && (Character.toLowerCase(_buffer.charAt(0))
+                 == Character.toUpperCase(_buffer.charAt(0)))) {
+            return _buffer.charAt(0);
          } else {
             return -1;
          }
@@ -2585,9 +2571,9 @@ class RegexpNode {
 
       @Override
       boolean[] firstSet(boolean[] firstSet) {
-         if (_length > 0 && firstSet != null) {
-            char lower = Character.toLowerCase(_buffer[0]);
-            char upper = Character.toUpperCase(_buffer[0]);
+         if (_buffer.length() > 0 && firstSet != null) {
+            char lower = Character.toLowerCase(_buffer.charAt(0));
+            char upper = Character.toUpperCase(_buffer.charAt(0));
 
             if (lower < firstSet.length && upper < firstSet.length) {
                firstSet[lower] = true;
@@ -2602,7 +2588,7 @@ class RegexpNode {
 
       @Override
       String prefix() {
-         return new String(_buffer, 0, _length);
+         return _buffer;
       }
 
       //
@@ -2610,8 +2596,8 @@ class RegexpNode {
       //
       @Override
       int match(StringValue string, int strlen, int offset, RegexpState state) {
-         if (string.regionMatchesIgnoreCase(offset, _buffer, 0, _length)) {
-            return offset + _length;
+         if (string.regionMatchesIgnoreCase(offset, _buffer, 0)) {
+            return offset + _buffer.length();
          } else {
             return -1;
          }

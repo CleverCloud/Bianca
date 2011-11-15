@@ -25,12 +25,13 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.gettext;
 
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.UnicodeBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.gettext.expr.PluralExpr;
 import com.caucho.util.L10N;
 import com.caucho.vfs.Path;
@@ -65,7 +66,7 @@ class POFileParser extends GettextParser {
       init(path);
    }
 
-   void init(Path path)
+   final void init(Path path)
            throws IOException {
       _in = path.openRead();
       _peekChar = -1;
@@ -106,6 +107,7 @@ class POFileParser extends GettextParser {
     *
     * @return translations from file, or null on error
     */
+   @Override
    HashMap<StringValue, ArrayList<StringValue>> readTranslations()
            throws IOException {
       HashMap<StringValue, ArrayList<StringValue>> translations =
@@ -242,7 +244,7 @@ class POFileParser extends GettextParser {
     */
    private int readOriginalString(int token)
            throws IOException {
-      return readString(_env.createUnicodeBuilder(), token);
+      return readString(new StringValue(), token);
    }
 
    /**
@@ -250,7 +252,7 @@ class POFileParser extends GettextParser {
     */
    private int readString(int token)
            throws IOException {
-      return readString(new UnicodeBuilderValue(), token);
+      return readString(new StringValue(), token);
    }
 
    /**
@@ -359,6 +361,7 @@ class POFileParser extends GettextParser {
       }
    }
 
+   @Override
    void close() {
       if (_in != null) {
          _in.close();

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.reflection;
 
@@ -100,7 +101,7 @@ public class ReflectionExtension
          Set<String> extensionSet = moduleInfo.getLoadedExtensions();
 
          if (extensionSet.contains(_name)) {
-            for (Map.Entry<StringValue, Value> entry : moduleInfo.getConstMap().entrySet()) {
+            for (Map.Entry<StringValue, Value> entry : moduleInfo.getUnicodeConstMap().entrySet()) {
                array.put(entry.getKey(), entry.getValue());
             }
          }

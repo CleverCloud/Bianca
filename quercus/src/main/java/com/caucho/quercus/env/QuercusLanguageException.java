@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -36,9 +37,9 @@ import com.caucho.quercus.QuercusException;
  */
 public class QuercusLanguageException extends QuercusException {
 
-   private static final StringValue FILE = new ConstStringValue("file");
-   private static final StringValue LINE = new ConstStringValue("line");
-   private static final StringValue MESSAGE = new ConstStringValue("message");
+   private static final StringValue FILE = new StringValue("file");
+   private static final StringValue LINE = new StringValue("line");
+   private static final StringValue MESSAGE = new StringValue("message");
    private Value _value;
 
    public QuercusLanguageException(Value value) {

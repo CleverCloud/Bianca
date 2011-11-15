@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Emil Ong
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -88,7 +89,7 @@ public class UrlRewriterCallback extends CallbackFunction {
       String encodedVar = URLUtil.encodeURL(var.replaceAll(" ", "+"));
       String encodedValue = URLUtil.encodeURL(value.replaceAll(" ", "+"));
 
-      _rewriterQuery.append(encodedVar + "=" + encodedValue);
+      _rewriterQuery.append(encodedVar).append("=").append(encodedValue);
       _rewriterVars.add(new String[]{encodedVar, encodedValue});
    }
 
@@ -148,7 +149,7 @@ public class UrlRewriterCallback extends CallbackFunction {
          _input = input;
          _env = env;
          _index = 0;
-         _output = env.createUnicodeBuilder();
+         _output = new StringValue();
       }
 
       public Value parse() {

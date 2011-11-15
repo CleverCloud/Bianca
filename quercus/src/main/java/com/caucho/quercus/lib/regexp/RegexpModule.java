@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.regexp;
 
@@ -36,6 +37,7 @@ import com.caucho.quercus.annotation.NotNull;
 import com.caucho.quercus.annotation.Reference;
 import com.caucho.quercus.annotation.UsesSymbolTable;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.i18n.MbstringModule;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
@@ -313,7 +315,7 @@ public class RegexpModule
          StringValue regexpStr;
 
          if (value.isNull() || value.isBoolean()) {
-            regexpStr = env.getEmptyString();
+            regexpStr = StringValue.EMPTY;
          } else if (!value.isString()) {
             regexpStr = value.toLongValue().toStringValue();
          } else {
@@ -372,7 +374,7 @@ public class RegexpModule
          StringValue regexpStr;
 
          if (value.isNull() || value.isBoolean()) {
-            regexpStr = env.getEmptyString();
+            regexpStr = StringValue.EMPTY;
          } else if (!value.isString()) {
             regexpStr = value.toLongValue().toStringValue();
          } else {
@@ -439,8 +441,6 @@ public class RegexpModule
          UnicodeEreg ereg = _unicodeEregCache.get(key);
 
          if (ereg == null) {
-            pattern = pattern.convertToUnicode(env, encoding);
-
             StringValue cleanPattern = cleanEregRegexp(pattern, false);
 
             ereg = new UnicodeEreg(cleanPattern);
@@ -470,8 +470,6 @@ public class RegexpModule
          UnicodeEregi ereg = _unicodeEregiCache.get(key);
 
          if (ereg == null) {
-            pattern = pattern.convertToUnicode(env, encoding);
-
             StringValue cleanPattern = cleanEregRegexp(pattern, false);
 
             ereg = new UnicodeEregi(cleanPattern);
@@ -505,7 +503,7 @@ public class RegexpModule
          return BooleanValue.FALSE;
       }
 
-      StringValue empty = subject.EMPTY;
+      StringValue empty = StringValue.EMPTY;
 
       RegexpState regexpState = RegexpState.create(env, regexp, subject);
 
@@ -684,7 +682,7 @@ public class RegexpModule
 
       ArrayValue[] matchList = new ArrayValue[groupCount + 1];
 
-      StringValue emptyStr = subject.EMPTY;
+      StringValue emptyStr = StringValue.EMPTY;
 
       for (int j = 0; j < groupCount; j++) {
          ArrayValue values = new ArrayValueImpl();
@@ -765,7 +763,7 @@ public class RegexpModule
          return LongValue.ZERO;
       }
 
-      StringValue empty = subject.EMPTY;
+      StringValue empty = StringValue.EMPTY;
 
       int count = 0;
 
@@ -841,7 +839,7 @@ public class RegexpModule
     */
    public static StringValue preg_quote(StringValue string,
            @Optional StringValue delim) {
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringValue();
 
       boolean[] extra = null;
 
@@ -927,7 +925,7 @@ public class RegexpModule
                     subject.toStringValue(),
                     limit, count);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } catch (IllegalRegexpException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -963,7 +961,7 @@ public class RegexpModule
          if (replacementIter.hasNext()) {
             replacementStr = replacementIter.next().toStringValue();
          } else {
-            replacementStr = env.getEmptyString();
+            replacementStr = StringValue.EMPTY;
          }
 
          string = pregReplaceString(env,
@@ -1034,7 +1032,7 @@ public class RegexpModule
                     subject.toStringValue(),
                     limit, count);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } catch (IllegalRegexpException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -1071,7 +1069,7 @@ public class RegexpModule
             if (replacementIter.hasNext()) {
                replacementStr = replacementIter.next().toStringValue();
             } else {
-               replacementStr = env.getEmptyString();
+               replacementStr = StringValue.EMPTY;
             }
 
             string = pregReplaceString(env,
@@ -1116,7 +1114,7 @@ public class RegexpModule
            long limit,
            Value countV)
            throws IllegalRegexpException {
-      StringValue empty = subject.EMPTY;
+      StringValue empty = StringValue.EMPTY;
 
       long numberOfMatches = 0;
 
@@ -1128,7 +1126,7 @@ public class RegexpModule
 
       regexpState.setSubject(env, subject);
 
-      StringValue result = subject.createStringBuilder();
+      StringValue result = new StringValue();
       int tail = 0;
 
       while (regexpState.find() && numberOfMatches < limit) {
@@ -1223,7 +1221,7 @@ public class RegexpModule
       StringValue regexpStr;
 
       if (regexpValue.isLong()) {
-         regexpStr = env.createString((char) regexpValue.toInt());
+         regexpStr = new StringValue((char) regexpValue.toInt());
       } else {
          regexpStr = regexpValue.toStringValue(env);
       }
@@ -1248,7 +1246,7 @@ public class RegexpModule
       StringValue regexpStr;
 
       if (regexpValue.isLong()) {
-         regexpStr = env.createString((char) regexpValue.toInt());
+         regexpStr = new StringValue((char) regexpValue.toInt());
       } else {
          regexpStr = regexpValue.toStringValue(env);
       }
@@ -1279,7 +1277,7 @@ public class RegexpModule
       // a single character.
 
       if (replacement instanceof NullValue) {
-         replacementStr = env.getEmptyString();
+         replacementStr = StringValue.EMPTY;
       } else if (replacement instanceof StringValue) {
          replacementStr = replacement.toStringValue();
       } else {
@@ -1330,7 +1328,7 @@ public class RegexpModule
          limit = LONG_MAX;
       }
 
-      StringValue result = subject.createStringBuilder();
+      StringValue result = new StringValue();
 
       int tail = 0;
       boolean isMatched = false;
@@ -1354,7 +1352,7 @@ public class RegexpModule
          // if isEval then append replacement evaluated as PHP code
          // else append replacement string
          if (isEval) {
-            StringValue evalString = subject.createStringBuilder();
+            StringValue evalString = new StringValue();
 
             try {
                for (int i = 0; i < replacementLen; i++) {
@@ -1455,7 +1453,7 @@ public class RegexpModule
                     limit,
                     count);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } catch (IllegalRegexpException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -1511,7 +1509,7 @@ public class RegexpModule
                     limit,
                     count);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } catch (IllegalRegexpException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -1536,7 +1534,7 @@ public class RegexpModule
       }
 
       if (!subject.isset()) {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       } else {
          return pregReplaceCallbackImpl(env,
                  regexp,
@@ -1562,7 +1560,7 @@ public class RegexpModule
       }
 
       if (!subject.isset()) {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       } else {
          for (int i = 0; i < regexpList.length; i++) {
             subject = pregReplaceCallbackImpl(env,
@@ -1726,7 +1724,7 @@ public class RegexpModule
     * Makes a regexp for a case-insensitive match.
     */
    public static StringValue sql_regcase(StringValue string) {
-      StringValue sb = string.createStringBuilder();
+      StringValue sb = new StringValue();
 
       int len = string.length();
       for (int i = 0; i < len; i++) {
@@ -1881,11 +1879,11 @@ public class RegexpModule
            StringValue str,
            String startDelim,
            String endDelim) {
-      StringValue sb = str.createStringBuilder();
+      StringValue sb = new StringValue();
 
-      sb = sb.appendBytes(startDelim);
+      sb = sb.append(startDelim);
       sb = sb.append(str);
-      sb = sb.appendBytes(endDelim);
+      sb = sb.append(endDelim);
 
       return sb;
    }
@@ -1984,7 +1982,7 @@ public class RegexpModule
            boolean isComments) {
       int len = regexp.length();
 
-      StringValue sb = regexp.createStringBuilder();
+      StringValue sb = new StringValue();
       char quote = 0;
 
       for (int i = 0; i < len; i++) {
@@ -1993,8 +1991,8 @@ public class RegexpModule
          switch (ch) {
             case '\\':
                if (quote == '[') {
-                  sb = sb.appendByte('\\');
-                  sb = sb.appendByte('\\');
+                  sb = sb.append('\\');
+                  sb = sb.append('\\');
                   continue;
                }
 
@@ -2010,11 +2008,11 @@ public class RegexpModule
                           && ch <= '7') {
                      // Java's regexp requires \0 for octal
 
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('0');
-                     sb = sb.appendByte(ch);
+                     sb = sb.append('\\');
+                     sb = sb.append('0');
+                     sb = sb.append(ch);
                   } else if (ch == 'x' && i + 1 < len && regexp.charAt(i + 1) == '{') {
-                     sb = sb.appendByte('\\');
+                     sb = sb.append('\\');
 
                      int tail = regexp.indexOf('}', i + 1);
 
@@ -2024,21 +2022,21 @@ public class RegexpModule
                         int length = hex.length();
 
                         if (length == 1) {
-                           sb = sb.appendBytes("x0" + hex);
+                           sb = sb.append("x0" + hex);
                         } else if (length == 2) {
-                           sb = sb.appendBytes("x" + hex);
+                           sb = sb.append("x" + hex);
                         } else if (length == 3) {
-                           sb = sb.appendBytes("u0" + hex);
+                           sb = sb.append("u0" + hex);
                         } else if (length == 4) {
-                           sb = sb.appendBytes("u" + hex);
+                           sb = sb.append("u" + hex);
                         } else {
                            throw new QuercusRuntimeException(L.l("illegal hex escape"));
                         }
 
                         i = tail;
                      } else {
-                        sb = sb.appendByte('\\');
-                        sb = sb.appendByte('x');
+                        sb = sb.append('\\');
+                        sb = sb.append('x');
                      }
                   } else if (Character.isLetter(ch)) {
                      switch (ch) {
@@ -2066,36 +2064,36 @@ public class RegexpModule
                         case 'P': //XXX: need to translate PHP properties to Java ones
                         case 'X':
                            //case 'C': byte matching, not supported
-                           sb = sb.appendByte('\\');
-                           sb = sb.appendByte(ch);
+                           sb = sb.append('\\');
+                           sb = sb.append(ch);
                            break;
                         default:
-                           sb = sb.appendByte(ch);
+                           sb = sb.append(ch);
                      }
                   } else {
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte(ch);
+                     sb = sb.append('\\');
+                     sb = sb.append(ch);
                   }
                } else {
-                  sb = sb.appendByte('\\');
+                  sb = sb.append('\\');
                }
                break;
 
             case '[':
                if (quote == '[') {
                   if (i + 1 < len && regexp.charAt(i + 1) == ':') {
-                     sb = sb.appendByte('[');
+                     sb = sb.append('[');
                   } else {
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('[');
+                     sb = sb.append('\\');
+                     sb = sb.append('[');
                   }
                } else if (i + 1 < len && regexp.charAt(i + 1) == '['
                        && !(i + 2 < len && regexp.charAt(i + 2) == ':')) {
                   // TODO: check regexp grammar
                   // php/151n
-                  sb = sb.appendByte('[');
-                  sb = sb.appendByte('\\');
-                  sb = sb.appendByte('[');
+                  sb = sb.append('[');
+                  sb = sb.append('\\');
+                  sb = sb.append('[');
                   i += 1;
                } /*
                else if (i + 2 < len &&
@@ -2105,7 +2103,7 @@ public class RegexpModule
                i += 2;
                }
                 */ else {
-                  sb = sb.appendByte('[');
+                  sb = sb.append('[');
                }
 
                if (quote == 0) {
@@ -2115,28 +2113,28 @@ public class RegexpModule
 
             case '#':
                if (quote == '[') {
-                  sb = sb.appendByte('\\');
-                  sb = sb.appendByte('#');
+                  sb = sb.append('\\');
+                  sb = sb.append('#');
                } else if (isComments) {
-                  sb = sb.appendByte(ch);
+                  sb = sb.append(ch);
 
                   for (i++; i < len; i++) {
                      ch = regexp.charAt(i);
 
-                     sb = sb.appendByte(ch);
+                     sb = sb.append(ch);
 
                      if (ch == '\n' || ch == '\r') {
                         break;
                      }
                   }
                } else {
-                  sb = sb.appendByte(ch);
+                  sb = sb.append(ch);
                }
 
                break;
 
             case ']':
-               sb = sb.appendByte(ch);
+               sb = sb.append(ch);
 
                if (quote == '[') {
                   quote = 0;
@@ -2148,34 +2146,34 @@ public class RegexpModule
                        && ('0' <= (ch = regexp.charAt(i + 1))
                        && ch <= '9'
                        || ch == ',')) {
-                  sb = sb.appendByte('{');
+                  sb = sb.append('{');
                   for (i++;
                           i < len
                           && ('0' <= (ch = regexp.charAt(i)) && ch <= '9' || ch == ',');
                           i++) {
-                     sb = sb.appendByte(ch);
+                     sb = sb.append(ch);
                   }
 
                   if (i < len) {
-                     sb = sb.appendByte(regexp.charAt(i));
+                     sb = sb.append(regexp.charAt(i));
                   }
                } else {
-                  sb = sb.appendByte('\\');
-                  sb = sb.appendByte('{');
+                  sb = sb.append('\\');
+                  sb = sb.append('{');
                }
                break;
 
             case '}':
-               sb = sb.appendByte('\\');
-               sb = sb.appendByte('}');
+               sb = sb.append('\\');
+               sb = sb.append('}');
                break;
 
             case '|':
-               sb = sb.appendByte('|');
+               sb = sb.append('|');
                break;
 
             default:
-               sb = sb.appendByte(ch);
+               sb = sb.append(ch);
          }
       }
 
@@ -2211,7 +2209,7 @@ public class RegexpModule
       StringValue eval(Env env,
               StringValue sb,
               RegexpState regexpState) {
-         return sb.appendBytes(_text, 0, _text.length);
+         return sb.append(_text);
       }
 
       @Override
@@ -2280,23 +2278,23 @@ public class RegexpModule
 
                switch (ch) {
                   case '\'':
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('\'');
+                     sb = sb.append('\\');
+                     sb = sb.append('\'');
                      break;
                   case '"':
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('"');
+                     sb = sb.append('\\');
+                     sb = sb.append('"');
                      break;
                   case '\\':
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('\\');
+                     sb = sb.append('\\');
+                     sb = sb.append('\\');
                      break;
                   case 0:
-                     sb = sb.appendByte('\\');
-                     sb = sb.appendByte('0');
+                     sb = sb.append('\\');
+                     sb = sb.append('0');
                      break;
                   default:
-                     sb = sb.appendByte(ch);
+                     sb = sb.append(ch);
                }
             }
          }

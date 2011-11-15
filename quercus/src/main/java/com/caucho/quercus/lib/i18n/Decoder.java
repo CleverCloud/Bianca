@@ -25,30 +25,26 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.quercus.env.UnicodeBuilderValue;
+import com.caucho.quercus.env.StringValue;
 
 abstract public class Decoder {
 
-   protected String _charset;
    protected CharSequence _replacement;
    protected boolean _isIgnoreErrors = false;
    protected boolean _isReplaceUnicode = false;
    protected boolean _isAllowMalformedOut = false;
    protected boolean _hasError;
 
-   protected Decoder(String charset) {
-      _charset = charset;
-   }
-
    public static Decoder create(String charset) {
       if (charset.equalsIgnoreCase("utf8")
-              || charset.equalsIgnoreCase("utf-8")) {
-         return new Utf8Decoder(charset);
+              || charset.equalsIgnoreCase("utf8")) {
+         return new Utf8Decoder();
       } else if (charset.equalsIgnoreCase("big5")
               || charset.equalsIgnoreCase("big-5")) {
          return new Big5Decoder(charset);
@@ -90,11 +86,7 @@ abstract public class Decoder {
    }
 
    public final CharSequence decode(Env env, StringValue str) {
-      if (str.isUnicode()) {
-         return str;
-      }
-
-      return decodeStringBuilder(env, str);
+      return str;
    }
 
    public StringBuilder decodeStringBuilder(Env env, StringValue str) {
@@ -102,14 +94,12 @@ abstract public class Decoder {
    }
 
    public StringValue decodeUnicode(Env env, StringValue str) {
-      UnicodeBuilderValue sb = new UnicodeBuilderValue();
+      StringValue sb = new StringValue();
 
       StringBuilder unicodeStr = decodeImpl(env, str);
 
       return sb.append(unicodeStr);
    }
-
-   abstract public boolean isDecodable(Env env, StringValue str);
 
    abstract protected StringBuilder decodeImpl(Env env, StringValue str);
 }

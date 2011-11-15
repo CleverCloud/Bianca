@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -86,6 +87,7 @@ public class ConnectionEntry implements EnvCleanup {
       _conn.setCatalog(catalog);
    }
 
+   @Override
    public int hashCode() {
       int hash = _ds.hashCode();
 
@@ -96,6 +98,7 @@ public class ConnectionEntry implements EnvCleanup {
       }
    }
 
+   @Override
    public boolean equals(Object o) {
       if (!(o instanceof ConnectionEntry)) {
          return false;

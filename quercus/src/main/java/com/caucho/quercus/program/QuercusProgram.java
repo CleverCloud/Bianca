@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.program;
 
@@ -223,7 +224,7 @@ public class QuercusProgram {
    /**
     * Adds a dependency.
     */
-   public void addDepend(Path path) {
+   public final void addDepend(Path path) {
       Depend depend = new Depend(path);
 
       depend.setRequireSource(_quercus.isRequireSource());
@@ -421,7 +422,7 @@ public class QuercusProgram {
       @Override
       public boolean logModified(Logger log) {
          if (isModified()) {
-            log.finer(_sourceFile + " is modified");
+            log.log(Level.FINER, "{0} is modified", _sourceFile);
 
             return true;
          } else {

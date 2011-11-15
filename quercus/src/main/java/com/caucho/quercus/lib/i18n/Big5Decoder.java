@@ -25,59 +25,20 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CoderResult;
-import java.util.logging.Logger;
 
-import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.StringValue;
-import com.caucho.util.L10N;
 
 public class Big5Decoder
         extends GenericDecoder {
 
-   private static final Logger log = Logger.getLogger(Big5Decoder.class.getName());
-   private static final L10N L = new L10N(Big5Decoder.class);
-
    public Big5Decoder(String charsetName) {
       super(charsetName);
-   }
-
-   @Override
-   public boolean isDecodable(Env env, StringValue str) {
-      if (str.isUnicode()) {
-         return true;
-      }
-
-      ByteBuffer in = ByteBuffer.wrap(str.toBytes());
-      CharBuffer out = CharBuffer.allocate(512);
-
-      while (in.hasRemaining()) {
-         CoderResult coder = _decoder.decode(in, out, false);
-         if (isMalformed(coder, in)) {
-            return false;
-         }
-
-         out.clear();
-      }
-
-      CoderResult coder = _decoder.decode(in, out, true);
-      if (isMalformed(coder, in)) {
-         return false;
-      }
-
-      out.clear();
-
-      coder = _decoder.flush(out);
-      if (isMalformed(coder, in)) {
-         return false;
-      }
-
-      return true;
    }
 
    private boolean isMalformed(CoderResult coder, ByteBuffer in) {

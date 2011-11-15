@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus;
 
@@ -66,13 +67,12 @@ public class QuercusContext {
 
    private static L10N L = new L10N(QuercusContext.class);
    private static final Logger log = Logger.getLogger(QuercusContext.class.getName());
-   private static HashSet<String> _superGlobals = new HashSet<String>();
-   private static IniDefinitions _ini = new IniDefinitions();
+   private static final HashSet<String> _superGlobals = new HashSet<String>();
+   private static final IniDefinitions _ini = new IniDefinitions();
    private final PageManager _pageManager;
    private final QuercusSessionManager _sessionManager;
    private final ClassLoader _loader;
    private ModuleContext _moduleContext;
-   private static LruCache<String, UnicodeBuilderValue> _unicodeMap = new LruCache<String, UnicodeBuilderValue>(8 * 1024);
    private static LruCache<String, StringValue> _stringMap = new LruCache<String, StringValue>(8 * 1024);
    private HashMap<String, ModuleInfo> _modules = new HashMap<String, ModuleInfo>();
    private HashSet<ModuleStartupListener> _moduleStartupListeners = new HashSet<ModuleStartupListener>();
@@ -118,13 +118,12 @@ public class QuercusContext {
    private String _scriptEncoding;
    private String _phpVersion = QuercusVersion.getVersionNumber();
    private String _mySqlVersion;
-   private String _jdbcEncoding = "ISO8859_1";
+   private String _jdbcEncoding = "utf8";
    private StringValue _phpVersionValue;
    private boolean _isStrict;
    private boolean _isLooseParse;
    private boolean _isRequireSource;
    private boolean _isConnectionPool = true;
-   private Boolean _isUnicodeSemantics;
    private DataSource _database;
    private ConcurrentHashMap<String, DataSource> _databaseMap = new ConcurrentHashMap<String, DataSource>();
    protected ConcurrentHashMap<Env, Env> _activeEnvSet = new ConcurrentHashMap<Env, Env>();
@@ -257,11 +256,11 @@ public class QuercusContext {
    public void setProfileProbability(double probability) {
    }
 
-   protected PageManager createPageManager() {
+   private PageManager createPageManager() {
       return new PageManager(this);
    }
 
-   protected QuercusSessionManager createSessionManager() {
+   private QuercusSessionManager createSessionManager() {
       return new QuercusSessionManager(this);
    }
 
@@ -320,21 +319,6 @@ public class QuercusContext {
       return false;
    }
 
-   public void setUnicodeSemantics(boolean isUnicode) {
-      _isUnicodeSemantics = isUnicode;
-   }
-
-   /**
-    * Returns true if unicode.semantics is on.
-    */
-   public boolean isUnicodeSemantics() {
-      if (_isUnicodeSemantics == null) {
-         _isUnicodeSemantics = Boolean.valueOf(getIniBoolean("unicode.semantics"));
-      }
-
-      return _isUnicodeSemantics.booleanValue();
-   }
-
    /*
     * Returns true if URLs may be arguments of include().
     */
@@ -376,11 +360,8 @@ public class QuercusContext {
    public String getScriptEncoding() {
       if (_scriptEncoding != null) {
          return _scriptEncoding;
-      } else if (isUnicodeSemantics()) {
-         return "utf-8";
-      } else {
-         return "iso-8859-1";
       }
+      return "utf8";
    }
 
    /*
@@ -433,11 +414,7 @@ public class QuercusContext {
 
    public StringValue getPhpVersionValue() {
       if (_phpVersionValue == null) {
-         if (isUnicodeSemantics()) {
-            _phpVersionValue = createUnicodeString(_phpVersion);
-         } else {
-            _phpVersionValue = createString(_phpVersion);
-         }
+         _phpVersionValue = createUnicodeString(_phpVersion);
       }
 
       return _phpVersionValue;
@@ -844,11 +821,7 @@ public class QuercusContext {
     */
    public void setServerEnv(String name, String value) {
       // php/3j58
-      if (isUnicodeSemantics()) {
-         setServerEnv(createUnicodeString(name), createUnicodeString(value));
-      } else {
-         setServerEnv(createString(name), createString(value));
-      }
+      setServerEnv(createUnicodeString(name), createUnicodeString(value));
    }
 
    /**
@@ -1346,11 +1319,7 @@ public class QuercusContext {
     */
    public int getConstantId(String name) {
       // php/3j12
-      if (isUnicodeSemantics()) {
-         return getConstantId(new UnicodeBuilderValue(name));
-      } else {
-         return getConstantId(new ConstStringValue(name));
-      }
+      return getConstantId(new StringValue(name));
    }
 
    /**
@@ -1606,11 +1575,7 @@ public class QuercusContext {
 
       Map<StringValue, Value> map;
 
-      if (isUnicodeSemantics()) {
-         map = info.getUnicodeConstMap();
-      } else {
-         map = info.getConstMap();
-      }
+      map = info.getUnicodeConstMap();
 
       if (map != null) {
          for (Map.Entry<StringValue, Value> entry : map.entrySet()) {
@@ -1660,13 +1625,13 @@ public class QuercusContext {
     * Creates a string.  Because these strings are typically Java
     * constants, they fit into a lru cache.
     */
-   public UnicodeBuilderValue createUnicodeString(String name) {
-      UnicodeBuilderValue value = _unicodeMap.get(name);
+   public StringValue createUnicodeString(String name) {
+      StringValue value = _stringMap.get(name);
 
       if (value == null) {
-         value = new UnicodeBuilderValue(name);
+         value = new StringValue(name);
 
-         _unicodeMap.put(name, value);
+         _stringMap.put(name, value);
       }
 
       return value;
@@ -1676,11 +1641,11 @@ public class QuercusContext {
     * Creates a string.  Because these strings are typically Java
     * constants, they fit into a lru cache.
     */
-   public StringValue createString(String name) {
+   private StringValue createString(String name) {
       StringValue value = _stringMap.get(name);
 
       if (value == null) {
-         value = new ConstStringValue(name);
+         value = new StringValue(name);
 
          _stringMap.put(name, value);
       }
@@ -1708,7 +1673,7 @@ public class QuercusContext {
    if (value == null) {
    name = name.intern();
 
-   value = new StringBuilderValue(name);
+   value = new StringValue(name);
    _internMap.put(name, value);
    }
 
@@ -1786,8 +1751,7 @@ public class QuercusContext {
               || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
-         // TODO: i18n
-         return new ConstStringValue((String) obj);
+         return new StringValue((String) obj);
       } else {
          // TODO: unknown types, e.g. Character?
 
@@ -1937,8 +1901,7 @@ public class QuercusContext {
    public static final IniDefinition INI_ALWAYS_POPULATE_RAW_POST_DATA = _ini.add(
            "always_populate_raw_post_data", false, IniDefinition.PHP_INI_PERDIR);
    // unicode ini
-   public static final IniDefinition INI_UNICODE_SEMANTICS = _ini.add("unicode.semantics", false, IniDefinition.PHP_INI_SYSTEM);
-   public static final IniDefinition INI_UNICODE_FALLBACK_ENCODING = _ini.add("unicode.fallback_encoding", "utf-8", IniDefinition.PHP_INI_ALL);
+   public static final IniDefinition INI_UNICODE_FALLBACK_ENCODING = _ini.add("unicode.fallback_encoding", "utf8", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_MODE = _ini.add("unicode.from_error_mode", "2", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_SUBST_CHAR = _ini.add(
            "unicode.from_error_subst_char", "3f", IniDefinition.PHP_INI_ALL);

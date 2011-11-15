@@ -25,10 +25,9 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
-
-import com.caucho.util.L10N;
 
 
 /**
@@ -36,7 +35,6 @@ import com.caucho.util.L10N;
  */
 public class CallbackError extends Callback {
 
-   private static final L10N L = new L10N(CallbackError.class);
    private final String _errorString;
 
    public CallbackError(String errorString) {

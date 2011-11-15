@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -147,7 +148,7 @@ public class PDO implements EnvCleanup {
    private PDOStatement _lastPDOStatement;
    private String _lastInsertId;
    private boolean _inTransaction;
-   private static String ENCODING = "ISO8859_1";
+   private static String ENCODING = "utf8";
    private final static Properties driverList = new Properties();
 
    static {
@@ -305,7 +306,7 @@ public class PDO implements EnvCleanup {
    /**
     * Executes a statement, returning the number of rows.
     */
-   public int exec(String query)
+   public final int exec(String query)
            throws SQLException {
       if (_conn == null) {
          return -1;

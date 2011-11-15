@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Sam
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -42,7 +43,7 @@ public class IteratorAggregateDelegate
         implements TraversableDelegate {
 
    private static final L10N L = new L10N(IteratorAggregateDelegate.class);
-   private static final StringBuilderValue GET_ITERATOR = new ConstStringValue("getIterator");
+   private static final StringValue GET_ITERATOR = new StringValue("getIterator");
    private static final IteratorDelegate _iteratorDelegate = new IteratorDelegate();
 
    @Override

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Charles Reich
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.simplexml;
 
@@ -43,6 +44,7 @@ import com.caucho.quercus.env.LongValue;
 import com.caucho.quercus.env.NullValue;
 import com.caucho.quercus.env.ObjectExtJavaValue;
 import com.caucho.quercus.env.QuercusClass;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.util.L10N;
@@ -227,7 +229,7 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
       _namespaceMap.put(prefix, namespace);
    }
 
-   protected boolean hasNamespace(String prefix, String namespace) {
+   protected final boolean hasNamespace(String prefix, String namespace) {
       String uri = getNamespace(prefix);
 
       return uri != null && uri.equals(namespace);
@@ -300,12 +302,12 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
    }
 
    protected void setText(StringValue text) {
-      _text = text.createStringBuilder().append(text);
+      _text = new StringValue().append(text);
    }
 
    protected void addText(StringValue text) {
       if (_text == null) {
-         _text = text.createStringBuilder();
+         _text = new StringValue();
       }
 
       _text = _text.append(text);
@@ -711,7 +713,7 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
    @ReturnNullAsFalse
    public StringValue asXML(Env env) {
       if (_parent == null) {
-         StringValue sb = env.createBinaryBuilder();
+         StringValue sb = new StringValue();
 
          sb.append("<?xml version=\"1.0\"?>\n");
          toXMLImpl(sb);
@@ -724,7 +726,7 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
    }
 
    public StringValue toXML(Env env) {
-      StringValue sb = env.createBinaryBuilder();
+      StringValue sb = new StringValue();
 
       toXMLImpl(sb);
 
@@ -1234,7 +1236,7 @@ public class SimpleXMLElement implements Map.Entry<String, Object> {
       if (_text != null) {
          return _text;
       } else {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 

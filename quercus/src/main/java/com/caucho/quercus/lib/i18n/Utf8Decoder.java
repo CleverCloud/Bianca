@@ -25,48 +25,21 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
-import java.util.logging.Logger;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.util.L10N;
 
 public class Utf8Decoder
         extends Decoder {
-
-   private static final Logger log = Logger.getLogger(Utf8Decoder.class.getName());
-   private static final L10N L = new L10N(Utf8Decoder.class);
    private static final int ERROR_CHARACTER = 0xFFFE;
    private static final int EOF = -1;
 
-   public Utf8Decoder(String charset) {
-      super(charset);
-   }
-
    @Override
    public boolean isUtf8() {
-      return true;
-   }
-
-   @Override
-   public boolean isDecodable(Env env, StringValue str) {
-      if (str.isUnicode()) {
-         return true;
-      }
-
-      Utf8Reader reader = new Utf8Reader(str);
-
-      int ch;
-
-      while ((ch = reader.read()) >= 0) {
-         if (ch == ERROR_CHARACTER) {
-            return false;
-         }
-      }
-
       return true;
    }
 

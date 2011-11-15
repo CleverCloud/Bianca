@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -139,7 +140,7 @@ public class SessionArrayValue extends ArrayValueWrapper
             while (true) {
                int ch;
 
-               StringValue sb = env.createUnicodeBuilder();
+               StringValue sb = new StringValue();
 
                while ((ch = is.read()) > 0 && ch != '|') {
                   sb.append((char) ch);
@@ -198,7 +199,7 @@ public class SessionArrayValue extends ArrayValueWrapper
               + ((in.read() & 0xff) << 8)
               + ((in.read() & 0xff)));
 
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
 
       for (int i = 0; i < len; i++) {
          char ch = (char) (((in.read() & 0xff) << 8) + (in.read() & 0xff));

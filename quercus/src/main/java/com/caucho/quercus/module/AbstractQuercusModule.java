@@ -25,13 +25,14 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.module;
 
 import com.caucho.quercus.env.Value;
-import com.caucho.quercus.env.ConstStringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.LongValue;
+import com.caucho.quercus.env.StringValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class AbstractQuercusModule implements QuercusModule {
    protected static final int PHP_INI_ALL = IniDefinition.PHP_INI_ALL;
    private static final HashMap<StringValue, Value> NULL_MAP = new HashMap<StringValue, Value>();
 
+   @Override
    public Map<StringValue, Value> getConstMap() {
       return NULL_MAP;
    }
@@ -54,6 +56,7 @@ public class AbstractQuercusModule implements QuercusModule {
    /**
     * Returns the default quercus.ini values.
     */
+   @Override
    public IniDefinitions getIniDefinitions() {
       return IniDefinitions.EMPTY;
    }
@@ -61,22 +64,23 @@ public class AbstractQuercusModule implements QuercusModule {
    /**
     * Returns the extensions loaded by the module.
     */
+   @Override
    public String[] getLoadedExtensions() {
       return new String[0];
    }
 
    protected static void addConstant(Map<StringValue, Value> map,
            String name, Value value) {
-      map.put(new ConstStringValue(name), value);
+      map.put(new StringValue(name), value);
    }
 
    protected static void addConstant(Map<StringValue, Value> map,
            String name, long value) {
-      map.put(new ConstStringValue(name), LongValue.create(value));
+      map.put(new StringValue(name), LongValue.create(value));
    }
 
    protected static void addConstant(Map<StringValue, Value> map,
            String name, String value) {
-      map.put(new ConstStringValue(name), StringValue.create(value));
+      map.put(new StringValue(name), StringValue.create(value));
    }
 }

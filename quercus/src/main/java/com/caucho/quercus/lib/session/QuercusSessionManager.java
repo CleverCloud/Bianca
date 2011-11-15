@@ -31,7 +31,7 @@ package com.caucho.quercus.lib.session;
 import com.caucho.config.ConfigException;
 import com.caucho.quercus.QuercusContext;
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.SessionArrayValue;
 import com.caucho.util.*;
 
@@ -452,7 +452,7 @@ public class QuercusSessionManager
             String encoded = (String) _persistentStore.get(session.getId());
 
             if (encoded != null) {
-               session.decode(env, new StringBuilderValue(encoded));
+               session.decode(env, new StringValue(encoded));
             }
          }
 

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.mcrypt;
 
@@ -36,6 +37,7 @@ import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
@@ -101,7 +103,7 @@ public class McryptModule extends AbstractQuercusModule {
             result = mcrypt.decrypt(data);
          }
 
-         return env.createBinaryBuilder(result, 0, result.length);
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -129,7 +131,7 @@ public class McryptModule extends AbstractQuercusModule {
             result = mcrypt.decrypt(data);
          }
 
-         return env.createBinaryBuilder(result, 0, result.length);
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -141,10 +143,10 @@ public class McryptModule extends AbstractQuercusModule {
    public static StringValue mcrypt_create_iv(Env env,
            int size,
            @Optional int randomMode) {
-      StringValue bb = env.createBinaryBuilder(size);
+      StringValue bb = new StringValue();
 
       for (int i = 0; i < size; i++) {
-         bb.appendByte((byte) RandomUtil.nextInt(256));
+         bb.append((byte) RandomUtil.nextInt(256));
       }
 
       return bb;
@@ -166,7 +168,7 @@ public class McryptModule extends AbstractQuercusModule {
 
          byte[] result = mcrypt.decrypt(data);
 
-         return env.createBinaryBuilder(result, 0, result.length);
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -194,7 +196,7 @@ public class McryptModule extends AbstractQuercusModule {
             result = mcrypt.decrypt(data);
          }
 
-         return env.createBinaryBuilder(result, 0, result.length);
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -324,7 +326,7 @@ public class McryptModule extends AbstractQuercusModule {
 
          mcrypt.init(key, iv);
 
-         return env.createBinaryBuilder(mcrypt.encrypt(data));
+         return new StringValue(new String(mcrypt.encrypt(data)));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -337,7 +339,7 @@ public class McryptModule extends AbstractQuercusModule {
       if (mcrypt == null) {
          return null;
       } else {
-         return env.createBinaryBuilder(mcrypt.encrypt(data));
+         return new StringValue(new String(mcrypt.encrypt(data)));
       }
    }
 
@@ -656,7 +658,7 @@ public class McryptModule extends AbstractQuercusModule {
             result = mcrypt.decrypt(data);
          }
 
-         return env.createBinaryBuilder(result);
+         return new StringValue(new String(result));
       } catch (Exception e) {
          throw new RuntimeException(e);
       }
@@ -669,7 +671,7 @@ public class McryptModule extends AbstractQuercusModule {
       if (mcrypt == null) {
          return BooleanValue.FALSE;
       } else {
-         return env.createBinaryBuilder(mcrypt.decrypt(data));
+         return new StringValue(new String(mcrypt.decrypt(data)));
       }
    }
 }

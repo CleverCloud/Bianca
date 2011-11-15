@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.mail;
 
@@ -188,7 +189,7 @@ public class MailModule extends AbstractQuercusModule {
 
          smtp.sendMessage(msg, addr);
 
-         log.fine("quercus-mail: sent mail to " + to);
+         log.log(Level.FINE, "quercus-mail: sent mail to {0}", to);
 
          return true;
       } catch (RuntimeException e) {

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.program;
 
@@ -43,19 +44,15 @@ import com.caucho.quercus.expr.ExprFactory;
 import com.caucho.quercus.expr.ParamRequiredExpr;
 import com.caucho.quercus.function.AbstractFunction;
 import com.caucho.quercus.statement.*;
-import com.caucho.util.L10N;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Represents sequence of statements.
  */
 public class Function extends AbstractFunction {
 
-   private static final Logger log = Logger.getLogger(Function.class.getName());
-   private static final L10N L = new L10N(Function.class);
    protected final FunctionInfo _info;
    protected final boolean _isReturnsReference;
    protected final String _name;
@@ -396,7 +393,7 @@ public class Function extends AbstractFunction {
          oldThis = env.getThis();
       } else {
          // php/0967, php/091i
-         oldThis = env.setThis(NullThisValue.NULL);
+         oldThis = env.setThis(NullThisValue.NULLTHIS);
       }
 
       try {

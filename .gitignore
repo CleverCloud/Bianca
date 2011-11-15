@@ -6,3 +6,4 @@ dist/
 /.gradle/
 .idea
 *.iml
+build.xml

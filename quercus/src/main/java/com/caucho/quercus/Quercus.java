@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus;
 
@@ -168,7 +169,7 @@ public class Quercus
       WriteStream os = new WriteStream(StdoutStream.create());
 
       os.setNewlineString("\n");
-      os.setEncoding("iso-8859-1");
+      os.setEncoding("utf8");
 
       Env env = createEnv(page, os, null, null);
       env.start();

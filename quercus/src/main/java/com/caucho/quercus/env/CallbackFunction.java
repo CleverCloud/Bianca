@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -182,7 +183,7 @@ public class CallbackFunction extends Callback {
     */
    @Override
    public void varExport(StringBuilder sb) {
-      sb.append("'' . \"\\0\" . '" + _funName.substring(1) + "'");
+      sb.append("'' . \"\\0\" . '").append(_funName.substring(1)).append("'");
    }
 
    @Override

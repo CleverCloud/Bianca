@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -609,6 +610,7 @@ public class ObjectExtValue extends ObjectValue
    /**
     * Removes the field array ref.
     */
+   @Override
    public void unsetThisArray(Env env, StringValue name, Value index) {
       if (_quercusClass.getFieldGet() != null) {
          return;
@@ -1105,34 +1107,10 @@ public class ObjectExtValue extends ObjectValue
    }
 
    /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return sb.append(toString(Env.getInstance()));
-   }
-
-   /**
     * Append to a binary builder.
     */
    @Override
-   public StringValue appendTo(StringBuilderValue sb) {
-      return sb.append(toString(Env.getInstance()));
-   }
-
-   /**
-    * Append to a binary builder.
-    */
-   @Override
-   public StringValue appendTo(BinaryBuilderValue sb) {
-      return sb.appendBytes(toString(Env.getInstance()));
-   }
-
-   /**
-    * Append to a binary builder.
-    */
-   @Override
-   public StringValue appendTo(LargeStringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return sb.append(toString(Env.getInstance()));
    }
 

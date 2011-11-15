@@ -25,10 +25,12 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.marshal;
 
 import com.caucho.quercus.env.Env;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 
 public class JavaByteArrayMarshal extends JavaArrayMarshal {
@@ -37,7 +39,7 @@ public class JavaByteArrayMarshal extends JavaArrayMarshal {
 
    @Override
    public Value unmarshal(Env env, Object value) {
-      return env.createBinaryBuilder((byte[]) value);
+      return new StringValue(new String((byte[])value));
    }
 
    @Override

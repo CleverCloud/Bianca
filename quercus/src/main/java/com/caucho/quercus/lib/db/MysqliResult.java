@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Charles Reich
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -33,6 +34,7 @@ import com.caucho.quercus.annotation.ResourceType;
 import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.env.*;
 import com.caucho.util.L10N;
+import java.io.UnsupportedEncodingException;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
@@ -947,14 +949,7 @@ public class MysqliResult extends JdbcResultResource {
             return NullValue.NULL;
          }
 
-         // TODO: i18n
-         StringBuilderValue sb = new StringBuilderValue();
-         sb.ensureAppendCapacity(length);
-
-         qRs.getString(column, sb.getBuffer(), sb.getOffset());
-         sb.setOffset(sb.getOffset() + length);
-
-         return sb;
+         return new StringValue(qRs.getString(column));
       }
 
       Method getColumnCharacterSetMethod = mysqli.getColumnCharacterSetMethod(md.getClass());
@@ -983,64 +978,12 @@ public class MysqliResult extends JdbcResultResource {
       // get bytes directly.  Also, getBytes is faster for MySQL since
       // getString converts from bytes to string.
 
-      if ("UTF-8".equals(encoding)) {
-         byte[] bytes = rs.getBytes(column);
+      String value = rs.getString(column);
 
-         if (bytes == null) {
-            return NullValue.NULL;
-         }
-
-         StringValue bb = env.createUnicodeBuilder();
-
-         int length = bytes.length;
-         int offset = 0;
-
-         bb.appendUtf8(bytes);
-
-         /*
-         while (offset < length) {
-         int ch = bytes[offset++] & 0xff;
-
-         if (ch < 0x80) {
-         bb.append((char) ch);
-         }
-         else if (ch < 0xe0) {
-         int ch2 = bytes[offset++] & 0xff;
-         int v = ((ch & 0x1f) << 6) + ((ch2 & 0x3f));
-
-         bb.append((char) MysqlLatin1Utility.decode(v));
-         }
-         else {
-         int ch2 = bytes[offset++] & 0xff;
-         int ch3 = bytes[offset++] & 0xff;
-         int v = ((ch & 0xf) << 12) + ((ch2 & 0x3f) << 6) + ((ch3 & 0x3f));
-
-         bb.append((char) MysqlLatin1Utility.decode(v));
-         }
-         }
-          */
-
-         return bb;
-      } else if ("Cp1252".equals(encoding) || "LATIN1".equals(encoding)) {
-         byte[] bytes = rs.getBytes(column);
-
-         if (bytes == null) {
-            return NullValue.NULL;
-         }
-
-         StringValue bb = env.createUnicodeBuilder();
-
-         bb.append(bytes);
-
-         return bb;
+      if (value != null) {
+         return env.createString(value);
       } else {
-         String value = rs.getString(column);
-
-         if (value != null) {
-            return env.createString(value);
-         } else {
-            return NullValue.NULL;
-         }
+         return NullValue.NULL;
       }
    }
 

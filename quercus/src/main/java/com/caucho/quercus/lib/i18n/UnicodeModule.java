@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
@@ -76,12 +77,8 @@ public class UnicodeModule extends AbstractQuercusModule {
       return _iniDefinitions;
    }
 
-   public static BooleanValue unicode_semantics(Env env) {
-      return env.isUnicodeSemantics() ? BooleanValue.TRUE : BooleanValue.FALSE;
-   }
-
    public static Value unicode_decode(Env env,
-           BinaryValue str,
+           StringValue str,
            String encoding,
            @Optional int errorMode) {
       try {
@@ -97,7 +94,7 @@ public class UnicodeModule extends AbstractQuercusModule {
    }
 
    public static Value unicode_encode(Env env,
-           UnicodeValue str,
+           StringValue str,
            String encoding,
            @Optional int errorMode) {
       try {
@@ -243,7 +240,7 @@ public class UnicodeModule extends AbstractQuercusModule {
          }
 
          if (newOffset < 0 || tail < newOffset) {
-            return str.EMPTY;
+            return StringValue.EMPTY;
          }
 
          unicodeStr = unicodeStr.subSequence(newOffset, tail);
@@ -295,12 +292,12 @@ public class UnicodeModule extends AbstractQuercusModule {
       boolean isEndUtf8 = false;
 
       if (inCharset.equalsIgnoreCase("utf8")
-              || inCharset.equalsIgnoreCase("utf-8")) {
+              || inCharset.equalsIgnoreCase("utf8")) {
          isStartUtf8 = true;
       }
 
       if (outCharset.equalsIgnoreCase("utf8")
-              || outCharset.equalsIgnoreCase("utf-8")) {
+              || outCharset.equalsIgnoreCase("utf8")) {
          isEndUtf8 = true;
       }
 
@@ -314,7 +311,7 @@ public class UnicodeModule extends AbstractQuercusModule {
          Decoder decoder;
 
          if (isStartUtf8) {
-            decoder = new Utf8Decoder(inCharset);
+            decoder = new Utf8Decoder();
          } else {
             decoder = Decoder.create(inCharset);
          }
@@ -573,7 +570,7 @@ public class UnicodeModule extends AbstractQuercusModule {
          return BooleanValue.FALSE;
       }
    }
-   static final IniDefinition INI_ICONV_INPUT_ENCODING = _iniDefinitions.add("iconv.input_encoding", "utf-8", PHP_INI_ALL);
-   static final IniDefinition INI_ICONV_OUTPUT_ENCODING = _iniDefinitions.add("iconv.output_encoding", "utf-8", PHP_INI_ALL);
-   static final IniDefinition INI_ICONV_INTERNAL_ENCODING = _iniDefinitions.add("iconv.internal_encoding", "utf-8", PHP_INI_ALL);
+   static final IniDefinition INI_ICONV_INPUT_ENCODING = _iniDefinitions.add("iconv.input_encoding", "utf8", PHP_INI_ALL);
+   static final IniDefinition INI_ICONV_OUTPUT_ENCODING = _iniDefinitions.add("iconv.output_encoding", "utf8", PHP_INI_ALL);
+   static final IniDefinition INI_ICONV_INTERNAL_ENCODING = _iniDefinitions.add("iconv.internal_encoding", "utf8", PHP_INI_ALL);
 }

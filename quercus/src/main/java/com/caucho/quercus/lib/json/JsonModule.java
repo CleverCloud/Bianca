@@ -25,21 +25,17 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.json;
 
 import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.env.*;
 import com.caucho.quercus.module.AbstractQuercusModule;
-import com.caucho.util.L10N;
 
-import java.util.logging.Logger;
 
 public class JsonModule
         extends AbstractQuercusModule {
-
-   private static final Logger log = Logger.getLogger(JsonModule.class.getName());
-   private static final L10N L = new L10N(JsonModule.class);
 
    @Override
    public String[] getLoadedExtensions() {
@@ -57,7 +53,7 @@ public class JsonModule
     * @return String JSON-encoded String
     */
    public StringValue json_encode(Env env, Value val) {
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
 
       val.jsonEncode(env, sb);
 

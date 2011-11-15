@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Sam
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -35,10 +36,10 @@ package com.caucho.quercus.env;
  */
 public class ArrayAccessDelegate implements ArrayDelegate {
 
-   private static final StringValue OFFSET_GET = new ConstStringValue("offsetGet");
-   private static final StringValue OFFSET_SET = new ConstStringValue("offsetSet");
-   private static final StringValue OFFSET_UNSET = new ConstStringValue("offsetUnset");
-   private static final StringValue OFFSET_EXISTS = new ConstStringValue("offsetExists");
+   private static final StringValue OFFSET_GET = new StringValue("offsetGet");
+   private static final StringValue OFFSET_SET = new StringValue("offsetSet");
+   private static final StringValue OFFSET_UNSET = new StringValue("offsetUnset");
+   private static final StringValue OFFSET_EXISTS = new StringValue("offsetExists");
 
    @Override
    public Value get(ObjectValue qThis, Value index) {

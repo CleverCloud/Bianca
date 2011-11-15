@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.marshal;
 
@@ -127,12 +128,6 @@ public class MarshalFactory {
          marshal = PathMarshal.MARSHAL;
       } else if (StringValue.class.equals(argType)) {
          marshal = StringValueMarshal.MARSHAL;
-      } else if (UnicodeValue.class.equals(argType)) {
-         marshal = UnicodeValueMarshal.MARSHAL;
-      } else if (BinaryValue.class.equals(argType)) {
-         marshal = BinaryValueMarshal.MARSHAL;
-      } else if (BinaryBuilderValue.class.equals(argType)) {
-         marshal = BinaryValueMarshal.MARSHAL;
       } else if (InputStream.class.equals(argType)) {
          marshal = InputStreamMarshal.MARSHAL;
       } else if (BinaryInput.class.equals(argType)) {

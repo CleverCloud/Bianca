@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.xml;
 
@@ -68,7 +69,7 @@ public class XMLWriter {
     * Opens the writer for a memory target
     */
    public boolean openMemory(Env env) {
-      StringValue s = env.createUnicodeBuilder();
+      StringValue s = new StringValue();
 
       _s = new MemoryXMLWriterStream(s);
 
@@ -211,7 +212,7 @@ public class XMLWriter {
          endAttribute();
       }
 
-      if (_elementStack.size() == 0) {
+      if (_elementStack.isEmpty()) {
          return false;
       } else if (_state == WriterState.ELEMENT_HEADER) {
          popElement();
@@ -245,7 +246,7 @@ public class XMLWriter {
          endAttribute();
       }
 
-      if (_elementStack.size() == 0) {
+      if (_elementStack.isEmpty()) {
          return false;
       }
 
@@ -425,7 +426,7 @@ public class XMLWriter {
 
       _s.append("<").append(env, prefix).append(":").append(env, name);
 
-      StringValue endName = prefix.createStringBuilder();
+      StringValue endName = new StringValue();
       endName.append(prefix).append(":").append(name);
 
       _elementStack.add(endName);

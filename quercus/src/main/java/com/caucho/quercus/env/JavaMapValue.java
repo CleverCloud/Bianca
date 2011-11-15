@@ -25,20 +25,19 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
 import com.caucho.quercus.program.JavaClassDef;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Represents a Quercus java value.
  */
 public class JavaMapValue extends JavaValue {
 
-   private static final Logger log = Logger.getLogger(JavaMapValue.class.getName());
    private final Map _map;
 
    public JavaMapValue(Env env, Map map, JavaClassDef def) {

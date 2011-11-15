@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Charles Reich
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.exception;
 
@@ -44,13 +45,13 @@ import java.util.Iterator;
 @ClassImplementation
 public class ExceptionClass {
 
-   private static final StringValue MESSAGE = new ConstStringValue("message");
-   private static final StringValue FUNCTION = new ConstStringValue("function");
-   private static final StringValue FILE = new ConstStringValue("file");
-   private static final StringValue LINE = new ConstStringValue("line");
-   private static final StringValue CODE = new ConstStringValue("code");
-   private static final StringValue TRACE = new ConstStringValue("trace");
-   private static final StringValue JAVA_EXCEPTION = new ConstStringValue("__javaException");
+   private static final StringValue MESSAGE = new StringValue("message");
+   private static final StringValue FUNCTION = new StringValue("function");
+   private static final StringValue FILE = new StringValue("file");
+   private static final StringValue LINE = new StringValue("line");
+   private static final StringValue CODE = new StringValue("code");
+   private static final StringValue TRACE = new StringValue("trace");
+   private static final StringValue JAVA_EXCEPTION = new StringValue("__javaException");
 
    /**
     * Create a new exception API object.
@@ -87,7 +88,7 @@ public class ExceptionClass {
     * Returns a String representation of this Exception.
     */
    public static Value __toString(Env env, @This ObjectValue value) {
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
 
       sb.append("ExceptionClass[" + value.getName() + "]\n");
       sb.append(getMessage(env, value));
@@ -146,7 +147,7 @@ public class ExceptionClass {
    public static Value getTraceAsString(Env env, @This Value obj) {
       Value trace = getTrace(env, obj);
 
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
       sb.append("<trace>");
 
       Iterator<Value> iter = trace.getValueIterator(env);

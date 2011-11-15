@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.script;
 
@@ -105,7 +106,7 @@ public class QuercusScriptEngine
             os.setNewlineString("\n");
 
             try {
-               os.setEncoding("iso-8859-1");
+               os.setEncoding("utf8");
             } catch (Exception e) {
             }
 

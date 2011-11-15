@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -46,8 +47,6 @@ public class ArrayValueImpl extends ArrayValue
         implements Serializable {
 
    private static final Logger log = Logger.getLogger(ArrayValueImpl.class.getName());
-   private static final StringValue KEY = new ConstStringValue("key");
-   private static final StringValue VALUE = new ConstStringValue("value");
    private static final int DEFAULT_SIZE = 16;
    private static final int SORT_REGULAR = 0;
    private static final int SORT_NUMERIC = 1;
@@ -104,7 +103,7 @@ public class ArrayValueImpl extends ArrayValue
       copyFrom(source);
    }
 
-   protected void copyFrom(ArrayValueImpl source) {
+   protected final void copyFrom(ArrayValueImpl source) {
       if (!source._isDirty) {
          source._isDirty = true;
       }

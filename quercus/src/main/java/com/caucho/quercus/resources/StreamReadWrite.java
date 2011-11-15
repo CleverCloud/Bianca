@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.resources;
 
@@ -59,7 +60,7 @@ public class StreamReadWrite extends StreamResource
       init(is, os);
    }
 
-   protected void init(ReadStream is, WriteStream os) {
+   protected final void init(ReadStream is, WriteStream os) {
       _is = is;
       _os = os;
    }
@@ -119,7 +120,7 @@ public class StreamReadWrite extends StreamResource
       if (_is != null) {
          return env.createString(_is.readLineNoChop());
       } else {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
    }
 

@@ -25,12 +25,13 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.gettext;
 
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.UnicodeBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.gettext.expr.PluralExpr;
 import com.caucho.util.L10N;
 import com.caucho.vfs.Path;
@@ -109,6 +110,7 @@ class MOFileParser extends GettextParser {
     *
     * @return translations from file, or null on error
     */
+   @Override
    HashMap<StringValue, ArrayList<StringValue>> readTranslations()
            throws IOException {
       int[] originalOffsets = new int[_numberOfStrings];
@@ -170,7 +172,7 @@ class MOFileParser extends GettextParser {
     */
    private StringValue readOriginalString()
            throws IOException {
-      StringValue sb = _env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
 
       for (int ch = _in.read(); ch > 0; ch = _in.read()) {
          sb.append((char) ch);
@@ -185,7 +187,7 @@ class MOFileParser extends GettextParser {
    private ArrayList<StringValue> readPluralForms(int length)
            throws IOException {
       ArrayList<StringValue> list = new ArrayList<StringValue>();
-      StringValue sb = new UnicodeBuilderValue();
+      StringValue sb = new StringValue();
 
       for (; length > 0; length--) {
          int ch = _in.readChar();
@@ -194,7 +196,7 @@ class MOFileParser extends GettextParser {
             sb.append((char) ch);
          } else if (ch == 0) {
             list.add(sb);
-            sb = new UnicodeBuilderValue();
+            sb = new StringValue();
          } else {
             break;
          }
@@ -225,6 +227,7 @@ class MOFileParser extends GettextParser {
       }
    }
 
+   @Override
    void close() {
       if (_in != null) {
          _in.close();

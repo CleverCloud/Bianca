@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.program;
 
@@ -34,18 +35,12 @@ import com.caucho.quercus.env.Value;
 import com.caucho.quercus.expr.Expr;
 import com.caucho.quercus.expr.ExprFactory;
 import com.caucho.quercus.statement.*;
-import com.caucho.util.L10N;
-
-import java.util.logging.Logger;
 
 /**
  * Declaration for an abstract function or interface.
  */
 public class MethodDeclaration extends Function {
 
-   private static final Logger log = Logger.getLogger(
-           MethodDeclaration.class.getName());
-   private static final L10N L = new L10N(MethodDeclaration.class);
    private final ClassDef _qClass;
 
    public MethodDeclaration(ExprFactory exprFactory,

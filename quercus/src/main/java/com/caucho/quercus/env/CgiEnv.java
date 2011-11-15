@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -134,7 +135,7 @@ public class CgiEnv
          StringValue nameV = cleanCookieName(name);
 
          if (nameV.length() > 0 && nameV.charAt(0) == '$') {
-            array.append(nameV, getEmptyString());
+            array.append(nameV, StringValue.EMPTY);
          }
       }
    }
@@ -142,7 +143,7 @@ public class CgiEnv
    private StringValue cleanCookieName(CharSequence name) {
       int len = name.length();
 
-      StringValue sb = createStringBuilder();
+      StringValue sb = new StringValue();
 
       int i = 0;
       while (i < len) {
@@ -321,7 +322,7 @@ public class CgiEnv
                  isMagicQuotes,
                  getIniBoolean("file_uploads"));
       } else if (!method.equals("GET")) {
-         StringValue bb = createBinaryBuilder();
+         StringValue bb = new StringValue();
          //bb.appendReadAll(is, contentLength);
 
          setInputData(bb);

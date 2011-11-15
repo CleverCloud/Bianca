@@ -36,7 +36,7 @@ import java.util.zip.DeflaterOutputStream;
 
 /**
  * As opposed to java's GZIPOutputStream, this class allows for more control on
- * what is written to the underlying OutputStream. 
+ * what is written to the underlying OutputStream.
  *
  * @see java.util.zip.GZIPOutputStream
  */

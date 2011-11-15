@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Sam
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -33,6 +34,7 @@ import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.annotation.ReadOnly;
 import com.caucho.quercus.annotation.Reference;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.lib.file.FileReadValue;
 import com.caucho.util.IntMap;
 import com.caucho.util.L10N;
@@ -1478,7 +1480,7 @@ public class PDOStatement
 
          if (!_isValid) {
             // this matches php behaviour
-            _var.set(_env.getEmptyString());
+            _var.set(StringValue.EMPTY);
          } else {
             Value value = getColumnValue(_column, _jdbcType, _type);
 
@@ -1492,7 +1494,7 @@ public class PDOStatement
    /**
     * Bind a value to a parameter when the statement is executed.
     */
-   private class BindParam {
+   public class BindParam {
 
       private final int _index;
       private final Value _value;

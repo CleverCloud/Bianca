@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.i18n;
 
@@ -34,18 +35,13 @@ import com.caucho.quercus.env.StringValue;
 abstract public class Encoder {
 
    protected static final int ERROR_CHARACTER = 0xFFFE;
-   protected String _charset;
    protected String _replacement;
    protected boolean _isIgnore;
    protected boolean _isReplaceUnicode = false;
 
-   protected Encoder(String charset) {
-      _charset = charset;
-   }
-
    public static Encoder create(String charset) {
       if (charset.equalsIgnoreCase("utf8")
-              || charset.equalsIgnoreCase("utf-8")) {
+              || charset.equalsIgnoreCase("utf8")) {
          return new Utf8Encoder();
       } else if (charset.equalsIgnoreCase("big5")
               || charset.equalsIgnoreCase("big-5")) {

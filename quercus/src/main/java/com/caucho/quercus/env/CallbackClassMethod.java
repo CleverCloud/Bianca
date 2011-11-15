@@ -25,10 +25,10 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
-import com.caucho.util.L10N;
 import com.caucho.vfs.WriteStream;
 
 import java.io.IOException;
@@ -39,7 +39,6 @@ import java.util.IdentityHashMap;
  */
 public class CallbackClassMethod extends Callback {
 
-   private static final L10N L = new L10N(CallbackClassMethod.class);
    private final QuercusClass _qClass;
    private final StringValue _methodName;
    private final int _hash;
@@ -162,12 +161,5 @@ public class CallbackClassMethod extends Callback {
    public boolean isInternal(Env env) {
       // return _fun instanceof JavaInvoker;
       return false;
-   }
-
-   private Value error(Env env) {
-      env.warning(L.l("{0}::{1}() is an invalid callback method",
-              _qClass.getName(), _methodName));
-
-      return NullValue.NULL;
    }
 }

@@ -31,7 +31,7 @@ package com.caucho.quercus.env;
 /**
  * Represents a PHP array value copied as part of deserialization or APC.
  *
- * Any modification to the array will set the CopyRoot modified 
+ * Any modification to the array will set the CopyRoot modified
  */
 public class ArrayCopyValueImpl extends ArrayValueImpl {
 

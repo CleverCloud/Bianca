@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -224,7 +225,7 @@ public class NetworkModule extends AbstractQuercusModule {
          return env.createString("255.255.255.255");
       }
 
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringValue();
 
       sb.append((address & 0xFF000000L) >> 24);
       sb.append('.');

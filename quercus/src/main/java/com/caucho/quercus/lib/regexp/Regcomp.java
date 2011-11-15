@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 
 /*
@@ -36,9 +37,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.*;
 
-import com.caucho.quercus.env.ConstStringValue;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.util.*;
 
 /**
@@ -142,7 +142,7 @@ class Regcomp {
       }
 
       if (log.isLoggable(Level.FINEST)) {
-         log.finest("regexp[] " + value);
+         log.log(Level.FINEST, "regexp[] {0}", value);
       }
 
       return value;
@@ -515,7 +515,7 @@ class Regcomp {
 
          String name = sb.toString();
 
-         Integer v = _groupNameReverseMap.get(new ConstStringValue(name));
+         Integer v = _groupNameReverseMap.get(new StringValue(name));
 
          if (v != null) {
             RegexpNode next = new RegexpNode.GroupRef(v);
@@ -539,8 +539,8 @@ class Regcomp {
 
          int group = _nGroup++;
 
-         _groupNameMap.put(group, new StringBuilderValue(name));
-         _groupNameReverseMap.put(new StringBuilderValue(name), group);
+         _groupNameMap.put(group, new StringValue(name));
+         _groupNameReverseMap.put(new StringValue(name), group);
 
          return parseGroup(pattern, tail, group, _flags);
       } else {

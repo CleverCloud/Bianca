@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -207,22 +208,6 @@ public class JavaAdapterVar extends Value {
    @Override
    public boolean isString() {
       return getValue().isString();
-   }
-
-   /**
-    * Returns true for a BinaryValue.
-    */
-   @Override
-   public boolean isBinary() {
-      return getValue().isBinary();
-   }
-
-   /**
-    * Returns true for a UnicodeValue.
-    */
-   @Override
-   public boolean isUnicode() {
-      return getValue().isUnicode();
    }
 
    /**
@@ -412,31 +397,7 @@ public class JavaAdapterVar extends Value {
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return getValue().appendTo(sb);
-   }
-
-   /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(BinaryBuilderValue sb) {
-      return getValue().appendTo(sb);
-   }
-
-   /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(StringBuilderValue sb) {
-      return getValue().appendTo(sb);
-   }
-
-   /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(LargeStringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return getValue().appendTo(sb);
    }
 
@@ -504,16 +465,6 @@ public class JavaAdapterVar extends Value {
    @Override
    public StringValue toStringValue() {
       return getValue().toStringValue();
-   }
-
-   @Override
-   public StringValue toBinaryValue(Env env) {
-      return getValue().toBinaryValue(env);
-   }
-
-   @Override
-   public StringValue toUnicodeValue(Env env) {
-      return getValue().toUnicodeValue(env);
    }
 
    @Override

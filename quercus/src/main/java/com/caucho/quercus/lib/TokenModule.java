@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -43,7 +44,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
- * Quercus tokenizer 
+ * Quercus tokenizer
  */
 public class TokenModule extends AbstractQuercusModule {
 
@@ -212,7 +213,7 @@ public class TokenModule extends AbstractQuercusModule {
            StringValue s,
            @Optional boolean isReturn) {
       try {
-         StringValue sb = isReturn ? env.createUnicodeBuilder() : null;
+         StringValue sb = isReturn ? new StringValue() : null;
          WriteStream out = env.getOut();
 
          Token lexer = new Token(env, s);
@@ -372,7 +373,7 @@ public class TokenModule extends AbstractQuercusModule {
 
       while ((token = lexer.nextToken()) >= 0) {
          if (0x20 <= token && token <= 0x7f) {
-            result.put(env.createString((char) token));
+            result.put(env.createString(((char)token) + ""));
          } else {
             result.put(new ArrayValueImpl().append(LongValue.create(token)).append(lexer.getLexeme()));
          }
@@ -646,7 +647,7 @@ public class TokenModule extends AbstractQuercusModule {
       }
 
       int nextToken() {
-         _lexeme = _env.createUnicodeBuilder();
+         _lexeme = new StringValue();
 
          if (!_inPhp) {
             _inPhp = true;

@@ -25,12 +25,13 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.expr;
 
 import com.caucho.quercus.Location;
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.ConstStringValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.parser.QuercusParser;
@@ -45,7 +46,7 @@ public class LiteralStringExpr extends Expr {
    public LiteralStringExpr(Location location, String value) {
       super(location);
 
-      _value = new ConstStringValue(value);
+      _value = new StringValue(value);
    }
 
    public LiteralStringExpr(Location location, StringValue value) {

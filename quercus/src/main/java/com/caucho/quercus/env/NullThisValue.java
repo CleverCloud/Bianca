@@ -25,26 +25,20 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
 import java.io.Serializable;
 
 /**
- * Represents a PHP null value, used for 
+ * Represents a PHP null value, used for
  */
 public class NullThisValue extends NullValue
         implements Serializable {
 
-   public static final NullThisValue NULL = new NullThisValue();
+   public static final NullThisValue NULLTHIS = new NullThisValue();
 
    private NullThisValue() {
-   }
-
-   //
-   // Java Serialization
-   //
-   private Object readResolve() {
-      return NULL;
    }
 }

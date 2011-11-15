@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.expr;
 
@@ -36,7 +37,7 @@ import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.MethodIntern;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.quercus.env.ConstStringValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Var;
 import com.caucho.quercus.parser.QuercusParser;
 import com.caucho.util.L10N;
@@ -55,7 +56,7 @@ public class ClassFieldExpr extends AbstractVarExpr {
       _className = className;
       _varName = MethodIntern.intern(varName);
 
-      _var = new ConstStringValue(className + "::" + varName);
+      _var = new StringValue(className + "::" + varName);
    }
 
    //

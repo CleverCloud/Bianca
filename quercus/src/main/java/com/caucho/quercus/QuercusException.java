@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus;
 
@@ -84,7 +85,7 @@ public class QuercusException extends RuntimeException {
          sb.append("\n");
 
          for (int i = 0; i < _quercusStackTrace.size(); i++) {
-            sb.append("   " + _quercusStackTrace.get(i) + "\n");
+            sb.append("   ").append(_quercusStackTrace.get(i)).append("\n");
          }
 
          return sb.toString();

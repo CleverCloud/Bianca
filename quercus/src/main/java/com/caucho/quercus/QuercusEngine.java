@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus;
 
@@ -112,7 +113,7 @@ public class QuercusEngine {
          ws.setNewlineString("\n");
 
          try {
-            ws.setEncoding("iso-8859-1");
+            ws.setEncoding("utf8");
          } catch (Exception e) {
          }
 

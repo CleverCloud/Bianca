@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.xml;
 
@@ -35,6 +36,7 @@ import com.caucho.quercus.annotation.Reference;
 import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
@@ -89,6 +91,7 @@ public class XmlModule extends AbstractQuercusModule {
    public static final int XML_ERROR_FINISHED = 36;
    public static final int XML_ERROR_SUSPEND_PE = 37;
 
+   @Override
    public String[] getLoadedExtensions() {
       return new String[]{"xml"};
    }
@@ -97,7 +100,7 @@ public class XmlModule extends AbstractQuercusModule {
     * Converts from iso-8859-1 to utf8
     */
    public static Value utf8_encode(Env env, StringValue str) {
-      StringValue sb = str.createStringBuilder();
+      StringValue sb = new StringValue();
 
       int len = str.length();
       for (int i = 0; i < len; i++) {
@@ -122,7 +125,7 @@ public class XmlModule extends AbstractQuercusModule {
     * Converts from utf8 to iso-8859-1
     */
    public static Value utf8_decode(Env env, StringValue str) {
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
 
       int len = str.length();
       for (int i = 0; i < len; i++) {
@@ -237,9 +240,9 @@ public class XmlModule extends AbstractQuercusModule {
     * returns a new Xml Parser
     */
    public Xml xml_parser_create(Env env,
-           @Optional("'UTF-8'") String outputEncoding) {
+           @Optional("'utf8'") String outputEncoding) {
       if (outputEncoding == null) {
-         outputEncoding = "UTF-8";
+         outputEncoding = "utf8";
       }
 
       return new Xml(env, outputEncoding, null);
@@ -255,10 +258,10 @@ public class XmlModule extends AbstractQuercusModule {
     * @return namespace aware Xml Parser
     */
    public Xml xml_parser_create_ns(Env env,
-           @Optional("'UTF-8'") String outputEncoding,
+           @Optional("'utf8'") String outputEncoding,
            @Optional("':'") String separator) {
       if (outputEncoding == null) {
-         outputEncoding = "UTF-8";
+         outputEncoding = "utf8";
       }
 
       return new Xml(env, outputEncoding, separator);

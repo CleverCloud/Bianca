@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.json;
 
@@ -429,7 +430,7 @@ class JsonDecoder {
     * Returns a PHP string.
     */
    private Value decodeString(Env env, boolean isQuoted) {
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
 
       while (_offset < _len) {
          char ch = _str.charAt(_offset++);

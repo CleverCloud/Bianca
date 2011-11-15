@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Charles Reich
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -35,6 +36,7 @@ import com.caucho.quercus.env.BooleanValue;
 import com.caucho.quercus.env.ConnectionEntry;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.util.L10N;
@@ -621,7 +623,7 @@ public class Mysqli extends JdbcConnectionResource {
       try {
          return env.createString(validateConnection().getServerInfo());
       } catch (SQLException e) {
-         return env.getEmptyString();
+         return new StringValue();
       }
    }
 
@@ -770,7 +772,7 @@ public class Mysqli extends JdbcConnectionResource {
       setResultResource(null);
 
       if (log.isLoggable(Level.FINE)) {
-         log.fine("mysql_query(" + sql + ")");
+         log.log(Level.FINE, "mysql_query({0})", sql);
       }
 
       try {

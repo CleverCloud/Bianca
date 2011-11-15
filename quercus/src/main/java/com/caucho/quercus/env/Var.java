@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -218,22 +219,6 @@ public class Var extends Value
    @Override
    public boolean isString() {
       return _value.isString();
-   }
-
-   /**
-    * Returns true for a BinaryValue.
-    */
-   @Override
-   public boolean isBinary() {
-      return _value.isBinary();
-   }
-
-   /**
-    * Returns true for a UnicodeValue.
-    */
-   @Override
-   public boolean isUnicode() {
-      return _value.isUnicode();
    }
 
    /**
@@ -569,14 +554,6 @@ public class Var extends Value
    }
 
    /**
-    * Cost to convert to a binary value
-    */
-   @Override
-   public int toBinaryValueMarshalCost() {
-      return _value.toBinaryValueMarshalCost();
-   }
-
-   /**
     * Cost to convert to a StringValue
     */
    @Override
@@ -585,42 +562,10 @@ public class Var extends Value
    }
 
    /**
-    * Cost to convert to a UnicdeValue
-    */
-   @Override
-   public int toUnicodeValueMarshalCost() {
-      return _value.toUnicodeValueMarshalCost();
-   }
-
-   /**
-    * Append to a unicode builder.
-    */
-   @Override
-   public StringValue appendTo(UnicodeBuilderValue sb) {
-      return _value.appendTo(sb);
-   }
-
-   /**
-    * Append to a binary builder.
-    */
-   @Override
-   public StringValue appendTo(BinaryBuilderValue sb) {
-      return _value.appendTo(sb);
-   }
-
-   /**
     * Append to a string builder.
     */
    @Override
-   public StringValue appendTo(StringBuilderValue sb) {
-      return _value.appendTo(sb);
-   }
-
-   /**
-    * Append to a string builder.
-    */
-   @Override
-   public StringValue appendTo(LargeStringBuilderValue sb) {
+   public StringValue appendTo(StringValue sb) {
       return _value.appendTo(sb);
    }
 
@@ -727,21 +672,6 @@ public class Var extends Value
    @Override
    public StringValue toStringValue(Env env) {
       return _value.toStringValue(env);
-   }
-
-   @Override
-   public StringValue toBinaryValue(Env env) {
-      return _value.toBinaryValue(env);
-   }
-
-   @Override
-   public StringValue toUnicode(Env env) {
-      return _value.toUnicode(env);
-   }
-
-   @Override
-   public StringValue toUnicodeValue(Env env) {
-      return _value.toUnicodeValue(env);
    }
 
    @Override

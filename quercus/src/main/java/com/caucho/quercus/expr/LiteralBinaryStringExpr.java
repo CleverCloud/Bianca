@@ -25,30 +25,31 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.expr;
 
 import com.caucho.quercus.Location;
-import com.caucho.quercus.env.BinaryBuilderValue;
+import com.caucho.quercus.env.StringValue;
 
 /**
  * Represents a PHP string literal expression.
  */
 public class LiteralBinaryStringExpr extends LiteralStringExpr {
 
-   public LiteralBinaryStringExpr(Location location, byte[] bytes) {
-      super(location, new BinaryBuilderValue(bytes));
+   public LiteralBinaryStringExpr(Location location, String str) {
+      super(location, new StringValue(str));
    }
 
-   public LiteralBinaryStringExpr(Location location, BinaryBuilderValue value) {
+   public LiteralBinaryStringExpr(Location location, StringValue value) {
       super(location, value);
    }
 
-   public LiteralBinaryStringExpr(byte[] bytes) {
-      this(Location.UNKNOWN, bytes);
+   public LiteralBinaryStringExpr(String str) {
+      this(Location.UNKNOWN, str);
    }
 
-   public LiteralBinaryStringExpr(BinaryBuilderValue value) {
+   public LiteralBinaryStringExpr(StringValue value) {
       this(Location.UNKNOWN, value);
    }
 }

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -64,7 +65,7 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
     * Returns an overloaded java method.
     */
    @Override
-   public AbstractJavaMethod overload(AbstractJavaMethod fun) {
+   public final AbstractJavaMethod overload(AbstractJavaMethod fun) {
       if (fun.getHasRestArgs()) {
          int len = fun.getMinArgLength();
 

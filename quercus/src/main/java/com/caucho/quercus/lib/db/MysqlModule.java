@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -32,6 +33,7 @@ import com.caucho.quercus.annotation.NotNull;
 import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.env.*;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
 import com.caucho.util.Log;
@@ -56,19 +58,19 @@ public class MysqlModule extends AbstractQuercusModule {
    public static final int MYSQL_BOTH = JdbcResultResource.FETCH_BOTH;
    public static final int MYSQL_USE_RESULT = 0x0;
    public static final int MYSQL_STORE_RESULT = 0x1;
-   private static final StringValue SV_NAME = new ConstStringValue("name");
-   private static final StringValue SV_TABLE = new ConstStringValue("table");
-   private static final StringValue SV_DEF = new ConstStringValue("def");
-   private static final StringValue SV_MAX_LENGTH = new ConstStringValue("max_length");
-   private static final StringValue SV_NOT_NULL = new ConstStringValue("not_null");
-   private static final StringValue SV_PRIMARY_KEY = new ConstStringValue("primary_key");
-   private static final StringValue SV_MULTIPLE_KEY = new ConstStringValue("multiple_key");
-   private static final StringValue SV_UNIQUE_KEY = new ConstStringValue("unique_key");
-   private static final StringValue SV_NUMERIC = new ConstStringValue("numeric");
-   private static final StringValue SV_BLOB = new ConstStringValue("blob");
-   private static final StringValue SV_TYPE = new ConstStringValue("type");
-   private static final StringValue SV_UNSIGNED = new ConstStringValue("unsigned");
-   private static final StringValue SV_ZEROFILL = new ConstStringValue("zerofill");
+   private static final StringValue SV_NAME = new StringValue("name");
+   private static final StringValue SV_TABLE = new StringValue("table");
+   private static final StringValue SV_DEF = new StringValue("def");
+   private static final StringValue SV_MAX_LENGTH = new StringValue("max_length");
+   private static final StringValue SV_NOT_NULL = new StringValue("not_null");
+   private static final StringValue SV_PRIMARY_KEY = new StringValue("primary_key");
+   private static final StringValue SV_MULTIPLE_KEY = new StringValue("multiple_key");
+   private static final StringValue SV_UNIQUE_KEY = new StringValue("unique_key");
+   private static final StringValue SV_NUMERIC = new StringValue("numeric");
+   private static final StringValue SV_BLOB = new StringValue("blob");
+   private static final StringValue SV_TYPE = new StringValue("type");
+   private static final StringValue SV_UNSIGNED = new StringValue("unsigned");
+   private static final StringValue SV_ZEROFILL = new StringValue("zerofill");
 
    public MysqlModule() {
    }
@@ -331,7 +333,7 @@ public class MysqlModule extends AbstractQuercusModule {
    public static StringValue mysql_escape_string(Env env, Value val) {
       StringValue unescapedString = val.toStringValue();
 
-      StringValue sb = unescapedString.createStringBuilder();
+      StringValue sb = new StringValue();
 
       int len = unescapedString.length();
 
@@ -550,7 +552,7 @@ public class MysqlModule extends AbstractQuercusModule {
 
          fieldResult.putThisField(env, SV_NAME, env.createString(columnLabel));
          fieldResult.putThisField(env, SV_TABLE, env.createString(tableName));
-         fieldResult.putThisField(env, SV_DEF, env.getEmptyString());
+         fieldResult.putThisField(env, SV_DEF, StringValue.EMPTY);
          fieldResult.putThisField(env, SV_MAX_LENGTH,
                  LongValue.create(maxLength));
          fieldResult.putThisField(env, SV_NOT_NULL,
@@ -1252,10 +1254,10 @@ public class MysqlModule extends AbstractQuercusModule {
       }
 
       conn = new MysqliResource(env,
-              env.getEmptyString(),
-              env.getEmptyString(), env.getEmptyString(),
+              StringValue.EMPTY,
+              StringValue.EMPTY, StringValue.EMPTY,
               db, 3306,
-              env.getEmptyString());
+              StringValue.EMPTY);
 
       env.setSpecialValue("caucho.mysql", conn);
 

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.file;
 
@@ -559,10 +560,10 @@ public class StreamModule extends AbstractQuercusModule {
    }
 
    static {
-      _wrapperArray.append(new ConstStringValue("quercus"));
-      _wrapperArray.append(new ConstStringValue("file"));
-      _wrapperArray.append(new ConstStringValue("http"));
-      _wrapperArray.append(new ConstStringValue("ftp"));
+      _wrapperArray.append(new StringValue("quercus"));
+      _wrapperArray.append(new StringValue("file"));
+      _wrapperArray.append(new StringValue("http"));
+      _wrapperArray.append(new StringValue("ftp"));
    }
 
    static {

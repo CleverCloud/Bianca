@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.reflection;
 
@@ -146,7 +147,7 @@ public class ReflectionProperty
       return "ReflectionProperty[" + _prop.toString() + "]";
    }
 
-   static class Property {
+   protected static class Property {
 
       final QuercusClass _cls;
       final StringValue _nameV;

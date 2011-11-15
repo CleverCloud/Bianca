@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.expr;
 
@@ -95,7 +96,7 @@ public class ExprFactory {
    /**
     * Creates a binary literal expression.
     */
-   public Expr createBinary(byte[] bytes) {
+   public Expr createBinary(String bytes) {
       return new LiteralBinaryStringExpr(bytes);
    }
 
@@ -426,20 +427,6 @@ public class ExprFactory {
    }
 
    /**
-    * Creates a unicode cast
-    */
-   public Expr createToUnicode(Expr expr) {
-      return new ToUnicodeExpr(expr);
-   }
-
-   /**
-    * Creates a binary string cast
-    */
-   public Expr createToBinary(Expr expr) {
-      return new ToBinaryExpr(expr);
-   }
-
-   /**
     * Creates an object cast
     */
    public Expr createToObject(Expr expr) {
@@ -621,16 +608,12 @@ public class ExprFactory {
          LiteralBinaryStringExpr leftString = (LiteralBinaryStringExpr) left.getValue();
          LiteralBinaryStringExpr rightString = (LiteralBinaryStringExpr) tail.getValue();
 
-         try {
-            byte[] bytes = (leftString.evalConstant().toString()
-                    + rightString.evalConstant().toString()).getBytes("ISO-8859-1");
+         String bytes = (leftString.evalConstant().toString()
+                 + rightString.evalConstant().toString());
 
-            Expr value = createBinary(bytes);
+         Expr value = createBinary(bytes);
 
-            return createAppendImpl(value, tail.getNext());
-         } catch (java.io.UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-         }
+         return createAppendImpl(value, tail.getNext());
       } else if (left.getValue() instanceof LiteralBinaryStringExpr
               || tail.getValue() instanceof LiteralBinaryStringExpr) {
          left.setNext(tail);
@@ -866,9 +849,9 @@ public class ExprFactory {
 
       if ("isset".equals(name) && args.size() == 1) {
          return new FunIssetExpr(args.get(0));
-      } else if ("get_called_class".equals(name) && args.size() == 0) {
+      } else if ("get_called_class".equals(name) && args.isEmpty()) {
          return new FunGetCalledClassExpr(loc);
-      } else if ("get_class".equals(name) && args.size() == 0) {
+      } else if ("get_class".equals(name) && args.isEmpty()) {
          return new FunGetClassExpr(parser);
       } else if ("each".equals(name) && args.size() == 1) {
          Expr arg = args.get(0);

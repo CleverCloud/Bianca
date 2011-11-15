@@ -25,10 +25,9 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.regexp;
-
-import com.caucho.quercus.env.StringValue;
 
 class PeekString extends PeekStream {
 
@@ -67,11 +66,6 @@ class PeekString extends PeekStream {
       }
 
       _index--;
-   }
-
-   @Override
-   StringValue createStringBuilder() {
-      return ((StringValue) _string).createStringBuilder();
    }
 
    @Override

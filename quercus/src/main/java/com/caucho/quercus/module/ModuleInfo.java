@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.module;
 
@@ -37,6 +38,7 @@ import com.caucho.util.L10N;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -54,7 +56,6 @@ public class ModuleInfo {
    private final String _name;
    private final QuercusModule _module;
    private HashSet<String> _extensionSet = new HashSet<String>();
-   private HashMap<StringValue, Value> _constMap = new HashMap<StringValue, Value>();
    private HashMap<StringValue, Value> _unicodeConstMap = new HashMap<StringValue, Value>();
    private HashMap<String, AbstractFunction> _staticFunctions = new HashMap<String, AbstractFunction>();
    private IniDefinitions _iniDefinitions = new IniDefinitions();
@@ -96,19 +97,8 @@ public class ModuleInfo {
       return _extensionSet;
    }
 
-   public HashMap<StringValue, Value> getConstMap() {
-      return _constMap;
-   }
-
    public HashMap<StringValue, Value> getUnicodeConstMap() {
       return _unicodeConstMap;
-   }
-
-   /**
-    * Returns a named constant.
-    */
-   public Value getConstant(StringValue name) {
-      return _constMap.get(name);
    }
 
    /**
@@ -129,14 +119,11 @@ public class ModuleInfo {
     */
    private void introspectPhpModuleClass(Class cl)
            throws IllegalAccessException, InstantiationException {
-      for (String ext : _module.getLoadedExtensions()) {
-         _extensionSet.add(ext);
-      }
+      _extensionSet.addAll(Arrays.asList(_module.getLoadedExtensions()));
 
       Map<StringValue, Value> map = _module.getConstMap();
 
       if (map != null) {
-         _constMap.putAll(map);
          _unicodeConstMap.putAll(map);
       }
 
@@ -158,9 +145,7 @@ public class ModuleInfo {
          Value value = objectToValue(obj);
 
          if (value != null) {
-            _constMap.put(new ConstStringValue(field.getName()), value);
-
-            _unicodeConstMap.put(new UnicodeBuilderValue(field.getName()),
+            _unicodeConstMap.put(new StringValue(field.getName()),
                     value);
          }
       }
@@ -255,8 +240,7 @@ public class ModuleInfo {
               || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
-         // TODO: need unicode semantics check
-         return new StringBuilderValue((String) obj);
+         return new StringValue((String) obj);
       } else {
          // TODO: unknown types, e.g. Character?
 

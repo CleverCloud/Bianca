@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.servlet;
 
@@ -75,6 +76,7 @@ public class GoogleQuercusServletImpl extends QuercusServletImpl {
       return this;
    }
 
+   @Override
    protected WriteStream openWrite(HttpServletResponse response)
            throws IOException {
       WriteStream ws;
@@ -134,6 +136,7 @@ public class GoogleQuercusServletImpl extends QuercusServletImpl {
    /**
     * Service.
     */
+   @Override
    public void service(HttpServletRequest request,
            HttpServletResponse response)
            throws ServletException, IOException {

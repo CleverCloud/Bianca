@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.marshal;
 
@@ -41,7 +42,7 @@ public class JavaCharacterArrayMarshal extends JavaArrayMarshal {
       char[] buffer = (char[]) value;
 
       if (buffer != null) {
-         return env.createString(buffer, 0, buffer.length);
+         return env.createString(new String(buffer));
       } else {
          return NullValue.NULL;
       }

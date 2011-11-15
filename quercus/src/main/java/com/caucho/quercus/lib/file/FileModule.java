@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.file;
 
@@ -484,7 +485,7 @@ public class FileModule extends AbstractQuercusModule {
          int ch = is.read();
 
          if (ch >= 0) {
-            StringValue v = env.createBinaryBuilder(1);
+            StringValue v = new StringValue();
 
             v.append((char) ch);
 
@@ -561,7 +562,7 @@ public class FileModule extends AbstractQuercusModule {
                }
             }
 
-            StringValue sb = env.createBinaryBuilder();
+            StringValue sb = new StringValue();
 
             if (ch == quote) {
                for (ch = is.read(); ch >= 0; ch = is.read()) {
@@ -693,26 +694,26 @@ public class FileModule extends AbstractQuercusModule {
 
          try {
             while (true) {
-               StringValue bb = env.createBinaryBuilder();
+               StringValue bb = new StringValue();
 
                for (int ch = is.read(); ch >= 0; ch = is.read()) {
                   if (ch == '\n') {
-                     bb.appendByte(ch);
+                     bb.append(ch);
                      break;
                   } else if (ch == '\r') {
-                     bb.appendByte('\r');
+                     bb.append('\r');
 
                      int ch2 = is.read();
 
                      if (ch2 == '\n') {
-                        bb.appendByte('\n');
+                        bb.append('\n');
                      } else {
                         is.unread();
                      }
 
                      break;
                   } else {
-                     bb.appendByte(ch);
+                     bb.append(ch);
                   }
                }
 
@@ -941,7 +942,7 @@ public class FileModule extends AbstractQuercusModule {
 
       BinaryInput is = (BinaryInput) s;
 
-      StringValue bb = env.createLargeBinaryBuilder();
+      StringValue bb = new StringValue();
       bb.appendReadAll(is, maxLen);
 
       s.close();
@@ -1120,7 +1121,7 @@ public class FileModule extends AbstractQuercusModule {
                if (lastCh == '[') {
                   globRegex.append(ch);
                } else {
-                  globRegex.append("\\" + ch);
+                  globRegex.append("\\").append(ch);
 
                   if (inSquareBrackets) {
                      bracketCount++;
@@ -1613,7 +1614,7 @@ public class FileModule extends AbstractQuercusModule {
          length = Integer.MAX_VALUE;
       }
 
-      StringValue sb = env.createBinaryBuilder();
+      StringValue sb = new StringValue();
 
       sb.appendRead(is, length);
 
@@ -1801,7 +1802,7 @@ public class FileModule extends AbstractQuercusModule {
          Matcher matcher = compiledGlobRegex.matcher(entry);
 
          if (matcher.matches()) {
-            StringValue sb = env.createUnicodeBuilder();
+            StringValue sb = new StringValue();
 
             if (prefix.length() > 0) {
                sb.append(prefix);
@@ -2393,7 +2394,7 @@ public class FileModule extends AbstractQuercusModule {
       }
 
       if (ch == '"') {
-         StringValue sb = env.createUnicodeBuilder();
+         StringValue sb = new StringValue();
 
          for (ch = is.read(); ch >= 0 && ch != '"'; ch = is.read()) {
             sb.append((char) ch);
@@ -2403,7 +2404,7 @@ public class FileModule extends AbstractQuercusModule {
 
          return sb;
       } else if (ch == '\'') {
-         StringValue sb = env.createUnicodeBuilder();
+         StringValue sb = new StringValue();
 
          for (ch = is.read(); ch >= 0 && ch != '\''; ch = is.read()) {
             sb.append((char) ch);
@@ -2445,7 +2446,7 @@ public class FileModule extends AbstractQuercusModule {
                }
 
             } else if (ch == '"') {
-               StringValue result = env.createUnicodeBuilder();
+               StringValue result = new StringValue();
 
                String value = sb.toString().trim();
 
@@ -2516,12 +2517,12 @@ public class FileModule extends AbstractQuercusModule {
     */
    public static Value pathinfo(Env env, String path, @Optional Value optionsV) {
       if (optionsV == null) {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
 
       if (path == null) {
          if (!(optionsV instanceof DefaultValue)) {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
 
          ArrayValueImpl value = new ArrayValueImpl();
@@ -2563,7 +2564,7 @@ public class FileModule extends AbstractQuercusModule {
          } else if ((options & PATHINFO_FILENAME) == PATHINFO_FILENAME) {
             return env.createString(filename);
          } else {
-            return env.getEmptyString();
+            return StringValue.EMPTY;
          }
       } else {
          ArrayValueImpl value = new ArrayValueImpl();
@@ -2701,7 +2702,7 @@ public class FileModule extends AbstractQuercusModule {
          pathStr = path.getFullPath();
       }
 
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringValue();
 
       // php/164c
       if (pathStr.endsWith("/")) {
@@ -3074,11 +3075,11 @@ public class FileModule extends AbstractQuercusModule {
 
    static {
       ProtocolWrapper zlibProtocolWrapper = new ZlibProtocolWrapper();
-      StreamModule.stream_wrapper_register(new ConstStringValue("compress.zlib"),
+      StreamModule.stream_wrapper_register(new StringValue("compress.zlib"),
               zlibProtocolWrapper);
-      StreamModule.stream_wrapper_register(new ConstStringValue("zlib"),
+      StreamModule.stream_wrapper_register(new StringValue("zlib"),
               zlibProtocolWrapper);
-      StreamModule.stream_wrapper_register(new ConstStringValue("php"),
+      StreamModule.stream_wrapper_register(new StringValue("php"),
               new PhpProtocolWrapper());
 
       addConstant(_constMap, "SEEK_SET", SEEK_SET);

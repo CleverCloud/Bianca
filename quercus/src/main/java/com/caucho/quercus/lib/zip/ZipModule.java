@@ -24,6 +24,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Charles Reich
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.zip;
 
@@ -179,7 +180,7 @@ public class ZipModule extends AbstractQuercusModule {
    /**
     * Reads and decompresses entry's compressed data.
     *
-    * @return false or decompressed BinaryValue
+    * @return false or decompressed StringValue
     */
    @ReturnNullAsFalse
    public StringValue zip_entry_read(Env env,

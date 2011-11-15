@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.servlet;
 
@@ -326,21 +327,6 @@ public class QuercusServlet
       return ini;
    }
 
-   public boolean isUnicodeSemantics() {
-      for (PhpIni ini : _phpIniList) {
-         String value = ini._propertyMap.get("unicode.semantics");
-
-         if (value != null
-                 && !value.equals("0")
-                 && !value.equals("false")
-                 && !value.equals("off")) {
-            return true;
-         }
-      }
-
-      return _unicode;
-   }
-
    /**
     * Sets a php.ini file.
     */
@@ -399,6 +385,7 @@ public class QuercusServlet
    /**
     * Initializes the servlet.
     */
+   @Override
    public void init(ServletConfig config)
            throws ServletException {
       super.init(config);
@@ -488,10 +475,6 @@ public class QuercusServlet
 
       _impl = getQuercusServlet(configClass.getName().startsWith("com.caucho"));
 
-      if (isUnicodeSemantics()) {
-         _impl.getQuercus().setUnicodeSemantics(true);
-      }
-
       _impl.init(config);
 
       QuercusContext quercus = getQuercus();
@@ -557,6 +540,7 @@ public class QuercusServlet
    /**
     * Service.
     */
+   @Override
    public void service(HttpServletRequest request,
            HttpServletResponse response)
            throws ServletException, IOException {
@@ -577,6 +561,7 @@ public class QuercusServlet
    /**
     * Closes the servlet instance.
     */
+   @Override
    public void destroy() {
       _quercus.close();
       _impl.destroy();

@@ -25,13 +25,14 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Sam
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.spl;
 
 import com.caucho.quercus.env.CountDelegate;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.ObjectValue;
-import com.caucho.quercus.env.ConstStringValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.env.StringValue;
 
@@ -42,7 +43,7 @@ import com.caucho.quercus.env.StringValue;
  */
 public class CountableDelegate implements CountDelegate {
 
-   private static final StringValue COUNT_METHOD = new ConstStringValue("count");
+   private static final StringValue COUNT_METHOD = new StringValue("count");
 
    @Override
    public int count(ObjectValue qThis) {

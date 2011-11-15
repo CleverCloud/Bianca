@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.date;
 
@@ -814,7 +815,7 @@ public class DateModule extends AbstractQuercusModule {
       if (getAsFloat) {
          return new DoubleValue(now);
       } else {
-         return (env.createUnicodeBuilder().append(String.format("%.6f", now - Math.floor(now))).append(' ').append((int) Math.floor(now)));
+         return (new StringValue().append(String.format("%.6f", now - Math.floor(now))).append(' ').append((int) Math.floor(now)));
       }
    }
 

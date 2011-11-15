@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -166,8 +167,6 @@ abstract public class JavaAdapter extends ArrayValue
          list = new ArrayList();
       } else if (type.isAssignableFrom(LinkedList.class)) {
          list = new LinkedList();
-      } else if (type.isAssignableFrom(Vector.class)) {
-         list = new Vector();
       } else {
          try {
             list = (List) type.newInstance();

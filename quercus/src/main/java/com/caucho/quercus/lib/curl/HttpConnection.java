@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.curl;
 
@@ -91,7 +92,7 @@ public class HttpConnection {
 
    }
 
-   public final static HttpConnection createConnection(URL url,
+   public static HttpConnection createConnection(URL url,
            String username,
            String password,
            CurlResource curl,
@@ -120,7 +121,7 @@ public class HttpConnection {
       return conn;
    }
 
-   public final static HttpConnection createConnection(URL url,
+   public static HttpConnection createConnection(URL url,
            String username,
            String password,
            CurlResource curl)
@@ -275,7 +276,7 @@ public class HttpConnection {
    /**
     * Returns the authorization response.
     */
-   private final String getAuthorization(URL url,
+   private String getAuthorization(URL url,
            String requestMethod,
            String header,
            String clientField,

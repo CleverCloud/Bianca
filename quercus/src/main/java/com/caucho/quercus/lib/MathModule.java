@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -174,7 +175,7 @@ public class MathModule extends AbstractQuercusModule {
 
    private static StringValue intToBase(Env env, long num, int base) {
       if (num == 0) {
-         return env.createString((char) '0');
+         return env.createString("0");
       }
 
       // ignore sign
@@ -182,34 +183,34 @@ public class MathModule extends AbstractQuercusModule {
          num = num ^ Long.MAX_VALUE + 1;
       }
 
-      int bufLen = 64;
-      char[] buffer = new char[bufLen];
+      StringBuilder reverseBuffer = new StringBuilder();
 
-      int i = bufLen;
-      while (num != 0 && i > 0) {
+      while (num != 0) {
          int d = (int) (num % base);
 
          if (d < 10) {
-            buffer[--i] = (char) (d + '0');
+            reverseBuffer.append((char) (d + '0'));
          } else {
-            buffer[--i] = (char) (d + 'a' - 10);
+            reverseBuffer.append((char) (d + 'a' - 10));
          }
 
          num = num / base;
       }
 
-      for (int j = i; j < bufLen; j++) {
-         buffer[j - i] = buffer[j];
+      int bufLen = reverseBuffer.length();
+      StringBuilder buffer = new StringBuilder();
+      for (int j = bufLen-1; j >= 0; --j) {
+         buffer.append(reverseBuffer.charAt(j));
       }
 
-      return env.createString(buffer, bufLen - i);
+      return new StringValue(buffer.toString());
    }
 
    private static StringValue intToBase(Env env, BigInteger num, int base) {
       BigInteger toBaseBig = BigInteger.valueOf(base);
       BigInteger zero = BigInteger.valueOf(0);
 
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringValue();
 
       do {
          BigInteger[] resultArray = num.divideAndRemainder(toBaseBig);
@@ -225,7 +226,7 @@ public class MathModule extends AbstractQuercusModule {
 
       } while (num.compareTo(zero) != 0);
 
-      StringValue toReturn = env.createStringBuilder();
+      StringValue toReturn = new StringValue();
 
       int len = sb.length();
       for (int i = len - 1; i >= 0; i--) {

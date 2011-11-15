@@ -142,11 +142,11 @@ public final class DefinitionState {
       ArrayValue user = new ArrayValueImpl();
 
       // TODO: i18n
-      result.put(new StringBuilderValue("internal"), internal);
-      result.put(new StringBuilderValue("user"), user);
+      result.put(new StringValue("internal"), internal);
+      result.put(new StringValue("user"), user);
 
       for (String name : _funMap.keySet()) {
-         StringValue key = new StringBuilderValue(name);
+         StringValue key = new StringValue(name);
 
          if (!internal.contains(key).isset()) {
             user.put(name);

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.simplexml;
 
@@ -117,7 +118,7 @@ public class SimpleXMLAttributeList extends SimpleXMLElement {
     */
    @Override
    public StringValue asXML(Env env) {
-      StringValue sb = env.createStringBuilder();
+      StringValue sb = new StringValue();
 
       if (_attributes != null) {
          for (SimpleXMLElement attr : _attributes) {

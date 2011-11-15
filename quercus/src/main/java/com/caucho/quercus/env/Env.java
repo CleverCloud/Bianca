@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -125,14 +126,14 @@ public class Env {
    private static final int HTTP_SERVER_VARS = 15;
    private static final int HTTP_RAW_POST_DATA = 16;
    private static final IntMap SPECIAL_VARS = new IntMap();
-   private static final StringValue PHP_SELF_STRING = new ConstStringValue("PHP_SELF");
-   private static final StringValue UTF8_STRING = new ConstStringValue("utf-8");
-   private static final StringValue S_GET = new ConstStringValue("_GET");
-   private static final StringValue S_POST = new ConstStringValue("_POST");
-   private static final StringValue S_SESSION = new ConstStringValue("_SESSION");
-   private static final StringValue S_SERVER = new ConstStringValue("_SERVER");
-   private static final StringValue S_COOKIE = new ConstStringValue("_COOKIE");
-   private static final StringValue S_FILES = new ConstStringValue("_FILES");
+   private static final StringValue PHP_SELF_STRING = new StringValue("PHP_SELF");
+   private static final StringValue UTF8_STRING = new StringValue("utf8");
+   private static final StringValue S_GET = new StringValue("_GET");
+   private static final StringValue S_POST = new StringValue("_POST");
+   private static final StringValue S_SESSION = new StringValue("_SESSION");
+   private static final StringValue S_SERVER = new StringValue("_SERVER");
+   private static final StringValue S_COOKIE = new StringValue("_COOKIE");
+   private static final StringValue S_FILES = new StringValue("_FILES");
    public static final Value[] EMPTY_VALUE = new Value[0];
    private static ThreadLocal<Env> _threadEnv = new ThreadLocal<Env>();
    private static final FreeList<AbstractFunction[]> _freeFunList = new FreeList<AbstractFunction[]>(256);
@@ -177,8 +178,7 @@ public class Env {
    private HashMap<Path, ArrayList<Path>> _includePathMap;
    // TODO: may require a LinkedHashMap for ordering?
    private HashMap<Path, QuercusPage> _includeMap = new HashMap<Path, QuercusPage>();
-   private Value _this = NullThisValue.NULL;
-   private final boolean _isUnicodeSemantics;
+   private Value _this = NullThisValue.NULLTHIS;
    private boolean _isAllowUrlInclude;
    private boolean _isAllowUrlFopen;
    private HashMap<StringValue, Path> _lookupCache = new HashMap<StringValue, Path>();
@@ -201,6 +201,7 @@ public class Env {
    private LinkedList<FieldGetEntry> _fieldSetList = new LinkedList<FieldGetEntry>();
    private LinkedList<FieldGetEntry> _issetList = new LinkedList<FieldGetEntry>();
    private LinkedList<FieldGetEntry> _unsetList = new LinkedList<FieldGetEntry>();
+   private static Logger _logger;
 
    public enum OVERLOADING_TYPES {
 
@@ -232,7 +233,6 @@ public class Env {
    private SessionCallback _sessionCallback;
    private StreamContextResource _defaultStreamContext;
    private int _objectId = 0;
-   private Logger _logger;
    // hold special Quercus php import statements
    private ImportMap _importMap;
    private TimeZone _defaultTimeZone;
@@ -258,7 +258,6 @@ public class Env {
       _quercus = quercus;
 
       _isStrict = quercus.isStrict();
-      _isUnicodeSemantics = quercus.isUnicodeSemantics();
 
       _isAllowUrlInclude = quercus.isAllowUrlInclude();
       _isAllowUrlFopen = quercus.isAllowUrlFopen();
@@ -345,13 +344,13 @@ public class Env {
       addConstant("PHP_VERSION", OptionsModule.phpversion(this, null), true);
 
       // Define the constant string PHP_SAPI
-      addConstant("PHP_SAPI", new ConstStringValue(OptionsModule.php_sapi_name(this)), true);
+      addConstant("PHP_SAPI", new StringValue(OptionsModule.php_sapi_name(this)), true);
 
-      addConstant("PEAR_EXTENSION_DIR", new ConstStringValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_EXTENSION_DIR", new ConstStringValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_LIBDIR", new ConstStringValue(getPwd() + "WEB-INF/lib/"), true);
-      addConstant("PHP_CONFIG_FILE_PATH", new ConstStringValue(getPwd() + "WEB-INF/"), true);
-      addConstant("PHP_CONFIG_FILE_SCAN_DIR", new ConstStringValue(getPwd() + "WEB-INF/"), true);
+      addConstant("PEAR_EXTENSION_DIR", new StringValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_EXTENSION_DIR", new StringValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_LIBDIR", new StringValue(getPwd() + "WEB-INF/lib/"), true);
+      addConstant("PHP_CONFIG_FILE_PATH", new StringValue(getPwd() + "WEB-INF/"), true);
+      addConstant("PHP_CONFIG_FILE_SCAN_DIR", new StringValue(getPwd() + "WEB-INF/"), true);
 
       // c#0004403 - #27
       if (request != null) {
@@ -361,8 +360,8 @@ public class Env {
             if (_authRequest[0].equals("Basic")) {
                // BASIC auth
                String[] _auth64 = Base64.decode(_authRequest[1]).split(":");
-               getGlobalVar("_SERVER").put(new ConstStringValue("PHP_AUTH_USER"), new ConstStringValue(_auth64[0]));
-               getGlobalVar("_SERVER").put(new ConstStringValue("PHP_AUTH_PW"), new ConstStringValue(_auth64[1]));
+               getGlobalVar("_SERVER").put(new StringValue("PHP_AUTH_USER"), new StringValue(_auth64[0]));
+               getGlobalVar("_SERVER").put(new StringValue("PHP_AUTH_PW"), new StringValue(_auth64[1]));
             }
          }
       }
@@ -408,7 +407,7 @@ public class Env {
       String encoding = getHttpInputEncoding();
 
       if (encoding == null)
-      encoding = "iso-8859-1";
+      encoding = "utf8";
 
       _request.setCharacterEncoding(encoding);
       } catch (Exception e) {
@@ -483,21 +482,21 @@ public class Env {
             warning(e);
          }
 
-         StringValue bb = createBinaryBuilder();
+         StringValue bb = new StringValue();
          bb.appendReadAll(is, Integer.MAX_VALUE);
 
          setInputData(bb);
       }
    }
 
-   protected AbstractFunction[] getDefaultFunctionMap() {
+   protected final AbstractFunction[] getDefaultFunctionMap() {
       return getQuercus().getFunctionMap();
    }
 
    /**
     * Initialize the page, loading any functions and classes
     */
-   protected QuercusPage pageInit(QuercusPage page) {
+   protected final QuercusPage pageInit(QuercusPage page) {
       if (page.getCompiledPage() != null) {
          page = page.getCompiledPage();
       }
@@ -535,13 +534,6 @@ public class Env {
    // i18n
    //
    /**
-    * Returns true if unicode.semantics is on.
-    */
-   public boolean isUnicodeSemantics() {
-      return _isUnicodeSemantics;
-   }
-
-   /**
     * Returns the encoding used for scripts.
     */
    public String getScriptEncoding() {
@@ -560,13 +552,8 @@ public class Env {
 
    /**
     * Returns the encoding used for runtime conversions, e.g. files
-    * XXX: ISO-8859-1 when unicode.semantics is OFF
     */
    public String getRuntimeEncoding() {
-      if (!_isUnicodeSemantics) {
-         return "iso-8859-1";
-      }
-
       StringValue encoding = getIni("unicode.runtime_encoding");
 
       if (encoding.length() == 0) {
@@ -597,13 +584,8 @@ public class Env {
 
    /**
     * Returns the encoding used for input, i.e. post,
-    * null if unicode.semantics is off.
     */
    public String getHttpInputEncoding() {
-      if (!_isUnicodeSemantics) {
-         return null;
-      }
-
       StringValue encoding = getIni("unicode.http_input_encoding");
 
       if (encoding.length() == 0) {
@@ -618,13 +600,9 @@ public class Env {
    }
 
    /**
-    * Returns the encoding used for output, null if unicode.semantics is off.
+    * Returns the encoding used for output.
     */
    public String getOutputEncoding() {
-      if (!_isUnicodeSemantics) {
-         return null;
-      }
-
       String encoding = QuercusContext.INI_UNICODE_OUTPUT_ENCODING.getAsString(this);
 
       if (encoding == null) {
@@ -632,76 +610,10 @@ public class Env {
       }
 
       if (encoding == null) {
-         encoding = "utf-8";
+         encoding = "utf8";
       }
 
       return encoding;
-   }
-
-   /**
-    * Creates a binary builder.
-    */
-   public StringValue createBinaryBuilder() {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue();
-      } else {
-         return new StringBuilderValue();
-      }
-   }
-
-   /**
-    * Creates a binary builder for large things like files.
-    */
-   public StringValue createLargeBinaryBuilder() {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue();
-      } else {
-         return new LargeStringBuilderValue();
-      }
-   }
-
-   /**
-    * Creates a binary builder.
-    */
-   public StringValue createBinaryBuilder(int length) {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue(length);
-      } else {
-         return new StringBuilderValue(length);
-      }
-   }
-
-   /**
-    * Creates a binary builder.
-    */
-   public StringValue createBinaryBuilder(byte[] buffer, int offset, int length) {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue(buffer, offset, length);
-      } else {
-         return new StringBuilderValue(buffer, offset, length);
-      }
-   }
-
-   /**
-    * Creates a binary builder.
-    */
-   public StringValue createBinaryBuilder(byte[] buffer) {
-      if (_isUnicodeSemantics) {
-         return new BinaryBuilderValue(buffer, 0, buffer.length);
-      } else {
-         return new StringBuilderValue(buffer, 0, buffer.length);
-      }
-   }
-
-   /**
-    * Creates a unicode builder.
-    */
-   public StringValue createUnicodeBuilder() {
-      if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue();
-      } else {
-         return new StringBuilderValue();
-      }
    }
 
    public TimeZone getDefaultTimeZone() {
@@ -1183,9 +1095,9 @@ public class Env {
    /**
     * Prints a byte buffer.
     */
-   public final void write(byte[] buffer, int offset, int length) {
+   public final void write(String buffer, int offset) {
       try {
-         getOut().write(buffer, offset, length);
+         getOut().print(buffer.substring(offset));
       } catch (IOException e) {
          throw new QuercusModuleException(e);
       }
@@ -1239,7 +1151,7 @@ public class Env {
    /**
     * Returns the current directory.
     */
-   public Path getPwd() {
+   public final Path getPwd() {
       return _pwd;
    }
 
@@ -1261,7 +1173,7 @@ public class Env {
    /**
     * Sets the current directory.
     */
-   public void setPwd(Path path) {
+   public final void setPwd(Path path) {
       _pwd = path;
       _lookupCache.clear();
    }
@@ -1283,7 +1195,7 @@ public class Env {
    /**
     * Sets the initial directory.
     */
-   public void setSelfPath(Path path) {
+   public final void setSelfPath(Path path) {
       _selfPath = path;
       _selfDirectory = _selfPath.getParent();
    }
@@ -2608,7 +2520,7 @@ public class Env {
    /**
     * Gets a value.
     */
-   public Var getGlobalVar(String name) {
+   public final Var getGlobalVar(String name) {
       EnvVar envVar = getGlobalEnvVar(createString(name));
 
       return envVar.getVar();
@@ -3190,18 +3102,13 @@ public class Env {
    /**
     * Sets a constant.
     */
-   public Value addConstant(String name,
+   public final Value addConstant(String name,
            Value value,
            boolean isCaseInsensitive) {
       int id;
 
       if (isCaseInsensitive) {
-         StringValue newname = null;
-         if (isUnicodeSemantics()) {
-            newname = new UnicodeBuilderValue(name);
-         } else {
-            newname = new ConstStringValue(name);
-         }
+         StringValue newname = new StringValue(name);
          id = _quercus.addLowerConstantId(newname);
       } else {
          id = _quercus.getConstantId(name);
@@ -3710,7 +3617,7 @@ public class Env {
     */
    protected Value executePage(QuercusPage page) {
       if (log.isLoggable(Level.FINEST)) {
-         log.finest(this + " executePage " + page);
+         log.log(Level.FINEST, "{0} executePage {1}", new Object[]{this, page});
       }
 
       if (page.getCompiledPage() != null) {
@@ -4018,7 +3925,7 @@ public class Env {
     * saved
     */
    boolean isSpecialVar(StringValue name) {
-      if (_quercus.isSuperGlobal(name)) {
+      if (QuercusContext.isSuperGlobal(name)) {
          return true;
       } else if (_scriptGlobalMap.get(name) != null) {
          return true;
@@ -4124,59 +4031,11 @@ public class Env {
       }
    }
 
-   /*
-    * Creates an empty string.
-    */
-   public StringValue getEmptyString() {
-      if (_isUnicodeSemantics) {
-         return UnicodeBuilderValue.EMPTY;
-      } else {
-         return ConstStringValue.EMPTY;
-      }
-   }
-
-   /*
-    * Creates an empty string builder.
-    */
-   public StringValue createStringBuilder() {
-      if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue();
-      } else {
-         return new StringBuilderValue();
-      }
-   }
-
    /**
     * Creates a PHP string from a byte buffer.
     */
    public StringValue createString(byte[] buffer, int offset, int length) {
-      if (_isUnicodeSemantics) {
-         return new UnicodeValueImpl(new String(buffer, offset, length));
-      } else {
-         return new ConstStringValue(buffer, offset, length);
-      }
-   }
-
-   /**
-    * Creates a PHP string from a byte buffer.
-    */
-   public StringValue createString(char[] buffer, int length) {
-      if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue(buffer, length);
-      } else {
-         return new ConstStringValue(buffer, length);
-      }
-   }
-
-   /**
-    * Creates a PHP string from a char buffer.
-    */
-   public StringValue createString(char[] buffer, int offset, int length) {
-      if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue(buffer, offset, length);
-      } else {
-         return new ConstStringValue(buffer, offset, length);
-      }
+      return new StringValue(new String(buffer, offset, length));
    }
 
    /**
@@ -4184,39 +4043,9 @@ public class Env {
     */
    public StringValue createString(String s) {
       if (s == null || s.length() == 0) {
-         return (_isUnicodeSemantics
-                 ? UnicodeBuilderValue.EMPTY
-                 : ConstStringValue.EMPTY);
-      } else if (s.length() == 1) {
-         if (_isUnicodeSemantics) {
-            return UnicodeBuilderValue.create(s.charAt(0));
-         } else {
-            return ConstStringValue.create(s.charAt(0));
-         }
-      } else if (_isUnicodeSemantics) {
-         return new UnicodeBuilderValue(s);
+         return (StringValue.EMPTY);
       } else {
-         StringValue stringValue = _internStringMap.get(s);
-
-         if (stringValue == null) {
-            stringValue = new ConstStringValue(s);
-            _internStringMap.put(s, stringValue);
-         }
-
-         return stringValue;
-
-         // return new ConstStringValue(s);
-      }
-   }
-
-   /**
-    * Creates a string from a byte.
-    */
-   public StringValue createString(char ch) {
-      if (_isUnicodeSemantics) {
-         return UnicodeValueImpl.create(ch);
-      } else {
-         return ConstStringValue.create(ch);
+         return new StringValue(s);
       }
    }
 
@@ -4224,16 +4053,10 @@ public class Env {
     * Creates a PHP string from a buffer.
     */
    public StringValue createBinaryString(TempBuffer head) {
-      StringValue string;
-
-      if (_isUnicodeSemantics) {
-         string = new BinaryBuilderValue();
-      } else {
-         string = new StringBuilderValue();
-      }
+      StringValue string = new StringValue();
 
       for (; head != null; head = head.getNext()) {
-         string.append(head.getBuffer(), 0, head.getLength());
+         string.append(new String(head.getBuffer()));
       }
 
       return string;
@@ -4433,7 +4256,7 @@ public class Env {
    /**
     * Returns a PHP value for a Java object
     */
-   public Value wrapJava(Object obj) {
+   public final Value wrapJava(Object obj) {
       if (obj == null) {
          return NullValue.NULL;
       }
@@ -4781,7 +4604,7 @@ public class Env {
          _autoloadList.remove(fun);
 
          //restore original __autoload functionality
-         if (_autoloadList.size() == 0) {
+         if (_autoloadList.isEmpty()) {
             _autoloadList = null;
          }
       }
@@ -4825,7 +4648,7 @@ public class Env {
       }
 
       if (url != null) {
-         includeOnce(new StringBuilderValue(url.toString()));
+         includeOnce(new StringValue(url.toString()));
          return true;
       } else {
          return false;
@@ -5139,7 +4962,7 @@ public class Env {
          if (!_isAllowUrlInclude && isUrl(path)) {
             String msg = (L.l("not allowed to include url {0}", path.getURL()));
 
-            log.warning(dbgId() + msg);
+            log.log(Level.WARNING, "{0}{1}", new Object[]{dbgId(), msg});
             error(msg);
 
             return BooleanValue.FALSE;
@@ -5165,7 +4988,7 @@ public class Env {
 
    void executePage(Path path) {
       if (log.isLoggable(Level.FINEST)) {
-         log.finest(this + " execute " + path);
+         log.log(Level.FINEST, "{0} execute {1}", new Object[]{this, path});
       }
 
       try {
@@ -5934,7 +5757,7 @@ public class Env {
     */
    public Value stub(String msg) {
       if (log.isLoggable(Level.FINE)) {
-         log.fine(getLocation().getMessagePrefix() + msg);
+         log.log(Level.FINE, "{0}{1}", new Object[]{getLocation().getMessagePrefix(), msg});
       }
 
       return NullValue.NULL;
@@ -5988,9 +5811,7 @@ public class Env {
     * Sets an error handler
     */
    public void setErrorHandler(int mask, Callable fun) {
-      for (int i = 0; i < _errorHandlers.length; i++) {
-         _prevErrorHandlers[i] = _errorHandlers[i];
-      }
+      System.arraycopy(_errorHandlers, 0, _prevErrorHandlers, 0, _errorHandlers.length);
 
       if ((mask & E_ERROR) != 0) {
          _errorHandlers[B_ERROR] = fun;
@@ -6033,9 +5854,7 @@ public class Env {
     * Sets an error handler
     */
    public void restoreErrorHandler() {
-      for (int i = 0; i < _errorHandlers.length; i++) {
-         _errorHandlers[i] = _prevErrorHandlers[i];
-      }
+      System.arraycopy(_prevErrorHandlers, 0, _errorHandlers, 0, _errorHandlers.length);
    }
 
    /**
@@ -6098,7 +5917,7 @@ public class Env {
 
       if ((errorMask & mask) != 0) {
          if (log.isLoggable(Level.FINE)) {
-            log.fine(this + " " + loc + msg);
+            log.log(Level.FINE, "{0} {1}{2}", new Object[]{this, loc, msg});
          }
       }
 
@@ -6538,6 +6357,7 @@ public class Env {
    return retValue;
    }
     */
+   @Override
    public String toString() {
       return "Env[]";
    }
@@ -6623,7 +6443,7 @@ public class Env {
       _quercus.completeEnv(this);
 
       if (_duplex != null) {
-         log.fine(this + " skipping close for duplex mode");
+         log.log(Level.FINE, "{0} skipping close for duplex mode", this);
          return;
       }
 

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.db;
 
@@ -484,17 +485,17 @@ public class JdbcResultResource {
                if (rs.wasNull()) {
                   return NullValue.NULL;
                } else if (metaData.isCurrency(column)) {
-                  StringValue sb = _env.createUnicodeBuilder();
+                  StringValue sb = new StringValue();
 
                   sb.append("$");
 
                   return sb.append(value);
                } else if (value == 0.0) {
-                  StringValue sb = _env.createUnicodeBuilder();
+                  StringValue sb = new StringValue();
 
                   return sb.append("0");
                } else {
-                  StringValue sb = _env.createUnicodeBuilder();
+                  StringValue sb = new StringValue();
 
                   return sb.append(value);
                }
@@ -525,7 +526,7 @@ public class JdbcResultResource {
             case Types.LONGVARBINARY:
             case Types.VARBINARY:
             case Types.BINARY: {
-               StringValue bb = env.createBinaryBuilder();
+               StringValue bb = new StringValue();
 
                InputStream is = rs.getBinaryStream(column);
 
@@ -547,11 +548,7 @@ public class JdbcResultResource {
 
             case Types.VARCHAR:
             case Types.LONGVARCHAR:
-               if (env.isUnicodeSemantics()) {
-                  return getUnicodeColumnString(env, rs, metaData, column);
-               } else {
-                  return getColumnString(env, rs, metaData, column);
-               }
+               return getColumnString(env, rs, metaData, column);
 
             case Types.TIME:
                return getColumnTime(env, rs, column);
@@ -585,7 +582,7 @@ public class JdbcResultResource {
       }
    }
 
-   protected Value getUnicodeColumnString(Env env,
+   protected Value getColumnString(Env env,
            ResultSet rs,
            ResultSetMetaData md,
            int column)
@@ -597,33 +594,9 @@ public class JdbcResultResource {
          return NullValue.NULL;
       }
 
-      StringValue bb = env.createUnicodeBuilder();
+      StringValue bb = new StringValue();
 
       bb.append(reader);
-
-      return bb;
-   }
-
-   protected Value getColumnString(Env env,
-           ResultSet rs,
-           ResultSetMetaData md,
-           int column)
-           throws SQLException {
-      // php/1464, php/144f, php/144g
-      // php/144b
-
-      // calling getString() will decode using the database encoding, so
-      // get bytes directly.  Also, getBytes is faster for MySQL since
-      // getString converts from bytes to string.
-      byte[] bytes = rs.getBytes(column);
-
-      if (bytes == null) {
-         return NullValue.NULL;
-      }
-
-      StringValue bb = env.createUnicodeBuilder();
-
-      bb.append(bytes);
 
       return bb;
    }

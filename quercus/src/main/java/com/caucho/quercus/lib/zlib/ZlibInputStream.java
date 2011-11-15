@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.zlib;
 
@@ -39,7 +40,7 @@ import java.io.IOException;
 /**
  * Input from a compressed stream.
  *
- * 
+ *
  */
 public class ZlibInputStream extends ReadStreamInput {
 
@@ -55,7 +56,7 @@ public class ZlibInputStream extends ReadStreamInput {
       init(in);
    }
 
-   protected void init(BinaryInput in)
+   protected final void init(BinaryInput in)
            throws IOException {
       _in = in;
 

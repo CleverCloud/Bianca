@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -44,7 +45,6 @@ import java.util.Set;
 public class CompiledObjectValue extends ObjectValue
         implements Serializable {
 
-   private static final StringValue TO_STRING = new UnicodeValueImpl("__toString");
    private static final Value[] NULL_FIELDS = new Value[0];
    public Value[] _fields;
    private ObjectExtValue _object;
@@ -551,8 +551,7 @@ public class CompiledObjectValue extends ObjectValue
    if (fun != null)
    return fun.callMethod(env, this, new Expr[0]).toString(env);
    else
-   return env
-   .createUnicodeBuilder().append(_quercusClass.getName()).append("[]");
+   return new StringValue().append(_quercusClass.getName()).append("[]");
    }
     */
    /**

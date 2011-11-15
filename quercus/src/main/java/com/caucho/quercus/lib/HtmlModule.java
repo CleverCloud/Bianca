@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -34,7 +35,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.caucho.quercus.QuercusModuleException;
@@ -44,13 +44,11 @@ import com.caucho.quercus.env.ArrayValueImpl;
 import com.caucho.quercus.env.ConstArrayValue;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.LongValue;
-import com.caucho.quercus.env.StringBuilderValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
-import com.caucho.vfs.Encoding;
-import com.caucho.vfs.i18n.EncodingWriter;
 
 /**
  * PHP functions implementing html code.
@@ -91,11 +89,11 @@ public class HtmlModule extends AbstractQuercusModule {
          Value value = entry.getValue();
 
          if (key.isString()) {
-            key = key.toUnicodeValue(env);
+            key = key.toStringValue(env);
          }
 
          if (value.isString()) {
-            value = value.toUnicodeValue(env);
+            value = value.toStringValue(env);
          }
 
          copy.put(key, value);
@@ -113,36 +111,29 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional("ENT_COMPAT") int quoteStyle) {
       Value result;
 
-      if (!env.isUnicodeSemantics()) {
-         if (table == HTML_ENTITIES) {
-            result = HTML_ENTITIES_ARRAY.copy();
-         } else {
-            result = HTML_SPECIALCHARS_ARRAY.copy();
+
+      if (table == HTML_ENTITIES) {
+         if (HTML_ENTITIES_ARRAY_UNICODE == null) {
+            HTML_ENTITIES_ARRAY_UNICODE = toUnicodeArray(
+                    env, HTML_ENTITIES_ARRAY);
          }
+
+         result = HTML_ENTITIES_ARRAY_UNICODE.copy();
       } else {
-         if (table == HTML_ENTITIES) {
-            if (HTML_ENTITIES_ARRAY_UNICODE == null) {
-               HTML_ENTITIES_ARRAY_UNICODE = toUnicodeArray(
-                       env, HTML_ENTITIES_ARRAY);
-            }
-
-            result = HTML_ENTITIES_ARRAY_UNICODE.copy();
-         } else {
-            if (HTML_SPECIALCHARS_ARRAY_UNICODE == null) {
-               HTML_SPECIALCHARS_ARRAY_UNICODE = toUnicodeArray(
-                       env, HTML_SPECIALCHARS_ARRAY);
-            }
-
-            result = HTML_SPECIALCHARS_ARRAY_UNICODE.copy();
+         if (HTML_SPECIALCHARS_ARRAY_UNICODE == null) {
+            HTML_SPECIALCHARS_ARRAY_UNICODE = toUnicodeArray(
+                    env, HTML_SPECIALCHARS_ARRAY);
          }
+
+         result = HTML_SPECIALCHARS_ARRAY_UNICODE.copy();
       }
 
       if ((quoteStyle & ENT_HTML_QUOTE_SINGLE) != 0) {
-         result.put(env.createString('\''), env.createString("&#39;"));
+         result.put(env.createString("'"), env.createString("&#39;"));
       }
 
       if ((quoteStyle & ENT_HTML_QUOTE_DOUBLE) != 0) {
-         result.put(env.createString('"'), env.createString("&quot;"));
+         result.put(env.createString("\""), env.createString("&quot;"));
       }
 
       return result;
@@ -159,7 +150,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional("ENT_COMPAT") int quoteStyle) {
       int len = str.length();
 
-      StringValue sb = str.createStringBuilder(len * 4 / 5);
+      StringValue sb = new StringValue();
 
       for (int i = 0; i < len; i++) {
          char ch = str.charAt(i);
@@ -257,7 +248,7 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional String charset) {
       int len = string.length();
 
-      StringValue sb = string.createStringBuilder(len * 5 / 4);
+      StringValue sb = new StringValue();
 
       for (int i = 0; i < len; i++) {
          char ch = string.charAt(i);
@@ -306,23 +297,19 @@ public class HtmlModule extends AbstractQuercusModule {
     */
    public static Value htmlentities(Env env,
            StringValue string,
-           @Optional("ENT_COMPAT") int quoteStyle,
-           @Optional String charset) {
-      if (charset == null || charset.length() == 0) {
-         charset = "ISO-8859-1";
-      }
+           @Optional("ENT_COMPAT") int quoteStyle) {
 
       Reader reader;
 
       try {
-         reader = string.toReader(charset);
+         reader = string.toReader();
       } catch (UnsupportedEncodingException e) {
          env.warning(e);
 
          reader = new StringReader(string.toString());
       }
 
-      StringValue sb = string.createStringBuilder(string.length() * 5 / 4);
+      StringValue sb = new StringValue();
 
       int ch;
       try {
@@ -343,15 +330,8 @@ public class HtmlModule extends AbstractQuercusModule {
                }
             } else if (entity != null) {
                sb.append(entity);
-            } else if (env.isUnicodeSemantics() || 0x00 <= ch && ch <= 0xff) {
-               sb.append((char) ch);
             } else {
-               sb.append("&#");
-               sb.append(hexdigit(ch >> 12));
-               sb.append(hexdigit(ch >> 8));
-               sb.append(hexdigit(ch >> 4));
-               sb.append(hexdigit(ch));
-               sb.append(";");
+               sb.append((char) ch);
             }
          }
       } catch (IOException e) {
@@ -384,77 +364,54 @@ public class HtmlModule extends AbstractQuercusModule {
            @Optional int quoteStyle,
            @Optional String charset) {
       if (string.length() == 0) {
-         return env.getEmptyString();
+         return StringValue.EMPTY;
       }
 
       ArrayValue htmlEntities = null;
 
-      boolean isUnicode = env.isUnicodeSemantics();
-
-      if (isUnicode) {
-         if (HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY == null) {
-            HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY = toUnicodeArray(
-                    env, HTML_ENTITIES_ARRAY_ENTITY_KEY);
-         }
-
-         htmlEntities = HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY;
-      } else {
-         htmlEntities = HTML_ENTITIES_ARRAY_ENTITY_KEY;
+      if (HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY == null) {
+         HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY = toUnicodeArray(
+                 env, HTML_ENTITIES_ARRAY_ENTITY_KEY);
       }
 
-      EncodingWriter out = null;
-
-      if (!isUnicode) {
-         if (charset == null || charset.length() == 0) {
-            charset = env.getRuntimeEncoding();
-         }
-
-         out = Encoding.getWriteEncoding(charset);
-      }
+      htmlEntities = HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY;
 
       int len = string.length();
       int htmlEntityStart = -1;
-      StringValue result = env.createStringBuilder();
+      StringValue result = new StringValue();
 
-      try {
-         // Loop through each character
-         for (int i = 0; i < len; i++) {
-            char ch = string.charAt(i);
+      // Loop through each character
+      for (int i = 0; i < len; i++) {
+         char ch = string.charAt(i);
 
-            // Check whether it's a html entity
-            // i.e. starts with '&' and ends with ';'
-            if (ch == '&' && htmlEntityStart < 0) {
-               htmlEntityStart = i;
-            } else if (htmlEntityStart < 0) {
-               // else add it to result.
-               result.append(ch);
-            } else if (ch == ';') {
-               // If so substitute the entity and add it to result.
-               StringValue entity = string.substring(htmlEntityStart, i + 1);
-               Value value = htmlEntities.get(entity);
+         // Check whether it's a html entity
+         // i.e. starts with '&' and ends with ';'
+         if (ch == '&' && htmlEntityStart < 0) {
+            htmlEntityStart = i;
+         } else if (htmlEntityStart < 0) {
+            // else add it to result.
+            result.append(ch);
+         } else if (ch == ';') {
+            // If so substitute the entity and add it to result.
+            StringValue entity = string.substring(htmlEntityStart, i + 1);
+            Value value = htmlEntities.get(entity);
 
-               if (value.isNull()) {
-                  result.append(entity);
-               } else if (isUnicode) {
-                  result.append((char) value.toInt());
-               } else {
-                  out.write(result, (char) value.toInt());
-               }
-
-               htmlEntityStart = -1;
-            } else if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z')) {
+            if (value.isNull()) {
+               result.append(entity);
             } else {
-               result.append('&');
-               i = htmlEntityStart;
-               htmlEntityStart = -1;
+               result.append((char) value.toInt());
             }
-         }
 
-         if (htmlEntityStart > 0) {
-            result.append(string, htmlEntityStart, len);
+            htmlEntityStart = -1;
+         } else if (!(('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))) {
+            result.append('&');
+            i = htmlEntityStart;
+            htmlEntityStart = -1;
          }
-      } catch (IOException e) {
-         log.log(Level.FINE, e.toString(), e);
+      }
+
+      if (htmlEntityStart > 0) {
+         result.append(string, htmlEntityStart, len);
       }
 
       return result;
@@ -485,7 +442,7 @@ public class HtmlModule extends AbstractQuercusModule {
            ArrayValue revMap, int ch, String entity) {
       // TODO: i18n and optimize static variables usage
       array.put("" + (char) ch, entity);
-      StringValue entityValue = new StringBuilderValue(entity);
+      StringValue entityValue = new StringValue(entity);
       map[ch & 0xffff] = entityValue;
       revMap.put(entityValue, LongValue.create(ch));
    }

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.servlet;
 
@@ -73,6 +74,7 @@ public class QuercusServletImpl extends HttpServlet {
    /**
     * initialize the script manager.
     */
+   @Override
    public final void init(ServletConfig config)
            throws ServletException {
       _config = config;
@@ -120,6 +122,7 @@ public class QuercusServletImpl extends HttpServlet {
    /**
     * Service.
     */
+   @Override
    public void service(HttpServletRequest request,
            HttpServletResponse response)
            throws ServletException, IOException {
@@ -290,6 +293,7 @@ public class QuercusServletImpl extends HttpServlet {
    /**
     * Destroys the quercus instance.
     */
+   @Override
    public void destroy() {
       _quercus.close();
    }

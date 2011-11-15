@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -156,7 +157,7 @@ public class BooleanValue extends Value
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      StringValue sb = env.createUnicodeBuilder();
+      StringValue sb = new StringValue();
 
       if (_value) {
          sb.append("1");

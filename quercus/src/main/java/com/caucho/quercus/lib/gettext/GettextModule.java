@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Nam Nguyen
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.gettext;
 
@@ -38,7 +39,6 @@ import com.caucho.vfs.Path;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 /**
  * Module to find translated strings and return them in desired charset.
@@ -48,7 +48,6 @@ public class GettextModule
         extends AbstractQuercusModule {
 
    private LruCache<Object, GettextResource> _cache = new LruCache<Object, GettextResource>(16);
-   private final Logger log = Logger.getLogger(GettextModule.class.getName());
    private final L10N L = new L10N(GettextModule.class);
 
    @Override
@@ -413,11 +412,7 @@ public class GettextModule
 
       StringValue sb;
 
-      if (msg.isUnicode()) {
-         sb = env.createUnicodeBuilder();
-      } else {
-         sb = env.createBinaryBuilder();
-      }
+      sb = new StringValue();
 
       return formatImpl(env, msg, args, sb);
    }
@@ -428,7 +423,7 @@ public class GettextModule
    Value []args,
    String charset)
    {
-   StringValue sb = env.createBinaryBuilder();
+   StringValue sb = new StringValue();
 
    byte []bytes = null;
 

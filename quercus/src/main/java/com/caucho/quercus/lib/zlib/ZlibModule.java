@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Charles Reich
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.zlib;
 
@@ -264,9 +265,9 @@ public class ZlibModule extends AbstractQuercusModule {
          if (ch < 0) {
             return BooleanValue.FALSE;
          } else {
-            StringValue sb = env.createBinaryBuilder(1);
+            StringValue sb = new StringValue();
 
-            sb.appendByte(ch);
+            sb.append(ch);
 
             return sb;
          }
@@ -438,7 +439,7 @@ public class ZlibModule extends AbstractQuercusModule {
 
          boolean isFinished = false;
 
-         StringValue out = env.createLargeBinaryBuilder();
+         StringValue out = new StringValue();
 
          buffer[0] = (byte) 0x78;
 
@@ -452,7 +453,7 @@ public class ZlibModule extends AbstractQuercusModule {
             buffer[1] = (byte) 0xda;
          }
 
-         out.append(buffer, 0, 2);
+         out.append(new String(buffer), 0, 2);
 
          int len;
          while (!isFinished) {
@@ -469,7 +470,7 @@ public class ZlibModule extends AbstractQuercusModule {
             }
 
             while ((len = deflater.deflate(buffer, 0, buffer.length)) > 0) {
-               out.append(buffer, 0, len);
+               out.append(new String(buffer), 0, len);
             }
          }
 
@@ -480,7 +481,7 @@ public class ZlibModule extends AbstractQuercusModule {
          buffer[2] = (byte) (value >> 8);
          buffer[3] = (byte) (value >> 0);
 
-         out.append(buffer, 0, 4);
+         out.append(new String(buffer), 0, 4);
 
          return out;
       } catch (Exception e) {
@@ -514,11 +515,11 @@ public class ZlibModule extends AbstractQuercusModule {
 
          in = new InflaterInputStream(is);
 
-         StringValue sb = env.createLargeBinaryBuilder();
+         StringValue sb = new StringValue();
 
          int len;
          while ((len = in.read(buffer, 0, buffer.length)) >= 0) {
-            sb.append(buffer, 0, len);
+            sb.append(new String(buffer));
          }
 
          return sb;
@@ -604,7 +605,7 @@ public class ZlibModule extends AbstractQuercusModule {
 
       try {
          inflater = new Inflater(true);
-         StringValue sb = env.createBinaryBuilder();
+         StringValue sb = new StringValue();
 
          while (true) {
             int sublen = Math.min(length, buffer.length);
@@ -615,9 +616,8 @@ public class ZlibModule extends AbstractQuercusModule {
                inflater.setInput(buffer, 0, sublen);
                length -= sublen;
 
-               int inflatedLength;
-               while ((inflatedLength = inflater.inflate(buffer, 0, sublen)) > 0) {
-                  sb.append(buffer, 0, inflatedLength);
+               while (inflater.inflate(buffer, 0, sublen) > 0) {
+                  sb.append(new String(buffer));
                }
             } else {
                break;
@@ -673,9 +673,9 @@ public class ZlibModule extends AbstractQuercusModule {
          }
          gzOut.close();
 
-         StringValue sb = env.createBinaryBuilder();
+         StringValue sb = new StringValue();
          for (TempBuffer ptr = ts.getHead(); ptr != null; ptr = ptr.getNext()) {
-            sb.append(ptr.getBuffer(), 0, ptr.getLength());
+            sb.append(new String(ptr.getBuffer()));
          }
 
          return sb;

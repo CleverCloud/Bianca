@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Emil Ong
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.jms;
 
@@ -36,6 +37,7 @@ import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.module.IniDefinition;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
+import java.util.logging.Level;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -102,7 +104,7 @@ public class JMSModule extends AbstractQuercusModule {
                  (ConnectionFactory) context.lookup(factoryName.toString());
 
          if (connectionFactory == null) {
-            log.warning("Couldn't find factory " + factoryName.toString());
+            log.log(Level.WARNING, "Couldn''t find factory {0}", factoryName.toString());
          }
 
          return connectionFactory;

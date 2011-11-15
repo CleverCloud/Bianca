@@ -25,11 +25,13 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Emil Ong
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib.file;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.EnvCleanup;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.Value;
 import com.caucho.vfs.Encoding;
@@ -222,7 +224,7 @@ public class FileInputOutput extends AbstractBinaryOutput
    @Override
    public StringValue read(int length)
            throws IOException {
-      StringValue bb = _env.createBinaryBuilder();
+      StringValue bb = new StringValue();
       TempBuffer temp = TempBuffer.allocate();
 
       try {
@@ -238,7 +240,7 @@ public class FileInputOutput extends AbstractBinaryOutput
             sublen = read(buffer, 0, sublen);
 
             if (sublen > 0) {
-               bb.append(buffer, 0, sublen);
+               bb.append(new String(buffer), 0, sublen);
                length -= sublen;
             } else {
                break;

@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.lib;
 
@@ -41,8 +42,7 @@ public final class UnserializeReader {
    private static final L10N L = new L10N(UnserializeReader.class);
    private static final Logger log = Logger.getLogger(UnserializeReader.class.getName());
    private static final LruCache<StringKey, StringValue> _keyCache = new LruCache<StringKey, StringValue>(4096);
-   private final char[] _buffer;
-   private final int _length;
+   private final String _buffer;
    private int _index;
    private StringKey _key = new StringKey();
    private ArrayList<Value> _valueList = new ArrayList<Value>();
@@ -51,8 +51,7 @@ public final class UnserializeReader {
 
    public UnserializeReader(StringValue s)
            throws IOException {
-      _buffer = s.toCharArray();
-      _length = _buffer.length;
+      _buffer = s.toString();
 
       if (s.indexOf("R:") >= 0
               || s.indexOf("r:") >= 0) {
@@ -62,8 +61,7 @@ public final class UnserializeReader {
 
    public UnserializeReader(String s)
            throws IOException {
-      _buffer = s.toCharArray();
-      _length = _buffer.length;
+      _buffer = s;
 
       if (s.indexOf("R:") >= 0
               || s.indexOf("r:") >= 0) {
@@ -95,7 +93,9 @@ public final class UnserializeReader {
          }
 
          case 's':
-         case 'S': {
+         case 'S':
+         case 'u':
+         case 'U':{
             expect(':');
             int len = (int) readInt();
             expect(':');
@@ -107,29 +107,6 @@ public final class UnserializeReader {
             }
 
             Value value = readStringValue(env, len);
-
-            expect('"');
-            expect(';');
-
-            if (_useReference) {
-               value = createReference(value);
-            }
-
-            return value;
-         }
-         case 'u':
-         case 'U': {
-            expect(':');
-            int len = (int) readInt();
-            expect(':');
-            expect('"');
-
-            if (!isValidString(len)) {
-               env.notice(L.l("expected string length of {0}", len));
-               return BooleanValue.FALSE;
-            }
-
-            Value value = readUnicodeValue(env, len);
 
             expect('"');
             expect(';');
@@ -584,14 +561,14 @@ public final class UnserializeReader {
             StringValue v;
 
             if (len < 32) {
-               _key.init(_buffer, _index, len);
+               _key.init(_buffer, _index);
 
                v = _keyCache.get(_key);
 
                if (v != null) {
                   _index += len;
                } else {
-                  StringKey key = new StringKey(_buffer, _index, len);
+                  StringKey key = new StringKey(_buffer, _index);
 
                   v = readStringValue(env, len);
 
@@ -647,21 +624,21 @@ public final class UnserializeReader {
 
    public final void expect(int expectCh)
            throws IOException {
-      if (_length <= _index) {
+      if (_buffer.length() <= _index) {
          throw new IOException(L.l("expected '{0}' at end of string",
                  String.valueOf((char) expectCh)));
       }
 
-      int ch = _buffer[_index++];
+      int ch = _buffer.charAt(_index++);
 
       if (ch != expectCh) {
          String context = String.valueOf((char) ch);
 
          if (_index - 2 >= 0) {
-            context = _buffer[_index - 2] + context;
+            context = _buffer.charAt(_index - 2) + context;
          }
-         if (_index < _buffer.length) {
-            context += _buffer[_index];
+         if (_index < _buffer.length()) {
+            context += _buffer.charAt(_index);
          }
 
          throw new IOException(
@@ -697,7 +674,7 @@ public final class UnserializeReader {
    }
 
    public final boolean isValidString(int len) {
-      if (_index + len >= _buffer.length) {
+      if (_index + len >= _buffer.length()) {
          return false;
       }
 
@@ -705,39 +682,25 @@ public final class UnserializeReader {
    }
 
    public final String readString(int len) {
-      String s = new String(_buffer, _index, len);
-
       _index += len;
 
-      return s;
+      return _buffer.substring(_index, _index+len);
    }
 
    public final StringValue readStringValue(Env env, int len) {
-      StringValue s = env.createString(_buffer, _index, len);
-
-      _index += len;
-
-      return s;
-   }
-
-   public final StringValue readUnicodeValue(Env env, int len) {
-      StringValue s = new UnicodeBuilderValue(_buffer, _index, len);
-
-      _index += len;
-
-      return s;
+      return new StringValue(readString(len));
    }
 
    public final int read() {
-      if (_index < _length) {
-         return _buffer[_index++];
+      if (_index < _buffer.length()) {
+         return _buffer.charAt(_index++);
       } else {
          return -1;
       }
    }
 
-   public final int read(char[] buffer, int offset, int length) {
-      System.arraycopy(_buffer, _index, buffer, offset, length);
+   public final int read(String buffer, int offset, int length) {
+      buffer = new StringBuilder(buffer.substring(0, offset)).append(_buffer.substring(_index)).toString();
 
       _index += length;
 
@@ -750,35 +713,31 @@ public final class UnserializeReader {
 
    public final static class StringKey {
 
-      char[] _buffer;
+      String _buffer;
       int _offset;
-      int _length;
 
       StringKey() {
       }
 
-      StringKey(char[] buffer, int offset, int length) {
-         _buffer = new char[length];
-         System.arraycopy(buffer, offset, _buffer, 0, length);
+      StringKey(String buffer, int offset) {
+         _buffer = buffer;
          _offset = 0;
-         _length = length;
       }
 
-      void init(char[] buffer, int offset, int length) {
+      void init(String buffer, int offset) {
          _buffer = buffer;
          _offset = offset;
-         _length = length;
       }
 
       @Override
       public int hashCode() {
-         char[] buffer = _buffer;
+         String buffer = _buffer;
          int offset = _offset;
-         int end = offset + _length;
+         int end = offset + _buffer.length();
          int hash = 17;
 
          for (; offset < end; offset++) {
-            hash = 65521 * hash + buffer[offset];
+            hash = 65521 * hash + buffer.charAt(offset);
          }
 
          return hash;
@@ -792,27 +751,13 @@ public final class UnserializeReader {
 
          StringKey key = (StringKey) o;
 
-         int length = _length;
+         int length = _buffer.length();
 
-         if (length != key._length) {
+         if (length != key._buffer.length()) {
             return false;
          }
 
-         char[] aBuf = _buffer;
-         char[] bBuf = key._buffer;
-
-         int aOffset = _offset;
-         int bOffset = key._offset;
-
-         int aEnd = aOffset + length;
-
-         while (aOffset < aEnd) {
-            if (aBuf[aOffset++] != bBuf[bOffset++]) {
-               return false;
-            }
-         }
-
-         return true;
+         return _buffer.equals(key._buffer);
       }
    }
 }

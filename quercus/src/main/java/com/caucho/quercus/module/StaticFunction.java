@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.module;
 
@@ -32,20 +33,15 @@ import com.caucho.quercus.QuercusExitException;
 import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.annotation.Name;
 import com.caucho.quercus.env.JavaInvoker;
-import com.caucho.util.L10N;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 /**
  * Represents the introspected static function information.
  */
 public class StaticFunction extends JavaInvoker {
 
-   private static final L10N L = new L10N(StaticFunction.class);
-   private static final Logger log =
-           Logger.getLogger(StaticFunction.class.getName());
    protected final QuercusModule _quercusModule;
    protected final Method _method;
    private final int _argLength;
@@ -73,6 +69,7 @@ public class StaticFunction extends JavaInvoker {
    /*
     * Returns true for a static function.
     */
+   @Override
    public boolean isStatic() {
       return true;
    }
@@ -169,6 +166,7 @@ public class StaticFunction extends JavaInvoker {
       return sb.toString();
    }
 
+   @Override
    public String toString() {
       return getClass().getSimpleName() + "[" + _method + "]";
    }

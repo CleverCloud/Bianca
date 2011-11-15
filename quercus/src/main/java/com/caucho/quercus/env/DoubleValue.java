@@ -25,6 +25,7 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.caucho.quercus.env;
 
@@ -215,7 +216,7 @@ public class DoubleValue extends NumberValue
     */
    @Override
    public StringValue toStringBuilder(Env env) {
-      return env.createUnicodeBuilder().append(toString());
+      return new StringValue().append(toString());
    }
 
    /**
