@@ -1626,14 +1626,20 @@ abstract public class Value implements java.io.Serializable {
          long l = toLong();
          long r = rValue.toLong();
 
-         if (r != 0 && l % r == 0) {
-            return LongValue.create(l / r);
-         } else {
-            return new DoubleValue(toDouble() / rValue.toDouble());
+         if (r != 0) {
+             if (l % r == 0)
+                return LongValue.create(l / r);
+            else
+                return DoubleValue.create(toDouble() / rValue.toDouble());
          }
       } else {
-         return new DoubleValue(toDouble() / rValue.toDouble());
+          double r = rValue.toDouble();
+
+          if (r != 0)
+                 return DoubleValue.create(toDouble() / r);
       }
+      /* OMG PHP IS SO UGLY :D #phpuglyfacts */
+      return StringValue.EMPTY;
    }
 
    /**
