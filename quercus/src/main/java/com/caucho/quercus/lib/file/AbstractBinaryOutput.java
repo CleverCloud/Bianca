@@ -62,7 +62,7 @@ abstract public class AbstractBinaryOutput
    public int write(InputStream is, int length) {
       int writeLength = 0;
 
-      byte[] buffer = new byte[1024];
+      byte[] buffer = new byte[8192];
 
       try {
          while (length > 0) {
