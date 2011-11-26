@@ -696,7 +696,8 @@ public class FileModule extends AbstractQuercusModule {
             while (true) {
                StringValue bb = new StringValue();
 
-               for (int ch = is.read(); ch >= 0; ch = is.read()) {
+               for (int c = is.read(); c >= 0; c = is.read()) {
+                  char ch = (char) c;
                   if (ch == '\n') {
                      bb.append(ch);
                      break;
