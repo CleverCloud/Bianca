@@ -34,7 +34,6 @@ import com.caucho.quercus.QuercusRuntimeException;
 import com.caucho.quercus.lib.file.BinaryInput;
 import com.caucho.quercus.marshal.Marshal;
 import com.caucho.vfs.ReadStream;
-import com.caucho.vfs.TempBuffer;
 import com.caucho.vfs.WriteStream;
 
 import java.io.*;
@@ -111,13 +110,6 @@ public class StringValue
       v1.appendTo(this);
       v2.appendTo(this);
       v3.appendTo(this);
-   }
-
-   public StringValue(TempBuffer head) {
-      this();
-
-      // php/0c4l
-      append(head);
    }
 
    /**
@@ -1568,9 +1560,8 @@ public class StringValue
     * i.e. just call is.read once even if more data is available.
     */
    public int appendRead(InputStream is, long length) {
-      TempBuffer tBuf = TempBuffer.allocate();
       try {
-         byte[] buffer = tBuf.getBuffer();
+         byte[] buffer = new byte[8192];
          int sublen = buffer.length;
          if (length < sublen) {
             sublen = (int) length;
@@ -1585,8 +1576,6 @@ public class StringValue
          return sublen;
       } catch (IOException e) {
          throw new QuercusModuleException(e);
-      } finally {
-         TempBuffer.free(tBuf);
       }
    }
 
@@ -1595,10 +1584,8 @@ public class StringValue
     * end of file or the length is reached.
     */
    public int appendReadAll(InputStream is, long length) {
-      TempBuffer tBuf = TempBuffer.allocate();
-
       try {
-         byte[] buffer = tBuf.getBuffer();
+         byte[] buffer = new byte[8192];
          int readLength = 0;
 
          while (length > 0) {
@@ -1621,8 +1608,6 @@ public class StringValue
          return readLength;
       } catch (IOException e) {
          throw new QuercusModuleException(e);
-      } finally {
-         TempBuffer.free(tBuf);
       }
    }
 
@@ -1631,10 +1616,8 @@ public class StringValue
     * end of file or the length is reached.
     */
    public int appendReadAll(ReadStream is, long length) {
-      TempBuffer tBuf = TempBuffer.allocate();
-
       try {
-         byte[] buffer = tBuf.getBuffer();
+         byte[] buffer = new byte[8192];
          int readLength = 0;
 
          while (length > 0) {
@@ -1657,8 +1640,6 @@ public class StringValue
          return readLength;
       } catch (IOException e) {
          throw new QuercusModuleException(e);
-      } finally {
-         TempBuffer.free(tBuf);
       }
    }
 
@@ -1667,17 +1648,9 @@ public class StringValue
     * call is.read() only once.
     */
    public int appendRead(BinaryInput is, long length) {
-      TempBuffer tBuf = TempBuffer.allocate();
-
       try {
-         byte[] buffer = tBuf.getBuffer();
+         byte[] buffer = new byte[(int) length];
          int sublen = buffer.length;
-         if (length < sublen) {
-            sublen = (int) length;
-         } else if (length > sublen) {
-            buffer = new byte[(int) length];
-            sublen = (int) length;
-         }
 
          sublen = is.read(buffer, 0, sublen);
 
@@ -1688,8 +1661,6 @@ public class StringValue
          return sublen;
       } catch (IOException e) {
          throw new QuercusModuleException(e);
-      } finally {
-         TempBuffer.free(tBuf);
       }
    }
 
@@ -1698,10 +1669,8 @@ public class StringValue
     * stream.
     */
    public int appendReadAll(BinaryInput is, long length) {
-      TempBuffer tBuf = TempBuffer.allocate();
-
       try {
-         byte[] buffer = tBuf.getBuffer();
+         byte[] buffer = new byte[8192];
          int readLength = 0;
 
          while (length > 0) {
@@ -1724,8 +1693,6 @@ public class StringValue
          return readLength;
       } catch (IOException e) {
          throw new QuercusModuleException(e);
-      } finally {
-         TempBuffer.free(tBuf);
       }
    }
 
