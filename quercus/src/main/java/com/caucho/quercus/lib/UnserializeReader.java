@@ -682,9 +682,10 @@ public final class UnserializeReader {
    }
 
    public final String readString(int len) {
-      _index += len;
-
-      return _buffer.substring(_index, _index+len);
+      int end = Math.min(_buffer.length(), _index + len);
+      String str = _buffer.substring(_index, end);
+      _index = len;
+      return str;
    }
 
    public final StringValue readStringValue(Env env, int len) {
@@ -733,7 +734,7 @@ public final class UnserializeReader {
       public int hashCode() {
          String buffer = _buffer;
          int offset = _offset;
-         int end = offset + _buffer.length();
+         int end = _buffer.length();
          int hash = 17;
 
          for (; offset < end; offset++) {
