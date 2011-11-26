@@ -62,8 +62,7 @@ abstract public class AbstractBinaryOutput
    public int write(InputStream is, int length) {
       int writeLength = 0;
 
-      TempBuffer tb = TempBuffer.allocate();
-      byte[] buffer = tb.getBuffer();
+      byte[] buffer = new byte[1024];
 
       try {
          while (length > 0) {
@@ -90,8 +89,6 @@ abstract public class AbstractBinaryOutput
          return writeLength;
       } catch (IOException e) {
          throw new QuercusModuleException(e);
-      } finally {
-         TempBuffer.free(tb);
       }
    }
 

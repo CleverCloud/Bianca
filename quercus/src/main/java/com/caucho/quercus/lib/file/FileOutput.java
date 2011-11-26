@@ -230,7 +230,6 @@ public class FileOutput extends AbstractBinaryOutput
 
    /**
     * Converts to a string.
-    * @param env
     */
    @Override
    public String toString() {

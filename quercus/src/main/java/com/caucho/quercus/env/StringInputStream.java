@@ -65,14 +65,12 @@ public class StringInputStream extends InputStream {
          sublen = length;
       }
 
-      String s = _string;
-      int index = _index;
+      byte[] s = _string.substring(_index, _index + sublen).getBytes();
+      _index += sublen;
 
       for (int i = 0; i < sublen; i++) {
-         buffer[offset + i] = (byte) s.charAt(index + i);
+         buffer[offset + i] = s[i];
       }
-
-      _index = index + sublen;
 
       return sublen;
    }
