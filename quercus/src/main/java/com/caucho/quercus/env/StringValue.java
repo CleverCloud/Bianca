@@ -1959,7 +1959,7 @@ public class StringValue
     */
    @Override
    public final InputStream toInputStream() {
-      return new BuilderInputStream();
+      return new StringValueInputStream();
    }
 
    public Reader toSimpleReader()
@@ -2204,7 +2204,7 @@ public class StringValue
     * Returns an OutputStream.
     */
    public OutputStream getOutputStream() {
-      return new BuilderOutputStream();
+      return new StringValueOutputStream();
    }
 
    @Override
@@ -2301,13 +2301,12 @@ public class StringValue
             return -1;
          }
 
-         int index = _index;
+         byte[] s = substring(_index, _index + sublen).toString().getBytes();
+         _index += sublen;
 
          for (int i = 0; i < sublen; i++) {
-            buffer[offset + i] = (byte) charAt(index + i);
+            buffer[offset + i] = s[i];
          }
-
-         _index += sublen;
 
          return sublen;
       }
@@ -2355,42 +2354,7 @@ public class StringValue
       }
    }
 
-   class BuilderInputStream extends InputStream {
-
-      private int _index;
-
-      /**
-       * Reads the next byte.
-       */
-      @Override
-      public int read() {
-         if (_index < _buffer.length()) {
-            return _buffer.charAt(_index++);
-         } else {
-            return -1;
-         }
-      }
-
-      /**
-       * Reads into a buffer.
-       */
-      @Override
-      public int read(byte[] buffer, int offset, int length) {
-         int sublen = Math.min(_buffer.length() - _index, length);
-
-         if (sublen <= 0) {
-            return -1;
-         }
-
-         _buffer = new StringBuilder(_buffer.substring(0, _index)).append(new String(buffer).substring(_index, _index + sublen));
-
-         _index += sublen;
-
-         return sublen;
-      }
-   }
-
-   class BuilderOutputStream extends OutputStream {
+   class StringValueOutputStream extends OutputStream {
 
       /**
        * Writes the next byte.
