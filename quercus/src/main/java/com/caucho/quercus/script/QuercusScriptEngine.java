@@ -105,7 +105,7 @@ public class QuercusScriptEngine
             os.setNewlineString("\n");
 
             try {
-               os.setEncoding("utf8");
+               os.setEncoding("utf-8");
             } catch (Exception e) {
             }
 

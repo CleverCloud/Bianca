@@ -46,7 +46,7 @@ import java.util.logging.Logger;
  * Represents the $_SESSION
  */
 public class SessionArrayValue extends ArrayValueWrapper
-        implements CacheListener, Serializable {
+   implements CacheListener, Serializable {
 
    static protected final Logger log = Logger.getLogger(SessionArrayValue.class.getName());
    private String _id;
@@ -56,12 +56,12 @@ public class SessionArrayValue extends ArrayValueWrapper
    private boolean _isValid;
 
    public SessionArrayValue(String id, long now,
-           long maxInactiveInterval) {
+                            long maxInactiveInterval) {
       this(id, now, maxInactiveInterval, new ArrayValueImpl());
    }
 
    public SessionArrayValue(String id, long now,
-           long maxInactiveInterval, ArrayValue array) {
+                            long maxInactiveInterval, ArrayValue array) {
       super(array);
 
       _id = id;
@@ -100,8 +100,8 @@ public class SessionArrayValue extends ArrayValueWrapper
       long accessTime = _accessTime;
 
       SessionArrayValue copy =
-              new SessionArrayValue(_id, accessTime, _maxInactiveInterval,
-              (ArrayValue) getArray().copy(env, map));
+         new SessionArrayValue(_id, accessTime, _maxInactiveInterval,
+            (ArrayValue) getArray().copy(env, map));
 
       return copy;
    }
@@ -174,7 +174,7 @@ public class SessionArrayValue extends ArrayValueWrapper
     * Saves the object to the output stream.
     */
    public void store(Env env, OutputStream out)
-           throws IOException {
+      throws IOException {
       String encode = encode(env);
 
       int len = encode.length();
@@ -193,11 +193,11 @@ public class SessionArrayValue extends ArrayValueWrapper
    }
 
    public void load(Env env, InputStream in)
-           throws IOException {
+      throws IOException {
       int len = (((in.read() & 0xff) << 24)
-              + ((in.read() & 0xff) << 16)
-              + ((in.read() & 0xff) << 8)
-              + ((in.read() & 0xff)));
+         + ((in.read() & 0xff) << 16)
+         + ((in.read() & 0xff) << 8)
+         + ((in.read() & 0xff)));
 
       StringValue sb = new StringValue();
 
@@ -212,7 +212,7 @@ public class SessionArrayValue extends ArrayValueWrapper
 
    /**
     * Cleaning up session stuff at the end of a request.
-    *
+    * <p/>
     * <p>If the session data has changed and we have persistent sessions,
     * save the session.  However, if save-on-shutdown is true, only save
     * on a server shutdown.
@@ -281,7 +281,7 @@ public class SessionArrayValue extends ArrayValueWrapper
    public void invalidate() {
       if (!_isValid) {
          throw new IllegalStateException(L.l(
-                 "Can't call invalidate() when session is no longer valid."));
+            "Can't call invalidate() when session is no longer valid."));
       }
 
       try {
@@ -308,26 +308,24 @@ public class SessionArrayValue extends ArrayValueWrapper
    @Override
    public void removeEvent() {
       // TODO: logic doesn't make sense
-	/*
-      boolean isValid = _isValid;
+      /*
+     boolean isValid = _isValid;
 
-      if (log.isLoggable(Level.FINE)) {
-      log.fine("remove session " + _id);
-      }
+     if (log.isLoggable(Level.FINE)) {
+     log.fine("remove session " + _id);
+     }
 
-      long now = Alarm.getCurrentTime();
+     ClusterObject clusterObject = _clusterObject;
 
-      ClusterObject clusterObject = _clusterObject;
-
-      if (_isValid && clusterObject != null) {
-      try {
-      clusterObject.update();
-      clusterObject.store(this);
-      } catch (Throwable e) {
-      log.log(Level.WARNING, "Can't serialize session", e);
-      }
-      }
-       */
+     if (_isValid && clusterObject != null) {
+     try {
+     clusterObject.update();
+     clusterObject.store(this);
+     } catch (Throwable e) {
+     log.log(Level.WARNING, "Can't serialize session", e);
+     }
+     }
+      */
    }
 
    //

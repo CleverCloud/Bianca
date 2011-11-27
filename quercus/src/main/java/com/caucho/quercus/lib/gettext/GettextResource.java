@@ -29,7 +29,7 @@
  */
 package com.caucho.quercus.lib.gettext;
 
-import com.caucho.vfs.BasicDependencyContainer;
+import com.caucho.vfs.Dependency;
 import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
@@ -51,7 +51,7 @@ class GettextResource {
    protected Path _pathPO;
    private Path _pathMO;
    private Path _currentPath;
-   private BasicDependencyContainer _depend;
+   private Depend _depend;
    private PluralExpr _pluralExpr;
    private HashMap<StringValue, ArrayList<StringValue>> _translations;
    private String _charset;
@@ -94,11 +94,7 @@ class GettextResource {
       try {
          GettextParser parser;
 
-         if (_depend == null) {
-            _depend = new BasicDependencyContainer();
-         }
-
-         _depend.add(new Depend(_currentPath));
+         _depend = new Depend(_currentPath);
 
          if (_currentPath == _pathPO) {
             parser = new POFileParser(_env, _currentPath);

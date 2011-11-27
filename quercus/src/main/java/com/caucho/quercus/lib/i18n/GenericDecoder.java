@@ -37,7 +37,6 @@ import java.nio.charset.CoderResult;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
-import com.caucho.vfs.TempCharBuffer;
 
 public class GenericDecoder
         extends Decoder {
@@ -62,10 +61,7 @@ public class GenericDecoder
    protected StringBuilder decodeImpl(Env env, StringValue str) {
       ByteBuffer in = ByteBuffer.wrap(str.toString().getBytes());
 
-      TempCharBuffer tempBuf = TempCharBuffer.allocate();
-
-      try {
-         CharBuffer out = CharBuffer.wrap(tempBuf.getBuffer());
+         CharBuffer out = CharBuffer.wrap(new char[8192]);
 
          StringBuilder sb = new StringBuilder();
 
@@ -89,9 +85,6 @@ public class GenericDecoder
          fill(sb, in, out, coder);
 
          return sb;
-      } finally {
-         TempCharBuffer.free(tempBuf);
-      }
    }
 
    protected boolean fill(StringBuilder sb, ByteBuffer in,

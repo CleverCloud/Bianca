@@ -30,7 +30,6 @@
 package com.caucho.quercus;
 
 import com.caucho.config.ConfigException;
-import com.caucho.java.JavaCompiler;
 import com.caucho.quercus.annotation.ClassImplementation;
 import com.caucho.quercus.env.*;
 import com.caucho.quercus.expr.ExprFactory;
@@ -46,6 +45,7 @@ import com.caucho.quercus.page.QuercusPage;
 import com.caucho.quercus.parser.QuercusParser;
 import com.caucho.quercus.program.*;
 import com.caucho.util.*;
+import com.caucho.server.util.*;
 import com.caucho.vfs.*;
 
 import javax.servlet.ServletContext;
@@ -118,7 +118,7 @@ public class QuercusContext {
    private String _scriptEncoding;
    private String _phpVersion = QuercusVersion.getVersionNumber();
    private String _mySqlVersion;
-   private String _jdbcEncoding = "utf8";
+   private String _jdbcEncoding = "utf-8";
    private StringValue _phpVersionValue;
    private boolean _isStrict;
    private boolean _isLooseParse;
@@ -360,7 +360,7 @@ public class QuercusContext {
       if (_scriptEncoding != null) {
          return _scriptEncoding;
       }
-      return "utf8";
+      return "utf-8";
    }
 
    /*
@@ -857,6 +857,53 @@ public class QuercusContext {
    public void setCompileClassLoader(ClassLoader loader) {
    }
 
+  private static char encodeHex(int i)
+  {
+    i &= 0xf;
+
+    if (i < 10)
+      return (char) (i + '0');
+    else
+      return (char) (i - 10 + 'a');
+  }
+
+  /**
+   * Mangles the path into a valid Java class name.
+   */
+  public static String mangleName(String name)
+  {
+    CharBuffer cb = new CharBuffer();
+    cb.append("_");
+
+    for (int i = 0; i < name.length(); i++) {
+      char ch = name.charAt(i);
+
+      if (ch == '/' || ch == CauchoSystem.getPathSeparatorChar()) {
+        if (i == 0) {
+        }
+        else if (cb.charAt(cb.length() - 1) != '.' &&
+                 (i + 1 < name.length() && name.charAt(i + 1) != '/'))
+          cb.append("._");
+      }
+      else if (ch == '.')
+        cb.append("__");
+      else if (ch == '_')
+        cb.append("_0");
+      else if (Character.isJavaIdentifierPart(ch))
+        cb.append(Character.toLowerCase(ch));
+      else if (ch <= 256)
+        cb.append("_2" + encodeHex(ch >> 4) + encodeHex(ch));
+      else
+        cb.append("_4" + encodeHex(ch >> 12) + encodeHex(ch >> 8) +
+                  encodeHex(ch >> 4) + encodeHex(ch));
+    }
+
+    if (cb.length() == 0)
+      cb.append("_z");
+
+    return cb.toString();
+  }
+
    /**
     * Returns the relative path.
     */
@@ -876,7 +923,7 @@ public class QuercusContext {
          relPath = pathName;
       }
 
-      return "_quercus." + JavaCompiler.mangleName(relPath);
+      return "_quercus." + mangleName(relPath);
    }
 
    /**
@@ -1888,7 +1935,7 @@ public class QuercusContext {
    public static final IniDefinition INI_ALWAYS_POPULATE_RAW_POST_DATA = _ini.add(
            "always_populate_raw_post_data", false, IniDefinition.PHP_INI_PERDIR);
    // unicode ini
-   public static final IniDefinition INI_UNICODE_FALLBACK_ENCODING = _ini.add("unicode.fallback_encoding", "utf8", IniDefinition.PHP_INI_ALL);
+   public static final IniDefinition INI_UNICODE_FALLBACK_ENCODING = _ini.add("unicode.fallback_encoding", "utf-8", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_MODE = _ini.add("unicode.from_error_mode", "2", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_SUBST_CHAR = _ini.add(
            "unicode.from_error_subst_char", "3f", IniDefinition.PHP_INI_ALL);

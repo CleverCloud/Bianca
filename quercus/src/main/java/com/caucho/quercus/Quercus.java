@@ -168,7 +168,7 @@ public class Quercus
       WriteStream os = new WriteStream(StdoutStream.create());
 
       os.setNewlineString("\n");
-      os.setEncoding("utf8");
+      os.setEncoding("utf-8");
 
       Env env = createEnv(page, os, null, null);
       env.start();

@@ -216,12 +216,12 @@ public class QuercusParser {
            ReadStream is) {
       this(quercus);
 
-      init(sourceFile, is, "utf8");
+      init(sourceFile, is, "utf-8");
    }
 
    private void init(Path sourceFile)
            throws IOException {
-      init(sourceFile, sourceFile.openRead(), "utf8");
+      init(sourceFile, sourceFile.openRead(), "utf-8");
    }
 
    private void init(Path sourceFile, ReadStream is, String encoding) {
