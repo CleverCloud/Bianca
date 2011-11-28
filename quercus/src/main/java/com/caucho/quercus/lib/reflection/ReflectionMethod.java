@@ -31,18 +31,13 @@ package com.caucho.quercus.lib.reflection;
 import com.caucho.quercus.QuercusException;
 import com.caucho.quercus.UnimplementedException;
 import com.caucho.quercus.annotation.Optional;
-import com.caucho.quercus.env.ArrayValue;
-import com.caucho.quercus.env.ArrayValueImpl;
-import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.ObjectValue;
-import com.caucho.quercus.env.Value;
-import com.caucho.quercus.env.StringValue;
+import com.caucho.quercus.env.*;
 import com.caucho.quercus.function.AbstractFunction;
 import com.caucho.quercus.program.Arg;
 import com.caucho.util.L10N;
 
 public class ReflectionMethod extends ReflectionFunctionAbstract
-        implements Reflector {
+   implements Reflector {
 
    private static final L10N L = new L10N(ReflectionMethod.class);
    public static final int IS_STATIC = 1;
@@ -64,7 +59,7 @@ public class ReflectionMethod extends ReflectionFunctionAbstract
    }
 
    public static ReflectionMethod __construct(
-           Env env, Value obj, StringValue name) {
+      Env env, Value obj, StringValue name) {
       String clsName;
 
       if (obj.isObject()) {
@@ -74,24 +69,24 @@ public class ReflectionMethod extends ReflectionFunctionAbstract
       }
 
       return new ReflectionMethod(
-              clsName, env.getClass(clsName).getFunction(name));
+         clsName, env.getClass(clsName).getFunction(name));
    }
 
    public static String export(Env env,
-           Value cls,
-           String name,
-           @Optional boolean isReturn) {
+                               Value cls,
+                               String name,
+                               @Optional boolean isReturn) {
       return null;
    }
 
    public Value invoke(Env env, ObjectValue object, Value[] args) {
       return getFunction().callMethod(
-              env, object.getQuercusClass(), object, args);
+         env, object.getQuercusClass(), object, args);
    }
 
    public Value invokeArgs(Env env, ObjectValue object, ArrayValue args) {
       return getFunction().callMethod(env, object.getQuercusClass(), object,
-              args.getValueArray(env));
+         args.getValueArray(env));
    }
 
    public boolean isFinal() {
@@ -155,8 +150,8 @@ public class ReflectionMethod extends ReflectionFunctionAbstract
 
       if (clsName == null) {
          throw new QuercusException(
-                 L.l("class name is null {0}: {1}",
-                 getFunction(), getFunction().getClass()));
+            L.l("class name is null {0}: {1}",
+               getFunction(), getFunction().getClass()));
       }
 
       return new ReflectionClass(env, clsName);
@@ -170,7 +165,7 @@ public class ReflectionMethod extends ReflectionFunctionAbstract
       Arg[] args = fun.getArgs();
 
       for (int i = 0; i < args.length; i++) {
-         array.put(env.wrapJava(new ReflectionParameter(_clsName, fun, args[i])));
+         array.put(env.wrapJava(new ReflectionParameter(env, args[i].getExpectedClass(), fun, args[i])));
       }
 
       return array;

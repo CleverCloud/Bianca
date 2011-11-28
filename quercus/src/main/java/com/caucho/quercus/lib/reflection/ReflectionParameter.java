@@ -30,18 +30,19 @@ package com.caucho.quercus.lib.reflection;
 
 import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.QuercusClass;
-import com.caucho.quercus.env.Value;
 import com.caucho.quercus.env.StringValue;
+import com.caucho.quercus.env.Value;
 import com.caucho.quercus.expr.ParamRequiredExpr;
 import com.caucho.quercus.function.AbstractFunction;
 import com.caucho.quercus.program.Arg;
 import com.caucho.util.L10N;
 
 public class ReflectionParameter
-        implements Reflector {
+   implements Reflector {
 
    private static final L10N L = new L10N(ReflectionParameter.class);
    private String _clsName;
+   private ReflectionClass _cls;
    private AbstractFunction _fun;
    private Arg _arg;
 
@@ -50,20 +51,22 @@ public class ReflectionParameter
       _arg = arg;
    }
 
-   protected ReflectionParameter(String clsName,
-           AbstractFunction fun,
-           Arg arg) {
+   protected ReflectionParameter(Env env,
+                                 String clsName,
+                                 AbstractFunction fun,
+                                 Arg arg) {
       this(fun, arg);
 
       _clsName = clsName;
+      _cls = new ReflectionClass(env, clsName);
    }
 
    private void __clone() {
    }
 
    public static ReflectionParameter __construct(Env env,
-           String funName,
-           StringValue paramName) {
+                                                 String funName,
+                                                 StringValue paramName) {
       AbstractFunction fun = env.findFunction(funName);
 
       Arg[] args = fun.getArgs();
@@ -75,13 +78,13 @@ public class ReflectionParameter
       }
 
       throw new ReflectionException(
-              L.l("cannot find parameter '{0}'", paramName));
+         L.l("cannot find parameter '{0}'", paramName));
    }
 
    public static String export(Env env,
-           Value function,
-           Value parameter,
-           boolean isReturn) {
+                               Value function,
+                               Value parameter,
+                               boolean isReturn) {
       return null;
    }
 
@@ -125,7 +128,7 @@ public class ReflectionParameter
    }
 
    public ReflectionClass getClass(Env env) {
-      return null;
+      return _cls;
    }
 
    public boolean isArray() {
@@ -148,7 +151,7 @@ public class ReflectionParameter
       //XXX: more specific exception
       if (!isOptional()) {
          throw new ReflectionException(
-                 L.l("parameter '{0}' is not optional", _arg.getName()));
+            L.l("parameter '{0}' is not optional", _arg.getName()));
       }
 
       return _arg.getDefault().eval(env);
@@ -157,6 +160,6 @@ public class ReflectionParameter
    @Override
    public String toString() {
       return "ReflectionParameter["
-              + _fun.getName() + "(" + _arg.getName() + ")]";
+         + _fun.getName() + "(" + _arg.getName() + ")]";
    }
 }
