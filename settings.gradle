@@ -1,1 +1,1 @@
-include "resin", "quercus", "app"
+include "quercus", "app"

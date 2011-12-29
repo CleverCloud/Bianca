@@ -73,8 +73,7 @@ public class IconvUtility {
            int offset,
            int length)
            throws UnsupportedEncodingException {
-      TempCharBuffer tb = TempCharBuffer.allocate();
-      char[] charBuf = tb.getBuffer();
+      char[] charBuf = new char[8192];
 
       try {
          Reader in;
@@ -90,7 +89,7 @@ public class IconvUtility {
          WriteStream out = new WriteStream(ts);
 
          try {
-            out.setEncoding("utf8");
+            out.setEncoding("utf-8");
          } catch (IOException e) {
             log.log(Level.WARNING, e.toString(), e);
          }
@@ -123,8 +122,6 @@ public class IconvUtility {
          return sb;
       } catch (IOException e) {
          throw new QuercusModuleException(e);
-      } finally {
-         TempCharBuffer.free(tb);
       }
    }
 

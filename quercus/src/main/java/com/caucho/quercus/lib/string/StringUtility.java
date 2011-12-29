@@ -39,7 +39,6 @@ import com.caucho.quercus.env.Post;
 import com.caucho.quercus.env.Value;
 import com.caucho.quercus.lib.ArrayModule;
 import com.caucho.util.L10N;
-import com.caucho.vfs.ByteToChar;
 
 public class StringUtility {
 
@@ -63,38 +62,32 @@ public class StringUtility {
            boolean isMagicQuotes,
            int[] querySeparatorMap) {
       try {
-         ByteToChar byteToChar = env.getByteToChar();
-
-         if (encoding != null) {
-            byteToChar.setEncoding(encoding);
-         }
-
          int len = str.length();
 
          for (int i = 0; i < len; i++) {
             int ch = 0;
-            byteToChar.clear();
+            StringBuilder builder = new StringBuilder();
 
             for (; i < len && querySeparatorMap[ch = str.charAt(i)] > 0; i++) {
             }
 
             for (; i < len && (ch = str.charAt(i)) != '='
                     && querySeparatorMap[ch] == 0; i++) {
-               i = addQueryChar(byteToChar, str, len, i, ch);
+               i = addQueryChar(builder, str, len, i, ch);
             }
 
-            String key = byteToChar.getConvertedString();
+            String key = builder.toString();
 
-            byteToChar.clear();
+            builder = new StringBuilder();
 
             String value;
             if (ch == '=') {
                for (i++; i < len
                        && querySeparatorMap[ch = str.charAt(i)] == 0; i++) {
-                  i = addQueryChar(byteToChar, str, len, i, ch);
+                  i = addQueryChar(builder, str, len, i, ch);
                }
 
-               value = byteToChar.getConvertedString();
+               value = builder.toString();
             } else {
                value = "";
             }
@@ -150,7 +143,7 @@ public class StringUtility {
       }
    }
 
-   protected static int addQueryChar(ByteToChar byteToChar,
+   protected static int addQueryChar(StringBuilder builder,
            CharSequence str,
            int len,
            int i,
@@ -162,7 +155,7 @@ public class StringUtility {
 
       switch (ch) {
          case '+':
-            byteToChar.addChar(' ');
+            builder.append(' ');
             return i;
 
          case '%':
@@ -171,16 +164,16 @@ public class StringUtility {
                int d2 = StringModule.hexToDigit(str.charAt(i + 2));
 
                // TODO: d1 and d2 may be -1 if not valid hex chars
-               byteToChar.addByte(d1 * 16 + d2);
+               builder.append((char) (d1 * 16 + d2));
 
                return i + 2;
             } else {
-               byteToChar.addByte((byte) ch);
+               builder.append((char) ch);
                return i;
             }
 
          default:
-            byteToChar.addByte((byte) ch);
+            builder.append((char) ch);
             return i;
       }
    }

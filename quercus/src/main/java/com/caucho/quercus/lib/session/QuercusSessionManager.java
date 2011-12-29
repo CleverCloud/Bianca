@@ -31,8 +31,8 @@ package com.caucho.quercus.lib.session;
 import com.caucho.config.ConfigException;
 import com.caucho.quercus.QuercusContext;
 import com.caucho.quercus.env.Env;
-import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.SessionArrayValue;
+import com.caucho.quercus.env.StringValue;
 import com.caucho.util.*;
 
 import java.io.IOException;
@@ -48,8 +48,7 @@ import java.util.logging.Logger;
  * Stripped down version of com.caucho.server.session.SessionManager,
  * customized to PHP instead of J2EE sessions.
  */
-public class QuercusSessionManager
-        implements AlarmListener {
+public class QuercusSessionManager {
 
    private static final L10N L = new L10N(QuercusSessionManager.class);
    private static final Logger log = Logger.getLogger(QuercusSessionManager.class.getName());
@@ -79,7 +78,6 @@ public class QuercusSessionManager
    private boolean _isAppendServerIndex = false;
    private boolean _isTwoDigitSessionIndex = false;
    protected boolean _isClosed;
-   //private Alarm _alarm = new Alarm(this);
    private Map _persistentStore;
    // statistics
    protected Object _statisticsLock = new Object();
@@ -143,7 +141,7 @@ public class QuercusSessionManager
     */
    public void setSaveOnShutdown(boolean save) {
       log.warning("<save-on-shutdown> is deprecated.  "
-              + "Use <save-only-on-shutdown> instead");
+         + "Use <save-only-on-shutdown> instead");
 
       setSaveOnlyOnShutdown(save);
    }
@@ -201,12 +199,12 @@ public class QuercusSessionManager
     * session doesn't exist.
     */
    public void setReuseSessionId(String reuse)
-           throws ConfigException {
+      throws ConfigException {
       if (reuse == null) {
          _reuseSessionId = COOKIE;
       } else if (reuse.equalsIgnoreCase("true")
-              || reuse.equalsIgnoreCase("yes")
-              || reuse.equalsIgnoreCase("cookie")) {
+         || reuse.equalsIgnoreCase("yes")
+         || reuse.equalsIgnoreCase("cookie")) {
          _reuseSessionId = COOKIE;
       } else if (reuse.equalsIgnoreCase("false") || reuse.equalsIgnoreCase("no")) {
          _reuseSessionId = FALSE;
@@ -214,9 +212,9 @@ public class QuercusSessionManager
          _reuseSessionId = TRUE;
       } else {
          throw new ConfigException(
-                 L.l("'{0}' is an invalid value for reuse-session-id.  "
-                 + "'true' or 'false' are the allowed values.",
-                 reuse));
+            L.l("'{0}' is an invalid value for reuse-session-id.  "
+               + "'true' or 'false' are the allowed values.",
+               reuse));
       }
    }
 
@@ -261,11 +259,11 @@ public class QuercusSessionManager
    /**
     * Loads the session.
     *
-    * @param in the input stream containing the serialized session
+    * @param in  the input stream containing the serialized session
     * @param obj the session object to be deserialized
     */
    public void load(ObjectInputStream in, Object obj)
-           throws IOException {
+      throws IOException {
       SessionArrayValue session = (SessionArrayValue) obj;
 
       session.load(null, in);
@@ -291,8 +289,7 @@ public class QuercusSessionManager
     * Create a new session.
     *
     * @param oldId the id passed to the request.  Reuse if possible.
-    * @param now the current date
-    *
+    * @param now   the current date
     */
    public SessionArrayValue createSession(Env env, String oldId, long now) {
       String id = oldId;
@@ -344,11 +341,9 @@ public class QuercusSessionManager
     *
     * @param key the session id
     * @param now the time in milliseconds.  now == 0 implies
-    * that we're just checking for the existence of such a session in
-    * the cache and do not intend actually to load it if it is not.
-    *
+    *            that we're just checking for the existence of such a session in
+    *            the cache and do not intend actually to load it if it is not.
     * @return the cached session.
-    *
     */
    public SessionArrayValue getSession(Env env, String key, long now) {
       SessionArrayValue session;
@@ -427,7 +422,7 @@ public class QuercusSessionManager
     * Creates a new SessionArrayValue instance.
     */
    protected SessionArrayValue createSessionValue(String key, long now,
-           long sessionTimeout) {
+                                                  long sessionTimeout) {
       return new SessionArrayValue(key, now, _sessionTimeout);
    }
 
@@ -435,10 +430,9 @@ public class QuercusSessionManager
     * Loads the session from the backing store.
     *
     * @param session the session to load.
-    * @param now current time in milliseconds.  now == 0 implies
-    * that we're just checking for the existence of such a session in
-    * the cache and do not intend actually to load it if it is not.
-    *
+    * @param now     current time in milliseconds.  now == 0 implies
+    *                that we're just checking for the existence of such a session in
+    *                the cache and do not intend actually to load it if it is not.
     */
    protected boolean load(Env env, SessionArrayValue session, long now) {
       try {
@@ -471,63 +465,6 @@ public class QuercusSessionManager
    }
 
    /**
-    * Timeout for reaping old sessions.
-    */
-   @Override
-   public void handleAlarm(Alarm alarm) {
-      try {
-         _sessionList.clear();
-
-         int liveSessions = 0;
-
-         if (_isClosed) {
-            return;
-         }
-
-         long now = Alarm.getCurrentTime();
-
-         synchronized (_sessions) {
-            _sessionIter = _sessions.values(_sessionIter);
-
-            while (_sessionIter.hasNext()) {
-               SessionArrayValue session = _sessionIter.next();
-
-               long maxIdleTime = session.getMaxInactiveInterval();
-
-               if (session.inUse()) {
-                  liveSessions++;
-               } else if (session.getAccessTime() + maxIdleTime < now) {
-                  _sessionList.add(session);
-               } else {
-                  liveSessions++;
-               }
-            }
-         }
-
-         synchronized (_statisticsLock) {
-            _sessionTimeoutCount += _sessionList.size();
-         }
-
-         for (int i = 0; i < _sessionList.size(); i++) {
-            SessionArrayValue session = _sessionList.get(i);
-
-            try {
-               long maxIdleTime = session.getMaxInactiveInterval();
-               _sessions.remove(session.getId());
-
-               session.invalidate();
-            } catch (Throwable e) {
-               log.log(Level.FINER, e.toString(), e);
-            }
-         }
-      } finally {
-         if (!_isClosed) {
-            alarm.queue(60000);
-         }
-      }
-   }
-
-   /**
     * Cleans up the sessions when the Application shuts down gracefully.
     */
    public void close() {
@@ -541,8 +478,6 @@ public class QuercusSessionManager
       if (_sessions == null) {
          return;
       }
-
-      //_alarm.dequeue();
 
       _sessionList.clear();
 
@@ -605,7 +540,7 @@ public class QuercusSessionManager
     * Saves the session.
     */
    public void store(OutputStream out, Object obj)
-           throws IOException {
+      throws IOException {
       SessionArrayValue session = (SessionArrayValue) obj;
 
       session.store(Env.getInstance(), out);

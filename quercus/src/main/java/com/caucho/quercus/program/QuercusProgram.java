@@ -35,7 +35,6 @@ import com.caucho.quercus.env.*;
 import com.caucho.quercus.function.AbstractFunction;
 import com.caucho.quercus.page.QuercusPage;
 import com.caucho.quercus.statement.*;
-import com.caucho.vfs.BasicDependencyContainer;
 import com.caucho.vfs.Depend;
 import com.caucho.vfs.Path;
 import com.caucho.vfs.Dependency;
@@ -73,8 +72,7 @@ public class QuercusProgram {
    private ArrayList<PersistentDependency> _dependList = new ArrayList<PersistentDependency>();
    // runtime function list for compilation
    private AbstractFunction[] _runtimeFunList;
-   private final BasicDependencyContainer _depend;
-   private final BasicDependencyContainer _topDepend;
+   private final PageDependency _topDepend;
 
    /**
     * Creates a new quercus program
@@ -92,12 +90,7 @@ public class QuercusProgram {
            Statement statement) {
       _quercus = quercus;
 
-      _depend = new BasicDependencyContainer();
-      _depend.setCheckInterval(quercus.getDependencyCheckInterval());
-
-      _topDepend = new BasicDependencyContainer();
-      _topDepend.setCheckInterval(quercus.getDependencyCheckInterval());
-      _topDepend.add(new PageDependency());
+      _topDepend = new PageDependency();
 
       _sourceFile = sourceFile;
       if (sourceFile != null) {
@@ -133,11 +126,7 @@ public class QuercusProgram {
       _sourceFile = sourceFile;
       _compiledPage = page;
 
-      _depend = new BasicDependencyContainer();
-
-      _topDepend = new BasicDependencyContainer();
-      _topDepend.setCheckInterval(quercus.getDependencyCheckInterval());
-      _topDepend.add(new PageDependency());
+      _topDepend = new PageDependency();
    }
 
    /**
@@ -230,7 +219,6 @@ public class QuercusProgram {
       depend.setRequireSource(_quercus.isRequireSource());
 
       _dependList.add(depend);
-      _depend.add(depend);
    }
 
    public ArrayList<PersistentDependency> getDependencyList() {
@@ -415,7 +403,11 @@ public class QuercusProgram {
          if (_compiledPage != null) {
             return _compiledPage.isModified();
          } else {
-            return _depend.isModified();
+            for (PersistentDependency pd : _dependList) {
+                if (pd.isModified())
+                    return true;
+            }
+            return false;
          }
       }
 

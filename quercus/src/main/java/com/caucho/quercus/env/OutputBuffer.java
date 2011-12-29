@@ -85,7 +85,7 @@ public class OutputBuffer {
                log.log(Level.WARNING, e.toString(), e);
             }
             try {
-               _out.setEncoding("utf8");
+               _out.setEncoding("utf-8");
             } catch (UnsupportedEncodingException e2) {
                if (log.isLoggable(Level.WARNING)) {
                   log.log(Level.WARNING, e.toString(), e2);

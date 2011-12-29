@@ -130,7 +130,7 @@ public class Env {
    private static final int HTTP_RAW_POST_DATA = 16;
    private static final IntMap SPECIAL_VARS = new IntMap();
    private static final StringValue PHP_SELF_STRING = new StringValue("PHP_SELF");
-   private static final StringValue UTF8_STRING = new StringValue("utf8");
+   private static final StringValue UTF8_STRING = new StringValue("utf-8");
    private static final StringValue S_GET = new StringValue("_GET");
    private static final StringValue S_POST = new StringValue("_POST");
    private static final StringValue S_SESSION = new StringValue("_SESSION");
@@ -412,7 +412,7 @@ public class Env {
       String encoding = getHttpInputEncoding();
 
       if (encoding == null)
-      encoding = "utf8";
+      encoding = "utf-8";
 
       _request.setCharacterEncoding(encoding);
       } catch (Exception e) {
@@ -617,7 +617,7 @@ public class Env {
       }
 
       if (encoding == null) {
-         encoding = "utf8";
+         encoding = "utf-8";
       }
 
       return encoding;
@@ -1552,13 +1552,6 @@ public class Env {
     */
    public long getIniBytes(String name, long deflt) {
       return getIniDefinition(name).getAsLongBytes(this, deflt);
-   }
-
-   /**
-    * Returns the ByteToChar converter.
-    */
-   public ByteToChar getByteToChar() {
-      return ByteToChar.create();
    }
 
    /**

@@ -31,7 +31,6 @@ package com.caucho.quercus.page;
 import com.caucho.quercus.QuercusContext;
 import com.caucho.quercus.parser.QuercusParser;
 import com.caucho.quercus.program.QuercusProgram;
-import com.caucho.util.Alarm;
 import com.caucho.util.L10N;
 import com.caucho.util.LruCache;
 import com.caucho.vfs.IOExceptionWrapper;
@@ -51,7 +50,7 @@ public class PageManager {
    //private Path _pwd;
    private boolean _isLazyCompile;
    private boolean _isCompile;
-   private boolean _isCompileFailover = Alarm.isActive();
+   private boolean _isCompileFailover = true;
    private boolean _isRequireSource = true;
    protected LruCache<Path, QuercusProgram> _programCache = new LruCache<Path, QuercusProgram>(1024);
    private boolean _isClosed;
@@ -87,7 +86,19 @@ public class PageManager {
    public void setCompile(boolean isCompile) {
       _isCompile = isCompile;
    }
+   /**
+    * * true if interpreted pages should be used if pages fail to compile.
+    * */
+      public boolean isCompileFailover() {
+                return _isCompileFailover;
+                   }
 
+         /**
+          * * true if interpreted pages should be used if pages fail to compile.
+          * */
+         public void setCompileFailover(boolean isCompileFailover) {
+                   _isCompileFailover = isCompileFailover;
+                      }
    /**
     * true if the pages should be compiled lazily.
     */
@@ -100,20 +111,6 @@ public class PageManager {
     */
    public void setLazyCompile(boolean isCompile) {
       _isLazyCompile = isCompile;
-   }
-
-   /**
-    * true if interpreted pages should be used if pages fail to compile.
-    */
-   public boolean isCompileFailover() {
-      return _isCompileFailover;
-   }
-
-   /**
-    * true if interpreted pages should be used if pages fail to compile.
-    */
-   public void setCompileFailover(boolean isCompileFailover) {
-      _isCompileFailover = isCompileFailover;
    }
 
    /**

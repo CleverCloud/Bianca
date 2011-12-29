@@ -31,26 +31,20 @@ package com.caucho.quercus.env;
 
 import com.caucho.quercus.function.AbstractFunction;
 import com.caucho.util.Primes;
-import com.caucho.util.Alarm;
 import com.caucho.vfs.WriteStream;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.AbstractSet;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Represents a PHP object value.
  */
 @SuppressWarnings("serial")
 public class ObjectExtValue extends ObjectValue
-        implements Serializable {
+   implements Serializable {
 
    private static final int DEFAULT_SIZE = 16;
    private static final int DEFAULT_PRIME = Primes.getBiggestPrime(DEFAULT_SIZE);
@@ -104,8 +98,8 @@ public class ObjectExtValue extends ObjectValue
    }
 
    public ObjectExtValue(Env env,
-           IdentityHashMap<Value, Value> copyMap,
-           ObjectExtValue copy) {
+                         IdentityHashMap<Value, Value> copyMap,
+                         ObjectExtValue copy) {
       super(copy.getQuercusClass());
 
       _methodMap = copy._methodMap;
@@ -488,10 +482,10 @@ public class ObjectExtValue extends ObjectValue
 
                try {
                   retValue = fieldSet.callMethod(env,
-                          _quercusClass,
-                          this,
-                          name,
-                          value);
+                     _quercusClass,
+                     this,
+                     name,
+                     value);
                } finally {
                   _isFieldInit = false;
                }
@@ -544,8 +538,8 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public void initField(StringValue key,
-           Value value,
-           FieldVisibility visibility) {
+                         Value value,
+                         FieldVisibility visibility) {
       Entry entry = createEntry(key, visibility);
 
       entry._value = value;
@@ -562,8 +556,8 @@ public class ObjectExtValue extends ObjectValue
          int hash = (name.hashCode() & 0x7fffffff) % _prime;
 
          for (Entry entry = _entries[hash];
-                 entry != null;
-                 entry = entry._next) {
+              entry != null;
+              entry = entry._next) {
             if (name.equals(entry.getKey())) {
                Entry prev = entry._prev;
                Entry next = entry._next;
@@ -639,7 +633,7 @@ public class ObjectExtValue extends ObjectValue
                // php/091m
                if (cls != _quercusClass) {
                   env.notice(L.l("Can't access private field '{0}::${1}'",
-                          _quercusClass.getName(), name));
+                     _quercusClass.getName(), name));
                   return null;
                }
             } else if (entry._visibility == FieldVisibility.PROTECTED) {
@@ -647,7 +641,7 @@ public class ObjectExtValue extends ObjectValue
 
                if (cls == null || (cls != _quercusClass && !cls.isA(_quercusClass.getName()))) {
                   env.notice(L.l("Can't access protected field '{0}::${1}'",
-                          _quercusClass.getName(), name));
+                     _quercusClass.getName(), name));
                   return null;
                }
             }
@@ -683,8 +677,8 @@ public class ObjectExtValue extends ObjectValue
       int hash = (name.hashCode() & 0x7fffffff) % _prime;
 
       for (Entry entry = _entries[hash];
-              entry != null;
-              entry = entry._next) {
+           entry != null;
+           entry = entry._next) {
          if (name.equals(entry._key)) {
             return entry;
          }
@@ -710,6 +704,7 @@ public class ObjectExtValue extends ObjectValue
    //
    // Foreach/Traversable functions
    //
+
    /**
     * Returns an iterator for the key => value pairs.
     */
@@ -763,6 +758,7 @@ public class ObjectExtValue extends ObjectValue
    //
    // method calls
    //
+
    /**
     * Finds the method name.
     */
@@ -776,7 +772,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value[] args) {
+                           Value[] args) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethod(env, _quercusClass, this, args);
@@ -797,7 +793,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1) {
+                           Value a1) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethod(env, _quercusClass, this, a1);
@@ -808,7 +804,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           Value a1, Value a2) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethod(env, _quercusClass, this, a1, a2);
@@ -819,8 +815,8 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethod(env, _quercusClass, this, a1, a2, a3);
@@ -831,8 +827,8 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethod(env, _quercusClass, this, a1, a2, a3, a4);
@@ -843,8 +839,8 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethod(env, _quercusClass, this, a1, a2, a3, a4, a5);
@@ -855,7 +851,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value[] args) {
+                              Value[] args) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethodRef(env, _quercusClass, this, args);
@@ -876,7 +872,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1) {
+                              Value a1) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethodRef(env, _quercusClass, this, a1);
@@ -887,7 +883,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2) {
+                              Value a1, Value a2) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethodRef(env, _quercusClass, this, a1, a2);
@@ -898,7 +894,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                              Value a1, Value a2, Value a3) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethodRef(env, _quercusClass, this, a1, a2, a3);
@@ -909,7 +905,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                              Value a1, Value a2, Value a3, Value a4) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethodRef(env, _quercusClass, this, a1, a2, a3, a4);
@@ -920,7 +916,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                              Value a1, Value a2, Value a3, Value a4, Value a5) {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethodRef(env, _quercusClass, this, a1, a2, a3, a4, a5);
@@ -936,6 +932,7 @@ public class ObjectExtValue extends ObjectValue
    return fun.callMethod(env, this, args);
    }
     */
+
    /**
     * Returns the value for the variable, creating an object if the var
     * is unset.
@@ -956,6 +953,7 @@ public class ObjectExtValue extends ObjectValue
    return NullValue.NULL;
    }
     */
+
    /**
     * Copy for assignment.
     */
@@ -1009,7 +1007,7 @@ public class ObjectExtValue extends ObjectValue
          Entry entry = iter.next();
 
          Entry copy = newObject.createEntry(entry.getKey(),
-                 entry.getVisibility());
+            entry.getVisibility());
 
          copy.setValue(entry.getValue().copy());
       }
@@ -1027,7 +1025,7 @@ public class ObjectExtValue extends ObjectValue
     */
    @Override
    public void serialize(Env env,
-           StringBuilder sb, SerializeMap serializeMap) {
+                         StringBuilder sb, SerializeMap serializeMap) {
       Integer index = serializeMap.get(this);
 
       if (index != null) {
@@ -1132,6 +1130,7 @@ public class ObjectExtValue extends ObjectValue
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override
@@ -1147,6 +1146,7 @@ public class ObjectExtValue extends ObjectValue
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override
@@ -1202,10 +1202,10 @@ public class ObjectExtValue extends ObjectValue
    //XXX: push up to super, and use varDumpObject
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       int size = getSize();
 
       if (isIncompleteObject()) {
@@ -1240,10 +1240,10 @@ public class ObjectExtValue extends ObjectValue
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print(getName());
       out.print(' ');
       out.println("Object");
@@ -1264,7 +1264,7 @@ public class ObjectExtValue extends ObjectValue
    // Java Serialization
    //
    private void writeObject(ObjectOutputStream out)
-           throws IOException {
+      throws IOException {
       out.writeObject(_className);
 
       out.writeInt(_size);
@@ -1307,7 +1307,7 @@ public class ObjectExtValue extends ObjectValue
    }
 
    private void readObject(ObjectInputStream in)
-           throws ClassNotFoundException, IOException {
+      throws ClassNotFoundException, IOException {
       Env env = Env.getInstance();
       String name = (String) in.readObject();
 
@@ -1329,8 +1329,8 @@ public class ObjectExtValue extends ObjectValue
 
       for (int i = 0; i < size; i++) {
          putThisField(env,
-                 (StringValue) in.readObject(),
-                 (Value) in.readObject());
+            (StringValue) in.readObject(),
+            (Value) in.readObject());
       }
    }
 
@@ -1382,13 +1382,9 @@ public class ObjectExtValue extends ObjectValue
 
    @Override
    public String toString() {
-      if (Alarm.isTest()) {
-         return getClass().getSimpleName() + "[" + _className + "]";
-      } else {
-         return getClass().getSimpleName()
-                 + "@" + System.identityHashCode(this)
-                 + "[" + _className + "]";
-      }
+      return getClass().getSimpleName()
+         + "@" + System.identityHashCode(this)
+         + "[" + _className + "]";
    }
 
    public class EntrySet extends AbstractSet<Map.Entry<Value, Value>> {
@@ -1408,7 +1404,7 @@ public class ObjectExtValue extends ObjectValue
    }
 
    public static class EntryIterator
-           implements Iterator<Entry> {
+      implements Iterator<Entry> {
 
       private final Entry[] _list;
       private int _index;
@@ -1459,7 +1455,7 @@ public class ObjectExtValue extends ObjectValue
    }
 
    public static class KeyValueIterator
-           implements Iterator<Map.Entry<Value, Value>> {
+      implements Iterator<Map.Entry<Value, Value>> {
 
       private final Entry[] _list;
       private int _index;
@@ -1510,7 +1506,7 @@ public class ObjectExtValue extends ObjectValue
    }
 
    public static class ValueIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private final Entry[] _list;
       private int _index;
@@ -1561,7 +1557,7 @@ public class ObjectExtValue extends ObjectValue
    }
 
    public static class KeyIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private final Entry[] _list;
       private int _index;
@@ -1612,8 +1608,8 @@ public class ObjectExtValue extends ObjectValue
    }
 
    public final static class Entry
-           implements Map.Entry<Value, Value>,
-           Comparable<Map.Entry<Value, Value>> {
+      implements Map.Entry<Value, Value>,
+      Comparable<Map.Entry<Value, Value>> {
 
       private final StringValue _key;
       private final FieldVisibility _visibility;
@@ -1793,10 +1789,10 @@ public class ObjectExtValue extends ObjectValue
       }
 
       public void varDumpImpl(Env env,
-              WriteStream out,
-              int depth,
-              IdentityHashMap<Value, String> valueSet)
-              throws IOException {
+                              WriteStream out,
+                              int depth,
+                              IdentityHashMap<Value, String> valueSet)
+         throws IOException {
          String suffix = "";
 
          if (_visibility == FieldVisibility.PROTECTED) {
@@ -1816,10 +1812,10 @@ public class ObjectExtValue extends ObjectValue
       }
 
       protected void printRImpl(Env env,
-              WriteStream out,
-              int depth,
-              IdentityHashMap<Value, String> valueSet)
-              throws IOException {
+                                WriteStream out,
+                                int depth,
+                                IdentityHashMap<Value, String> valueSet)
+         throws IOException {
          String suffix = "";
 
          if (_visibility == FieldVisibility.PROTECTED) {
@@ -1837,7 +1833,7 @@ public class ObjectExtValue extends ObjectValue
       }
 
       private void printDepth(WriteStream out, int depth)
-              throws java.io.IOException {
+         throws java.io.IOException {
          for (int i = 0; i < depth; i++) {
             out.print(' ');
          }

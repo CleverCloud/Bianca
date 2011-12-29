@@ -77,7 +77,6 @@ import com.caucho.util.FreeList;
 import com.caucho.util.IntSet;
 import com.caucho.util.L10N;
 import com.caucho.util.RandomUtil;
-import com.caucho.vfs.ByteToChar;
 import com.caucho.vfs.Path;
 
 /**
@@ -435,14 +434,13 @@ public class StringModule extends AbstractQuercusModule {
    }
 
    public static Value convert_uudecode(Env env, StringValue source) {
-      try {
          int length = source.length();
 
          if (length == 0) {
             return BooleanValue.FALSE;
          }
 
-         ByteToChar byteToChar = env.getByteToChar();
+         StringBuilder builder = new StringBuilder();
 
          int i = 0;
          while (i < length) {
@@ -464,24 +462,21 @@ public class StringModule extends AbstractQuercusModule {
                code += ((source.charAt(i++) - 0x20) & 0x3f) << 6;
                code += ((source.charAt(i++) - 0x20) & 0x3f);
 
-               byteToChar.addByte(code >> 16);
+               builder.append(code >> 16);
 
                if (sublen > 1) {
-                  byteToChar.addByte(code >> 8);
+                  builder.append(code >> 8);
                }
 
                if (sublen > 2) {
-                  byteToChar.addByte(code);
+                  builder.append(code);
                }
 
                sublen -= 3;
             }
          }
 
-         return env.createString(byteToChar.getConvertedString());
-      } catch (IOException e) {
-         throw new QuercusModuleException(e);
-      }
+         return env.createString(builder.toString());
    }
 
    /**

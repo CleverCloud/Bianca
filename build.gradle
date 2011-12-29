@@ -14,19 +14,13 @@ subprojects {
     }
 }
 
-project(':resin') {
-    dependencies {
-	compile ("javax:javaee-api:6.0")
-    }
-}
-
 project(':quercus') {
     configurations {
 	runtime.extendsFrom compile
     }
 
     dependencies {
-	compile project(':resin')
+        compile ("javax:javaee-api:6.0")
 	compile "org.bouncycastle:bcprov-jdk16:1.46", "org.bouncycastle:bcpg-jdk16:1.46", "org.bouncycastle:bcmail-jdk16:1.46", "org.bouncycastle:bctsp-jdk16:1.46"
 	compile fileTree(dir: 'libs', include: '*.jar')
     }

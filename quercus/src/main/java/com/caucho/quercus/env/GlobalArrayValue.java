@@ -32,12 +32,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.caucho.inject.Module;
-
 /**
  * Represents the server
  */
-@Module
 public class GlobalArrayValue extends ArrayValueImpl {
 
    private final Env _env;

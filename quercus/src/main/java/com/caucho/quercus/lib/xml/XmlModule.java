@@ -97,9 +97,9 @@ public class XmlModule extends AbstractQuercusModule {
    }
 
    /**
-    * Converts from iso-8859-1 to utf8
+    * Converts from iso-8859-1 to utf-8
     */
-   public static Value utf8_encode(Env env, StringValue str) {
+   public static Value utf8encode(Env env, StringValue str) {
       StringValue sb = new StringValue();
 
       int len = str.length();
@@ -122,9 +122,9 @@ public class XmlModule extends AbstractQuercusModule {
    }
 
    /**
-    * Converts from utf8 to iso-8859-1
+    * Converts from utf-8 to iso-8859-1
     */
-   public static Value utf8_decode(Env env, StringValue str) {
+   public static Value utf8decode(Env env, StringValue str) {
       StringValue sb = new StringValue();
 
       int len = str.length();
@@ -240,9 +240,9 @@ public class XmlModule extends AbstractQuercusModule {
     * returns a new Xml Parser
     */
    public Xml xml_parser_create(Env env,
-           @Optional("'utf8'") String outputEncoding) {
+           @Optional("'utf-8'") String outputEncoding) {
       if (outputEncoding == null) {
-         outputEncoding = "utf8";
+         outputEncoding = "utf-8";
       }
 
       return new Xml(env, outputEncoding, null);
@@ -258,10 +258,10 @@ public class XmlModule extends AbstractQuercusModule {
     * @return namespace aware Xml Parser
     */
    public Xml xml_parser_create_ns(Env env,
-           @Optional("'utf8'") String outputEncoding,
+           @Optional("'utf-8'") String outputEncoding,
            @Optional("':'") String separator) {
       if (outputEncoding == null) {
-         outputEncoding = "utf8";
+         outputEncoding = "utf-8";
       }
 
       return new Xml(env, outputEncoding, separator);

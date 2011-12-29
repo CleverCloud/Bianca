@@ -210,7 +210,7 @@ public class RegexpState {
    public boolean find(Env env, StringValue subject) {
       try {
          if (subject == null) {
-            throw new QuercusException(L.l("error converting subject to utf8"));
+            throw new QuercusException(L.l("error converting subject to utf-8"));
          }
 
          _subject = subject;
@@ -234,7 +234,7 @@ public class RegexpState {
          }
 
          if (subject == null) {
-            throw new QuercusException(L.l("error converting subject to utf8"));
+            throw new QuercusException(L.l("error converting subject to utf-8"));
          }
 
          _subject = subject;
@@ -264,7 +264,7 @@ public class RegexpState {
 
          if (subject == null) {
             if (log.isLoggable(Level.FINE)) {
-               log.fine(L.l("error converting subject to utf8"));
+               log.fine(L.l("error converting subject to utf-8"));
             }
 
             return -1;

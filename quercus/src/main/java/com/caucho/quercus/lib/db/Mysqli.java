@@ -293,8 +293,8 @@ public class Mysqli extends JdbcConnectionResource {
          urlBuilder.append("characterEncoding=");
          urlBuilder.append(encoding);
 
-         // Sets useUnicode to true if using utf8
-         if (encoding.equals("utf8")) {
+         // Sets useUnicode to true if using utf-8
+         if (encoding.equals("utf-8")) {
             urlBuilder.append("&useUnicode=true");
          }
       }
@@ -956,7 +956,7 @@ public class Mysqli extends JdbcConnectionResource {
 
    /**
     * Sets the character set
-    * XXX: Stubbed, only latin1 and utf8 are supported
+    * XXX: Stubbed, only latin1 and utf-8 are supported
     */
    public boolean set_charset(Env env, String charset) {
 

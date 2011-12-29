@@ -41,7 +41,6 @@ import com.caucho.quercus.env.Value;
 import com.caucho.quercus.module.AbstractQuercusModule;
 import com.caucho.util.L10N;
 import com.caucho.vfs.TempBuffer;
-import com.caucho.vfs.TempCharBuffer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -301,7 +300,6 @@ public class SocketModule extends AbstractQuercusModule {
            @NotNull SocketInputOutput socket,
            int length, @Optional int type) {
       TempBuffer tempBuffer = null;
-      TempCharBuffer tempCharBuffer = null;
 
       try {
          if (type == PHP_NORMAL_READ) {
@@ -329,10 +327,6 @@ public class SocketModule extends AbstractQuercusModule {
 
          return BooleanValue.FALSE;
       } finally {
-         if (tempCharBuffer != null) {
-            TempCharBuffer.free(tempCharBuffer);
-         }
-
          if (tempBuffer != null) {
             TempBuffer.free(tempBuffer);
          }
