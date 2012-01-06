@@ -33,7 +33,8 @@ import com.caucho.quercus.env.Env;
 import com.caucho.quercus.env.StringValue;
 import com.caucho.quercus.env.StringValue;
 
-import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.io.IOException; 
 
 /**
  * A helper class that handles line endings when reading from a BinaryInput.
@@ -57,14 +58,14 @@ public class LineReader {
     */
    public StringValue readLine(Env env, BinaryInput input, long length)
            throws IOException {
-      StringValue sb = new StringValue();
+      StringBuilder str = new StringBuilder();
 
       int ch;
 
       for (; length > 0 && (ch = input.read()) >= 0; length--) {
          // php/161[pq] newlines
          if (ch == '\n') {
-            sb.append((byte) ch);
+            str.append(ch);
 
             if (_isMacLineEnding == null) {
                _isMacLineEnding = false;
@@ -74,7 +75,7 @@ public class LineReader {
                break;
             }
          } else if (ch == '\r') {
-            sb.append((byte) '\r');
+            str.append('\r');
 
             int ch2 = input.read();
 
@@ -87,7 +88,7 @@ public class LineReader {
                   input.unread();
                   break;
                } else {
-                  sb.append((byte) '\n');
+                  str.append('\n');
                   break;
                }
             } else {
@@ -98,19 +99,19 @@ public class LineReader {
                }
 
                if (_isMacLineEnding) {
-                  return sb;
+                  return new StringValue (str.toString());
                }
             }
 
          } else {
-            sb.append((byte) ch);
+            str.append(ch);
          }
       }
 
-      if (sb.length() == 0) {
+      if (str.length() == 0) {
          return null;
       } else {
-         return sb;
+         return new StringValue (str.toString());
       }
 
    }

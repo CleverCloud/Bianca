@@ -139,6 +139,7 @@ public class WrappedStream implements BinaryInput, BinaryOutput {
    /**
     * Reads a character from a file, returning -1 on EOF.
     */
+   /* TOCHECK */
    @Override
    public int read()
            throws IOException {

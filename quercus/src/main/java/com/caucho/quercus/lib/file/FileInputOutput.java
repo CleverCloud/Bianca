@@ -155,7 +155,7 @@ public class FileInputOutput extends AbstractBinaryOutput
          return ch;
       }
 
-      return read() & 0xff;
+      return read();
    }
 
    /**

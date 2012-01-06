@@ -87,12 +87,15 @@ public class UTF8Reader extends EncodingReader {
     InputStream is = _is;
     
     int ch1 = is.read();
-
+    if (ch1 < -1)
+        ch1 += 0x100;
     if (ch1 < 0x80) {
       return ch1;
     }
     if ((ch1 & 0xe0) == 0xc0) {
       int ch2 = is.read();
+      if (ch2 < -1)
+        ch2 += 0x100;
       if (ch2 < 0)
         throw new EOFException("unexpected end of file in utf-8 character");
       else if ((ch2 & 0xc0) != 0x80) {
@@ -107,6 +110,10 @@ public class UTF8Reader extends EncodingReader {
     else if ((ch1 & 0xf0) == 0xe0) {
       int ch2 = is.read();
       int ch3 = is.read();
+      if (ch2 < -1)
+        ch2 += 0x100;
+      if (ch3 < -1)
+        ch3 += 0x100;
       
       if (ch2 < 0)
         throw new EOFException("unexpected end of file in utf-8 character");
@@ -138,6 +145,12 @@ public class UTF8Reader extends EncodingReader {
       int ch2 = is.read();
       int ch3 = is.read();
       int ch4 = is.read();
+      if (ch2 < -1)
+        ch2 += 0x100;
+      if (ch3 < -1)
+        ch3 += 0x100;
+      if (ch4 < -1)
+        ch4 += 0x100;
 
       if (ch2 < 0)
         throw new EOFException("unexpected end of file in utf-8 character");

@@ -123,8 +123,7 @@ public class Zlib {
          return -1;
       }
 
-      TempBuffer tb = TempBuffer.allocate();
-      byte[] buffer = tb.getBuffer();
+      byte[] buffer = new byte[8192];
 
       int inputSize = 0;
       int sublen;
@@ -157,7 +156,6 @@ public class Zlib {
          env.warning(L.l(e.getMessage()));
       }
 
-      TempBuffer.free(tb);
       return inputSize;
    }
 

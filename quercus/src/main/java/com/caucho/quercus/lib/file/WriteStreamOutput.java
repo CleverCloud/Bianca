@@ -113,8 +113,7 @@ public class WriteStreamOutput extends OutputStream implements BinaryOutput {
 
    @Override
    public int write(InputStream is, int length) throws IOException {
-      TempBuffer tempBuffer = TempBuffer.allocate();
-      byte[] buffer = tempBuffer.getBuffer();
+      byte[] buffer = new byte[8192];
 
       int writeLength = length;
 
@@ -135,8 +134,6 @@ public class WriteStreamOutput extends OutputStream implements BinaryOutput {
 
          length -= sublen;
       }
-
-      TempBuffer.free(tempBuffer);
 
       return writeLength;
    }

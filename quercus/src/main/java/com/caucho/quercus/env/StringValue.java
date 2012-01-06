@@ -35,11 +35,12 @@ import com.caucho.quercus.lib.file.BinaryInput;
 import com.caucho.quercus.marshal.Marshal;
 import com.caucho.vfs.ReadStream;
 import com.caucho.vfs.WriteStream;
+import com.caucho.vfs.i18n.UTF8Reader;
 
 import java.io.*;
 import java.util.IdentityHashMap;
 import java.util.zip.CRC32;
-
+/* TOCHECK append int */
 /**
  * Represents a PHP string
  */
@@ -1560,17 +1561,18 @@ public class StringValue
     * i.e. just call is.read once even if more data is available.
     */
    public int appendRead(InputStream is, long length) {
+       UTF8Reader reader = new UTF8Reader (is);
       try {
-         byte[] buffer = new byte[8192];
+         char[] buffer = new char[8192];
          int sublen = buffer.length;
          if (length < sublen) {
             sublen = (int) length;
          }
 
-         sublen = is.read(buffer, 0, sublen);
+         sublen = reader.read(buffer, 0, sublen);
 
          if (sublen > 0) {
-            append(new String(buffer), 0, sublen);
+            append(new String(buffer, 0, sublen));
          }
 
          return sublen;
@@ -2336,7 +2338,7 @@ public class StringValue
        */
       @Override
       public void write(byte[] buffer, int offset, int length) {
-         append(new String(buffer), offset, length);
+         append(new String(buffer, offset, length));
       }
    }
 }

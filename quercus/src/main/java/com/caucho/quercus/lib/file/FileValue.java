@@ -72,11 +72,10 @@ public class FileValue extends StreamResource {
    public StringValue readLine(Env env)
            throws IOException {
       StringValue sb = new StringValue();
-
       int ch;
 
       while ((ch = read()) >= 0) {
-         sb.append((char) ch);
+         sb.append((char)ch);
 
          if (ch == '\n') {
             return sb;

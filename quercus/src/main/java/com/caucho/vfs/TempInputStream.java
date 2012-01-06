@@ -50,7 +50,7 @@ public class TempInputStream extends InputStream {
     if (head == null)
       return -1;
 
-    int value = head._buf[_offset++] & 0xff;
+    int value = head._buf[_offset++];
 
     if (head._length <= _offset) {
       _head = head._next;

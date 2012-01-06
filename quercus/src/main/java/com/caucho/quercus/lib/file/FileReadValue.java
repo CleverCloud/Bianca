@@ -139,7 +139,6 @@ public class FileReadValue extends FileValue {
    public StringValue readLine(Env env)
            throws IOException {
       // TODO: offset messed up
-
       if (_is != null) {
          return env.createString(_is.readLineNoChop());
       } else {

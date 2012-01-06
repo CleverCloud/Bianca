@@ -676,7 +676,7 @@ public final class ByteBuffer {
       if (_index >= _buf._length)
         return -1;
       else
-        return _buf._buffer[_index++] & 0xff;
+        return _buf._buffer[_index++];
     }
 
     BBInputStream(ByteBuffer buf)

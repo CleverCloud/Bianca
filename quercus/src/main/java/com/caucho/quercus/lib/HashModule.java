@@ -325,8 +325,7 @@ public class HashModule extends AbstractQuercusModule {
          length = Integer.MAX_VALUE - 1;
       }
 
-      TempBuffer tempBuffer = TempBuffer.allocate();
-      byte[] buffer = tempBuffer.getBuffer();
+      byte[] buffer = new byte[8192];
 
       int readLength = 0;
 
@@ -351,8 +350,6 @@ public class HashModule extends AbstractQuercusModule {
          }
       } catch (IOException e) {
          log.log(Level.WARNING, e.toString(), e);
-      } finally {
-         TempBuffer.free(tempBuffer);
       }
 
       return readLength;

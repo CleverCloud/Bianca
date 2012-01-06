@@ -61,7 +61,6 @@ public final class ReadStream extends InputStream
   public static int ZERO_COPY_SIZE = 1024;
   public static int READ_TIMEOUT = -4;
 
-  private TempBuffer _tempRead;
   private byte []_readBuffer;
   private int _readOffset;
   private int _readLength;
@@ -134,16 +133,15 @@ public final class ReadStream extends InputStream
     _sibling = sibling;
 
     if (source.canRead()) {
-      if (_tempRead == null) {
-        _tempRead = TempBuffer.allocate();
-        _readBuffer = _tempRead._buf;
+      if (_readBuffer == null) {
+        _readBuffer = new byte[8192];
       }
     }
     _readOffset = 0;
     _readLength = 0;
 
     _readEncoding = null;
-    _readEncodingName = "ISO-8859-1";
+    _readEncodingName = "UTF-8";
   }
 
   public void setSibling(WriteStream sibling)
@@ -356,7 +354,7 @@ public final class ReadStream extends InputStream
         return -1;
     }
 
-    return _readBuffer[_readOffset++] & 0xff;
+    return _readBuffer[_readOffset++];
   }
 
   /**
@@ -563,7 +561,7 @@ public final class ReadStream extends InputStream
         return -1;
     }
 
-    return _readBuffer[_readOffset++] & 0xff;
+    return _readBuffer[_readOffset++];
   }
 
   /**
@@ -603,7 +601,7 @@ public final class ReadStream extends InputStream
       sublen = length;
 
     for (int i = sublen - 1; i >= 0; i--)
-      buf[offset + i] = (char) (readBuffer[readOffset + i] & 0xff);
+      buf[offset + i] = (char) readBuffer[readOffset + i];
 
     _readOffset = readOffset + sublen;
 
@@ -779,10 +777,10 @@ public final class ReadStream extends InputStream
         sublen = capacity - offset;
 
       for (; sublen > 0; sublen--) {
-        int ch = readBuffer[readOffset++] & 0xff;
+        char ch = (char) readBuffer[readOffset++];
 
         if (ch != '\n') {
-          buf[offset++] = (char) ch;
+          buf[offset++] = ch;
         }
         else if (isChop) {
           if (offset > 0 && buf[offset - 1] == '\r')
@@ -795,7 +793,7 @@ public final class ReadStream extends InputStream
           return true;
         }
         else {
-          buf[offset++] = (char) '\n';
+          buf[offset++] = '\n';
 
           cb.setLength(offset);
 
@@ -859,7 +857,7 @@ public final class ReadStream extends InputStream
         sublen = length;
 
       for (; sublen > 0; sublen--) {
-        int ch = readBuffer[readOffset++] & 0xff;
+        char ch = (char) readBuffer[readOffset++];
 
         if (ch != '\n') {
         }
@@ -872,14 +870,14 @@ public final class ReadStream extends InputStream
             return offset;
         }
         else {
-          buf[offset++] = (char) ch;
+          buf[offset++] = ch;
 
           _readOffset = readOffset;
 
           return offset + 1;
         }
 
-        buf[offset++] = (char) ch;
+        buf[offset++] = ch;
       }
       _readOffset = readOffset;
 
@@ -1233,7 +1231,7 @@ public final class ReadStream extends InputStream
     _readLength = 0;
 
     int readLength = _source.read(_readBuffer, 0, _readBuffer.length);
-
+    
     // Setting to 0 is needed to avoid int to long conversion errors with AIX
     if (readLength > 0) {
       _readLength = readLength;
@@ -1306,10 +1304,6 @@ public final class ReadStream extends InputStream
         return;
 
       if (! _reuseBuffer) {
-        if (_tempRead != null) {
-          TempBuffer.free(_tempRead);
-          _tempRead = null;
-        }
         _readBuffer = null;
       }
 

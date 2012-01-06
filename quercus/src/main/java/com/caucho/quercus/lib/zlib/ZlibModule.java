@@ -428,8 +428,7 @@ public class ZlibModule extends AbstractQuercusModule {
    public Value gzcompress(Env env,
            InputStream data,
            @Optional("6") int level) {
-      TempBuffer tempBuf = TempBuffer.allocate();
-      byte[] buffer = tempBuf.getBuffer();
+      byte[] buffer = new byte[8192];
 
       Deflater deflater = null;
 
@@ -487,8 +486,6 @@ public class ZlibModule extends AbstractQuercusModule {
       } catch (Exception e) {
          throw QuercusModuleException.create(e);
       } finally {
-         TempBuffer.free(tempBuf);
-
          if (deflater != null) {
             deflater.end();
          }

@@ -45,6 +45,7 @@ import com.caucho.vfs.Path;
 import com.caucho.vfs.ReadStream;
 import com.caucho.vfs.WriteStream;
 import com.caucho.vfs.LockableStream;
+import com.caucho.vfs.i18n.UTF8Reader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -621,7 +622,6 @@ public class FileModule extends AbstractQuercusModule {
            @NotNull BinaryInput is,
            @Optional("0x7fffffff") int length) {
       // php/1615
-
       try {
          if (is == null) {
             return BooleanValue.FALSE;
@@ -688,38 +688,37 @@ public class FileModule extends AbstractQuercusModule {
             return BooleanValue.FALSE;
          }
 
-         BinaryInput is = (BinaryInput) stream;
+         BinaryInput bi = (BinaryInput) stream;
+         UTF8Reader is = new UTF8Reader (bi.getInputStream ());
 
          ArrayValue result = new ArrayValueImpl();
-
          try {
             while (true) {
-               StringValue bb = new StringValue();
+               StringBuilder bb = new StringBuilder();
 
                for (int c = is.read(); c >= 0; c = is.read()) {
-                  char ch = (char) c;
-                  if (ch == '\n') {
-                     bb.append(ch);
+                  if (c == '\n') {
+                     bb.append('\n');
                      break;
-                  } else if (ch == '\r') {
+                  } else if (c == '\r') {
                      bb.append('\r');
 
-                     int ch2 = is.read();
+                     int c2 = is.read();
 
-                     if (ch2 == '\n') {
+                     if (c2 == '\n') {
                         bb.append('\n');
                      } else {
-                        is.unread();
+                        bi.unread();
                      }
 
                      break;
                   } else {
-                     bb.append(ch);
+                     bb.append((char) c);
                   }
                }
 
                if (bb.length() > 0) {
-                  result.append(bb);
+                  result.append(new StringValue(bb.toString()));
                } else {
                   return result;
                }

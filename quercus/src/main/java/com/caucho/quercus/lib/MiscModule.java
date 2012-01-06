@@ -48,6 +48,7 @@ import com.caucho.quercus.program.QuercusProgram;
 import com.caucho.util.L10N;
 import com.caucho.util.RandomUtil;
 import com.caucho.vfs.*;
+import com.caucho.vfs.i18n.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -240,8 +241,8 @@ public class MiscModule extends AbstractQuercusModule {
          processBuilder.directory(new File(env.getShellPwd()));
          final Process process = processBuilder.start();
 
-         InputStream is = process.getInputStream();
-         InputStream es = process.getErrorStream();
+         UTF8Reader is = new UTF8Reader (process.getInputStream());
+         UTF8Reader es = new UTF8Reader (process.getErrorStream());
          OutputStream os = process.getOutputStream();
          os.close();
 

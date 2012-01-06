@@ -105,7 +105,7 @@ public class SerializedXml implements java.io.Externalizable {
     public int read()
       throws IOException
     {
-      int ch = _in.readByte() & 0xff;
+      int ch = _in.readByte();
       
       return ch;
     }
