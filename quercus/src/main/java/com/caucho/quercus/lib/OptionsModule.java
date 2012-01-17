@@ -803,6 +803,10 @@ public class OptionsModule extends AbstractQuercusModule {
    public static void gc_disable() {
    }
 
+   public static Value gc_collect_cycles() {
+        return new LongValue (0);
+   }
+
    private static ArrayList<Value> expandVersion(Env env, StringValue version) {
       ArrayList<Value> expand = new ArrayList<Value>();
 
