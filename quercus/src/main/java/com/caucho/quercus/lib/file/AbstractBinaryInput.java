@@ -32,6 +32,7 @@ package com.caucho.quercus.lib.file;
 import com.caucho.quercus.QuercusModuleException;
 import com.caucho.quercus.env.*;
 import com.caucho.vfs.ReadStream;
+import com.caucho.vfs.i18n.UTF8Reader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,7 +113,7 @@ public class AbstractBinaryInput
    public int read()
            throws IOException {
       if (_is != null) {
-         int c = _is.read();
+         int c = new UTF8Reader(_is).read();
 
          if (c == -1) {
             _isEOF = true;

@@ -140,8 +140,12 @@ public final class ReadStream extends InputStream
     _readOffset = 0;
     _readLength = 0;
 
-    _readEncoding = null;
     _readEncodingName = "UTF-8";
+    try {
+        _readEncoding = Encoding.getReadEncoding(this, _readEncodingName);
+    } catch (UnsupportedEncodingException e) {
+        _readEncoding = null;
+    }
   }
 
   public void setSibling(WriteStream sibling)

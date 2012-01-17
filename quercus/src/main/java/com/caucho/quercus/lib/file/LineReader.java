@@ -65,7 +65,7 @@ public class LineReader {
       for (; length > 0 && (ch = input.read()) >= 0; length--) {
          // php/161[pq] newlines
          if (ch == '\n') {
-            str.append(ch);
+            str.append((char) ch);
 
             if (_isMacLineEnding == null) {
                _isMacLineEnding = false;
@@ -104,7 +104,7 @@ public class LineReader {
             }
 
          } else {
-            str.append(ch);
+            str.append((char) ch);
          }
       }
 

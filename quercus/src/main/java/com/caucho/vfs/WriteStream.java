@@ -151,7 +151,7 @@ public class WriteStream extends OutputStreamWithBuffer
     newlineBytes = _sysNewlineBytes;
 
     _writeEncoding = null;
-    _writeEncodingName = "ISO-8859-1";
+    _writeEncodingName = "UTF_8";
   }
 
   /**

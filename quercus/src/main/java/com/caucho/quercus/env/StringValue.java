@@ -1928,7 +1928,7 @@ public class StringValue
     */
    @Override
    public final InputStream toInputStream() {
-      return new StringValueInputStream();
+      return new StringValueInputStream(this);
    }
 
    public Reader toSimpleReader()
@@ -2238,9 +2238,12 @@ public class StringValue
 
       private final int _length;
       private int _index;
+      private StringValue _s;
 
-      StringValueInputStream() {
-         _length = length();
+      StringValueInputStream(StringValue s) {
+         _index = 0;
+         _s = new StringValue (s);
+         _length = _s.length();
       }
 
       /**
@@ -2249,7 +2252,7 @@ public class StringValue
       @Override
       public int read() {
          if (_index < _length) {
-            return charAt(_index++);
+            return _s.charAt(_index++);
          } else {
             return -1;
          }
@@ -2260,24 +2263,47 @@ public class StringValue
        */
       @Override
       public int read(byte[] buffer, int offset, int length) {
-         int sublen = _length - _index;
-
-         if (length < sublen) {
-            sublen = length;
-         }
-
-         if (sublen <= 0) {
+         if (length <= 0 || _length <= _index) {
             return -1;
          }
 
-         byte[] s = substring(_index, _index + sublen).toString().getBytes();
-         _index += sublen;
 
-         for (int i = 0; i < sublen; i++) {
-            buffer[offset + i] = s[i];
-         }
+         char[] s = _s.toString().toCharArray();
 
-         return sublen;
+         int i;
+         for (i = 0; i < length && _index < _length; i++) {
+      char ch = s[_index++];
+
+      // TODO: check for length - i being enough
+      if (ch < 0x80)
+        buffer[offset + i] = (byte) ch;
+      else if (ch < 0x800) {
+        buffer[offset + i++] = (byte) (0xc0 + (ch >> 6));
+        buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
+      }
+      else if (ch < 0xd800 || 0xdfff < ch || i == length || _index == _length) {
+        // server/0815
+        buffer[offset + i++] = (byte) (0xe0 + (ch >> 12));
+        buffer[offset + i++] = (byte) (0x80 + ((ch >> 6) & 0x3f));
+        buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
+      }
+      else {
+        char ch2 = s[_index++];
+        int v = 0x10000 + (ch & 0x3ff) * 0x400 + (ch2 & 0x3ff);
+          
+        buffer[offset + i++] = (byte) (0xf0 + (v >> 18));
+        buffer[offset + i++] = (byte) (0x80 + ((v >> 12) & 0x3f));
+        buffer[offset + i++] = (byte) (0x80 + ((v >> 6) & 0x3f));
+        buffer[offset + i] = (byte) (0x80 + (v & 0x3f));
+      }
+    }
+         return i;
+
+      }
+
+      @Override
+      public int available() {
+        return _length - _index;
       }
    }
 

@@ -3258,7 +3258,7 @@ public class QuercusParser {
 
          case SIMPLE_BINARY_ESCAPE:
          case COMPLEX_BINARY_ESCAPE:
-            return parseEscapedString(_lexeme, token, false, false);
+            return parseEscapedString(_lexeme, token, false);
 
          case LONG: {
             long value = 0;
@@ -4785,27 +4785,11 @@ public class QuercusParser {
    /**
     * Parses the next string
     */
-   private Expr parseEscapedString(String prefix, int token, boolean isSystem)
-           throws IOException {
-      return parseEscapedString(prefix, token, isSystem, true);
-   }
-
-   /**
-    * Parses the next string
-    */
    private Expr parseEscapedString(String prefix,
            int token,
-           boolean isSystem,
-           boolean isUnicode)
+           boolean isSystem)
            throws IOException {
-      Expr expr;
-
-      if (isUnicode) {
-         expr = createString(prefix);
-      } else {
-         // TODO: getBytes isn't correct
-         expr = createBinary(prefix);
-      }
+      Expr expr = createString(prefix);
 
       while (true) {
          Expr tail;
@@ -4876,11 +4860,7 @@ public class QuercusParser {
          if (_sb.length() > 0) {
             Expr string;
 
-            if (isUnicode) {
-               string = createString(_sb.toString());
-            } else {
-               string = createBinary(_sb.toString());
-            }
+            string = createString(_sb.toString());
 
             expr = _factory.createAppend(expr, string);
          }
