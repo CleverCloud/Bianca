@@ -118,7 +118,7 @@ public class QuercusContext {
    private String _scriptEncoding;
    private String _phpVersion = QuercusVersion.getVersionNumber();
    private String _mySqlVersion;
-   private String _jdbcEncoding = "utf-8";
+   private String _jdbcEncoding = "utf8";
    private StringValue _phpVersionValue;
    private boolean _isStrict;
    private boolean _isLooseParse;

@@ -476,9 +476,9 @@ public abstract class JdbcConnectionResource
 
    private DatabaseMetaData getMetaData()
            throws SQLException {
-      if (_dmd == null) {
+     // if (_dmd == null) {
          _dmd = _conn.getConnection().getMetaData();
-      }
+     // }
 
       return _dmd;
    }
