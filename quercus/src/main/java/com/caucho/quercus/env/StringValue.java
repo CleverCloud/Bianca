@@ -1786,7 +1786,7 @@ public class StringValue
     * Returns the first index of the match string, starting from the head.
     */
    public int indexOf(CharSequence match, int head) {
-      return substring(head).toString().indexOf(match.toString());
+      return substring(head).toString().indexOf(match.toString()) + head;
    }
 
    /**
@@ -1800,7 +1800,7 @@ public class StringValue
     * Returns the last index of the match string, starting from the head.
     */
    public int indexOf(char match, int head) {
-      return substring(head).toString().indexOf(match);
+      return substring(head).toString().indexOf(match) + head;
    }
 
    /**

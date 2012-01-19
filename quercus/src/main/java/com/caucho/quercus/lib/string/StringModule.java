@@ -3361,7 +3361,6 @@ public class StringModule extends AbstractQuercusModule {
 
          result = result.append(subject, head, next);
          result = result.append(replace);
-
          if (head < next + searchLen) {
             head = next + searchLen;
          } else {
