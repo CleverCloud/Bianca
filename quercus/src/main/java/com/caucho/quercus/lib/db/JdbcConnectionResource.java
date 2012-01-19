@@ -57,7 +57,6 @@ public abstract class JdbcConnectionResource
    // cached statement
    private Statement _savedStmt;
    private Statement _freeStmt;
-   private DatabaseMetaData _dmd;
    private JdbcResultResource _rs;
    private int _affectedRows;
    private String _errorMessage = null;
@@ -287,11 +286,7 @@ public abstract class JdbcConnectionResource
       clearErrors();
 
       try {
-         if (_dmd == null) {
-            _dmd = _conn.getConnection().getMetaData();
-         }
-
-         ResultSet rs = _dmd.getCatalogs();
+        ResultSet rs = _conn.getConnection().getMetaData().getCatalogs();
 
          if (rs != null) {
             return createResult(_env, _savedStmt, rs);
@@ -344,11 +339,7 @@ public abstract class JdbcConnectionResource
     */
    public String getClientInfo() {
       try {
-         if (_dmd == null) {
-            _dmd = _conn.getConnection().getMetaData();
-         }
-
-         return _dmd.getDatabaseProductVersion();
+         return  _conn.getConnection().getMetaData().getDatabaseProductVersion();
       } catch (SQLException e) {
          log.log(Level.FINE, e.toString(), e);
          return null;
@@ -421,11 +412,7 @@ public abstract class JdbcConnectionResource
     */
    public String getHostInfo()
            throws SQLException {
-      if (_dmd == null) {
-         _dmd = _conn.getConnection().getMetaData();
-      }
-
-      return _dmd.getURL();
+      return _conn.getConnection().getMetaData().getURL();
    }
 
    /**
@@ -476,11 +463,7 @@ public abstract class JdbcConnectionResource
 
    private DatabaseMetaData getMetaData()
            throws SQLException {
-     // if (_dmd == null) {
-         _dmd = _conn.getConnection().getMetaData();
-     // }
-
-      return _dmd;
+      return _conn.getConnection().getMetaData();
    }
 
    static int infoToVersion(String info) {
