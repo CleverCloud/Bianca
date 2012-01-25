@@ -684,7 +684,7 @@ public final class UnserializeReader {
    public final String readString(int len) {
       int end = Math.min(_buffer.length(), _index + len);
       String str = _buffer.substring(_index, end);
-      _index = len;
+      _index += len;
       return str;
    }
 
