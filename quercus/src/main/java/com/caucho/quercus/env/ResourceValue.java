@@ -72,6 +72,13 @@ public class ResourceValue extends Value
       return "ResourceValue[]";
    }
 
+   /*
+    * Returns true for a resource.
+    */
+   public boolean isResource() {
+      return true;
+   }
+
    @Override
    protected void varDumpImpl(Env env,
            WriteStream out,
