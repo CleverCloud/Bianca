@@ -728,8 +728,12 @@ public final class BiancaClass extends NullValue {
    }
 
    public Value getStaticFieldValue(Env env, StringValue name) {
-      if ("this".equals(name.toString()))
-         return env.getThis();
+      if ("this".equals(name.toString())) {
+         Value _this = env.getThis();
+         if (_this.equals(env.getCallingClass())) /*static*/
+            env.error(L.l("Using $this when not in object context"));
+         return _this;
+      }
 
       StringValue staticName = _staticFieldNameMap.get(name);
 
@@ -773,8 +777,12 @@ public final class BiancaClass extends NullValue {
     * For Reflection.
     */
    public Value getStaticField(Env env, StringValue name) {
-      if ("this".equals(name.toString()))
-         return env.getThis();
+      if ("this".equals(name.toString())) {
+         Value _this = env.getThis();
+         if (_this.equals(env.getCallingClass())) /*static*/
+            env.error(L.l("Using $this when not in object context"));
+         return _this;
+      }
 
       StringValue staticName = _staticFieldNameMap.get(name);
 
