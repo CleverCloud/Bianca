@@ -728,6 +728,9 @@ public final class BiancaClass extends NullValue {
    }
 
    public Value getStaticFieldValue(Env env, StringValue name) {
+      if ("this".equals(name.toString()))
+         return env.getThis();
+
       StringValue staticName = _staticFieldNameMap.get(name);
 
       if (staticName == null) {
@@ -770,6 +773,9 @@ public final class BiancaClass extends NullValue {
     * For Reflection.
     */
    public Value getStaticField(Env env, StringValue name) {
+      if ("this".equals(name.toString()))
+         return env.getThis();
+
       StringValue staticName = _staticFieldNameMap.get(name);
 
       if (staticName != null) {
