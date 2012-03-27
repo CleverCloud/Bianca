@@ -923,8 +923,8 @@ public class Var extends Value
     * Divides the following value.
     */
    @Override
-   public Value div(Value rValue) {
-      return _value.div(rValue);
+   public Value div(Env env, Value rValue) {
+      return _value.div(env, rValue);
    }
 
    /**

@@ -410,8 +410,8 @@ public class ArgRef extends Value
     * Divides the following value.
     */
    @Override
-   public Value div(Value rValue) {
-      return _var.div(rValue);
+   public Value div(Env env, Value rValue) {
+      return _var.div(env, rValue);
    }
 
    /**

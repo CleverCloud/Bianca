@@ -42,10 +42,6 @@ public class BinaryDivExpr extends AbstractBinaryExpr {
       super(location, left, right);
    }
 
-   public BinaryDivExpr(Expr left, Expr right) {
-      super(left, right);
-   }
-
    /**
     * Returns true for a double.
     */
@@ -66,7 +62,13 @@ public class BinaryDivExpr extends AbstractBinaryExpr {
       Value lValue = _left.eval(env);
       Value rValue = _right.eval(env);
 
-      return lValue.div(rValue);
+      env.pushCall(this, env.getThis(), new Value[] {lValue, rValue});
+
+      try {
+         return lValue.div(env, rValue);
+      } finally {
+         env.popCall();
+      }
    }
 
    @Override

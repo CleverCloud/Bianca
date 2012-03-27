@@ -622,8 +622,8 @@ public class JavaAdapterVar extends Value {
     * Divides the following value.
     */
    @Override
-   public Value div(Value rValue) {
-      return getValue().div(rValue);
+   public Value div(Env env, Value rValue) {
+      return getValue().div(env, rValue);
    }
 
    /**

@@ -1622,7 +1622,7 @@ abstract public class Value implements java.io.Serializable {
    /**
     * Divides the following value.
     */
-   public Value div(Value rValue) {
+   public Value div(Env env, Value rValue) {
       if (getValueType().isLongAdd() && rValue.getValueType().isLongAdd()) {
          long l = toLong();
          long r = rValue.toLong();
@@ -1640,6 +1640,7 @@ abstract public class Value implements java.io.Serializable {
                  return DoubleValue.create(toDouble() / r);
       }
       /* OMG PHP IS SO UGLY :D #phpuglyfacts */
+      env.warning(L.l("Division by zero"));
       return StringValue.EMPTY;
    }
 

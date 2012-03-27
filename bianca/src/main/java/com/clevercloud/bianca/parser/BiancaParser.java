@@ -2785,7 +2785,7 @@ public class BiancaParser {
                expr = _factory.createMul(expr, parseAssignExpr());
                break;
             case '/':
-               expr = _factory.createDiv(expr, parseAssignExpr());
+               expr = _factory.createDiv(getLocation(), expr, parseAssignExpr());
                break;
             case '%':
                expr = _factory.createMod(expr, parseAssignExpr());
@@ -2878,7 +2878,7 @@ public class BiancaParser {
             case DIV_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createDiv(expr,
+                          _factory.createDiv(getLocation(), expr,
                           parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());

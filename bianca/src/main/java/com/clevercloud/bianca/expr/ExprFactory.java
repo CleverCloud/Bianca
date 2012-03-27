@@ -493,8 +493,8 @@ public class ExprFactory {
    /**
     * Creates a division expression.
     */
-   public Expr createDiv(Expr left, Expr right) {
-      return new BinaryDivExpr(left, right);
+   public Expr createDiv(Location location, Expr left, Expr right) {
+      return new BinaryDivExpr(location, left, right);
    }
 
    /**
