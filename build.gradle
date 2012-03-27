@@ -14,7 +14,7 @@ subprojects {
     }
 }
 
-project(':quercus') {
+project(':bianca') {
     configurations {
 	runtime.extendsFrom compile
     }
@@ -26,12 +26,12 @@ project(':quercus') {
     }
 
     task prepareJava << {
-        String versionFile = "quercus/src/main/java/com/caucho/quercus/QuercusVersion.java"
+        String versionFile = "bianca/src/main/java/com/clevercloud/bianca/BiancaVersion.java"
 	String buildV = ["./bin/prepareJava.sh", versionFile].execute().text
     }
 
     task cleanJava << {
-        String versionFile = "quercus/src/main/java/com/caucho/quercus/QuercusVersion.java"
+        String versionFile = "bianca/src/main/java/com/clevercloud/bianca/BiancaVersion.java"
 	String cleanV = ["./bin/cleanJava.sh", versionFile].execute().text
     }
 
@@ -52,7 +52,7 @@ project(':app') {
     version = ""
     apply plugin: 'war'
     dependencies {
-	compile(project(':quercus')){
+	compile(project(':bianca')){
 	   exclude module: 'javaee-api'
 	}
     }

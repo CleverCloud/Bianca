@@ -1,15 +1,15 @@
 <html>
 <head>
 <title>
-Quercus&#153; Start Page
+Bianca&#153; Start Page
 </title>
 
 <!--
 <?php
 
-  function quercus_test()
+  function bianca_test()
   {
-    return function_exists("quercus_version");
+    return function_exists("bianca_version");
   }
 
 ?>
@@ -34,17 +34,17 @@ Quercus&#153; Start Page
 
 #failure_default_interpreter {
     display: none;
-    <?php if (! quercus_test()) echo "display: block;"; ?> 
+    <?php if (! bianca_test()) echo "display: block;"; ?> 
 }
 
 #success_pro {
     display: none;
-    <?php if (quercus_is_pro() && quercus_test()) echo "display: block;"; ?> 
+    <?php if (bianca_is_pro() && bianca_test()) echo "display: block;"; ?> 
 }
 
 #success_open_source {
     display: none;
-    <?php if (! quercus_is_pro() && quercus_test()) echo "display: block;"; ?> 
+    <?php if (! bianca_is_pro() && bianca_test()) echo "display: block;"; ?> 
 }
 </style>
 </head>
@@ -52,43 +52,40 @@ Quercus&#153; Start Page
 <body>
 
 <p>
-Testing for Quercus&#153;...
+Testing for Bianca&#153;...
 </p>
 
 <div class="message" id="failure">
-PHP files are not being interpreted by Quercus&#153;.
+PHP files are not being interpreted by Bianca&#153;.
 </div>
 
 <div class="message" id="failure_default_interpreter">
-PHP is being interpreted, but not by Quercus&#153;!  Please check your configuration.
+PHP is being interpreted, but not by Bianca&#153;!  Please check your configuration.
 </div>
 
 <div class="message" id="success_pro">
-<img src="images/dragonfly-tiny.png">Congratulations!  Quercus&#153; <?php if (quercus_test()) echo quercus_version(); ?> is compiling PHP pages.  Have fun!
+Congratulations!  Bianca&#153; <?php if (bianca_test()) echo bianca_version(); ?> is compiling PHP pages.  Have fun!
 </div>
 
 <div class="message" id="success_open_source">
-<img src="images/dragonfly-tiny.png">Congratulations!  Quercus&#153; <?php if (quercus_test()) echo quercus_version(); ?> is interpreting PHP pages.  Have fun!
+Congratulations!  Bianca&#153; <?php if (bianca_test()) echo bianca_version(); ?> is interpreting PHP pages.  Have fun!
 </div>
 
 <div>
-Documentation is available at <a href="http://www.caucho.com">http://www.caucho.com</a>
-</div>
-
-<div>
-The README is available <a href="README">here</a>.
+Documentation is available at <a href="http://www.biancaproject.com">http://www.biancaproject.com</a>
 </div>
 
 <hr/>
 
 <div class="footer">
-Copyright &copy; 1998-2009
+Copyright &copy; 2011-2012
+<a href="http://www.clever-cloud.com">Clever Cloud SAS</a>. 
+All rights reserved.<br/>
+Copyright &copy; 1998-2010
 <a href="http://www.caucho.com">Caucho Technology, Inc</a>. 
 All rights reserved.<br/>
 
-Resin <sup><font size="-1">&#174;</font></sup> is a registered trademark,
-and Quercus<sup>tm</sup>, Amber<sup>tm</sup>, and Hessian<sup>tm</sup>
-are trademarks of Caucho Technology.
+Resin <sup><font size="-1">&#174;</font></sup> is a registered trademark of Caucho Technology.
 </div>
 </body>
 

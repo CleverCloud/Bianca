@@ -1,16 +1,16 @@
 README
 -----------------------------------------------------
 
-1. What is Quercus ?
+1. What is Bianca ?
 2. Why a development branch maintained by Clever Cloud ?
 3. Compiling
 4. Installing
 5. Report an issue
 
 
-I. What is Quercus ?
+I. What is Bianca ?
 -----------------------------------------------------
-Caucho's Quercus (TM) is a fast, 100% Java implementation of the PHP language
+CleverCloud's Bianca (TM) is a fast, 100% Java implementation of the PHP language
 allowing developers to use PHP flexibility for the web interface and Java for
 stability.
 
@@ -38,7 +38,7 @@ IV. Installing
 
 V. Report an issue
 -----------------------------------------------------
-If you find an issue with our version of Quercus, please report it on the
-GitHub bugtracker : http://github.com/CleverCloud/Quercus/issues
-If the issue comes from Caucho's code, we will copy it on the Caucho's
+If you find an issue with our version of Bianca, please report it on the
+GitHub bugtracker : http://github.com/CleverCloud/Bianca/issues
+If the issue comes from CleverCloud's code, we will copy it on the CleverCloud's
 bugtracker with patches.

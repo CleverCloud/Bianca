@@ -1,0 +1,64 @@
+com.clevercloud.bianca.lib.date.DateTime
+com.clevercloud.bianca.lib.date.DateTimeZone
+com.clevercloud.bianca.lib.db.Mysqli
+com.clevercloud.bianca.lib.db.MysqliResult as Mysqli_Result
+com.clevercloud.bianca.lib.db.MysqliStatement as Mysqli_Stmt
+com.clevercloud.bianca.lib.db.OracleOciCollection
+com.clevercloud.bianca.lib.db.OracleOciLob
+com.clevercloud.bianca.lib.db.PDO provides PDO
+com.clevercloud.bianca.lib.db.PDOException provides PDO
+com.clevercloud.bianca.lib.db.PDOStatement provides PDO
+com.clevercloud.bianca.lib.exception.ExceptionClass as Exception
+com.clevercloud.bianca.lib.exception.ErrorException
+com.clevercloud.bianca.lib.spl.LogicException
+com.clevercloud.bianca.lib.spl.BadFunctionCallException
+com.clevercloud.bianca.lib.spl.BadMethodCallException
+com.clevercloud.bianca.lib.spl.DomainException
+com.clevercloud.bianca.lib.spl.InvalidArgumentException
+com.clevercloud.bianca.lib.spl.LengthException
+com.clevercloud.bianca.lib.spl.OutOfBoundsException
+com.clevercloud.bianca.lib.spl.OutOfRangeException
+com.clevercloud.bianca.lib.spl.OverflowException
+com.clevercloud.bianca.lib.spl.RangeException
+com.clevercloud.bianca.lib.spl.RuntimeException
+com.clevercloud.bianca.lib.spl.UnderflowException
+com.clevercloud.bianca.lib.spl.UnexpectedValueException
+com.clevercloud.bianca.lib.Java
+com.clevercloud.bianca.lib.jms.JMSQueue
+com.clevercloud.bianca.lib.Memcache provides memcache
+com.clevercloud.bianca.lib.reflection.Reflection provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionClass provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionException provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionExtension provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionFunction provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionFunctionAbstract provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionMethod provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionObject provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionParameter provides Reflection
+com.clevercloud.bianca.lib.reflection.ReflectionProperty provides Reflection
+com.clevercloud.bianca.lib.reflection.Reflector provides Reflection
+com.clevercloud.bianca.lib.simplexml.SimpleXMLElement provides SimpleXML
+com.clevercloud.bianca.env.ArrayAccess
+com.clevercloud.bianca.lib.spl.ArrayIterator
+com.clevercloud.bianca.lib.spl.ArrayObject
+com.clevercloud.bianca.lib.spl.Countable
+com.clevercloud.bianca.env.IteratorClass as Iterator
+com.clevercloud.bianca.env.IteratorAggregate
+com.clevercloud.bianca.lib.spl.OuterIterator
+com.clevercloud.bianca.lib.spl.RecursiveIterator
+com.clevercloud.bianca.lib.spl.SeekableIterator
+com.clevercloud.bianca.env.Serializable
+com.clevercloud.bianca.env.Traversable
+com.clevercloud.bianca.lib.dom.DOMAttr provides dom
+com.clevercloud.bianca.lib.dom.DOMComment provides dom
+com.clevercloud.bianca.lib.dom.DOMDocument provides dom
+com.clevercloud.bianca.lib.dom.DOMElement provides dom
+com.clevercloud.bianca.lib.dom.DOMEntityReference provides dom
+com.clevercloud.bianca.lib.dom.DOMImplementation provides dom
+com.clevercloud.bianca.lib.dom.DOMProcessingInstruction provides dom
+com.clevercloud.bianca.lib.dom.DOMText provides dom
+com.clevercloud.bianca.lib.dom.DOMXPath provides dom
+com.clevercloud.bianca.lib.resin.MBeanServer
+com.clevercloud.bianca.lib.xml.XmlReader
+com.clevercloud.bianca.lib.xml.XMLWriter
+com.clevercloud.bianca.lib.zip.ZipArchive provides ZipArchive

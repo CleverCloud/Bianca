@@ -4,7 +4,7 @@
     "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
 
 <web-app>
-  <description>Caucho Technology's PHP Implementation</description>
+  <description>CleverCloud Technology's PHP Implementation</description>
 
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
@@ -16,11 +16,11 @@
     </filter-mapping>
 
   <servlet>
-    <servlet-name>Quercus Servlet</servlet-name>
-    <servlet-class>com.caucho.quercus.servlet.QuercusServlet</servlet-class>
+    <servlet-name>Bianca Servlet</servlet-name>
+    <servlet-class>com.clevercloud.bianca.servlet.BiancaServlet</servlet-class>
 
     <!--
-      Specifies the encoding Quercus should use to read in PHP scripts.
+      Specifies the encoding Bianca should use to read in PHP scripts.
     -->
     <!--
     <init-param>
@@ -30,7 +30,7 @@
     -->
 
     <!--
-      Tells Quercus to use the following JDBC database and to ignore the
+      Tells Bianca to use the following JDBC database and to ignore the
       arguments of mysql_connect().
     -->
     <!--
@@ -57,7 +57,7 @@
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>Quercus Servlet</servlet-name>
+    <servlet-name>Bianca Servlet</servlet-name>
     <url-pattern>*.php</url-pattern>
   </servlet-mapping>
 
