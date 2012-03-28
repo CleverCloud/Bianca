@@ -2603,6 +2603,14 @@ class RegexpNode {
             return -1;
          }
       }
+
+      @Override
+      protected void toString(StringBuilder sb, Map<RegexpNode, Integer> map) {
+         sb.append(toStringName());
+         sb.append("[");
+         sb.append(_buffer);
+         sb.append("]");
+      }
    }
    static final StringBegin STRING_BEGIN = new StringBegin();
    static final StringEnd STRING_END = new StringEnd();
