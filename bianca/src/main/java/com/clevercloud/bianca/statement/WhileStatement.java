@@ -98,6 +98,8 @@ public class WhileStatement extends Statement {
          }
       } catch (RuntimeException e) {
          rethrow(e, RuntimeException.class);
+      } finally {
+         env.setLocation(null);
       }
 
       return null;
