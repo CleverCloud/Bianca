@@ -1841,10 +1841,7 @@ public class StringValue
     */
    public boolean regionMatches(int offset,
                                 String mBuffer, int mOffset) {
-      int length = mBuffer.length();
-      if (offset < 0) offset = 0;
-      if (mOffset < 0) mOffset = 0;
-      return toString().substring(offset, Math.min(offset + length, length())).equals(mBuffer.substring(Math.min(mOffset, length - 1)));
+      return toString().regionMatches(offset, mBuffer, mOffset, mBuffer.length() - mOffset);
    }
 
    /**
@@ -1852,10 +1849,7 @@ public class StringValue
     */
    public boolean regionMatchesIgnoreCase(int offset,
                                           String mBuffer, int mOffset) {
-      int length = mBuffer.length();
-      if (offset < 0) offset = 0;
-      if (mOffset < 0) mOffset = 0;
-      return toString().toLowerCase().substring(offset, Math.min(offset + length, length())).equals(mBuffer.substring(Math.min(mOffset, length - 1)).toLowerCase());
+      return toString().toLowerCase().regionMatches(offset, mBuffer.toLowerCase(), mOffset, mBuffer.length() - mOffset);
    }
 
    /**
