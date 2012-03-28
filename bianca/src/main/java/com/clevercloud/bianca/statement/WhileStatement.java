@@ -65,9 +65,8 @@ public class WhileStatement extends Statement {
 
    @Override
    public Value execute(Env env) {
+      Location oldLocation = env.setLocation(getLocation());
       try {
-         env.setLocation(getLocation());
-
          while (_test.evalBoolean(env)) {
             Value value = _block.execute(env);
 
@@ -99,7 +98,7 @@ public class WhileStatement extends Statement {
       } catch (RuntimeException e) {
          rethrow(e, RuntimeException.class);
       } finally {
-         env.setLocation(null);
+         env.setLocation(oldLocation);
       }
 
       return null;
