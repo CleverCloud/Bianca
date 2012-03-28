@@ -59,13 +59,12 @@ public class ExprStatement extends Statement {
 
    @Override
    public Value execute(Env env) {
-      // php/0d92
-      Location oldLocation = env.setLocation(getLocation());
+      env.pushCall(this._expr, env.getThis(), new Value[0]);
 
       // php/1a08
       _expr.evalTop(env);
 
-      env.setLocation(oldLocation);
+      env.popCall();
 
       return null;
    }
