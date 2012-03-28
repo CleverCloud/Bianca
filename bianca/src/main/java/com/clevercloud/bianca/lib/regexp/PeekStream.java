@@ -44,10 +44,6 @@ class PeekStream {
    void ungetc(int ch) {
    }
 
-   StringValue createStringBuilder() {
-      return new StringValue();
-   }
-
    String getPattern() {
       return toString();
    }
