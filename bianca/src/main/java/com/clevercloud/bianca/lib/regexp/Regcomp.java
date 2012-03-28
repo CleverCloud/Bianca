@@ -1254,6 +1254,17 @@ class Regcomp {
       return parseString(ch, pattern, false);
    }
 
+   private void maybeAppend(char ch, CharBuffer cb, PeekStream pattern) {
+      switch (pattern.peek()) {
+         case '+':
+         case '?':
+         case '*':
+            break;
+         default:
+            cb.append(ch);
+      }
+   }
+
    /**
     * parseString
     */
@@ -1271,13 +1282,13 @@ class Regcomp {
             case '\n':
             case '\r':
                if (!isIgnoreWs() || isEscaped) {
-                  cb.append((char) ch);
+                  maybeAppend((char) ch, cb, pattern);
                }
                break;
 
             case '#':
                if (!isIgnoreWs() || isEscaped) {
-                  cb.append((char) ch);
+                  maybeAppend((char) ch, cb, pattern);
                } else {
                   while ((ch = pattern.read()) != '\n' && ch >= 0) {
                   }
@@ -1302,7 +1313,7 @@ class Regcomp {
                   pattern.ungetc(ch);
                   return createString(cb);
                }
-               cb.append('{');
+               maybeAppend('{', cb, pattern);
                break;
 
             case '\\':
@@ -1413,7 +1424,7 @@ class Regcomp {
                break;
 
             default:
-               cb.append((char) ch);
+               maybeAppend((char) ch, cb, pattern);
          }
       }
 
