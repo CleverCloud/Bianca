@@ -30,14 +30,15 @@
  */
 package com.clevercloud.bianca.lib.i18n;
 
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
 
 public class UnicodeUtility {
 
    public static StringValue utf8Clean(Env env,
-           StringValue str,
-           String replacement,
-           boolean isIgnore) {
+                                       StringValue str,
+                                       String replacement,
+                                       boolean isIgnore) {
       StringValue sb = new StringValue();
 
       int len = str.length();
@@ -50,7 +51,7 @@ public class UnicodeUtility {
          } else if (0xC2 <= ch && ch <= 0xDF) {
             char ch2;
             if (i + 1 < len
-                    && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF) {
+               && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF) {
                i++;
                sb.append(ch);
                sb.append(ch2);
@@ -64,8 +65,8 @@ public class UnicodeUtility {
             char ch2;
             char ch3;
             if (i + 2 < len
-                    && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF
-                    && 0x80 <= (ch3 = str.charAt(i + 2)) && ch3 <= 0xBF) {
+               && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF
+               && 0x80 <= (ch3 = str.charAt(i + 2)) && ch3 <= 0xBF) {
                i += 2;
                sb.append(ch);
                sb.append(ch2);
@@ -82,9 +83,9 @@ public class UnicodeUtility {
             char ch4;
 
             if (i + 3 < len
-                    && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF
-                    && 0x80 <= (ch3 = str.charAt(i + 2)) && ch3 <= 0xBF
-                    && 0x80 <= (ch4 = str.charAt(i + 3)) && ch4 <= 0xBF) {
+               && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF
+               && 0x80 <= (ch3 = str.charAt(i + 2)) && ch3 <= 0xBF
+               && 0x80 <= (ch4 = str.charAt(i + 3)) && ch4 <= 0xBF) {
                i += 3;
                sb.append(ch);
                sb.append(ch2);
@@ -108,16 +109,16 @@ public class UnicodeUtility {
    }
 
    public static CharSequence decode(Env env,
-           StringValue str,
-           String charset) {
+                                     StringValue str,
+                                     String charset) {
       return decode(env, str, charset, null, false);
    }
 
    public static CharSequence decode(Env env,
-           StringValue str,
-           String charset,
-           String replacement,
-           boolean isIgnoreErrors) {
+                                     StringValue str,
+                                     String charset,
+                                     String replacement,
+                                     boolean isIgnoreErrors) {
       Decoder decoder = Decoder.create(charset);
 
       decoder.setReplacement(replacement);
@@ -127,16 +128,16 @@ public class UnicodeUtility {
    }
 
    public static StringValue encode(Env env,
-           CharSequence str,
-           String charset) {
+                                    CharSequence str,
+                                    String charset) {
       return encode(env, str, charset, null, false);
    }
 
    public static StringValue encode(Env env,
-           CharSequence str,
-           String charset,
-           String replacement,
-           boolean isIgnoreErrors) {
+                                    CharSequence str,
+                                    String charset,
+                                    String replacement,
+                                    boolean isIgnoreErrors) {
       Encoder encoder = Encoder.create(charset);
 
       encoder.setReplacement(replacement);
@@ -146,21 +147,21 @@ public class UnicodeUtility {
    }
 
    public static StringValue decodeEncode(Env env,
-           StringValue str,
-           String inCharset,
-           String outCharset,
-           String replacement,
-           boolean isIgnoreErrors) {
+                                          StringValue str,
+                                          String inCharset,
+                                          String outCharset,
+                                          String replacement,
+                                          boolean isIgnoreErrors) {
       boolean isStartUtf8 = false;
       boolean isEndUtf8 = false;
 
       if (inCharset.equalsIgnoreCase("utf-8")
-              || inCharset.equalsIgnoreCase("utf-8")) {
+         || inCharset.equalsIgnoreCase("utf-8")) {
          isStartUtf8 = true;
       }
 
       if (outCharset.equalsIgnoreCase("utf-8")
-              || outCharset.equalsIgnoreCase("utf-8")) {
+         || outCharset.equalsIgnoreCase("utf-8")) {
          isEndUtf8 = true;
       }
 

@@ -43,7 +43,7 @@ import java.util.IdentityHashMap;
  */
 @SuppressWarnings("serial")
 public class BooleanValue extends Value
-        implements Serializable {
+   implements Serializable {
 
    public static final BooleanValue TRUE = new BooleanValue(true);
    public static final BooleanValue FALSE = new BooleanValue(false);
@@ -118,6 +118,7 @@ public class BooleanValue extends Value
    //
    // marshal costs
    //
+
    /**
     * Cost to convert to a boolean
     */
@@ -129,6 +130,7 @@ public class BooleanValue extends Value
    //
    // conversions
    //
+
    /**
     * Converts to a long.
     */
@@ -263,6 +265,7 @@ public class BooleanValue extends Value
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    @Override
@@ -273,6 +276,7 @@ public class BooleanValue extends Value
    //
    // Java generator code
    //
+
    /**
     * Generates code to recreate the expression.
     *
@@ -280,7 +284,7 @@ public class BooleanValue extends Value
     */
    @Override
    public void generate(PrintWriter out)
-           throws IOException {
+      throws IOException {
       if (_value) {
          out.print("com.clevercloud.bianca.env.BooleanValue.TRUE");
       } else {
@@ -294,7 +298,7 @@ public class BooleanValue extends Value
     * @param out the writer to the Java source code.
     */
    public void generateBoolean(PrintWriter out)
-           throws IOException {
+      throws IOException {
       if (_value) {
          out.print("true");
       } else {
@@ -367,10 +371,10 @@ public class BooleanValue extends Value
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       if (toBoolean()) {
          out.print("bool(true)");
       } else {

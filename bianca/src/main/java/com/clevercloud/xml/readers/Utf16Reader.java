@@ -38,48 +38,43 @@ import java.io.IOException;
  * A fast reader to convert bytes to characters for parsing XML.
  */
 public class Utf16Reader extends XmlReader {
-  boolean isReverse;
-  /**
-   * Create a new reader.
-   */
-  public Utf16Reader()
-  {
-  }
+   boolean isReverse;
 
-  /**
-   * Create a new reader with the given read stream.
-   */
-  public Utf16Reader(XmlParser parser, ReadStream is)
-  {
-    super(parser, is);
-  }
+   /**
+    * Create a new reader.
+    */
+   public Utf16Reader() {
+   }
 
-  public void setReverse(boolean isReverse)
-  {
-    this.isReverse = isReverse;
-  }
+   /**
+    * Create a new reader with the given read stream.
+    */
+   public Utf16Reader(XmlParser parser, ReadStream is) {
+      super(parser, is);
+   }
 
-  public boolean getReverse()
-  {
-    return isReverse;
-  }
+   public void setReverse(boolean isReverse) {
+      this.isReverse = isReverse;
+   }
 
-  /**
-   * Read the next character, returning -1 on end of file..
-   */
-  public int read()
-    throws IOException
-  {
-    int ch1 = _is.read();
-    int ch2 = _is.read();
+   public boolean getReverse() {
+      return isReverse;
+   }
 
-    if (ch2 < 0) {
-      return -1;
-    }
-    else if (isReverse)
-      return (ch2 << 8) + ch1;
-    else
-      return (ch1 << 8) + ch2;
-  }
+   /**
+    * Read the next character, returning -1 on end of file..
+    */
+   public int read()
+      throws IOException {
+      int ch1 = _is.read();
+      int ch2 = _is.read();
+
+      if (ch2 < 0) {
+         return -1;
+      } else if (isReverse)
+         return (ch2 << 8) + ch1;
+      else
+         return (ch1 << 8) + ch2;
+   }
 }
 

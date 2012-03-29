@@ -32,17 +32,16 @@ import java.io.IOException;
 
 /**
  * Interface for appending bytes to buffer or an output stream.
- *
  */
 public interface ByteAppendable {
 
-  /**
-   * Appends value to the ByteAppendable.
-   */
-  public void write(int value) throws IOException;
+   /**
+    * Appends value to the ByteAppendable.
+    */
+   public void write(int value) throws IOException;
 
-  /**
-   * Appends buffer to the ByteAppendable.
-   */
-  public void write(byte[] buffer, int offset, int len) throws IOException;
+   /**
+    * Appends buffer to the ByteAppendable.
+    */
+   public void write(byte[] buffer, int offset, int len) throws IOException;
 }

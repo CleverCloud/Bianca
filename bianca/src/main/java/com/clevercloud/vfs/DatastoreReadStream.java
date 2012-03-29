@@ -30,206 +30,188 @@
 
 package com.clevercloud.vfs;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.logging.Logger;
 
 /**
  * Stream encapsulating FileInputStream
  */
 public class DatastoreReadStream extends StreamImpl
-    implements LockableStream
-{
-  private static final Logger log
-    = Logger.getLogger(DatastoreReadStream.class.getName());
+   implements LockableStream {
+   private static final Logger log
+      = Logger.getLogger(DatastoreReadStream.class.getName());
 
-  private DatastoreInputStream _is;
-  
-  /**
-   * Create a new FileReadStream.
-   */
-  public DatastoreReadStream()
-  {
-  }
-  
-  /**
-   * Create a new FileReadStream based on the java.io.* stream.
-   *
-   * @param is the underlying input stream.
-   */
-  public DatastoreReadStream(DatastoreInputStream is)
-  {
-    init(is);
-  }
-  
-  /**
-   * Create a new FileReadStream based on the java.io.* stream.
-   *
-   * @param is the underlying input stream.
-   * @param path the associated Path.
-   */
-  public DatastoreReadStream(DatastoreInputStream is, DatastorePath path)
-  {
-    init(is);
-    setPath(path);
-  }
+   private DatastoreInputStream _is;
 
-  /**
-   * Initializes a VfsStream with an input/output stream pair.  Before a
-   * read, the output will be flushed to avoid deadlocks.
-   *
-   * @param is the underlying InputStream.
-   * @param os the underlying OutputStream.
-   */
-  public void init(DatastoreInputStream is)
-  {
-    _is = is;
-    setPath(null);
-  }
+   /**
+    * Create a new FileReadStream.
+    */
+   public DatastoreReadStream() {
+   }
 
-  /**
-   * Returns true if there's an associated file.
-   */
-  public boolean hasSkip()
-  {
-    return _is != null;
-  }
+   /**
+    * Create a new FileReadStream based on the java.io.* stream.
+    *
+    * @param is the underlying input stream.
+    */
+   public DatastoreReadStream(DatastoreInputStream is) {
+      init(is);
+   }
 
-  /**
-   * Skips bytes in the file.
-   *
-   * @param n the number of bytes to skip
-   *
-   * @return the actual bytes skipped.
-   */
-  public long skip(long n)
-    throws IOException
-  {
-    if (_is != null)
-      return _is.skip(n);
-    else
-      return -1;
-  }
+   /**
+    * Create a new FileReadStream based on the java.io.* stream.
+    *
+    * @param is   the underlying input stream.
+    * @param path the associated Path.
+    */
+   public DatastoreReadStream(DatastoreInputStream is, DatastorePath path) {
+      init(is);
+      setPath(path);
+   }
 
-  /**
-   * Seeks based on the start.
-   */
-  public void seekStart(long offset)
-    throws IOException
-  {
-    if (_is != null)
-      _is.setPosition(offset);
-  }
+   /**
+    * Initializes a VfsStream with an input/output stream pair.  Before a
+    * read, the output will be flushed to avoid deadlocks.
+    *
+    * @param is the underlying InputStream.
+    * @param os the underlying OutputStream.
+    */
+   public void init(DatastoreInputStream is) {
+      _is = is;
+      setPath(null);
+   }
 
-  /**
-   * Returns true if there's an associated file.
-   */
-  public boolean canRead()
-  {
-    return _is != null;
-  }
+   /**
+    * Returns true if there's an associated file.
+    */
+   public boolean hasSkip() {
+      return _is != null;
+   }
 
-  /**
-   * Reads bytes from the file.
-   *
-   * @param buf a byte array receiving the data.
-   * @param offset starting index to receive data.
-   * @param length number of bytes to read.
-   *
-   * @return the number of bytes read or -1 on end of file.
-   */
-  public int read(byte []buf, int offset, int length) throws IOException
-  {
-    if (_is == null)
-      return -1;
-
-    int len = _is.read(buf, offset, length);
-
-    return len;
-  }
-
-  /**
-   * Returns the number of bytes available for reading.
-   */
-  public int getAvailable() throws IOException
-  {
-    if (_is == null)
-      return -1;
-    else {
-      return _is.available();
-    }
-  }
-
-  /**
-   * Closes the underlying stream.
-   */
-  public void close() throws IOException
-  {
-    unlock();
-
-    InputStream is = _is;
-    _is = null;
-    
-    if (is != null)
-      is.close();
-  }
-
-  public boolean lock(boolean shared, boolean block)
-  {
-    /*
-    unlock();
-
-    if (!shared) {
-      // Invalid request for an exclusive "write" lock on a read only stream.
-
-      return false;
-    }
-
-    try {
-      if (_fileChannel == null) {
-        _fileChannel = _is.getChannel();
-      }
-
-      if (block)
-        _fileLock = _fileChannel.lock(0, Long.MAX_VALUE, true);
+   /**
+    * Skips bytes in the file.
+    *
+    * @param n the number of bytes to skip
+    * @return the actual bytes skipped.
+    */
+   public long skip(long n)
+      throws IOException {
+      if (_is != null)
+         return _is.skip(n);
       else
-        _fileLock = _fileChannel.tryLock(0, Long.MAX_VALUE, true);
+         return -1;
+   }
 
-      return _fileLock != null;
-    } catch (IOException e) {
-      log.log(Level.FINE, e.toString(), e);
-      return false;
-    }
-    
+   /**
+    * Seeks based on the start.
     */
-    
-    return true;
-  }
+   public void seekStart(long offset)
+      throws IOException {
+      if (_is != null)
+         _is.setPosition(offset);
+   }
 
-  public boolean unlock()
-  {
-    /*
-    try {
-      FileLock lock = _fileLock;
-      _fileLock = null;
+   /**
+    * Returns true if there's an associated file.
+    */
+   public boolean canRead() {
+      return _is != null;
+   }
 
-      if (lock != null) {
-        lock.release();
+   /**
+    * Reads bytes from the file.
+    *
+    * @param buf    a byte array receiving the data.
+    * @param offset starting index to receive data.
+    * @param length number of bytes to read.
+    * @return the number of bytes read or -1 on end of file.
+    */
+   public int read(byte[] buf, int offset, int length) throws IOException {
+      if (_is == null)
+         return -1;
 
-        return true;
+      int len = _is.read(buf, offset, length);
+
+      return len;
+   }
+
+   /**
+    * Returns the number of bytes available for reading.
+    */
+   public int getAvailable() throws IOException {
+      if (_is == null)
+         return -1;
+      else {
+         return _is.available();
+      }
+   }
+
+   /**
+    * Closes the underlying stream.
+    */
+   public void close() throws IOException {
+      unlock();
+
+      InputStream is = _is;
+      _is = null;
+
+      if (is != null)
+         is.close();
+   }
+
+   public boolean lock(boolean shared, boolean block) {
+      /*
+      unlock();
+
+      if (!shared) {
+        // Invalid request for an exclusive "write" lock on a read only stream.
+
+        return false;
       }
 
-      return false;
-    } catch (IOException e) {
-      log.log(Level.FINE, e.toString(), e);
-      return false;
-    }
-    
-    */
-    
-    return true;
-  }
+      try {
+        if (_fileChannel == null) {
+          _fileChannel = _is.getChannel();
+        }
+
+        if (block)
+          _fileLock = _fileChannel.lock(0, Long.MAX_VALUE, true);
+        else
+          _fileLock = _fileChannel.tryLock(0, Long.MAX_VALUE, true);
+
+        return _fileLock != null;
+      } catch (IOException e) {
+        log.log(Level.FINE, e.toString(), e);
+        return false;
+      }
+
+      */
+
+      return true;
+   }
+
+   public boolean unlock() {
+      /*
+      try {
+        FileLock lock = _fileLock;
+        _fileLock = null;
+
+        if (lock != null) {
+          lock.release();
+
+          return true;
+        }
+
+        return false;
+      } catch (IOException e) {
+        log.log(Level.FINE, e.toString(), e);
+        return false;
+      }
+
+      */
+
+      return true;
+   }
 
 }

@@ -59,7 +59,6 @@ public class BinaryXorExpr extends AbstractBinaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -75,7 +74,6 @@ public class BinaryXorExpr extends AbstractBinaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

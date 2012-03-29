@@ -29,14 +29,13 @@
  */
 package com.clevercloud.bianca.lib.file;
 
+import com.clevercloud.bianca.env.Value;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.vfs.TempBuffer;
 
 /**
  * Represents a Bianca file open for reading

@@ -34,7 +34,7 @@ import java.io.IOException;
 public class CliBianca extends Bianca {
 
    public static void main(String[] args)
-           throws IOException {
+      throws IOException {
       Bianca.main(args);
    }
 }

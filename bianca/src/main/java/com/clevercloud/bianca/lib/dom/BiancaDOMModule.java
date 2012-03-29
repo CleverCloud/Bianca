@@ -36,7 +36,7 @@ import com.clevercloud.bianca.lib.simplexml.SimpleXMLElement;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 
 public class BiancaDOMModule
-        extends AbstractBiancaModule {
+   extends AbstractBiancaModule {
 
    public static final int XML_ELEMENT_NODE = 1;
    public static final int XML_ATTRIBUTE_NODE = 2;

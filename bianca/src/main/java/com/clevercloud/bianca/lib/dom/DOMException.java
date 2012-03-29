@@ -30,7 +30,7 @@
 package com.clevercloud.bianca.lib.dom;
 
 public class DOMException
-        extends org.w3c.dom.DOMException {
+   extends org.w3c.dom.DOMException {
 
    private DOMImplementation _impl;
    private org.w3c.dom.DOMException _delegate;

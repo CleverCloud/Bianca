@@ -35,52 +35,45 @@ import javax.xml.stream.events.EntityDeclaration;
 import javax.xml.stream.events.EntityReference;
 import java.io.Writer;
 
-public class EntityReferenceImpl extends XMLEventImpl 
-  implements EntityReference 
-{
-  private final String _name;
-  private final EntityDeclaration _declaration;
+public class EntityReferenceImpl extends XMLEventImpl
+   implements EntityReference {
+   private final String _name;
+   private final EntityDeclaration _declaration;
 
-  public EntityReferenceImpl(String name, EntityDeclaration declaration)
-  {
-    _name = name;
-    _declaration = declaration;
-  }
+   public EntityReferenceImpl(String name, EntityDeclaration declaration) {
+      _name = name;
+      _declaration = declaration;
+   }
 
-  public EntityDeclaration getDeclaration()
-  {
-    return _declaration;
-  }
+   public EntityDeclaration getDeclaration() {
+      return _declaration;
+   }
 
-  public String getName()
-  {
-    return _name;
-  }
+   public String getName() {
+      return _name;
+   }
 
-  public int getEventType()
-  {
-    return ENTITY_REFERENCE;
-  }
+   public int getEventType() {
+      return ENTITY_REFERENCE;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    // XXX
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      // XXX
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof EntityReference))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof EntityReference))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    EntityReference entity = (EntityReference) o;
-    
-    return getName().equals(entity.getName()) &&
-           getDeclaration().equals(entity.getDeclaration());
-  }
+      EntityReference entity = (EntityReference) o;
+
+      return getName().equals(entity.getName()) &&
+         getDeclaration().equals(entity.getDeclaration());
+   }
 }
 

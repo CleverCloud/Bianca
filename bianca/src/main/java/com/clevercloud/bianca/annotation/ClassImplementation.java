@@ -37,9 +37,9 @@ import java.lang.annotation.Target;
 /**
  * The @ClassImplementation annotation annotates a class as
  * implementing methods for a Bianca object.
- *
+ * <p/>
  * The object will be an ObjectValue, not a JavaValue.
- *
+ * <p/>
  * Most of the methods will have a @This annotation on the first argument
  * to handle the Bianca object.
  */

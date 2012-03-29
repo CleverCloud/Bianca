@@ -33,53 +33,50 @@ package com.clevercloud.util;
  * URL utilities.
  */
 public class URLUtil {
-  /**
-   * Encode the url with '%' encoding.
-   */
-  public static String encodeURL(String uri)
-  {
-    CharBuffer cb = CharBuffer.allocate();
+   /**
+    * Encode the url with '%' encoding.
+    */
+   public static String encodeURL(String uri) {
+      CharBuffer cb = CharBuffer.allocate();
 
-    for (int i = 0; i < uri.length(); i++) {
-      char ch = uri.charAt(i);
+      for (int i = 0; i < uri.length(); i++) {
+         char ch = uri.charAt(i);
 
-      switch (ch) {
-      case '<':
-      case '>':
-      case ' ':
-      case '%':
-      case '\'':
-      case '\"':
-        cb.append('%');
-        cb.append(encodeHex(ch >> 4));
-        cb.append(encodeHex(ch));
-        break;
+         switch (ch) {
+            case '<':
+            case '>':
+            case ' ':
+            case '%':
+            case '\'':
+            case '\"':
+               cb.append('%');
+               cb.append(encodeHex(ch >> 4));
+               cb.append(encodeHex(ch));
+               break;
 
-      default:
-        cb.append(ch);
+            default:
+               cb.append(ch);
+         }
       }
-    }
 
-    return cb.close();
-  }
+      return cb.close();
+   }
 
-  public static String byteToHex(int b)
-  {
-    CharBuffer cb = CharBuffer.allocate();
+   public static String byteToHex(int b) {
+      CharBuffer cb = CharBuffer.allocate();
 
-    cb.append(encodeHex((b & 0xf0) >> 4));
-    cb.append(encodeHex(b & 0xf));
+      cb.append(encodeHex((b & 0xf0) >> 4));
+      cb.append(encodeHex(b & 0xf));
 
-    return cb.close();
-  }
+      return cb.close();
+   }
 
-  public static char encodeHex(int ch)
-  {
-    ch &= 0xf;
+   public static char encodeHex(int ch) {
+      ch &= 0xf;
 
-    if (ch < 10)
-      return (char) (ch + '0');
-    else
-      return (char) (ch + 'a' - 10);
-  }
+      if (ch < 10)
+         return (char) (ch + '0');
+      else
+         return (char) (ch + 'a' - 10);
+   }
 }

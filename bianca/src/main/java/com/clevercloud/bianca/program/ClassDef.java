@@ -29,14 +29,14 @@
  */
 package com.clevercloud.bianca.program;
 
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.function.AbstractFunction;
-import com.clevercloud.bianca.Location;
 import com.clevercloud.util.L10N;
 
-import java.util.Map;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -51,9 +51,9 @@ abstract public class ClassDef {
    private String[] _ifaceList;
 
    protected ClassDef(Location location,
-           String name,
-           String parentName,
-           String[] ifaceList) {
+                      String name,
+                      String parentName,
+                      String[] ifaceList) {
       _location = location;
       _name = name;
       _parentName = parentName;
@@ -179,10 +179,10 @@ abstract public class ClassDef {
    public ObjectValue newInstance(Env env, BiancaClass qcl) {
       if (isAbstract()) {
          throw env.createErrorException(
-                 L.l("abstract class '{0}' cannot be instantiated.", getName()));
+            L.l("abstract class '{0}' cannot be instantiated.", getName()));
       } else if (isInterface()) {
          throw env.createErrorException(
-                 L.l("interface '{0}' cannot be instantiated.", getName()));
+            L.l("interface '{0}' cannot be instantiated.", getName()));
       }
 
       return new ObjectExtValue(qcl);
@@ -194,10 +194,10 @@ abstract public class ClassDef {
    public ObjectValue createObject(Env env, BiancaClass cls) {
       if (isAbstract()) {
          throw env.createErrorException(
-                 L.l("abstract class '{0}' cannot be instantiated.", getName()));
+            L.l("abstract class '{0}' cannot be instantiated.", getName()));
       } else if (isInterface()) {
          throw env.createErrorException(
-                 L.l("interface '{0}' cannot be instantiated.", getName()));
+            L.l("interface '{0}' cannot be instantiated.", getName()));
       }
 
       return new ObjectExtValue(cls);
@@ -270,9 +270,9 @@ abstract public class ClassDef {
    @Override
    public String toString() {
       return getClass().getSimpleName()
-              + "@"
-              + System.identityHashCode(this)
-              + "[" + _name + "]";
+         + "@"
+         + System.identityHashCode(this)
+         + "[" + _name + "]";
    }
 
    public Set<Map.Entry<StringValue, FieldEntry>> fieldSet() {

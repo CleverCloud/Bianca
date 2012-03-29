@@ -29,6 +29,7 @@
 */
 
 package com.clevercloud.xml.stream;
+
 import com.clevercloud.util.L10N;
 import com.clevercloud.vfs.Vfs;
 
@@ -46,126 +47,110 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 public class XMLOutputFactoryImpl extends XMLOutputFactory {
-  private static final L10N L = new L10N(XMLOutputFactoryImpl.class);
+   private static final L10N L = new L10N(XMLOutputFactoryImpl.class);
 
-  private boolean _repair = false;
+   private boolean _repair = false;
 
-  public XMLOutputFactoryImpl()
-  {
-  }
+   public XMLOutputFactoryImpl() {
+   }
 
 
-  //
-  // Event writer
-  //
+   //
+   // Event writer
+   //
 
-  public XMLEventWriter createXMLEventWriter(OutputStream stream)
-    throws XMLStreamException
-  {
-    return new XMLEventWriterImpl(createXMLStreamWriter(stream));
-  }
+   public XMLEventWriter createXMLEventWriter(OutputStream stream)
+      throws XMLStreamException {
+      return new XMLEventWriterImpl(createXMLStreamWriter(stream));
+   }
 
-  public XMLEventWriter createXMLEventWriter(OutputStream stream,
-                                             String encoding)
-    throws XMLStreamException
-  {
-    return new XMLEventWriterImpl(createXMLStreamWriter(stream, encoding));
-  }
+   public XMLEventWriter createXMLEventWriter(OutputStream stream,
+                                              String encoding)
+      throws XMLStreamException {
+      return new XMLEventWriterImpl(createXMLStreamWriter(stream, encoding));
+   }
 
-  /**
-   *  This method is optional.
-   */
-  public XMLEventWriter createXMLEventWriter(Result result)
-    throws XMLStreamException
-  {
-    return new XMLEventWriterImpl(createXMLStreamWriter(result));
-  }
+   /**
+    * This method is optional.
+    */
+   public XMLEventWriter createXMLEventWriter(Result result)
+      throws XMLStreamException {
+      return new XMLEventWriterImpl(createXMLStreamWriter(result));
+   }
 
-  public XMLEventWriter createXMLEventWriter(Writer stream)
-    throws XMLStreamException
-  {
-    return new XMLEventWriterImpl(createXMLStreamWriter(stream));
-  }
+   public XMLEventWriter createXMLEventWriter(Writer stream)
+      throws XMLStreamException {
+      return new XMLEventWriterImpl(createXMLStreamWriter(stream));
+   }
 
-  // 
-  // Stream writer
-  //
+   //
+   // Stream writer
+   //
 
-  public XMLStreamWriter createXMLStreamWriter(OutputStream stream)
-    throws XMLStreamException
-  {
-    return new XMLStreamWriterImpl(Vfs.openWrite(stream), _repair);
-  }
+   public XMLStreamWriter createXMLStreamWriter(OutputStream stream)
+      throws XMLStreamException {
+      return new XMLStreamWriterImpl(Vfs.openWrite(stream), _repair);
+   }
 
-  public XMLStreamWriter createXMLStreamWriter(OutputStream stream,
-                                               String encoding)
-    throws XMLStreamException
-  {
-    try {
-      OutputStreamWriter osw = new OutputStreamWriter(stream, encoding);
-      return new XMLStreamWriterImpl(Vfs.openWrite(osw), _repair);
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public XMLStreamWriter createXMLStreamWriter(OutputStream stream,
+                                                String encoding)
+      throws XMLStreamException {
+      try {
+         OutputStreamWriter osw = new OutputStreamWriter(stream, encoding);
+         return new XMLStreamWriterImpl(Vfs.openWrite(osw), _repair);
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  /**
-   *  This method is optional.
-   */
-  public XMLStreamWriter createXMLStreamWriter(Result result)
-    throws XMLStreamException
-  {
-    if (result instanceof DOMResult) {
-      return new DOMResultXMLStreamWriterImpl((DOMResult) result, _repair);
-    }
-    else if (result instanceof SAXResult) {
-      return new SAXResultXMLStreamWriterImpl((SAXResult) result);
-    }
-    else if (result instanceof StreamResult) {
-      Writer writer = ((StreamResult) result).getWriter();
+   /**
+    * This method is optional.
+    */
+   public XMLStreamWriter createXMLStreamWriter(Result result)
+      throws XMLStreamException {
+      if (result instanceof DOMResult) {
+         return new DOMResultXMLStreamWriterImpl((DOMResult) result, _repair);
+      } else if (result instanceof SAXResult) {
+         return new SAXResultXMLStreamWriterImpl((SAXResult) result);
+      } else if (result instanceof StreamResult) {
+         Writer writer = ((StreamResult) result).getWriter();
 
-      if (writer != null) 
-        return createXMLStreamWriter(writer);
+         if (writer != null)
+            return createXMLStreamWriter(writer);
 
-      OutputStream os = ((StreamResult) result).getOutputStream();
+         OutputStream os = ((StreamResult) result).getOutputStream();
 
-      if (os != null)
-        return createXMLStreamWriter(os);
+         if (os != null)
+            return createXMLStreamWriter(os);
 
-      throw new XMLStreamException("StreamResult has no output stream or writer");
-    }
+         throw new XMLStreamException("StreamResult has no output stream or writer");
+      }
 
-    throw new UnsupportedOperationException(L.l("Results of type {0} are not supported", result.getClass().getName()));
-  }
+      throw new UnsupportedOperationException(L.l("Results of type {0} are not supported", result.getClass().getName()));
+   }
 
-  public XMLStreamWriter createXMLStreamWriter(Writer stream)
-    throws XMLStreamException
-  {
-    return new XMLStreamWriterImpl(Vfs.openWrite(stream), _repair);
-  }
+   public XMLStreamWriter createXMLStreamWriter(Writer stream)
+      throws XMLStreamException {
+      return new XMLStreamWriterImpl(Vfs.openWrite(stream), _repair);
+   }
 
-  public Object getProperty(String name)
-    throws IllegalArgumentException
-  {
-    throw new IllegalArgumentException("property \""+name+"\" not supported");
-  }
+   public Object getProperty(String name)
+      throws IllegalArgumentException {
+      throw new IllegalArgumentException("property \"" + name + "\" not supported");
+   }
 
-  public boolean isPropertySupported(String name)
-  {
-    return false;
-  }
+   public boolean isPropertySupported(String name) {
+      return false;
+   }
 
-  public void setProperty(String name, Object value)
-    throws IllegalArgumentException
-  {
-    if (IS_REPAIRING_NAMESPACES.equals(name)) {
-      if (value instanceof Boolean)
-        _repair = ((Boolean) value).booleanValue();
-      else 
-        throw new IllegalArgumentException("value of " + name + " must be Boolean, not " + value);
-    }
-    else
-      throw new IllegalArgumentException("property \""+name+"\" not supported");
-  }
+   public void setProperty(String name, Object value)
+      throws IllegalArgumentException {
+      if (IS_REPAIRING_NAMESPACES.equals(name)) {
+         if (value instanceof Boolean)
+            _repair = ((Boolean) value).booleanValue();
+         else
+            throw new IllegalArgumentException("value of " + name + " must be Boolean, not " + value);
+      } else
+         throw new IllegalArgumentException("property \"" + name + "\" not supported");
+   }
 }

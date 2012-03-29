@@ -37,72 +37,62 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 class QNamedNodeMap<N> implements NamedNodeMap {
-  HashMap<String,Node> _map;
-  int _i;
-  Iterator<Node> _iter;
+   HashMap<String, Node> _map;
+   int _i;
+   Iterator<Node> _iter;
 
-  QNamedNodeMap(HashMap<String,Node> map)
-  {
-    _map = map;
-  }
-  
-  public Node getNamedItem(String name)
-  {
-    return _map.get(name);
-  }
-  
-  public Node getNamedItemNS(String namespaceURI, String localName)
-  {
-    return null;
-  }
+   QNamedNodeMap(HashMap<String, Node> map) {
+      _map = map;
+   }
 
-  public Node setNamedItem(Node arg) throws DOMException
-  {
-    return _map.put(arg.getNodeName(), arg);
-  }
-  
-  public Node setNamedItemNS(Node arg)
-  {
-    return null;
-  }
+   public Node getNamedItem(String name) {
+      return _map.get(name);
+   }
 
-  public Node removeNamedItem(String name) throws DOMException
-  {
-    return _map.remove(name);
-  }
-  
-  public Node removeNamedItemNS(String namespaceURI, String localName)
-  {
-    return null;
-  }
+   public Node getNamedItemNS(String namespaceURI, String localName) {
+      return null;
+   }
 
-  public Node item(int index)
-  {
-    Node value = null;
+   public Node setNamedItem(Node arg) throws DOMException {
+      return _map.put(arg.getNodeName(), arg);
+   }
 
-    synchronized (this) {
-      if (_iter == null || index <= _i) {
-        _iter = _map.values().iterator();
-        _i = 0;
-        value = _iter.next();
+   public Node setNamedItemNS(Node arg) {
+      return null;
+   }
+
+   public Node removeNamedItem(String name) throws DOMException {
+      return _map.remove(name);
+   }
+
+   public Node removeNamedItemNS(String namespaceURI, String localName) {
+      return null;
+   }
+
+   public Node item(int index) {
+      Node value = null;
+
+      synchronized (this) {
+         if (_iter == null || index <= _i) {
+            _iter = _map.values().iterator();
+            _i = 0;
+            value = _iter.next();
+         }
+
+         while (_i < index && _iter.hasNext()) {
+            value = _iter.next();
+            _i++;
+         }
       }
 
-      while (_i < index && _iter.hasNext()) {
-        value = _iter.next();
-        _i++;
-      }
-    }
-    
-    return value;
-  }
+      return value;
+   }
 
-  public int getLength()
-  {
-    return _map.size();
-  }
+   public int getLength() {
+      return _map.size();
+   }
 
-  public Iterator getNamedItemKeys() throws DOMException
-  {
-    return _map.keySet().iterator();
-  }
+   public Iterator getNamedItemKeys() throws DOMException {
+      return _map.keySet().iterator();
+   }
 }

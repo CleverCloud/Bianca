@@ -97,7 +97,7 @@ public class BinaryInputMarshal extends Marshal {
    @Override
    protected int getMarshalingCostImpl(Value argValue) {
       if (argValue instanceof JavaValue
-              && InputStream.class.isAssignableFrom(argValue.toJavaObject().getClass())) {
+         && InputStream.class.isAssignableFrom(argValue.toJavaObject().getClass())) {
          return Marshal.ZERO;
       } else {
          return Marshal.FOUR;

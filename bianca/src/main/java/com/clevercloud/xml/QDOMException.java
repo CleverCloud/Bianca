@@ -32,8 +32,7 @@ package com.clevercloud.xml;
 import org.w3c.dom.DOMException;
 
 class QDOMException extends DOMException {
-  QDOMException(int code, String message)
-  {
-    super((short) code, message);
-  }
+   QDOMException(int code, String message) {
+      super((short) code, message);
+   }
 }

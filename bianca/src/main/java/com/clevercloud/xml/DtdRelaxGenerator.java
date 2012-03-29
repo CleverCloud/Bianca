@@ -29,155 +29,143 @@
 
 package com.clevercloud.xml;
 
-import org.w3c.dom.Node;
+import com.clevercloud.relaxng.SchemaImpl;
+import com.clevercloud.relaxng.VerifierHandlerImpl;
+import com.clevercloud.relaxng.pattern.*;
 import org.xml.sax.ContentHandler;
 
-import java.io.IOException;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.*;
-
-import com.clevercloud.relaxng.pattern.*;
-import com.clevercloud.relaxng.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class DtdRelaxGenerator {
-  private static final Logger log
-    = Logger.getLogger(DtdRelaxGenerator.class.getName());
-  
-  private QDocumentType _dtd;
-  private GrammarPattern _grammar;
+   private static final Logger log
+      = Logger.getLogger(DtdRelaxGenerator.class.getName());
 
-  DtdRelaxGenerator(QDocumentType dtd)
-  {
-    _dtd = dtd;
-  }
+   private QDocumentType _dtd;
+   private GrammarPattern _grammar;
 
-  ContentHandler generate()
-  {
-    try {
-      _grammar = new GrammarPattern();
+   DtdRelaxGenerator(QDocumentType dtd) {
+      _dtd = dtd;
+   }
 
-      HashMap<String,QElementDef> elementMap = _dtd.getElementMap();
+   ContentHandler generate() {
+      try {
+         _grammar = new GrammarPattern();
 
-      for (QElementDef elt : elementMap.values()) {
-        String name = elt.getName();
+         HashMap<String, QElementDef> elementMap = _dtd.getElementMap();
 
-        Pattern pattern = null;
+         for (QElementDef elt : elementMap.values()) {
+            String name = elt.getName();
 
-        pattern = parseContentParticle(elt.getContent());
+            Pattern pattern = null;
 
-        if (pattern != null) {
-          ElementPattern eltPattern = new ElementPattern(name);
-          eltPattern.addNameChild(new NamePattern(new QName(name)));
-          eltPattern.addChild(pattern);
-          eltPattern.endElement();
+            pattern = parseContentParticle(elt.getContent());
 
-          _grammar.setDefinition(name, eltPattern);
-        }
+            if (pattern != null) {
+               ElementPattern eltPattern = new ElementPattern(name);
+               eltPattern.addNameChild(new NamePattern(new QName(name)));
+               eltPattern.addChild(pattern);
+               eltPattern.endElement();
+
+               _grammar.setDefinition(name, eltPattern);
+            }
+         }
+
+         Pattern start = _grammar.getDefinition(_dtd.getName());
+
+         if (start == null)
+            return null;
+
+         _grammar.setStart(start);
+
+         SchemaImpl schema = new SchemaImpl(_grammar);
+
+         VerifierHandlerImpl handler = new VerifierHandlerImpl(schema);
+
+         return handler;
+      } catch (Exception e) {
+         e.printStackTrace();
+
+         log.log(Level.WARNING, e.toString(), e);
+
+         return null;
       }
+   }
 
-      Pattern start = _grammar.getDefinition(_dtd.getName());
+   private Pattern parseContentParticle(Object obj)
+      throws Exception {
+      if (obj instanceof QContentParticle) {
+         QContentParticle cp = (QContentParticle) obj;
 
-      if (start == null)
-        return null;
+         Pattern pattern = null;
+         boolean isText = false;
 
-      _grammar.setStart(start);
+         if (cp.getSeparator() == ',') {
+            pattern = new GroupPattern();
+         } else if (cp.getSeparator() == '|') {
+            pattern = new ChoicePattern();
+         } else if (cp.getSeparator() == '&') {
+            pattern = new InterleavePattern();
+         } else
+            pattern = new GroupPattern();
 
-      SchemaImpl schema = new SchemaImpl(_grammar);
+         for (int i = 0; i < cp.getChildSize(); i++) {
+            Pattern child = parseContentParticle(cp.getChild(i));
 
-      VerifierHandlerImpl handler = new VerifierHandlerImpl(schema);
+            if (child instanceof TextPattern) {
+               isText = true;
+               continue;
+            }
 
-      return handler;
-    } catch (Exception e) {
-      e.printStackTrace();
-      
-      log.log(Level.WARNING, e.toString(), e);
+            if (child == null) {
+               log.finer(this + " " + cp.getChild(i) + " is an unknown CP");
 
-      return null;
-    }
-  }
+               return null;
+            }
 
-  private Pattern parseContentParticle(Object obj)
-    throws Exception
-  {
-    if (obj instanceof QContentParticle) {
-      QContentParticle cp = (QContentParticle) obj;
+            pattern.addChild(child);
+         }
 
-      Pattern pattern = null;
-      boolean isText = false;
+         pattern.endElement();
 
-      if (cp.getSeparator() == ',') {
-        pattern = new GroupPattern();
-      }
-      else if (cp.getSeparator() == '|') {
-        pattern = new ChoicePattern();
-      }
-      else if (cp.getSeparator() == '&') {
-        pattern = new InterleavePattern();
-      }
-      else
-        pattern = new GroupPattern();
+         if (cp.getRepeat() == '*')
+            pattern = new ZeroOrMorePattern(pattern);
+         else if (cp.getRepeat() == '?') {
+            Pattern group = new ChoicePattern();
+            group.addChild(new EmptyPattern());
+            group.addChild(pattern);
+            group.endElement();
 
-      for (int i = 0; i < cp.getChildSize(); i++) {
-        Pattern child = parseContentParticle(cp.getChild(i));
+            pattern = group;
+         } else if (cp.getRepeat() == '+') {
+            Pattern group = new GroupPattern();
+            group.addChild(pattern);
+            group.addChild(new ZeroOrMorePattern(pattern));
+            group.endElement();
 
-        if (child instanceof TextPattern) {
-          isText = true;
-          continue;
-        }
+            pattern = group;
+         }
 
-        if (child == null) {
-          log.finer(this + " " + cp.getChild(i) + " is an unknown CP");
+         if (isText) {
+            Pattern group = new InterleavePattern();
+            group.addChild(pattern);
+            group.addChild(new TextPattern());
+            group.endElement();
+            pattern = group;
+         }
 
-          return null;
-        }
+         return pattern;
+      } else if (obj instanceof String) {
+         String s = (String) obj;
 
-        pattern.addChild(child);
-      }
-
-      pattern.endElement();
-
-      if (cp.getRepeat() == '*')
-        pattern = new ZeroOrMorePattern(pattern);
-      else if (cp.getRepeat() == '?') {
-        Pattern group = new ChoicePattern();
-        group.addChild(new EmptyPattern());
-        group.addChild(pattern);
-        group.endElement();
-
-        pattern = group;
-      }
-      else if (cp.getRepeat() == '+') {
-        Pattern group = new GroupPattern();
-        group.addChild(pattern);
-        group.addChild(new ZeroOrMorePattern(pattern));
-        group.endElement();
-
-        pattern = group;
-      }
-
-      if (isText) {
-        Pattern group = new InterleavePattern();
-        group.addChild(pattern);
-        group.addChild(new TextPattern());
-        group.endElement();
-        pattern = group;
-      }
-
-      return pattern;
-    }
-    else if (obj instanceof String) {
-      String s = (String) obj;
-
-      if ("EMPTY".equals(s))
-        return new EmptyPattern();
-      else if (s.startsWith("#"))
-        return new TextPattern();
-      else
-        return new RefPattern(_grammar, s);
-    }
-    else
-      return null;
-  }
+         if ("EMPTY".equals(s))
+            return new EmptyPattern();
+         else if (s.startsWith("#"))
+            return new TextPattern();
+         else
+            return new RefPattern(_grammar, s);
+      } else
+         return null;
+   }
 }

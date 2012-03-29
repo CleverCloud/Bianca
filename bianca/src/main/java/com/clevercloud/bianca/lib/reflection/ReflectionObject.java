@@ -30,9 +30,9 @@
 package com.clevercloud.bianca.lib.reflection;
 
 import com.clevercloud.bianca.annotation.Optional;
+import com.clevercloud.bianca.env.BiancaClass;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.ObjectValue;
-import com.clevercloud.bianca.env.BiancaClass;
 import com.clevercloud.bianca.env.Value;
 
 public class ReflectionObject extends ReflectionClass {
@@ -55,8 +55,8 @@ public class ReflectionObject extends ReflectionClass {
    }
 
    public static String export(Env env,
-           Value object,
-           @Optional boolean isReturn) {
+                               Value object,
+                               @Optional boolean isReturn) {
       return null;
    }
 

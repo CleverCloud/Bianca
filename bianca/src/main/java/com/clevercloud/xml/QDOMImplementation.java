@@ -35,55 +35,50 @@ import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 
 public class QDOMImplementation implements DOMImplementation, java.io.Serializable {
-  public boolean hasFeature(String feature, String version)
-  {
-    if (feature.equalsIgnoreCase("xml") &&
-        (version.equals("2.0") || version.equals("1.0") ||
-          version == null || version.equals("")))
-      return true;
-    else if (feature.equalsIgnoreCase("Core") &&
-             (version.equals("2.0") || version.equals("1.0") ||
-              version == null || version.equals("")))
-      return true;
-    else
-      return false;
-  }
-  
-  public Object getFeature(String feature, String version)
-  {
-    return null;
-  }
+   public boolean hasFeature(String feature, String version) {
+      if (feature.equalsIgnoreCase("xml") &&
+         (version.equals("2.0") || version.equals("1.0") ||
+            version == null || version.equals("")))
+         return true;
+      else if (feature.equalsIgnoreCase("Core") &&
+         (version.equals("2.0") || version.equals("1.0") ||
+            version == null || version.equals("")))
+         return true;
+      else
+         return false;
+   }
 
-  public DocumentType createDocumentType(String name,
-                                         String publicId,
-                                         String systemId)
-  {
-    QDocumentType type = new QDocumentType(name);
-    type.setPublicId(publicId);
-    type.setSystemId(systemId);
+   public Object getFeature(String feature, String version) {
+      return null;
+   }
 
-    return type;
-  }
+   public DocumentType createDocumentType(String name,
+                                          String publicId,
+                                          String systemId) {
+      QDocumentType type = new QDocumentType(name);
+      type.setPublicId(publicId);
+      type.setSystemId(systemId);
 
-  public Document createDocument(String namespaceURI, String name,
-                                 DocumentType docType)
-  {
-    QDocument doc = new QDocument(this);
-    doc.setDoctype(docType);
+      return type;
+   }
 
-    Element elt = doc.createElementNS(namespaceURI, name);
-    doc.appendChild(elt);
+   public Document createDocument(String namespaceURI, String name,
+                                  DocumentType docType) {
+      QDocument doc = new QDocument(this);
+      doc.setDoctype(docType);
 
-    return doc;
-  }
+      Element elt = doc.createElementNS(namespaceURI, name);
+      doc.appendChild(elt);
 
-  // DOM LEVEL 3
+      return doc;
+   }
 
-  /**
-   * Returns specialized implementation interfaces, e.g. MATHML.
-   */
-  public DOMImplementation getInterface(String feature)
-  {
-    return null;
-  }
+   // DOM LEVEL 3
+
+   /**
+    * Returns specialized implementation interfaces, e.g. MATHML.
+    */
+   public DOMImplementation getInterface(String feature) {
+      return null;
+   }
 }

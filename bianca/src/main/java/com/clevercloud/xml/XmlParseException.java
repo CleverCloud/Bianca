@@ -29,30 +29,22 @@
 
 package com.clevercloud.xml;
 
-import com.clevercloud.config.*;
-import com.clevercloud.util.LineCompileException;
+import com.clevercloud.config.LineConfigException;
 
-import org.xml.sax.SAXException;
+public class XmlParseException extends LineConfigException {
+   XmlParseException() {
+      super();
+   }
 
-public class XmlParseException extends LineConfigException
-{
-  XmlParseException()
-  {
-    super();
-  }
-  
-  XmlParseException(String msg)
-  {
-    super(msg);
-  }
-  
-  XmlParseException(String filename, int line, String msg)
-  {
-    super(filename, line, msg);
-  }
-  
-  XmlParseException(String msg, Throwable cause)
-  {
-    super(msg, cause);
-  }
+   XmlParseException(String msg) {
+      super(msg);
+   }
+
+   XmlParseException(String filename, int line, String msg) {
+      super(filename, line, msg);
+   }
+
+   XmlParseException(String msg, Throwable cause) {
+      super(msg, cause);
+   }
 }

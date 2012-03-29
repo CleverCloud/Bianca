@@ -89,7 +89,7 @@ public class ArrayValueComponent {
    }
 
    public static void generate(PrintWriter out, ArrayValue array)
-           throws IOException {
+      throws IOException {
       int size = array.getSize();
       int bins = size / MAX_SIZE;
 

@@ -30,9 +30,9 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
+import com.clevercloud.bianca.env.BiancaClass;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.BiancaClass;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.util.L10N;
 
@@ -73,7 +73,6 @@ public class ObjectNewExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

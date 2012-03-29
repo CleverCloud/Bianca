@@ -36,41 +36,42 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 
 public class QCdata extends QText implements CDATASection {
-  public QCdata(String data)
-  {
-    super(data);
-  }
+   public QCdata(String data) {
+      super(data);
+   }
 
-  public String getNodeName() { return "#cdata-section"; }
-  public short getNodeType() { return CDATA_SECTION_NODE; }
+   public String getNodeName() {
+      return "#cdata-section";
+   }
 
-  public Text splitText(int offset)
-    throws DOMException
-  {
-    QCdata text = new QCdata(_data.substring(offset));
-    text._owner = _owner;
+   public short getNodeType() {
+      return CDATA_SECTION_NODE;
+   }
 
-    _data = _data.substring(0, offset);
+   public Text splitText(int offset)
+      throws DOMException {
+      QCdata text = new QCdata(_data.substring(offset));
+      text._owner = _owner;
 
-    text._parent = _parent;
-    if (_next != null)
-      _next._previous = text;
-    else if (_parent != null)
-      _parent._lastChild = text;
-    text._previous = this;
-    text._next = _next;
-    _next = text;
+      _data = _data.substring(0, offset);
 
-    return text;
-  }
+      text._parent = _parent;
+      if (_next != null)
+         _next._previous = text;
+      else if (_parent != null)
+         _parent._lastChild = text;
+      text._previous = this;
+      text._next = _next;
+      _next = text;
 
-  private Object writeReplace()
-  {
-    return new SerializedXml(this);
-  }
+      return text;
+   }
 
-  public void print(XmlPrinter os) throws IOException
-  {
-    os.cdata(getData());
-  }
+   private Object writeReplace() {
+      return new SerializedXml(this);
+   }
+
+   public void print(XmlPrinter os) throws IOException {
+      os.cdata(getData());
+   }
 }

@@ -32,91 +32,79 @@ package com.clevercloud.vfs;
 
 import java.io.IOException;
 
-public class DatastoreRandomAccessFile
-{
-  private int _position;
-  
-  private DatastoreFile _file;
-  
-  public DatastoreRandomAccessFile(DatastoreFile file)
-  {
-    _file = file;
-  }
-  
-  public long getLength()
-    throws IOException
-  {
-    return _file.getLength();
-  }
-  
-  public long getFilePointer()
-  {
-    return _position;
-  }
-  
-  public boolean seek(long offset)
-    throws IOException
-  {
-    _position = (int) offset;
-    
-    return true;
-  }
-  
-  public long skip(long offset)
-    throws IOException
-  {
-    _position += (int) offset;
-    
-    return offset;
-  }
-  
-  public void setPosition(long position)
-    throws IOException
-  {
-    _position = (int) position;
-  }
-  
-  public int read()
-    throws IOException
-  {
-    byte []buffer = new byte[1];
-    
-    if (read(buffer, 0, 1) <= 0)
-      return -1;
-    
-    return buffer[0];
-  }
-  
-  public void write(int b)
-    throws IOException
-  {
-    byte []buffer = new byte[1];
-    buffer[0] = (byte) (b & 0xFF);
-    
-    write(buffer, 0, 1);
-  }
-  
-  public int read(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    int len = _file.read(_position, buffer, offset, length);
-    
-    _position += len;
-    
-    return len;
-  }
-  
-  public void write(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    _file.write(_position, buffer, offset, length);
-    
-    _position += length;
-  }
-  
-  public void close()
-    throws IOException
-  {
-    
-  }
+public class DatastoreRandomAccessFile {
+   private int _position;
+
+   private DatastoreFile _file;
+
+   public DatastoreRandomAccessFile(DatastoreFile file) {
+      _file = file;
+   }
+
+   public long getLength()
+      throws IOException {
+      return _file.getLength();
+   }
+
+   public long getFilePointer() {
+      return _position;
+   }
+
+   public boolean seek(long offset)
+      throws IOException {
+      _position = (int) offset;
+
+      return true;
+   }
+
+   public long skip(long offset)
+      throws IOException {
+      _position += (int) offset;
+
+      return offset;
+   }
+
+   public void setPosition(long position)
+      throws IOException {
+      _position = (int) position;
+   }
+
+   public int read()
+      throws IOException {
+      byte[] buffer = new byte[1];
+
+      if (read(buffer, 0, 1) <= 0)
+         return -1;
+
+      return buffer[0];
+   }
+
+   public void write(int b)
+      throws IOException {
+      byte[] buffer = new byte[1];
+      buffer[0] = (byte) (b & 0xFF);
+
+      write(buffer, 0, 1);
+   }
+
+   public int read(byte[] buffer, int offset, int length)
+      throws IOException {
+      int len = _file.read(_position, buffer, offset, length);
+
+      _position += len;
+
+      return len;
+   }
+
+   public void write(byte[] buffer, int offset, int length)
+      throws IOException {
+      _file.write(_position, buffer, offset, length);
+
+      _position += length;
+   }
+
+   public void close()
+      throws IOException {
+
+   }
 }

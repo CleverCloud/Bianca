@@ -40,141 +40,132 @@ import java.util.ArrayList;
  * Relax element pattern
  */
 public class GroupPattern extends Pattern {
-  private ArrayList<Pattern> _patterns = new ArrayList<Pattern>();
+   private ArrayList<Pattern> _patterns = new ArrayList<Pattern>();
 
-  /**
-   * Creates a new element pattern.
-   */
-  public GroupPattern()
-  {
-  }
+   /**
+    * Creates a new element pattern.
+    */
+   public GroupPattern() {
+   }
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "group";
-  }
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "group";
+   }
 
-  /**
-   * Returns the number of children.
-   */
-  public int getSize()
-  {
-    return _patterns.size();
-  }
+   /**
+    * Returns the number of children.
+    */
+   public int getSize() {
+      return _patterns.size();
+   }
 
-  /**
-   * Returns the n-th child.
-   */
-  public Pattern getChild(int i)
-  {
-    return _patterns.get(i);
-  }
+   /**
+    * Returns the n-th child.
+    */
+   public Pattern getChild(int i) {
+      return _patterns.get(i);
+   }
 
-  /**
-   * Adds an element.
-   */
-  public void addChild(Pattern child)
-    throws RelaxException
-  {
-    child.setParent(this);
-    child.setElementName(getElementName());
+   /**
+    * Adds an element.
+    */
+   public void addChild(Pattern child)
+      throws RelaxException {
+      child.setParent(this);
+      child.setElementName(getElementName());
 
-    if (child instanceof GroupPattern) {
-      GroupPattern list = (GroupPattern) child;
+      if (child instanceof GroupPattern) {
+         GroupPattern list = (GroupPattern) child;
 
-      for (int i = 0; i < list.getSize(); i++)
-        addChild(list.getChild(i));
-      
-      return;
-    }
+         for (int i = 0; i < list.getSize(); i++)
+            addChild(list.getChild(i));
 
-    _patterns.add(child);
+         return;
+      }
 
-    boolean hasData = false;
-    boolean hasElement = false;
-    for (int i = 0; i < _patterns.size(); i++) {
-      if (_patterns.get(i).hasData())
-        hasData = true;
-      else if (_patterns.get(i).hasElement())
-        hasElement = true;
-    }
+      _patterns.add(child);
 
-    if (hasData && hasElement)
-      throw new RelaxException(L.l("<data> may not be in a <group>.  Use <text> instead."));
-  }
+      boolean hasData = false;
+      boolean hasElement = false;
+      for (int i = 0; i < _patterns.size(); i++) {
+         if (_patterns.get(i).hasData())
+            hasData = true;
+         else if (_patterns.get(i).hasElement())
+            hasElement = true;
+      }
 
-  /**
-   * Creates the production item.
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    if (_patterns.size() == 0)
-      return null;
+      if (hasData && hasElement)
+         throw new RelaxException(L.l("<data> may not be in a <group>.  Use <text> instead."));
+   }
 
-    Item tail = _patterns.get(_patterns.size() - 1).createItem(grammar);
+   /**
+    * Creates the production item.
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      if (_patterns.size() == 0)
+         return null;
 
-    for (int i = _patterns.size() - 2; i >= 0; i--)
-      tail = GroupItem.create(_patterns.get(i).createItem(grammar), tail);
-    
-    return tail;
-  }
+      Item tail = _patterns.get(_patterns.size() - 1).createItem(grammar);
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    if (_patterns.size() == 0)
-      return "notAllowed";
+      for (int i = _patterns.size() - 2; i >= 0; i--)
+         tail = GroupItem.create(_patterns.get(i).createItem(grammar), tail);
 
-    CharBuffer cb = new CharBuffer();
-    
-    for (int i = 0; i < _patterns.size(); i++) {
-      if (i != 0)
-        cb.append(", ");
+      return tail;
+   }
 
-      Pattern pattern = _patterns.get(i);
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      if (_patterns.size() == 0)
+         return "notAllowed";
 
-      if (pattern instanceof ChoicePattern &&
-          ! (((ChoicePattern) pattern).hasEmpty()))
-        cb.append("(" + _patterns.get(i).toProduction() + ")");
-      else
-        cb.append(_patterns.get(i).toProduction());
-    }
-    
-    return cb.toString();
-  }
+      CharBuffer cb = new CharBuffer();
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
+      for (int i = 0; i < _patterns.size(); i++) {
+         if (i != 0)
+            cb.append(", ");
+
+         Pattern pattern = _patterns.get(i);
+
+         if (pattern instanceof ChoicePattern &&
+            !(((ChoicePattern) pattern).hasEmpty()))
+            cb.append("(" + _patterns.get(i).toProduction() + ")");
+         else
+            cb.append(_patterns.get(i).toProduction());
+      }
+
+      return cb.toString();
+   }
+
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof GroupPattern))
+         return false;
+
+      GroupPattern group = (GroupPattern) o;
+
+      if (_patterns.size() != group._patterns.size())
+         return false;
+
+      for (int i = 0; i < _patterns.size(); i++)
+         if (!_patterns.get(i).equals(group._patterns.get(i)))
+            return false;
+
       return true;
+   }
 
-    if (! (o instanceof GroupPattern))
-      return false;
-
-    GroupPattern group = (GroupPattern) o;
-
-    if (_patterns.size() != group._patterns.size())
-      return false;
-
-    for (int i = 0; i < _patterns.size(); i++)
-      if (! _patterns.get(i).equals(group._patterns.get(i)))
-        return false;
-
-    return true;
-  }
-
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "GroupPattern" + _patterns;
-  }
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "GroupPattern" + _patterns;
+   }
 }
 

@@ -33,12 +33,7 @@ import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.UnimplementedException;
 import com.clevercloud.bianca.annotation.Reference;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import java.util.logging.Level;
@@ -73,11 +68,11 @@ public class MysqliStatement extends JdbcStatementResource {
     * or inserted by the last executed statement.
     *
     * @param env the PHP executing environment
-    * @return  an integer greater than zero indicates the number of
-    * rows affected or retrieved. Zero indicates that no records were
-    * updated for an UPDATE/DELETE statement, no rows matched the
-    * WHERE clause in the query or that no query has yet been
-    * executed. -1 indicates that the query has returned an error.
+    * @return an integer greater than zero indicates the number of
+    *         rows affected or retrieved. Zero indicates that no records were
+    *         updated for an UPDATE/DELETE statement, no rows matched the
+    *         WHERE clause in the query or that no query has yet been
+    *         executed. -1 indicates that the query has returned an error.
     */
    public int affected_rows(Env env) {
       try {
@@ -91,14 +86,14 @@ public class MysqliStatement extends JdbcStatementResource {
    /**
     * Binds variables to a prepared statement as parameters.
     *
-    * @param env the PHP executing environment
-    * @param types string of i,d,s,b (ie: "idds")
+    * @param env    the PHP executing environment
+    * @param types  string of i,d,s,b (ie: "idds")
     * @param params array of values (probably Vars)
     * @return true on success or false on failure
     */
    public boolean bind_param(Env env,
-           StringValue types,
-           @Reference Value[] params) {
+                             StringValue types,
+                             @Reference Value[] params) {
       try {
          return bindParams(env, types.toString(), params);
       } catch (Exception e) {
@@ -110,12 +105,12 @@ public class MysqliStatement extends JdbcStatementResource {
    /**
     * Binds variables to a prepared statement for result storage.
     *
-    * @param env the PHP executing environment
+    * @param env       the PHP executing environment
     * @param outParams the output variables
     * @return true on success or false on failure
     */
    public boolean bind_result(Env env,
-           @Reference Value[] outParams) {
+                              @Reference Value[] outParams) {
       try {
          return bindResults(env, outParams);
       } catch (Exception e) {
@@ -143,12 +138,12 @@ public class MysqliStatement extends JdbcStatementResource {
    /**
     * Seeks to an arbitrary row in statement result set.
     *
-    * @param env the PHP executing environment
+    * @param env    the PHP executing environment
     * @param offset row offset
     * @return NULL on sucess or FALSE on failure
     */
    public Value data_seek(Env env,
-           int offset) {
+                          int offset) {
       try {
 
          if (dataSeek(offset)) {
@@ -189,7 +184,7 @@ public class MysqliStatement extends JdbcStatementResource {
     *
     * @param env the PHP executing environment
     * @return a string that describes the error or
-    * an empty string if no error occurred.
+    *         an empty string if no error occurred.
     */
    public StringValue error(Env env) {
       try {
@@ -230,7 +225,7 @@ public class MysqliStatement extends JdbcStatementResource {
     *
     * @param env the PHP executing environment
     * @return true on success, false on failure or
-    * null if no more rows/data exists
+    *         null if no more rows/data exists
     */
    @Override
    public Value fetch(Env env) {
@@ -308,13 +303,13 @@ public class MysqliStatement extends JdbcStatementResource {
    /**
     * Prepare a SQL statement for execution.
     *
-    * @param env the PHP executing environment
+    * @param env   the PHP executing environment
     * @param query SQL query
     * @return true on success or false on failure
     */
    @Override
    public boolean prepare(Env env,
-           StringValue query) {
+                          StringValue query) {
       try {
          return super.prepare(env, query);
       } catch (Exception e) {
@@ -337,38 +332,38 @@ public class MysqliStatement extends JdbcStatementResource {
     * mysqli_stmt_result_metadata seems to be some initial
     * step towards getting metadata from a resultset created
     * by a SELECT run by a prepared statement.
-    *
+    * <p/>
     * NB: the $field variable in the following 2 PHP
     * scripts will be equivalent:
-    *
+    * <p/>
     * $result = mysqli_query($link,"SELECT * FROM test");
     * $field = mysqli_fetch_field($result);
-    *
+    * <p/>
     * AND
-    *
+    * <p/>
     * $stmt = mysqli_prepare($link, "SELECT * FROM test");
     * mysqli_stmt_execute($stmt);
     * $metaData = mysqli_stmt_result_metadata($stmt);
     * $field = mysqli_fetch_field($metaData);
-    *
+    * <p/>
     * So it seems that this function just provides a link into
     * the resultset.
-    *
+    * <p/>
     * The PHP documentation is clear that this function returns
     * a mysqli_result with NO DATA.
-    *
+    * <p/>
     * For simplicity, we return a mysqli_result with all the data.
-    *
+    * <p/>
     * We check that mysqli_stmt_execute() has been run.
-    *
+    * <p/>
     * From libmysql.c:
-    *   This function should be used after mysql_stmt_execute().
-    *   ...
-    *   Next steps you may want to make:
-    *   - find out number of columns is result set by calling
-    *     mysql_num_fields(res)....
-    *   - fetch metadata for any column with mysql_fetch_field...
-    *
+    * This function should be used after mysql_stmt_execute().
+    * ...
+    * Next steps you may want to make:
+    * - find out number of columns is result set by calling
+    * mysql_num_fields(res)....
+    * - fetch metadata for any column with mysql_fetch_field...
+    * <p/>
     * So basically, this function seems to exist only to be a
     * way to get at the metadata from a resultset generated
     * by a prepared statement.
@@ -382,7 +377,7 @@ public class MysqliStatement extends JdbcStatementResource {
 
          if (getResultSet() != null) {
             return new MysqliResult(env, getMetaData(),
-                    (Mysqli) validateConnection());
+               (Mysqli) validateConnection());
          } else {
             return null;
          }
@@ -395,14 +390,14 @@ public class MysqliStatement extends JdbcStatementResource {
    /**
     * Send data in blocks.
     *
-    * @param env the PHP executing environment
+    * @param env         the PHP executing environment
     * @param paramNumber indicates which parameter to associate the data with
-    * @param data the data to be sent
+    * @param data        the data to be sent
     * @return true on success or false on failure
     */
    public boolean send_long_data(Env env,
-           int paramNumber,
-           String data) {
+                                 int paramNumber,
+                                 String data) {
       throw new UnimplementedException("mysqli_stmt_send_long_data");
    }
 
@@ -418,7 +413,7 @@ public class MysqliStatement extends JdbcStatementResource {
     *
     * @param env the PHP executing environment
     * @return the SQLSTATE (5-characters string) for
-    * the last error. '00000' means no error
+    *         the last error. '00000' means no error
     */
    public StringValue sqlstate(Env env) {
       int code = errno();

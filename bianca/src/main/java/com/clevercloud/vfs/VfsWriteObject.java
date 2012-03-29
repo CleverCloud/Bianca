@@ -32,7 +32,7 @@ package com.clevercloud.vfs;
 import java.io.IOException;
 
 public interface VfsWriteObject {
-  void print(WriteStream os) throws IOException;
+   void print(WriteStream os) throws IOException;
 }
 
 

@@ -53,14 +53,14 @@ public class StaticFunction extends JavaInvoker {
     * @param method the introspected method.
     */
    public StaticFunction(ModuleContext moduleContext,
-           BiancaModule biancaModule,
-           Method method) {
+                         BiancaModule biancaModule,
+                         Method method) {
       super(moduleContext,
-              getName(method),
-              method.getParameterTypes(),
-              method.getParameterAnnotations(),
-              method.getAnnotations(),
-              method.getReturnType());
+         getName(method),
+         method.getParameterTypes(),
+         method.getParameterAnnotations(),
+         method.getAnnotations(),
+         method.getReturnType());
 
       _method = method;
       _argLength = method.getParameterTypes().length;

@@ -32,8 +32,8 @@ package com.clevercloud.bianca.expr;
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.vfs.Path;
 
 /**
@@ -54,9 +54,9 @@ public class FunIncludeOnceExpr extends AbstractUnaryExpr {
    }
 
    public FunIncludeOnceExpr(Location location,
-           Path sourceFile,
-           Expr expr,
-           boolean isRequire) {
+                             Path sourceFile,
+                             Expr expr,
+                             boolean isRequire) {
       this(location, sourceFile, expr);
 
       _isRequire = isRequire;
@@ -74,7 +74,6 @@ public class FunIncludeOnceExpr extends AbstractUnaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

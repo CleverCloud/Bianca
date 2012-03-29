@@ -56,6 +56,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // Properties
    //
+
    /**
     * Returns the value's class name.
     */
@@ -73,6 +74,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // Predicates and Relations
    //
+
    /**
     * Returns true for an implementation of a class
     */
@@ -181,6 +183,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // marshal costs
    //
+
    /**
     * Cost to convert to a boolean
     */
@@ -275,6 +278,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // predicates
    //
+
    /**
     * Returns true if the value is set.
     */
@@ -337,9 +341,9 @@ abstract public class Value implements java.io.Serializable {
       }
 
       if (lVal instanceof NullValue
-              || lVal instanceof BooleanValue
-              || rVal instanceof NullValue
-              || rVal instanceof BooleanValue) {
+         || lVal instanceof BooleanValue
+         || rVal instanceof NullValue
+         || rVal instanceof BooleanValue) {
          boolean lBool = toBoolean();
          boolean rBool = rValue.toBoolean();
 
@@ -357,11 +361,11 @@ abstract public class Value implements java.io.Serializable {
       }
 
       if ((lVal instanceof StringValue
-              || lVal instanceof NumberValue
-              || lVal instanceof ResourceValue)
-              && (rVal instanceof StringValue
-              || rVal instanceof NumberValue
-              || rVal instanceof ResourceValue)) {
+         || lVal instanceof NumberValue
+         || lVal instanceof ResourceValue)
+         && (rVal instanceof StringValue
+         || rVal instanceof NumberValue
+         || rVal instanceof ResourceValue)) {
          return NumberValue.compareNum(lVal, rVal);
       }
 
@@ -380,7 +384,7 @@ abstract public class Value implements java.io.Serializable {
 
       // TODO: proper default case?
       throw new RuntimeException(
-              "values are incomparable: " + lVal + " <=> " + rVal);
+         "values are incomparable: " + lVal + " <=> " + rVal);
    }
 
    /**
@@ -414,6 +418,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // Conversions
    //
+
    /**
     * Converts to a boolean.
     */
@@ -476,7 +481,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public Value toAutoArray() {
       Env.getCurrent().warning(L.l("'{0}' cannot be used as an array.",
-              toDebugString()));
+         toDebugString()));
 
       return this;
    }
@@ -486,7 +491,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public ArrayValue toArrayValue(Env env) {
       env.warning(L.l("'{0}' ({1}) is not assignable to ArrayValue",
-              this, getType()));
+         this, getType()));
 
       return null;
    }
@@ -521,7 +526,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public Object toJavaObject(Env env, Class type) {
       env.warning(L.l("Can't convert {0} to Java {1}",
-              getClass().getName(), type.getName()));
+         getClass().getName(), type.getName()));
 
       return null;
    }
@@ -531,7 +536,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public Object toJavaObjectNotNull(Env env, Class type) {
       env.warning(L.l("Can't convert {0} to Java {1}",
-              getClass().getName(), type.getName()));
+         getClass().getName(), type.getName()));
 
       return null;
    }
@@ -604,7 +609,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public Collection<?> toJavaCollection(Env env, Class<?> type) {
       env.warning(L.l("Can't convert {0} to Java {1}",
-              getClass().getName(), type.getName()));
+         getClass().getName(), type.getName()));
 
       return null;
    }
@@ -614,7 +619,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public List<?> toJavaList(Env env, Class<?> type) {
       env.warning(L.l("Can't convert {0} to Java {1}",
-              getClass().getName(), type.getName()));
+         getClass().getName(), type.getName()));
 
       return null;
    }
@@ -624,7 +629,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public Map<?, ?> toJavaMap(Env env, Class<?> type) {
       env.warning(L.l("Can't convert {0} to Java {1}",
-              getClass().getName(), type.getName()));
+         getClass().getName(), type.getName()));
 
       return null;
    }
@@ -706,9 +711,9 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Convert to a function argument value, e.g. for
-    *
+    * <p/>
     * function foo($a)
-    *
+    * <p/>
     * where $a is never assigned or modified
     */
    public Value toLocalValueReadOnly() {
@@ -717,9 +722,9 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Convert to a function argument value, e.g. for
-    *
+    * <p/>
     * function foo($a)
-    *
+    * <p/>
     * where $a is never assigned, but might be modified, e.g. $a[3] = 9
     */
    public Value toLocalValue() {
@@ -728,9 +733,9 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Convert to a function argument value, e.g. for
-    *
+    * <p/>
     * function foo($a)
-    *
+    * <p/>
     * where $a may be assigned.
     */
    public Value toLocalRef() {
@@ -739,9 +744,9 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Convert to a function argument value, e.g. for
-    *
+    * <p/>
     * function foo($a)
-    *
+    * <p/>
     * where $a is used as a variable in the function
     */
    public Var toLocalVar() {
@@ -750,9 +755,9 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Convert to a function argument reference value, e.g. for
-    *
+    * <p/>
     * function foo(&$a)
-    *
+    * <p/>
     * where $a is used as a variable in the function
     */
    public Var toLocalVarDeclAsRef() {
@@ -768,9 +773,9 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Convert to a function argument reference value, e.g. for
-    *
+    * <p/>
     * function foo(&$a)
-    *
+    * <p/>
     * where $a is never assigned in the function
     */
    public Value toRefValue() {
@@ -786,16 +791,16 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Convert to a function argument reference value, e.g. for
-    *
+    * <p/>
     * function foo(&$a)
-    *
+    * <p/>
     * where $a is used as a variable in the function
     */
    public Value toArgRef() {
       Env.getCurrent().warning(L.l(
-              "'{0}' is an invalid reference, because only "
-              + "variables may be passed by reference.",
-              this));
+         "'{0}' is an invalid reference, because only "
+            + "variables may be passed by reference.",
+         this));
 
       return NullValue.NULL;
    }
@@ -892,7 +897,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public Callable toCallable(Env env) {
       env.warning(L.l("Callable: '{0}' is not a valid callable argument",
-              toString()));
+         toString()));
 
       return new CallbackError(toString());
    }
@@ -900,6 +905,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // Operations
    //
+
    /**
     * Append to a binary builder.
     */
@@ -1047,6 +1053,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // function invocation
    //
+
    /**
     * Evaluates the function.
     */
@@ -1057,7 +1064,7 @@ abstract public class Value implements java.io.Serializable {
          return call.call(env, args);
       } else {
          return env.warning(L.l("{0} is not a valid function",
-                 this));
+            this));
       }
    }
 
@@ -1071,7 +1078,7 @@ abstract public class Value implements java.io.Serializable {
          return fun.callRef(env, args);
       } else {
          return env.warning(L.l("{0} is not a valid function",
-                 this));
+            this));
       }
    }
 
@@ -1085,7 +1092,7 @@ abstract public class Value implements java.io.Serializable {
          return fun.callCopy(env, args);
       } else {
          return env.warning(L.l("{0} is not a valid function",
-                 this));
+            this));
       }
    }
 
@@ -1170,26 +1177,27 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates the function with arguments
     */
    public Value callRef(Env env,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                        Value a1, Value a2, Value a3, Value a4, Value a5) {
       return callRef(env, new Value[]{a1, a2, a3, a4, a5});
    }
 
    //
    // Methods invocation
    //
+
    /**
     * Evaluates a method.
     */
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                           StringValue methodName, int hash,
+                           Value[] args) {
       if (isNull()) {
          return env.error(L.l("Method call '{0}' is not allowed for a null value.",
-                 methodName));
+            methodName));
       } else {
          return env.error(L.l("'{0}' is an unknown method of {1}.",
-                 methodName,
-                 toDebugString()));
+            methodName,
+            toDebugString()));
       }
    }
 
@@ -1197,8 +1205,8 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method.
     */
    public final Value callMethod(Env env,
-           StringValue methodName,
-           Value[] args) {
+                                 StringValue methodName,
+                                 Value[] args) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethod(env, methodName, hash, args);
@@ -1208,8 +1216,8 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method.
     */
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                              StringValue methodName, int hash,
+                              Value[] args) {
       return callMethod(env, methodName, hash, args);
    }
 
@@ -1217,8 +1225,8 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method.
     */
    public final Value callMethodRef(Env env,
-           StringValue methodName,
-           Value[] args) {
+                                    StringValue methodName,
+                                    Value[] args) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethodRef(env, methodName, hash, args);
@@ -1260,8 +1268,8 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 1 arg.
     */
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                           StringValue methodName, int hash,
+                           Value a1) {
       return callMethod(env, methodName, hash, new Value[]{a1});
    }
 
@@ -1269,8 +1277,8 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 1 arg.
     */
    public final Value callMethod(Env env,
-           StringValue methodName,
-           Value a1) {
+                                 StringValue methodName,
+                                 Value a1) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethod(env, methodName, hash, a1);
@@ -1280,8 +1288,8 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 1 arg.
     */
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                              StringValue methodName, int hash,
+                              Value a1) {
       return callMethodRef(env, methodName, hash, new Value[]{a1});
    }
 
@@ -1289,8 +1297,8 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 1 arg.
     */
    public final Value callMethodRef(Env env,
-           StringValue methodName,
-           Value a1) {
+                                    StringValue methodName,
+                                    Value a1) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethodRef(env, methodName, hash, a1);
@@ -1300,8 +1308,8 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 2 args.
     */
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2) {
       return callMethod(env, methodName, hash, new Value[]{a1, a2});
    }
 
@@ -1309,20 +1317,20 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 2 args.
     */
    public final Value callMethod(Env env,
-           StringValue methodName,
-           Value a1, Value a2) {
+                                 StringValue methodName,
+                                 Value a1, Value a2) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethod(env, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
     * Evaluates a method with 2 args.
     */
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2) {
       return callMethodRef(env, methodName, hash, new Value[]{a1, a2});
    }
 
@@ -1330,20 +1338,20 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 2 args.
     */
    public final Value callMethodRef(Env env,
-           StringValue methodName,
-           Value a1, Value a2) {
+                                    StringValue methodName,
+                                    Value a1, Value a2) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethodRef(env, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
     * Evaluates a method with 3 args.
     */
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3) {
       return callMethod(env, methodName, hash, new Value[]{a1, a2, a3});
    }
 
@@ -1351,20 +1359,20 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 3 args.
     */
    public final Value callMethod(Env env,
-           StringValue methodName,
-           Value a1, Value a2, Value a3) {
+                                 StringValue methodName,
+                                 Value a1, Value a2, Value a3) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethod(env, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
     * Evaluates a method with 3 args.
     */
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3) {
       return callMethodRef(env, methodName, hash, new Value[]{a1, a2, a3});
    }
 
@@ -1372,105 +1380,106 @@ abstract public class Value implements java.io.Serializable {
     * Evaluates a method with 3 args.
     */
    public final Value callMethodRef(Env env,
-           StringValue methodName,
-           Value a1, Value a2, Value a3) {
+                                    StringValue methodName,
+                                    Value a1, Value a2, Value a3) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethodRef(env, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
     * Evaluates a method with 4 args.
     */
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4) {
       return callMethod(env, methodName, hash,
-              new Value[]{a1, a2, a3, a4});
+         new Value[]{a1, a2, a3, a4});
    }
 
    /**
     * Evaluates a method with 4 args.
     */
    public final Value callMethod(Env env,
-           StringValue methodName,
-           Value a1, Value a2, Value a3, Value a4) {
+                                 StringValue methodName,
+                                 Value a1, Value a2, Value a3, Value a4) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethod(env, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
     * Evaluates a method with 4 args.
     */
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4) {
       return callMethodRef(env, methodName, hash,
-              new Value[]{a1, a2, a3, a4});
+         new Value[]{a1, a2, a3, a4});
    }
 
    /**
     * Evaluates a method with 4 args.
     */
    public final Value callMethodRef(Env env,
-           StringValue methodName,
-           Value a1, Value a2, Value a3, Value a4) {
+                                    StringValue methodName,
+                                    Value a1, Value a2, Value a3, Value a4) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethodRef(env, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
     * Evaluates a method with 5 args.
     */
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       return callMethod(env, methodName, hash,
-              new Value[]{a1, a2, a3, a4, a5});
+         new Value[]{a1, a2, a3, a4, a5});
    }
 
    /**
     * Evaluates a method with 5 args.
     */
    public final Value callMethod(Env env,
-           StringValue methodName,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                                 StringValue methodName,
+                                 Value a1, Value a2, Value a3, Value a4, Value a5) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethod(env, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
     * Evaluates a method with 5 args.
     */
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4, Value a5) {
       return callMethodRef(env, methodName, hash,
-              new Value[]{a1, a2, a3, a4, a5});
+         new Value[]{a1, a2, a3, a4, a5});
    }
 
    /**
     * Evaluates a method with 5 args.
     */
    public final Value callMethodRef(Env env,
-           StringValue methodName,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                                    StringValue methodName,
+                                    Value a1, Value a2, Value a3, Value a4, Value a5) {
       int hash = methodName.hashCodeCaseInsensitive();
 
       return callMethodRef(env, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    //
    // Arithmetic operations
    //
+
    /**
     * Negates the value.
     */
@@ -1628,16 +1637,16 @@ abstract public class Value implements java.io.Serializable {
          long r = rValue.toLong();
 
          if (r != 0) {
-             if (l % r == 0)
-                return LongValue.create(l / r);
+            if (l % r == 0)
+               return LongValue.create(l / r);
             else
-                return DoubleValue.create(toDouble() / rValue.toDouble());
+               return DoubleValue.create(toDouble() / rValue.toDouble());
          }
       } else {
-          double r = rValue.toDouble();
+         double r = rValue.toDouble();
 
-          if (r != 0)
-                 return DoubleValue.create(toDouble() / r);
+         if (r != 0)
+            return DoubleValue.create(toDouble() / r);
       }
       /* OMG PHP IS SO UGLY :D #phpuglyfacts */
       env.warning(L.l("Division by zero"));
@@ -1729,6 +1738,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // string functions
    //
+
    /**
     * Returns the length as a string.
     */
@@ -1739,6 +1749,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // Array functions
    //
+
    /**
     * Returns the array size.
     */
@@ -1835,6 +1846,7 @@ abstract public class Value implements java.io.Serializable {
    //
    // Object field references
    //
+
    /**
     * Returns the field value
     */
@@ -1905,7 +1917,7 @@ abstract public class Value implements java.io.Serializable {
    }
 
    public final Value putField(Env env, StringValue name, Value value,
-           Value innerIndex, Value innerValue) {
+                               Value innerIndex, Value innerValue) {
       Value result = value.append(innerIndex, innerValue);
 
       return putField(env, name, result);
@@ -2013,8 +2025,8 @@ abstract public class Value implements java.io.Serializable {
     * Initializes a new field, does not call __set if it is defined.
     */
    public void initField(StringValue key,
-           Value value,
-           FieldVisibility visibility) {
+                         Value value,
+                         FieldVisibility visibility) {
       putThisField(Env.getInstance(), key, value);
    }
 
@@ -2029,10 +2041,10 @@ abstract public class Value implements java.io.Serializable {
     * Sets an array field ref.
     */
    public Value putThisField(Env env,
-           StringValue name,
-           Value array,
-           Value index,
-           Value value) {
+                             StringValue name,
+                             Value array,
+                             Value index,
+                             Value value) {
       Value result = array.append(index, value);
 
       putThisField(env, name, result);
@@ -2160,7 +2172,7 @@ abstract public class Value implements java.io.Serializable {
     */
    public Value put(Value index, Value value) {
       Env.getCurrent().warning(L.l("{0} cannot be used as an array",
-              toDebugString()));
+         toDebugString()));
 
       return value;
    }
@@ -2169,7 +2181,7 @@ abstract public class Value implements java.io.Serializable {
     * Sets the array ref.
     */
    public final Value put(Value index, Value value,
-           Value innerIndex, Value innerValue) {
+                          Value innerIndex, Value innerValue) {
       Value result = value.append(innerIndex, innerValue);
 
       put(index, result);
@@ -2241,7 +2253,6 @@ abstract public class Value implements java.io.Serializable {
     * Returns the corresponding value if this array contains the given key
     *
     * @param key to search for in the array
-    *
     * @return the value if it is found in the array, NULL otherwise
     */
    public Value containsKey(Value key) {
@@ -2261,9 +2272,9 @@ abstract public class Value implements java.io.Serializable {
     */
    public Object valuesToArray(Env env, Class elementType) {
       env.error(L.l("Can't assign {0} with type {1} to {2}[]",
-              this,
-              this.getClass(),
-              elementType));
+         this,
+         this.getClass(),
+         elementType));
       return null;
    }
 
@@ -2283,6 +2294,7 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    public void print(Env env) {
@@ -2291,6 +2303,7 @@ abstract public class Value implements java.io.Serializable {
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    public void print(Env env, WriteStream out) {
@@ -2305,12 +2318,12 @@ abstract public class Value implements java.io.Serializable {
     * Serializes the value.
     *
     * @param env
-    * @param sb holds result of serialization
+    * @param sb           holds result of serialization
     * @param serializeMap holds reference indexes
     */
    public void serialize(Env env,
-           StringBuilder sb,
-           SerializeMap serializeMap) {
+                         StringBuilder sb,
+                         SerializeMap serializeMap) {
       serializeMap.incrementIndex();
 
       serialize(env, sb);
@@ -2348,13 +2361,14 @@ abstract public class Value implements java.io.Serializable {
    //
    // Java generator code
    //
+
    /**
     * Generates code to recreate the expression.
     *
     * @param out the writer to the Java source code.
     */
    public void generate(PrintWriter out)
-           throws IOException {
+      throws IOException {
    }
 
    protected static void printJavaChar(PrintWriter out, char ch) {
@@ -2422,10 +2436,10 @@ abstract public class Value implements java.io.Serializable {
    }
 
    public final void varDump(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       if (valueSet.get(this) != null) {
          out.print("*recursion*");
          return;
@@ -2441,18 +2455,18 @@ abstract public class Value implements java.io.Serializable {
    }
 
    protected void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                              WriteStream out,
+                              int depth,
+                              IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("resource(" + toString() + ")");
    }
 
    public final void printR(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                            WriteStream out,
+                            int depth,
+                            IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       if (valueSet.get(this) != null) {
          out.print("*recursion*");
          return;
@@ -2468,15 +2482,15 @@ abstract public class Value implements java.io.Serializable {
    }
 
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print(toString());
    }
 
    protected void printDepth(WriteStream out, int depth)
-           throws IOException {
+      throws IOException {
       for (int i = 0; i < depth; i++) {
          out.print(' ');
       }

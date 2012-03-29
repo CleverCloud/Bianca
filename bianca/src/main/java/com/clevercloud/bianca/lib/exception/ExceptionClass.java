@@ -30,12 +30,12 @@
  */
 package com.clevercloud.bianca.lib.exception;
 
+import com.clevercloud.bianca.BiancaException;
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.annotation.ClassImplementation;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.This;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.BiancaException;
 import com.clevercloud.bianca.lib.ErrorModule;
 
 import java.util.Iterator;
@@ -58,9 +58,9 @@ public class ExceptionClass {
     * Create a new exception API object.
     */
    public static Value __construct(Env env,
-           @This ObjectValue value,
-           @Optional StringValue message,
-           @Optional("0") int code) {
+                                   @This ObjectValue value,
+                                   @Optional StringValue message,
+                                   @Optional("0") int code) {
       value.putField(env, "message", message);
       value.putField(env, "code", LongValue.create(code));
 

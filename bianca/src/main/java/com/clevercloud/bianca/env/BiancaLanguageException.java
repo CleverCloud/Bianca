@@ -30,8 +30,8 @@
  */
 package com.clevercloud.bianca.env;
 
-import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.BiancaException;
+import com.clevercloud.bianca.Location;
 
 /**
  * Parent of PHP exceptions

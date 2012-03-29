@@ -30,9 +30,9 @@
  */
 package com.clevercloud.bianca.lib.regexp;
 
-import java.util.HashMap;
+import com.clevercloud.util.IntSet;
 
-import com.clevercloud.util.*;
+import java.util.HashMap;
 
 // TODO: non-ascii range not quite correct for unicode, and neither is
 // PHP's /u unicode option
@@ -107,7 +107,7 @@ class RegexpSet {
       // http://bugs.clevercloud.com/view.php?id=3811
       if (low > high || low < 0) {
          throw new RuntimeException(
-                 "Range out of range (" + low + ", " + high + ")");
+            "Range out of range (" + low + ", " + high + ")");
       }
 
       if (low < BITSET_CHARS) {

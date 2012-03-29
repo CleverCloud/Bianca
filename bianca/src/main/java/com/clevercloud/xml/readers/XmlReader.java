@@ -35,7 +35,6 @@ import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.xml.XmlChar;
 import com.clevercloud.xml.XmlParser;
-
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -44,206 +43,186 @@ import java.io.IOException;
  * A fast reader to convert bytes to characters for parsing XML.
  */
 public class XmlReader {
-  static final L10N L = new L10N(XmlReader.class);
-  
-  protected static boolean []isAsciiNameChar;
-  
-  protected XmlParser _parser;
-  protected XmlReader _next;
+   static final L10N L = new L10N(XmlReader.class);
 
-  protected Path _searchPath;
-  protected ReadStream _is;
-  protected String _filename;
-  protected int _line;
+   protected static boolean[] isAsciiNameChar;
 
-  protected String _systemId;
-  protected String _publicId;
+   protected XmlParser _parser;
+   protected XmlReader _next;
 
-  /**
-   * Create a new reader.
-   */
-  public XmlReader()
-  {
-  }
+   protected Path _searchPath;
+   protected ReadStream _is;
+   protected String _filename;
+   protected int _line;
 
-  /**
-   * Create a new reader with the given read stream.
-   */
-  public XmlReader(XmlParser parser, ReadStream is)
-  {
-    init(parser, is);
-  }
+   protected String _systemId;
+   protected String _publicId;
 
-  /**
-   * Initialize a reader at the start of parsing.
-   */
-  public void init(XmlParser parser, ReadStream is)
-  {
-    _parser = parser;
-    _is = is;
-    _filename = is.getUserPath();
-    _line = 1;
-  }
+   /**
+    * Create a new reader.
+    */
+   public XmlReader() {
+   }
 
-  /**
-   * Sets the filename.
-   */
-  public void setFilename(String filename)
-  {
-    _filename = filename;
-  }
+   /**
+    * Create a new reader with the given read stream.
+    */
+   public XmlReader(XmlParser parser, ReadStream is) {
+      init(parser, is);
+   }
 
-  /**
-   * Gets the filename.
-   */
-  public String getFilename()
-  {
-    return _filename;
-  }
+   /**
+    * Initialize a reader at the start of parsing.
+    */
+   public void init(XmlParser parser, ReadStream is) {
+      _parser = parser;
+      _is = is;
+      _filename = is.getUserPath();
+      _line = 1;
+   }
 
-  /**
-   * Sets the current line number.
-   */
-  public void setLine(int line)
-  {
-    _line = line;
-  }
+   /**
+    * Sets the filename.
+    */
+   public void setFilename(String filename) {
+      _filename = filename;
+   }
 
-  /**
-   * Gets the current line number.
-   */
-  public int getLine()
-  {
-    return _line;
-  }
+   /**
+    * Gets the filename.
+    */
+   public String getFilename() {
+      return _filename;
+   }
 
-  /**
-   * Sets the systemId.
-   */
-  public void setSystemId(String systemId)
-  {
-    _systemId = systemId;
-  }
+   /**
+    * Sets the current line number.
+    */
+   public void setLine(int line) {
+      _line = line;
+   }
 
-  /**
-   * Gets the systemId.
-   */
-  public String getSystemId()
-  {
-    return _systemId;
-  }
+   /**
+    * Gets the current line number.
+    */
+   public int getLine() {
+      return _line;
+   }
 
-  /**
-   * Sets the publicId.
-   */
-  public void setPublicId(String publicId)
-  {
-    _publicId = publicId;
-  }
+   /**
+    * Sets the systemId.
+    */
+   public void setSystemId(String systemId) {
+      _systemId = systemId;
+   }
 
-  /**
-   * Gets the publicId.
-   */
-  public String getPublicId()
-  {
-    return _publicId;
-  }
+   /**
+    * Gets the systemId.
+    */
+   public String getSystemId() {
+      return _systemId;
+   }
 
-  /**
-   * Sets the current search path.
-   */
-  public void setSearchPath(Path searchPath)
-  {
-    _searchPath = searchPath;
-  }
+   /**
+    * Sets the publicId.
+    */
+   public void setPublicId(String publicId) {
+      _publicId = publicId;
+   }
 
-  /**
-   * Gets the current search path.
-   */
-  public Path getSearchPath()
-  {
-    return _searchPath;
-  }
+   /**
+    * Gets the publicId.
+    */
+   public String getPublicId() {
+      return _publicId;
+   }
 
-  /**
-   * Sets the next reader.
-   */
-  public void setNext(XmlReader next)
-  {
-    _next = next;
-  }
+   /**
+    * Sets the current search path.
+    */
+   public void setSearchPath(Path searchPath) {
+      _searchPath = searchPath;
+   }
 
-  /**
-   * Sets the next reader.
-   */
-  public XmlReader getNext()
-  {
-    return _next;
-  }
+   /**
+    * Gets the current search path.
+    */
+   public Path getSearchPath() {
+      return _searchPath;
+   }
 
-  /**
-   * Returns the read stream.
-   */
-  public ReadStream getReadStream()
-  {
-    return _is;
-  }
-  
-  /**
-   * Read the next character, returning -1 on end of file..
-   */
-  public int read()
-    throws IOException
-  {
-    int ch = _is.readChar();
+   /**
+    * Sets the next reader.
+    */
+   public void setNext(XmlReader next) {
+      _next = next;
+   }
 
-    if (ch == '\n')
-      _parser.setLine(++_line);
-    
-    return ch;
-  }
+   /**
+    * Sets the next reader.
+    */
+   public XmlReader getNext() {
+      return _next;
+   }
 
-  /**
-   * Parses a name.
-   */
-  public int parseName(CharBuffer name, int ch)
-    throws IOException, SAXException
-  {
-    char []buffer = name.getBuffer();
-    int capacity = buffer.length;
-    int offset = 0;
+   /**
+    * Returns the read stream.
+    */
+   public ReadStream getReadStream() {
+      return _is;
+   }
 
-    buffer[offset++] = (char) ch;
+   /**
+    * Read the next character, returning -1 on end of file..
+    */
+   public int read()
+      throws IOException {
+      int ch = _is.readChar();
 
-    for (ch = read();
-         ch > 0 && ch < 128 && isAsciiNameChar[ch] || XmlChar.isNameChar(ch);
-         ch = read()) {
-      if (offset >= capacity) {
-        name.setLength(offset);
-        name.append((char) ch);
-        offset++;
-        buffer = name.getBuffer();
-        capacity = buffer.length;
+      if (ch == '\n')
+         _parser.setLine(++_line);
+
+      return ch;
+   }
+
+   /**
+    * Parses a name.
+    */
+   public int parseName(CharBuffer name, int ch)
+      throws IOException, SAXException {
+      char[] buffer = name.getBuffer();
+      int capacity = buffer.length;
+      int offset = 0;
+
+      buffer[offset++] = (char) ch;
+
+      for (ch = read();
+           ch > 0 && ch < 128 && isAsciiNameChar[ch] || XmlChar.isNameChar(ch);
+           ch = read()) {
+         if (offset >= capacity) {
+            name.setLength(offset);
+            name.append((char) ch);
+            offset++;
+            buffer = name.getBuffer();
+            capacity = buffer.length;
+         } else
+            buffer[offset++] = (char) ch;
       }
-      else
-        buffer[offset++] = (char) ch;
-    }
 
-    name.setLength(offset);
+      name.setLength(offset);
 
-    return ch;
-  }
+      return ch;
+   }
 
-  /**
-   * Finish reading.
-   */
-  public void finish()
-  {
-    _is = null;
-  }
+   /**
+    * Finish reading.
+    */
+   public void finish() {
+      _is = null;
+   }
 
-  static {
-    isAsciiNameChar = XmlChar.getAsciiNameCharArray();
-  }
+   static {
+      isAsciiNameChar = XmlChar.getAsciiNameCharArray();
+   }
 }
 

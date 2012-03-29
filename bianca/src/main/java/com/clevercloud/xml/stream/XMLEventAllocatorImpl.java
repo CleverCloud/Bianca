@@ -30,138 +30,139 @@
 
 package com.clevercloud.xml.stream;
 
-import com.clevercloud.xml.stream.events.*;
+import com.clevercloud.xml.stream.events.AttributeImpl;
+import com.clevercloud.xml.stream.events.NamespaceImpl;
+import com.clevercloud.xml.stream.events.StartDocumentImpl;
+import com.clevercloud.xml.stream.events.StartElementImpl;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
-import static javax.xml.stream.XMLStreamConstants.*;
 import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.*;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Namespace;
+import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.XMLEventAllocator;
 import javax.xml.stream.util.XMLEventConsumer;
-
 import java.util.HashMap;
 
+import static javax.xml.stream.XMLStreamConstants.*;
+
 public class XMLEventAllocatorImpl implements XMLEventAllocator {
-  private static final XMLEventFactory EVENT_FACTORY
-    = XMLEventFactory.newInstance();
+   private static final XMLEventFactory EVENT_FACTORY
+      = XMLEventFactory.newInstance();
 
-  public XMLEvent allocate(XMLStreamReader reader)
-    throws XMLStreamException
-  {
-    switch (reader.getEventType()) {
-      case ATTRIBUTE: 
-        // won't happen: our stream reader does not return attributes
-        // independent of start elements/empty elements
-        break;
+   public XMLEvent allocate(XMLStreamReader reader)
+      throws XMLStreamException {
+      switch (reader.getEventType()) {
+         case ATTRIBUTE:
+            // won't happen: our stream reader does not return attributes
+            // independent of start elements/empty elements
+            break;
 
-      case CDATA:
-        return EVENT_FACTORY.createCData(reader.getText());
+         case CDATA:
+            return EVENT_FACTORY.createCData(reader.getText());
 
-      case CHARACTERS: 
-        return EVENT_FACTORY.createCharacters(reader.getText());
+         case CHARACTERS:
+            return EVENT_FACTORY.createCharacters(reader.getText());
 
-      case COMMENT:
-        return EVENT_FACTORY.createComment(reader.getText());
+         case COMMENT:
+            return EVENT_FACTORY.createComment(reader.getText());
 
-      case DTD:
-        // XXX
-        break;
+         case DTD:
+            // XXX
+            break;
 
-      case END_DOCUMENT:
-        return EVENT_FACTORY.createEndDocument();
+         case END_DOCUMENT:
+            return EVENT_FACTORY.createEndDocument();
 
-      case END_ELEMENT:
-        // XXX namespaces?
-        return EVENT_FACTORY.createEndElement(reader.getName(), null);
+         case END_ELEMENT:
+            // XXX namespaces?
+            return EVENT_FACTORY.createEndElement(reader.getName(), null);
 
-      case ENTITY_DECLARATION:
-        // XXX
-        break;
+         case ENTITY_DECLARATION:
+            // XXX
+            break;
 
-      case ENTITY_REFERENCE:
-        // XXX
-        break;
+         case ENTITY_REFERENCE:
+            // XXX
+            break;
 
-      case NAMESPACE:
-        // won't happen: our stream reader does not return attributes
-        // independent of start elements/empty elements
-        break;
+         case NAMESPACE:
+            // won't happen: our stream reader does not return attributes
+            // independent of start elements/empty elements
+            break;
 
-      case NOTATION_DECLARATION:
-        // XXX
-        break;
+         case NOTATION_DECLARATION:
+            // XXX
+            break;
 
-      case PROCESSING_INSTRUCTION:
-        return EVENT_FACTORY.createProcessingInstruction(reader.getPITarget(),
-                                                         reader.getPIData());
+         case PROCESSING_INSTRUCTION:
+            return EVENT_FACTORY.createProcessingInstruction(reader.getPITarget(),
+               reader.getPIData());
 
-      case SPACE:
-        NamespaceContextImpl context = 
-          (NamespaceContextImpl) reader.getNamespaceContext();
-        
-        if (context.getDepth() == 0)
-          return EVENT_FACTORY.createIgnorableSpace(reader.getText());
+         case SPACE:
+            NamespaceContextImpl context =
+               (NamespaceContextImpl) reader.getNamespaceContext();
 
-        return EVENT_FACTORY.createSpace(reader.getText());
+            if (context.getDepth() == 0)
+               return EVENT_FACTORY.createIgnorableSpace(reader.getText());
 
-      case START_DOCUMENT:
-        boolean encodingSet = true;
-        String encoding = reader.getCharacterEncodingScheme();
+            return EVENT_FACTORY.createSpace(reader.getText());
 
-        if (encoding == null) {
-          encoding = "utf-8"; // XXX
-          encodingSet = false;
-        }
+         case START_DOCUMENT:
+            boolean encodingSet = true;
+            String encoding = reader.getCharacterEncodingScheme();
 
-        return new StartDocumentImpl(encodingSet, encoding, 
-                                     null /* XXX: system id */, 
-                                     reader.getVersion(), 
-                                     reader.isStandalone(), 
-                                     reader.standaloneSet());
+            if (encoding == null) {
+               encoding = "utf-8"; // XXX
+               encodingSet = false;
+            }
 
-      case START_ELEMENT:
-        HashMap<QName,Attribute> attributes = new HashMap<QName,Attribute>();
+            return new StartDocumentImpl(encodingSet, encoding,
+               null /* XXX: system id */,
+               reader.getVersion(),
+               reader.isStandalone(),
+               reader.standaloneSet());
 
-        for (int i = 0; i < reader.getAttributeCount(); i++) {
-          Attribute attribute = new AttributeImpl(reader.getAttributeName(i),
-                                                  reader.getAttributeValue(i));
-          attributes.put(reader.getAttributeName(i), attribute);
-        }
+         case START_ELEMENT:
+            HashMap<QName, Attribute> attributes = new HashMap<QName, Attribute>();
 
-        HashMap<String,Namespace> namespaces= new HashMap<String,Namespace>();
+            for (int i = 0; i < reader.getAttributeCount(); i++) {
+               Attribute attribute = new AttributeImpl(reader.getAttributeName(i),
+                  reader.getAttributeValue(i));
+               attributes.put(reader.getAttributeName(i), attribute);
+            }
 
-        for (int i = 0; i < reader.getNamespaceCount(); i++) {
-          String prefix = reader.getNamespacePrefix(i);
+            HashMap<String, Namespace> namespaces = new HashMap<String, Namespace>();
 
-          if (prefix == null)
-            prefix = XMLConstants.DEFAULT_NS_PREFIX;
+            for (int i = 0; i < reader.getNamespaceCount(); i++) {
+               String prefix = reader.getNamespacePrefix(i);
 
-          Namespace namespace = 
-            new NamespaceImpl(reader.getNamespaceURI(i), prefix);
-                            
-          namespaces.put(prefix, namespace);
-        }
+               if (prefix == null)
+                  prefix = XMLConstants.DEFAULT_NS_PREFIX;
 
-        // bypass factory
-        return new StartElementImpl(reader.getName(), attributes, namespaces,
-                                    reader.getNamespaceContext());
-    }
+               Namespace namespace =
+                  new NamespaceImpl(reader.getNamespaceURI(i), prefix);
 
-    throw new XMLStreamException("Event type = " + reader.getEventType());
-  }
+               namespaces.put(prefix, namespace);
+            }
 
-  public void allocate(XMLStreamReader reader, XMLEventConsumer consumer)
-    throws XMLStreamException
-  {
-    consumer.add(allocate(reader));
-  }
+            // bypass factory
+            return new StartElementImpl(reader.getName(), attributes, namespaces,
+               reader.getNamespaceContext());
+      }
 
-  public XMLEventAllocator newInstance()
-  {
-    return new XMLEventAllocatorImpl();
-  }
+      throw new XMLStreamException("Event type = " + reader.getEventType());
+   }
+
+   public void allocate(XMLStreamReader reader, XMLEventConsumer consumer)
+      throws XMLStreamException {
+      consumer.add(allocate(reader));
+   }
+
+   public XMLEventAllocator newInstance() {
+      return new XMLEventAllocatorImpl();
+   }
 }

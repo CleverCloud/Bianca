@@ -29,11 +29,7 @@
  */
 package com.clevercloud.bianca.lib.file;
 
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 public class PhpProtocolWrapper extends ProtocolWrapper {
@@ -45,7 +41,7 @@ public class PhpProtocolWrapper extends ProtocolWrapper {
 
    @Override
    public BinaryStream fopen(Env env, StringValue pathV, StringValue mode,
-           LongValue options) {
+                             LongValue options) {
       String path = pathV.toString();
 
       if (path.equals("php://output")) {
@@ -61,7 +57,7 @@ public class PhpProtocolWrapper extends ProtocolWrapper {
       }
 
       env.warning(L.l("{0} is an unsupported or unknown path for this protocol",
-              path));
+         path));
 
       return null;
    }
@@ -89,7 +85,7 @@ public class PhpProtocolWrapper extends ProtocolWrapper {
 
    @Override
    public boolean mkdir(Env env,
-           StringValue path, LongValue mode, LongValue options) {
+                        StringValue path, LongValue mode, LongValue options) {
       env.warning(L.l("mkdir not supported by protocol"));
 
       return false;

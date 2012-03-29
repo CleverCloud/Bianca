@@ -36,111 +36,102 @@ import java.util.Map;
 
 /**
  * The HTTP scheme.  Currently it supports GET and POST.
- *
+ * <p/>
  * <p>TODO: support WEBDAV, enabling the full Path API.
  */
 public class HttpsPath extends HttpPath {
-  protected static L10N L = new L10N(HttpsPath.class);
+   protected static L10N L = new L10N(HttpsPath.class);
 
-  /**
-   * Creates a new HTTP root path with a host and a port.
-   *
-   * @param host the target host
-   * @param port the target port, if zero, uses port 80.
-   */
-  public HttpsPath(String host, int port)
-  {
-    super(host, port);
-  }
+   /**
+    * Creates a new HTTP root path with a host and a port.
+    *
+    * @param host the target host
+    * @param port the target port, if zero, uses port 80.
+    */
+   public HttpsPath(String host, int port) {
+      super(host, port);
+   }
 
-  /**
-   * Creates a new HTTP sub path.
-   *
-   * @param root the HTTP filesystem root
-   * @param userPath the argument to the calling lookup()
-   * @param newAttributes any attributes passed to http
-   * @param path the full normalized path
-   * @param query any query string
-   */
-  public HttpsPath(FilesystemPath root, String userPath,
-                   Map<String,Object> newAttributes,
-                   String path, String query)
-  {
-    super(root, userPath, newAttributes, path, query);
-  }
+   /**
+    * Creates a new HTTP sub path.
+    *
+    * @param root          the HTTP filesystem root
+    * @param userPath      the argument to the calling lookup()
+    * @param newAttributes any attributes passed to http
+    * @param path          the full normalized path
+    * @param query         any query string
+    */
+   public HttpsPath(FilesystemPath root, String userPath,
+                    Map<String, Object> newAttributes,
+                    String path, String query) {
+      super(root, userPath, newAttributes, path, query);
+   }
 
-  protected HttpPath create(String host, int port)
-  {
-    return new HttpsPath(host, port);
-  }
+   protected HttpPath create(String host, int port) {
+      return new HttpsPath(host, port);
+   }
 
-  protected HttpPath create(FilesystemPath root,
-                            String userPath,
-                            Map<String,Object> newAttributes,
-                            String path, String query)
-  {
-    return new HttpsPath(root, userPath, newAttributes, path, query);
-  }
+   protected HttpPath create(FilesystemPath root,
+                             String userPath,
+                             Map<String, Object> newAttributes,
+                             String path, String query) {
+      return new HttpsPath(root, userPath, newAttributes, path, query);
+   }
 
-  /**
-   * Returns the scheme, http.
-   */
-  public String getScheme()
-  {
-    return "https";
-  }
+   /**
+    * Returns the scheme, http.
+    */
+   public String getScheme() {
+      return "https";
+   }
 
-  /**
-   * Returns a read stream for a GET request.
-   */
-  public StreamImpl openReadImpl() throws IOException
-  {
-    HttpStreamWrapper stream = HttpStream.openRead(this);
+   /**
+    * Returns a read stream for a GET request.
+    */
+   public StreamImpl openReadImpl() throws IOException {
+      HttpStreamWrapper stream = HttpStream.openRead(this);
 
-    stream.setSSL(true);
-    
-    return stream;
-  }
+      stream.setSSL(true);
 
-  /**
-   * Returns a read/write pair for a POST request.
-   */
-  public StreamImpl openReadWriteImpl() throws IOException
-  {
-    HttpStreamWrapper stream = HttpStream.openReadWrite(this);
+      return stream;
+   }
 
-    stream.setSSL(true);
-    
-    return stream;
-  }
+   /**
+    * Returns a read/write pair for a POST request.
+    */
+   public StreamImpl openReadWriteImpl() throws IOException {
+      HttpStreamWrapper stream = HttpStream.openReadWrite(this);
 
-  /**
-   * Returns a hashCode for the path.
-   */
-  public int hashCode()
-  {
-    return 17 + 65537 * super.hashCode() + 37 * _host.hashCode() + _port;
-  }
+      stream.setSSL(true);
 
-  /**
-   * Overrides equals to test for equality with an HTTP path.
-   */
-  public boolean equals(Object o)
-  {
-    if (! (o instanceof HttpsPath))
-      return false;
+      return stream;
+   }
 
-    HttpsPath test = (HttpsPath) o;
+   /**
+    * Returns a hashCode for the path.
+    */
+   public int hashCode() {
+      return 17 + 65537 * super.hashCode() + 37 * _host.hashCode() + _port;
+   }
 
-    if (! _host.equals(test._host))
-      return false;
-    else if (_port != test._port)
-      return false;
-    else if (_query != null && ! _query.equals(test._query))
-      return false;
-    else if (_query == null && test._query != null)
-      return false;
-    else
-      return true;
-  }
+   /**
+    * Overrides equals to test for equality with an HTTP path.
+    */
+   public boolean equals(Object o) {
+      if (!(o instanceof HttpsPath))
+         return false;
+
+      HttpsPath test = (HttpsPath) o;
+
+      if (!_host.equals(test._host))
+         return false;
+      else if (_port != test._port)
+         return false;
+      else if (_query != null && !_query.equals(test._query))
+         return false;
+      else if (_query == null && test._query != null)
+         return false;
+      else
+         return true;
+   }
 }

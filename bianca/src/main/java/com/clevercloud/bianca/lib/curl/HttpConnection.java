@@ -55,22 +55,22 @@ public class HttpConnection {
    private String _proxyAuthorization;
 
    protected HttpConnection(URL url,
-           String username,
-           String password)
-           throws IOException {
+                            String username,
+                            String password)
+      throws IOException {
       _URL = url;
       _username = username;
       _password = password;
    }
 
    public HttpConnection(URL url,
-           String username,
-           String password,
-           URL proxyURL,
-           String proxyUsername,
-           String proxyPassword,
-           String proxyType)
-           throws IOException {
+                         String username,
+                         String password,
+                         URL proxyURL,
+                         String proxyUsername,
+                         String proxyPassword,
+                         String proxyType)
+      throws IOException {
       _URL = url;
       _proxyURL = proxyURL;
       _proxyType = proxyType;
@@ -82,7 +82,7 @@ public class HttpConnection {
    }
 
    protected void init(CurlResource curl)
-           throws IOException {
+      throws IOException {
       Proxy proxy = getProxy();
 
       if (proxy != null) {
@@ -94,14 +94,14 @@ public class HttpConnection {
    }
 
    public static HttpConnection createConnection(URL url,
-           String username,
-           String password,
-           CurlResource curl,
-           URL proxyURL,
-           String proxyUsername,
-           String proxyPassword,
-           String proxyType)
-           throws IOException {
+                                                 String username,
+                                                 String password,
+                                                 CurlResource curl,
+                                                 URL proxyURL,
+                                                 String proxyUsername,
+                                                 String proxyPassword,
+                                                 String proxyType)
+      throws IOException {
       HttpConnection conn;
 
       if (url.getProtocol().equals("https")) {
@@ -123,10 +123,10 @@ public class HttpConnection {
    }
 
    public static HttpConnection createConnection(URL url,
-           String username,
-           String password,
-           CurlResource curl)
-           throws IOException {
+                                                 String username,
+                                                 String password,
+                                                 CurlResource curl)
+      throws IOException {
       HttpConnection conn;
 
       if (url.getProtocol().equals("https")) {
@@ -159,7 +159,7 @@ public class HttpConnection {
    }
 
    public void setRequestMethod(String method)
-           throws ProtocolException {
+      throws ProtocolException {
       _conn.setRequestMethod(method);
    }
 
@@ -193,8 +193,8 @@ public class HttpConnection {
     * Connects to the server.
     */
    public void connect(CurlResource curl)
-           throws ConnectException, ProtocolException, SocketTimeoutException,
-           IOException {
+      throws ConnectException, ProtocolException, SocketTimeoutException,
+      IOException {
       authenticate();
 
       _conn.connect();
@@ -204,8 +204,8 @@ public class HttpConnection {
     * Handles the authentication for this connection.
     */
    public void authenticate()
-           throws ConnectException, ProtocolException, SocketTimeoutException,
-           IOException {
+      throws ConnectException, ProtocolException, SocketTimeoutException,
+      IOException {
       if (_username != null || _proxyUsername != null) {
          authenticateImpl();
       }
@@ -222,8 +222,8 @@ public class HttpConnection {
     * Handles the authentication for this connection.
     */
    public void authenticateImpl()
-           throws ConnectException, ProtocolException, SocketTimeoutException,
-           IOException {
+      throws ConnectException, ProtocolException, SocketTimeoutException,
+      IOException {
       Proxy proxy = Proxy.NO_PROXY;
 
       if (_proxyURL != null) {
@@ -248,26 +248,26 @@ public class HttpConnection {
       int responseCode = headConn.getResponseCode();
 
       if (responseCode == HttpURLConnection.HTTP_PROXY_AUTH
-              && _proxyAuthorization == null) {
+         && _proxyAuthorization == null) {
          String header = headConn.getHeaderField("Proxy-Authenticate");
 
          _proxyAuthorization = getAuthorization(_URL,
-                 _conn.getRequestMethod(),
-                 header,
-                 "Proxy-Authorization",
-                 _proxyUsername,
-                 _proxyPassword);
+            _conn.getRequestMethod(),
+            header,
+            "Proxy-Authorization",
+            _proxyUsername,
+            _proxyPassword);
          authenticateImpl();
       } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED
-              && _authorization == null) {
+         && _authorization == null) {
          String header = headConn.getHeaderField("WWW-Authenticate");
 
          _authorization = getAuthorization(_URL,
-                 _conn.getRequestMethod(),
-                 header,
-                 "Authorization",
-                 _username,
-                 _password);
+            _conn.getRequestMethod(),
+            header,
+            "Authorization",
+            _username,
+            _password);
          authenticateImpl();
       }
 
@@ -278,12 +278,12 @@ public class HttpConnection {
     * Returns the authorization response.
     */
    private String getAuthorization(URL url,
-           String requestMethod,
-           String header,
-           String clientField,
-           String username,
-           String password)
-           throws ConnectException, SocketTimeoutException, IOException {
+                                   String requestMethod,
+                                   String header,
+                                   String clientField,
+                                   String username,
+                                   String password)
+      throws ConnectException, SocketTimeoutException, IOException {
       if (username == null || password == null) {
          return "";
       }
@@ -294,10 +294,10 @@ public class HttpConnection {
       }
 
       String auth = Authentication.getAuthorization(username,
-              password,
-              requestMethod,
-              uri,
-              header);
+         password,
+         requestMethod,
+         uri,
+         header);
 
       return auth;
    }
@@ -323,17 +323,17 @@ public class HttpConnection {
    }
 
    public InputStream getInputStream()
-           throws IOException {
+      throws IOException {
       return _conn.getInputStream();
    }
 
    public OutputStream getOutputStream()
-           throws IOException {
+      throws IOException {
       return _conn.getOutputStream();
    }
 
    public int getResponseCode()
-           throws IOException {
+      throws IOException {
       return _conn.getResponseCode();
    }
 

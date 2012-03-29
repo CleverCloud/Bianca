@@ -43,7 +43,7 @@ import java.io.IOException;
  * Represents read/write stream
  */
 public class StreamReadWrite extends StreamResource
-        implements EnvCleanup {
+   implements EnvCleanup {
 
    private Env _env;
    private ReadStream _is;
@@ -71,7 +71,7 @@ public class StreamReadWrite extends StreamResource
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return _is.read();
       } else {
@@ -84,7 +84,7 @@ public class StreamReadWrite extends StreamResource
     */
    @Override
    public int read(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return _is.read(buffer, offset, length);
       } else {
@@ -97,7 +97,7 @@ public class StreamReadWrite extends StreamResource
     */
    @Override
    public boolean readOptionalLinefeed()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          int ch = _is.read();
 
@@ -117,7 +117,7 @@ public class StreamReadWrite extends StreamResource
     */
    @Override
    public StringValue readLine(Env env)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return env.createString(_is.readLineNoChop());
       } else {
@@ -145,7 +145,7 @@ public class StreamReadWrite extends StreamResource
     */
    @Override
    public int write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.write(buffer, offset, length);
 
@@ -160,7 +160,7 @@ public class StreamReadWrite extends StreamResource
     */
    @Override
    public void print(char ch)
-           throws IOException {
+      throws IOException {
       print(String.valueOf(ch));
    }
 
@@ -169,7 +169,7 @@ public class StreamReadWrite extends StreamResource
     */
    @Override
    public void print(String s)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.print(s);
       }

@@ -30,148 +30,131 @@
 package com.clevercloud.xml;
 
 import com.clevercloud.util.CharBuffer;
-
 import org.xml.sax.Attributes;
 
 class QAttributes implements Attributes {
-  QName []names = new QName[32];
-  String []values = new String[32];
-  int size;
+   QName[] names = new QName[32];
+   String[] values = new String[32];
+   int size;
 
-  void clear()
-  {
-    size = 0;
-  }
+   void clear() {
+      size = 0;
+   }
 
-  void add(QName name, String value)
-  {
-    if (size == names.length) {
-      QName []newNames = new QName[2 * names.length];
-      String []newValues = new String[2 * names.length];
-      System.arraycopy(names, 0, newNames, 0, names.length);
-      System.arraycopy(values, 0, newValues, 0, names.length);
-      names = newNames;
-      values = newValues;
-    }
-    
-    names[size] = name;
-    values[size] = value;
-    size++;
-  }
+   void add(QName name, String value) {
+      if (size == names.length) {
+         QName[] newNames = new QName[2 * names.length];
+         String[] newValues = new String[2 * names.length];
+         System.arraycopy(names, 0, newNames, 0, names.length);
+         System.arraycopy(values, 0, newValues, 0, names.length);
+         names = newNames;
+         values = newValues;
+      }
 
-  public int getLength()
-  {
-    return size;
-  }    
+      names[size] = name;
+      values[size] = value;
+      size++;
+   }
 
-  public QName getName(int i)
-  {
-    return names[i];
-  }    
+   public int getLength() {
+      return size;
+   }
 
-  public String getQName(int i)
-  {
-    return names[i].getName();
-  }    
+   public QName getName(int i) {
+      return names[i];
+   }
 
-  public String getURI(int i)
-  {
-    String uri = names[i].getNamespaceURI();
+   public String getQName(int i) {
+      return names[i].getName();
+   }
 
-    if (uri != null)
-      return uri;
-    else
-      return ""; 
-  }    
+   public String getURI(int i) {
+      String uri = names[i].getNamespaceURI();
 
-  public String getLocalName(int i)
-  {
-    String name = names[i].getLocalName();
+      if (uri != null)
+         return uri;
+      else
+         return "";
+   }
 
-    if (name != null)
-      return name;
-    else
-      return ""; 
-  }    
+   public String getLocalName(int i) {
+      String name = names[i].getLocalName();
 
-  public String getValue(int i)
-  {
-    return values[i];
-  }    
+      if (name != null)
+         return name;
+      else
+         return "";
+   }
 
-  public String getValue(String qName)
-  {
-    for (int i = 0; i < size; i++) {
-      if (qName.equals(names[i].getName()))
-        return values[i];
-    }
+   public String getValue(int i) {
+      return values[i];
+   }
 
-    return null;
-  }    
+   public String getValue(String qName) {
+      for (int i = 0; i < size; i++) {
+         if (qName.equals(names[i].getName()))
+            return values[i];
+      }
 
-  public String getValue(String uri, String localName)
-  {
-    for (int i = 0; i < size; i++) {
-      String testURI = names[i].getNamespaceURI();
+      return null;
+   }
 
-      if (testURI == null)
-        testURI = "";
-      
-      if (uri.equals(testURI) && localName.equals(names[i].getLocalName()))
-        return values[i];
-    }
+   public String getValue(String uri, String localName) {
+      for (int i = 0; i < size; i++) {
+         String testURI = names[i].getNamespaceURI();
 
-    return null;
-  }    
+         if (testURI == null)
+            testURI = "";
 
-  public int getIndex(String qName)
-  {
-    for (int i = 0; i < size; i++) {
-      if (qName.equals(names[i].getName()))
-        return i;
-    }
+         if (uri.equals(testURI) && localName.equals(names[i].getLocalName()))
+            return values[i];
+      }
 
-    return -1;
-  }    
+      return null;
+   }
 
-  public int getIndex(String uri, String localName)
-  {
-    for (int i = 0; i < size; i++) {
-      if (uri.equals(names[i].getNamespaceURI()) &&
-          localName.equals(names[i].getLocalName()))
-        return i;
-    }
+   public int getIndex(String qName) {
+      for (int i = 0; i < size; i++) {
+         if (qName.equals(names[i].getName()))
+            return i;
+      }
 
-    return -1;
-  }    
+      return -1;
+   }
 
-  public String getType(int i)
-  {
-    return "CDATA";
-  }    
+   public int getIndex(String uri, String localName) {
+      for (int i = 0; i < size; i++) {
+         if (uri.equals(names[i].getNamespaceURI()) &&
+            localName.equals(names[i].getLocalName()))
+            return i;
+      }
 
-  public String getType(String uri, String localName)
-  {
-    return "CDATA";
-  }    
+      return -1;
+   }
 
-  public String getType(String qName)
-  {
-    return "CDATA";
-  }
+   public String getType(int i) {
+      return "CDATA";
+   }
 
-  public String toString()
-  {
-    CharBuffer cb = CharBuffer.allocate();
-    cb.append("[QAttributes");
-    for (int i = 0; i < size; i++) {
-      cb.append(" ");
-      cb.append(names[i]);
-      cb.append("=\"");
-      cb.append(values[i]);
-      cb.append("\"");
-    }
-    cb.append("]");
-    return cb.close();
-  }
+   public String getType(String uri, String localName) {
+      return "CDATA";
+   }
+
+   public String getType(String qName) {
+      return "CDATA";
+   }
+
+   public String toString() {
+      CharBuffer cb = CharBuffer.allocate();
+      cb.append("[QAttributes");
+      for (int i = 0; i < size; i++) {
+         cb.append(" ");
+         cb.append(names[i]);
+         cb.append("=\"");
+         cb.append(values[i]);
+         cb.append("\"");
+      }
+      cb.append("]");
+      return cb.close();
+   }
 }

@@ -52,11 +52,11 @@ public class JavaMethod extends JavaInvoker {
     */
    public JavaMethod(ModuleContext moduleContext, Method method) {
       super(moduleContext,
-              getName(method),
-              method.getParameterTypes(),
-              method.getParameterAnnotations(),
-              method.getAnnotations(),
-              method.getReturnType());
+         getName(method),
+         method.getParameterTypes(),
+         method.getParameterAnnotations(),
+         method.getAnnotations(),
+         method.getReturnType());
 
       _method = method;
       _isStatic = Modifier.isStatic(method.getModifiers());
@@ -121,12 +121,12 @@ public class JavaMethod extends JavaInvoker {
          }
 
          String methodName = (_method.getDeclaringClass().getName() + "."
-                 + _method.getName());
+            + _method.getName());
 
          throw new BiancaException(methodName + ": " + e1.getMessage(), e1);
       } catch (Exception e) {
          String methodName = (_method.getDeclaringClass().getName() + "."
-                 + _method.getName());
+            + _method.getName());
 
          throw new BiancaException(methodName + ": " + e.getMessage(), e);
       }

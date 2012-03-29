@@ -35,7 +35,6 @@ import com.clevercloud.util.Base64;
 import com.clevercloud.vfs.WriteStream;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.IdentityHashMap;
@@ -207,10 +206,10 @@ public class ServerArrayValue extends ArrayValueImpl {
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       if (!_isFilled) {
          fillMap();
       }
@@ -220,10 +219,10 @@ public class ServerArrayValue extends ArrayValueImpl {
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       if (!_isFilled) {
          fillMap();
       }
@@ -249,30 +248,30 @@ public class ServerArrayValue extends ArrayValueImpl {
 
       if (request != null) {
          super.put(SERVER_ADDR_V,
-                 _env.createString(request.getLocalAddr()));
+            _env.createString(request.getLocalAddr()));
          super.put(SERVER_NAME_V,
-                 _env.createString(request.getServerName()));
+            _env.createString(request.getServerName()));
 
          super.put(SERVER_PORT_V,
-                 LongValue.create(request.getServerPort()));
+            LongValue.create(request.getServerPort()));
          super.put(REMOTE_HOST_V,
-                 _env.createString(request.getRemoteHost()));
+            _env.createString(request.getRemoteHost()));
          super.put(REMOTE_ADDR_V,
-                 _env.createString(request.getRemoteAddr()));
+            _env.createString(request.getRemoteAddr()));
          super.put(REMOTE_PORT_V,
-                 LongValue.create(request.getRemotePort()));
+            LongValue.create(request.getRemotePort()));
 
          // Drupal's optional activemenu plugin only works on Apache servers!
          // bug at http://drupal.org/node/221867
          super.put(SERVER_SOFTWARE_V,
-                 _env.createString("Apache PHP Bianca("
-                 + _env.getBianca().getVersion()
-                 + ")"));
+            _env.createString("Apache PHP Bianca("
+               + _env.getBianca().getVersion()
+               + ")"));
 
          super.put(SERVER_PROTOCOL_V,
-                 _env.createString(request.getProtocol()));
+            _env.createString(request.getProtocol()));
          super.put(REQUEST_METHOD_V,
-                 _env.createString(request.getMethod()));
+            _env.createString(request.getMethod()));
 
          String queryString = BiancaRequestAdapter.getPageQueryString(request);
          String requestURI = BiancaRequestAdapter.getPageURI(request);
@@ -282,7 +281,7 @@ public class ServerArrayValue extends ArrayValueImpl {
 
          if (queryString != null) {
             super.put(QUERY_STRING_V,
-                    _env.createString(queryString));
+               _env.createString(queryString));
          }
 
          // TODO: a better way?
@@ -295,43 +294,43 @@ public class ServerArrayValue extends ArrayValueImpl {
          }
 
          super.put(DOCUMENT_ROOT_V,
-                 _env.createString(root));
+            _env.createString(root));
          super.put(SCRIPT_NAME_V,
-                 _env.createString(contextPath + servletPath));
+            _env.createString(contextPath + servletPath));
          super.put(SCRIPT_URL_V,
-                 _env.createString(requestURI));
+            _env.createString(requestURI));
 
          if (queryString != null) {
             requestURI = requestURI + '?' + queryString;
          }
 
          super.put(REQUEST_URI_V,
-                 _env.createString(requestURI));
+            _env.createString(requestURI));
 
          super.put(REQUEST_TIME_V,
-                 LongValue.create(_env.getStartTime() / 1000));
+            LongValue.create(_env.getStartTime() / 1000));
 
          super.put(SCRIPT_FILENAME_V,
-                 _env.createString(request.getRealPath(servletPath)));
+            _env.createString(request.getRealPath(servletPath)));
 
          if (pathInfo != null) {
             super.put(PATH_INFO_V,
-                    _env.createString(pathInfo));
+               _env.createString(pathInfo));
             super.put(PATH_TRANSLATED_V,
-                    _env.createString(request.getRealPath(pathInfo)));
+               _env.createString(request.getRealPath(pathInfo)));
          }
 
          if (request.isSecure()) {
             super.put(HTTPS_V,
-                    _env.createString("on"));
+               _env.createString("on"));
          }
 
          if (pathInfo == null) {
             super.put(PHP_SELF_V,
-                    _env.createString(contextPath + servletPath));
+               _env.createString(contextPath + servletPath));
          } else {
             super.put(PHP_SELF_V,
-                    _env.createString(contextPath + servletPath + pathInfo));
+               _env.createString(contextPath + servletPath + pathInfo));
          }
 
          // authType is not set on Tomcat
@@ -341,11 +340,11 @@ public class ServerArrayValue extends ArrayValueImpl {
          if (authHeader != null) {
             if (authHeader.indexOf("Basic") == 0) {
                super.put(AUTH_TYPE_V,
-                       _env.createString("Basic"));
+                  _env.createString("Basic"));
 
                if (request.getRemoteUser() != null) {
                   super.put(PHP_AUTH_USER_V,
-                          _env.createString(request.getRemoteUser()));
+                     _env.createString(request.getRemoteUser()));
 
                   String digest = authHeader.substring("Basic ".length());
 
@@ -354,17 +353,17 @@ public class ServerArrayValue extends ArrayValueImpl {
                   int i = userPass.indexOf(':');
                   if (i > 0) {
                      super.put(PHP_AUTH_PW_V,
-                             _env.createString(userPass.substring(i + 1)));
+                        _env.createString(userPass.substring(i + 1)));
                   }
                }
             } else if (authHeader.indexOf("Digest") == 0) {
                super.put(AUTH_TYPE_V,
-                       _env.createString("Digest"));
+                  _env.createString("Digest"));
 
                String digest = authHeader.substring("Digest ".length());
 
                super.put(PHP_AUTH_DIGEST_V,
-                       _env.createString(digest));
+                  _env.createString(digest));
             }
          }
 
@@ -376,13 +375,13 @@ public class ServerArrayValue extends ArrayValueImpl {
 
             if (key.equalsIgnoreCase("Host")) {
                super.put(HTTP_HOST_V,
-                       _env.createString(value));
+                  _env.createString(value));
             } else if (key.equalsIgnoreCase("Content-Length")) {
                super.put(CONTENT_LENGTH_V,
-                       _env.createString(value));
+                  _env.createString(value));
             } else if (key.equalsIgnoreCase("Content-Type")) {
                super.put(CONTENT_TYPE_V,
-                       _env.createString(value));
+                  _env.createString(value));
             } else {
                super.put(convertHttpKey(key), _env.createString(value));
             }

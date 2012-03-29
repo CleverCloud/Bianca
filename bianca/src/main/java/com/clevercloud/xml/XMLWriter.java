@@ -38,49 +38,49 @@ import java.io.IOException;
  * Interface for printing XML documents.
  */
 public interface XMLWriter {
-  public void setDocumentLocator(Locator locator);
-  
-  public void startDocument()
-    throws IOException, SAXException;
+   public void setDocumentLocator(Locator locator);
 
-  public void endDocument()
-    throws IOException, SAXException;
+   public void startDocument()
+      throws IOException, SAXException;
 
-  public void startPrefixMapping(String prefix, String uri)
-    throws IOException, SAXException;
+   public void endDocument()
+      throws IOException, SAXException;
 
-  public void endPrefixMapping(String prefix)
-    throws IOException, SAXException;
-  
-  public void startElement(String namespaceURI, String localName, String qName)
-    throws IOException, SAXException;
+   public void startPrefixMapping(String prefix, String uri)
+      throws IOException, SAXException;
 
-  public void attribute(String namespaceURI, String localName, String qName,
-                        String value)
-    throws IOException, SAXException;
+   public void endPrefixMapping(String prefix)
+      throws IOException, SAXException;
 
-  public void endElement(String namespaceURI, String localName, String qName)
-    throws IOException, SAXException;
+   public void startElement(String namespaceURI, String localName, String qName)
+      throws IOException, SAXException;
 
-  public void text(String text)
-    throws IOException, SAXException;
-  
-  public void text(char []buffer, int offset, int length)
-    throws IOException, SAXException;
+   public void attribute(String namespaceURI, String localName, String qName,
+                         String value)
+      throws IOException, SAXException;
 
-  public void cdata(String text)
-    throws IOException, SAXException;
-  
-  public void cdata(char []buffer, int offset, int length)
-    throws IOException, SAXException;
+   public void endElement(String namespaceURI, String localName, String qName)
+      throws IOException, SAXException;
 
-  public boolean getEscapeText();
-  
-  public void setEscapeText(boolean isEscaped);
-  
-  public void processingInstruction(String name, String value)
-    throws IOException, SAXException;
-  
-  public void comment(String value)
-    throws IOException, SAXException;
+   public void text(String text)
+      throws IOException, SAXException;
+
+   public void text(char[] buffer, int offset, int length)
+      throws IOException, SAXException;
+
+   public void cdata(String text)
+      throws IOException, SAXException;
+
+   public void cdata(char[] buffer, int offset, int length)
+      throws IOException, SAXException;
+
+   public boolean getEscapeText();
+
+   public void setEscapeText(boolean isEscaped);
+
+   public void processingInstruction(String name, String value)
+      throws IOException, SAXException;
+
+   public void comment(String value)
+      throws IOException, SAXException;
 }

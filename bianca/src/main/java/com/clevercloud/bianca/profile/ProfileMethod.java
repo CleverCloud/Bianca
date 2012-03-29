@@ -145,11 +145,11 @@ public class ProfileMethod {
    @Override
    public String toString() {
       return (getClass().getSimpleName()
-              + "[" + _name
-              + ",count=" + _count
-              + ",self-micros=" + _selfMicros
-              + ",total-micros=" + _totalMicros
-              + "]");
+         + "[" + _name
+         + ",count=" + _count
+         + ",self-micros=" + _selfMicros
+         + ",total-micros=" + _totalMicros
+         + "]");
    }
 
    static class ItemMicrosComparator implements Comparator<ProfileItem> {

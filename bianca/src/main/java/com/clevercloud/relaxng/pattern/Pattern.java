@@ -38,168 +38,151 @@ import com.clevercloud.util.L10N;
  * Relax pattern
  */
 abstract public class Pattern {
-  protected static final L10N L = new L10N(Pattern.class);
-  
-  private Pattern _parent;
-  private String _elementName;
+   protected static final L10N L = new L10N(Pattern.class);
 
-  private String _filename;
-  private int _line;
+   private Pattern _parent;
+   private String _elementName;
 
-  /**
-   * Returns the relax config name.
-   */
-  public String getTagName()
-  {
-    return getClass().getName();
-  }
+   private String _filename;
+   private int _line;
 
-  /**
-   * Sets the pattern source location.
-   */
-  public void setFilename(String filename)
-  {
-    _filename = filename;
-  }
+   /**
+    * Returns the relax config name.
+    */
+   public String getTagName() {
+      return getClass().getName();
+   }
 
-  /**
-   * Sets the pattern line
-   */
-  public void setLine(int line)
-  {
-    _line = line;
-  }
+   /**
+    * Sets the pattern source location.
+    */
+   public void setFilename(String filename) {
+      _filename = filename;
+   }
 
-  /**
-   * Gets the location.
-   */
-  public String getLocation()
-  {
-    if (_filename != null)
-      return _filename + ":" + _line;
-    else if (_parent != null)
-      return _parent.getLocation();
-    else
-      return null;
-  }
-  
-  /**
-   * Returns the element-name.
-   */
-  public String getElementName()
-  {
-    return _elementName;
-  }
-  
-  /**
-   * Sets the element-name.
-   */
-  public void setElementName(String elementName)
-  {
-    _elementName = elementName;
-  }
-  
-  /**
-   * Sets the parent.
-   */
-  public void setParent(Pattern parent)
-    throws RelaxException
-  {
-    _parent = parent;
-  }
+   /**
+    * Sets the pattern line
+    */
+   public void setLine(int line) {
+      _line = line;
+   }
 
-  /**
-   * Gets the parent.
-   */
-  public Pattern getParent()
-  {
-    return _parent;
-  }
+   /**
+    * Gets the location.
+    */
+   public String getLocation() {
+      if (_filename != null)
+         return _filename + ":" + _line;
+      else if (_parent != null)
+         return _parent.getLocation();
+      else
+         return null;
+   }
 
-  /**
-   * Returns true if it contains a data element.
-   */
-  public boolean hasData()
-  {
-    return false;
-  }
+   /**
+    * Returns the element-name.
+    */
+   public String getElementName() {
+      return _elementName;
+   }
 
-  /**
-   * Returns true if it contains an element.
-   */
-  public boolean hasElement()
-  {
-    return false;
-  }
+   /**
+    * Sets the element-name.
+    */
+   public void setElementName(String elementName) {
+      _elementName = elementName;
+   }
 
-  /**
-   * Adds a name child.
-   */
-  public void addNameChild(NameClassPattern child)
-    throws RelaxException
-  {
-    throw new RelaxException(L.l("<{0}> is not an allowed child for <{1}>.",
-                                 child.getTagName(), getTagName()));
-  }
+   /**
+    * Sets the parent.
+    */
+   public void setParent(Pattern parent)
+      throws RelaxException {
+      _parent = parent;
+   }
 
-  /**
-   * Adds an element child.
-   */
-  public void addChild(Pattern child)
-    throws RelaxException
-  {
-    throw new RelaxException(L.l("<{0}> is not an allowed child for <{1}>.",
-                                 child.getTagName(), getTagName()));
-  }
+   /**
+    * Gets the parent.
+    */
+   public Pattern getParent() {
+      return _parent;
+   }
 
-  /**
-   * Ends the element.
-   */
-  public void endElement()
-    throws RelaxException
-  {
-  }
+   /**
+    * Returns true if it contains a data element.
+    */
+   public boolean hasData() {
+      return false;
+   }
 
-  /**
-   * Creates the current state
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    throw new RelaxException(L.l("item isn't allowed in `{0}'.",
-                                 getClass().getName()));
-  }
+   /**
+    * Returns true if it contains an element.
+    */
+   public boolean hasElement() {
+      return false;
+   }
 
-  /**
-   * Creates the name program
-   */
-  public NameClassItem createNameItem()
-    throws RelaxException
-  {
-    throw new RelaxException(L.l("name-item isn't allowed in `{0}'.",
-                                 getClass().getName()));
-  }
+   /**
+    * Adds a name child.
+    */
+   public void addNameChild(NameClassPattern child)
+      throws RelaxException {
+      throw new RelaxException(L.l("<{0}> is not an allowed child for <{1}>.",
+         child.getTagName(), getTagName()));
+   }
 
-  abstract public boolean equals(Object o);
+   /**
+    * Adds an element child.
+    */
+   public void addChild(Pattern child)
+      throws RelaxException {
+      throw new RelaxException(L.l("<{0}> is not an allowed child for <{1}>.",
+         child.getTagName(), getTagName()));
+   }
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return "unknown";
-  }
-  
-  /**
-   * creates an error.
-   */
-  public RelaxException error(String msg)
-  {
-    String location = getLocation();
+   /**
+    * Ends the element.
+    */
+   public void endElement()
+      throws RelaxException {
+   }
 
-    if (location != null)
-      return new RelaxException(location + ": " + msg);
-    else
-      return new RelaxException(msg);
-  }
+   /**
+    * Creates the current state
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      throw new RelaxException(L.l("item isn't allowed in `{0}'.",
+         getClass().getName()));
+   }
+
+   /**
+    * Creates the name program
+    */
+   public NameClassItem createNameItem()
+      throws RelaxException {
+      throw new RelaxException(L.l("name-item isn't allowed in `{0}'.",
+         getClass().getName()));
+   }
+
+   abstract public boolean equals(Object o);
+
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return "unknown";
+   }
+
+   /**
+    * creates an error.
+    */
+   public RelaxException error(String msg) {
+      String location = getLocation();
+
+      if (location != null)
+         return new RelaxException(location + ": " + msg);
+      else
+         return new RelaxException(msg);
+   }
 }

@@ -42,6 +42,7 @@ import java.io.*;
 import java.util.IdentityHashMap;
 import java.util.zip.CRC32;
 /* TOCHECK append int */
+
 /**
  * Represents a PHP string
  */
@@ -1562,7 +1563,7 @@ public class StringValue
     * i.e. just call is.read once even if more data is available.
     */
    public int appendRead(InputStream is, long length) {
-       UTF8Reader reader = new UTF8Reader (is);
+      UTF8Reader reader = new UTF8Reader(is);
       try {
          char[] buffer = new char[8192];
          int sublen = buffer.length;
@@ -2237,7 +2238,7 @@ public class StringValue
 
       StringValueInputStream(StringValue s) {
          _index = 0;
-         _s = new StringValue (s);
+         _s = new StringValue(s);
          _length = _s.length();
       }
 
@@ -2267,38 +2268,36 @@ public class StringValue
 
          int i;
          for (i = 0; i < length && _index < _length; i++) {
-      char ch = s[_index++];
+            char ch = s[_index++];
 
-      // TODO: check for length - i being enough
-      if (ch < 0x80)
-        buffer[offset + i] = (byte) ch;
-      else if (ch < 0x800) {
-        buffer[offset + i++] = (byte) (0xc0 + (ch >> 6));
-        buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
-      }
-      else if (ch < 0xd800 || 0xdfff < ch || i == length || _index == _length) {
-        // server/0815
-        buffer[offset + i++] = (byte) (0xe0 + (ch >> 12));
-        buffer[offset + i++] = (byte) (0x80 + ((ch >> 6) & 0x3f));
-        buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
-      }
-      else {
-        char ch2 = s[_index++];
-        int v = 0x10000 + (ch & 0x3ff) * 0x400 + (ch2 & 0x3ff);
-          
-        buffer[offset + i++] = (byte) (0xf0 + (v >> 18));
-        buffer[offset + i++] = (byte) (0x80 + ((v >> 12) & 0x3f));
-        buffer[offset + i++] = (byte) (0x80 + ((v >> 6) & 0x3f));
-        buffer[offset + i] = (byte) (0x80 + (v & 0x3f));
-      }
-    }
+            // TODO: check for length - i being enough
+            if (ch < 0x80)
+               buffer[offset + i] = (byte) ch;
+            else if (ch < 0x800) {
+               buffer[offset + i++] = (byte) (0xc0 + (ch >> 6));
+               buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
+            } else if (ch < 0xd800 || 0xdfff < ch || i == length || _index == _length) {
+               // server/0815
+               buffer[offset + i++] = (byte) (0xe0 + (ch >> 12));
+               buffer[offset + i++] = (byte) (0x80 + ((ch >> 6) & 0x3f));
+               buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
+            } else {
+               char ch2 = s[_index++];
+               int v = 0x10000 + (ch & 0x3ff) * 0x400 + (ch2 & 0x3ff);
+
+               buffer[offset + i++] = (byte) (0xf0 + (v >> 18));
+               buffer[offset + i++] = (byte) (0x80 + ((v >> 12) & 0x3f));
+               buffer[offset + i++] = (byte) (0x80 + ((v >> 6) & 0x3f));
+               buffer[offset + i] = (byte) (0x80 + (v & 0x3f));
+            }
+         }
          return i;
 
       }
 
       @Override
       public int available() {
-        return _length - _index;
+         return _length - _index;
       }
    }
 

@@ -29,92 +29,85 @@
 
 package com.clevercloud.vfs;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class TempInputStream extends InputStream {
-  private TempBuffer _head;
+   private TempBuffer _head;
 
-  private int _offset;
+   private int _offset;
 
-  public TempInputStream(TempBuffer head)
-  {
-    _head = head;
-  }
+   public TempInputStream(TempBuffer head) {
+      _head = head;
+   }
 
-  @Override
-  public int read()
-    throws IOException
-  {
-    TempBuffer head = _head;
-    
-    if (head == null)
-      return -1;
+   @Override
+   public int read()
+      throws IOException {
+      TempBuffer head = _head;
 
-    int value = head._buf[_offset++];
+      if (head == null)
+         return -1;
 
-    if (head._length <= _offset) {
-      _head = head._next;
+      int value = head._buf[_offset++];
 
-      head._next = null;
-      TempBuffer.free(head);
-      _offset = 0;
-    }
+      if (head._length <= _offset) {
+         _head = head._next;
 
-    return value;
-  }
+         head._next = null;
+         TempBuffer.free(head);
+         _offset = 0;
+      }
 
-  @Override
-  public int read(byte []buf, int offset, int length) throws IOException
-  {
-    TempBuffer head = _head;
-    
-    if (head == null)
-      return -1;
+      return value;
+   }
 
-    int sublen = head._length - _offset;
+   @Override
+   public int read(byte[] buf, int offset, int length) throws IOException {
+      TempBuffer head = _head;
 
-    if (length < sublen)
-      sublen = length;
+      if (head == null)
+         return -1;
 
-    System.arraycopy(head._buf, _offset, buf, offset, sublen);
+      int sublen = head._length - _offset;
 
-    if (head._length <= _offset + sublen) {
-      _head = head._next;
+      if (length < sublen)
+         sublen = length;
 
-      head._next = null;
-      TempBuffer.free(head);
-      _offset = 0;
-    }
-    else
-      _offset += sublen;
-    
-    return sublen;
-  }
+      System.arraycopy(head._buf, _offset, buf, offset, sublen);
 
-  @Override
-  public int available() throws IOException
-  {
-    if (_head != null)
-      return _head._length - _offset;
-    else
-      return 0;
-  }
+      if (head._length <= _offset + sublen) {
+         _head = head._next;
 
-  @Override
-  public void close()
-    throws IOException
-  {
-    TempBuffer head = _head;
-    _head = null;
-    
-    if (head != null)
-      TempBuffer.freeAll(head);
-  }
+         head._next = null;
+         TempBuffer.free(head);
+         _offset = 0;
+      } else
+         _offset += sublen;
 
-  @Override
-  public String toString()
-  {
-    return getClass().getSimpleName() +  "[]";
-  }
+      return sublen;
+   }
+
+   @Override
+   public int available() throws IOException {
+      if (_head != null)
+         return _head._length - _offset;
+      else
+         return 0;
+   }
+
+   @Override
+   public void close()
+      throws IOException {
+      TempBuffer head = _head;
+      _head = null;
+
+      if (head != null)
+         TempBuffer.freeAll(head);
+   }
+
+   @Override
+   public String toString() {
+      return getClass().getSimpleName() + "[]";
+   }
 }

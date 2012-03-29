@@ -29,14 +29,10 @@
  */
 package com.clevercloud.bianca.statement;
 
-import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.BiancaDieException;
-import com.clevercloud.bianca.BiancaException;
-import com.clevercloud.bianca.BiancaExitException;
-import com.clevercloud.bianca.BiancaRuntimeException;
+import com.clevercloud.bianca.*;
+import com.clevercloud.bianca.env.BiancaLanguageException;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.BiancaLanguageException;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.expr.AbstractVarExpr;
 
@@ -81,7 +77,7 @@ public class TryStatement extends Statement {
             Catch item = _catchList.get(i);
 
             if (value != null && value.isA(item.getId())
-                    || item.getId().equals("Exception")) {
+               || item.getId().equals("Exception")) {
                if (value != null) {
                   item.getExpr().evalAssignValue(env, value);
                } else {

@@ -36,7 +36,6 @@ import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.util.L10N;
 import com.clevercloud.vfs.ReadStream;
-
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -47,7 +46,7 @@ public class DOMImplementation {
 
    private static L10N L = new L10N(DOMImplementation.class);
    private final IdentityHashMap<Object, Object> _wrapperMap =
-           new IdentityHashMap<Object, Object>();
+      new IdentityHashMap<Object, Object>();
    private final DOMFactory _factory;
    final org.w3c.dom.DOMImplementation _delegate;
 
@@ -72,9 +71,9 @@ public class DOMImplementation {
    }
 
    static public DOMDocument createDocument(Env env,
-           @Optional String namespaceURI,
-           @Optional String name,
-           @Optional DOMDocumentType docType) {
+                                            @Optional String namespaceURI,
+                                            @Optional String name,
+                                            @Optional DOMDocumentType docType) {
       DOMDocument doc;
 
       if (docType != null) {
@@ -100,16 +99,16 @@ public class DOMImplementation {
 
    @ReturnNullAsFalse
    static public DOMDocumentType createDocumentType(
-           Env env,
-           @NotNull String qualifiedName,
-           @Optional String publicId,
-           @Optional String systemId) {
+      Env env,
+      @NotNull String qualifiedName,
+      @Optional String publicId,
+      @Optional String systemId) {
       if (qualifiedName == null) {
          return null;
       }
 
       if ((publicId != null && publicId.length() > 0)
-              && (publicId != null && publicId.length() > 0)) {
+         && (publicId != null && publicId.length() > 0)) {
          return get(env).createDocumentType(qualifiedName, publicId, systemId);
       } else {
          return get(env).createDocumentType(qualifiedName);
@@ -282,7 +281,7 @@ public class DOMImplementation {
                wrapper = createWrapper((TypeInfo) obj);
             } else {
                throw new UnimplementedException(
-                       L.l("cannot wrap element of type {0}", obj.getClass().getName()));
+                  L.l("cannot wrap element of type {0}", obj.getClass().getName()));
             }
 
             _wrapperMap.put(obj, wrapper);
@@ -318,11 +317,11 @@ public class DOMImplementation {
    }
 
    public DOMDocumentType createDocumentType(String qualifiedName,
-           String publicId,
-           String systemId) {
+                                             String publicId,
+                                             String systemId) {
       return createWrapper(_factory.createDocumentType(qualifiedName,
-              publicId,
-              systemId));
+         publicId,
+         systemId));
    }
 
    public DOMElement createElement(String name) {
@@ -346,12 +345,12 @@ public class DOMImplementation {
    }
 
    public void parseHTMLDocument(Document document, ReadStream is, String path)
-           throws IOException, SAXException {
+      throws IOException, SAXException {
       _factory.parseHTMLDocument(document, is, path);
    }
 
    public void parseXMLDocument(Document document, ReadStream is, String path)
-           throws IOException, SAXException {
+      throws IOException, SAXException {
       _factory.parseXMLDocument(document, is, path);
    }
 }

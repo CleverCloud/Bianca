@@ -59,7 +59,6 @@ public class BinaryCharAtExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -73,7 +72,6 @@ public class BinaryCharAtExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -85,7 +83,6 @@ public class BinaryCharAtExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -97,7 +94,6 @@ public class BinaryCharAtExpr extends AbstractVarExpr {
     * Evaluates the expression as an assignment.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -105,7 +101,7 @@ public class BinaryCharAtExpr extends AbstractVarExpr {
       Value obj = _objExpr.eval(env);
 
       Value result = obj.setCharValueAt(_indexExpr.evalLong(env),
-              value);
+         value);
 
       _objExpr.evalAssignValue(env, result);
 
@@ -116,7 +112,6 @@ public class BinaryCharAtExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

@@ -159,15 +159,15 @@ public class MysqliModule extends AbstractBiancaModule {
     * Deprecated alias for {@link #mysqli_stmt_bind_param}.
     */
    public static boolean mysqli_bind_param(Env env,
-           @NotNull MysqliStatement stmt,
-           StringValue types,
-           @Reference Value[] params) {
+                                           @NotNull MysqliStatement stmt,
+                                           StringValue types,
+                                           @Reference Value[] params) {
       return mysqli_stmt_bind_param(env, stmt, types, params);
    }
 
    /**
     * Commits the current transaction for the supplied connection.
-    *
+    * <p/>
     * returns true on success or false on failure
     */
    public static boolean mysqli_commit(@NotNull Mysqli conn) {
@@ -215,20 +215,20 @@ public class MysqliModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static Mysqli mysqli_connect(Env env,
-           @Optional("localhost") StringValue host,
-           @Optional StringValue userName,
-           @Optional StringValue password,
-           @Optional String dbname,
-           @Optional("3306") int port,
-           @Optional StringValue socket)
-           throws IllegalStateException {
+                                       @Optional("localhost") StringValue host,
+                                       @Optional StringValue userName,
+                                       @Optional StringValue password,
+                                       @Optional String dbname,
+                                       @Optional("3306") int port,
+                                       @Optional StringValue socket)
+      throws IllegalStateException {
       Mysqli mysqli = new Mysqli(env,
-              host,
-              userName,
-              password,
-              dbname,
-              port,
-              socket);
+         host,
+         userName,
+         password,
+         dbname,
+         port,
+         socket);
 
       if (!mysqli.isConnected()) {
          return null;
@@ -268,15 +268,15 @@ public class MysqliModule extends AbstractBiancaModule {
    /**
     * Seeks the specified row.
     *
-    * @param env the PHP executing environment
-    * @param result the mysqli_result
+    * @param env       the PHP executing environment
+    * @param result    the mysqli_result
     * @param rowNumber the row offset
     * @return true on success or false if the row number
-    * does not exist. NULL is returned if an error occurred.
+    *         does not exist. NULL is returned if an error occurred.
     */
    public static Value mysqli_data_seek(Env env,
-           @NotNull MysqliResult result,
-           int rowNumber) {
+                                        @NotNull MysqliResult result,
+                                        int rowNumber) {
       if (result == null) {
          return NullValue.NULL;
       }
@@ -285,8 +285,8 @@ public class MysqliModule extends AbstractBiancaModule {
          return BooleanValue.TRUE;
       } else {
          env.warning(L.l(
-                 "Offset {0} is invalid for MySQL (or the query data is unbuffered)",
-                 rowNumber));
+            "Offset {0} is invalid for MySQL (or the query data is unbuffered)",
+            rowNumber));
          return BooleanValue.FALSE;
       }
    }
@@ -307,8 +307,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * Alias for {@link #mysqli_real_escape_string}
     */
    public static Value mysqli_escape_string(Env env,
-           @NotNull Mysqli conn,
-           StringValue unescapedString) {
+                                            @NotNull Mysqli conn,
+                                            StringValue unescapedString) {
       return mysqli_real_escape_string(env, conn, unescapedString);
    }
 
@@ -316,17 +316,16 @@ public class MysqliModule extends AbstractBiancaModule {
     * Deprecated alias for {@link #mysqli_stmt_fetch}.
     */
    public static Value mysqli_fetch(Env env,
-           MysqliStatement stmt) {
+                                    MysqliStatement stmt) {
       return mysqli_stmt_fetch(env, stmt);
    }
 
    /**
     * Returns the field metadata.
-    *
     */
    public static Value mysqli_fetch_field_direct(Env env,
-           @NotNull MysqliResult result,
-           int fieldOffset) {
+                                                 @NotNull MysqliResult result,
+                                                 int fieldOffset) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -338,7 +337,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns the field metadata.
     */
    public static Value mysqli_fetch_field(Env env,
-           @NotNull MysqliResult result) {
+                                          @NotNull MysqliResult result) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -350,7 +349,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns an array of field metadata.
     */
    public static Value mysqli_fetch_fields(Env env,
-           @NotNull MysqliResult result) {
+                                           @NotNull MysqliResult result) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -362,13 +361,13 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns an array of integers respresenting the size of each column
     * FALSE if an error occurred.
     *
-    * @param env the PHP executing environment
+    * @param env    the PHP executing environment
     * @param result the mysqli_result
     * @return true on success or false if an error occurred.
-    * NULL is returned if result is null.
+    *         NULL is returned if result is null.
     */
    public static Value mysqli_fetch_lengths(Env env,
-           @NotNull MysqliResult result) {
+                                            @NotNull MysqliResult result) {
       if (result == null) {
          return NullValue.NULL;
       }
@@ -383,8 +382,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * mysqli_field_seek() will be returned.
     */
    public static boolean mysqli_field_seek(Env env,
-           @NotNull MysqliResult result,
-           int fieldOffset) {
+                                           @NotNull MysqliResult result,
+                                           int fieldOffset) {
       if (result == null) {
          return false;
       }
@@ -398,7 +397,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * argument to mysqli_field_seek()
     */
    public static int mysqli_field_tell(Env env,
-           @NotNull MysqliResult result) {
+                                       @NotNull MysqliResult result) {
       if (result == null) {
          return -1;
       }
@@ -425,7 +424,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * an AUTO_INCREMENT value, or FALSE if no MySQL connection was established
     */
    public static Value mysqli_insert_id(Env env,
-           @NotNull Mysqli conn) {
+                                        @NotNull Mysqli conn) {
       if (conn == null) {
          return BooleanValue.FALSE;
       }
@@ -449,8 +448,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * concatenated by a semicolon.
     */
    public static boolean mysqli_multi_query(Env env,
-           @NotNull Mysqli conn,
-           StringValue query) {
+                                            @NotNull Mysqli conn,
+                                            StringValue query) {
       if (conn == null) {
          return false;
       }
@@ -486,7 +485,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns the error code for the prepared statement.
     */
    public static int mysqli_stmt_errno(Env env,
-           @NotNull MysqliStatement stmt) {
+                                       @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return 0;
       }
@@ -498,7 +497,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns the error message for the prepared statement.
     */
    public static StringValue mysqli_stmt_error(Env env,
-           @NotNull MysqliStatement stmt) {
+                                               @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return new StringValue();
       }
@@ -510,7 +509,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns the most recent error.
     */
    public static Value mysqli_error(Env env,
-           @NotNull Mysqli conn) {
+                                    @NotNull Mysqli conn) {
       if (conn == null) {
          return NullValue.NULL;
       }
@@ -534,8 +533,8 @@ public class MysqliModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue mysqli_fetch_array(Env env,
-           @NotNull MysqliResult result,
-           @Optional("MYSQLI_BOTH") int type) {
+                                               @NotNull MysqliResult result,
+                                               @Optional("MYSQLI_BOTH") int type) {
       if (result == null) {
          return null;
       }
@@ -548,7 +547,7 @@ public class MysqliModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue mysqli_fetch_assoc(Env env,
-           @NotNull MysqliResult result) {
+                                               @NotNull MysqliResult result) {
       if (result == null) {
          return null;
       }
@@ -560,7 +559,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns a row for the result. Return NULL if there are no more rows.
     */
    public static ArrayValue mysqli_fetch_row(Env env,
-           @NotNull MysqliResult result) {
+                                             @NotNull MysqliResult result) {
       if (result == null) {
          return null;
       }
@@ -572,13 +571,13 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns an object with properties that correspond
     * to the fetched row and moves the data pointer ahead.
     *
-    * @param env the PHP executing environment
+    * @param env    the PHP executing environment
     * @param result the mysqli_result
     * @return an object that corresponds to the fetched
-    * row or NULL if there are no more rows in resultset
+    *         row or NULL if there are no more rows in resultset
     */
    public static Value mysqli_fetch_object(Env env,
-           @NotNull MysqliResult result) {
+                                           @NotNull MysqliResult result) {
       if (result == null) {
          return NullValue.NULL;
       }
@@ -596,14 +595,14 @@ public class MysqliModule extends AbstractBiancaModule {
    /**
     * Returns a number that represents the MySQL client library
     * version in format:
-    *
+    * <p/>
     * main_version*10000 + minor_version*100 + sub_version.
-    *
+    * <p/>
     * For example 4.1.0 is returned as 40100.
     */
    public static int mysqli_get_client_version(Env env) {
       return Mysqli.infoToVersion(
-              mysqli_get_client_info(env).toString());
+         mysqli_get_client_info(env).toString());
    }
 
    /**
@@ -658,13 +657,13 @@ public class MysqliModule extends AbstractBiancaModule {
    /**
     * Returns the number of rows in the result set.
     *
-    * @param env the PHP executing environment
+    * @param env    the PHP executing environment
     * @param result the mysqli_result
     * @return the number of rows in the result set
-    * or NULL, if an error occurred
+    *         or NULL, if an error occurred
     */
    public static Value mysqli_num_rows(Env env,
-           @NotNull MysqliResult result) {
+                                       @NotNull MysqliResult result) {
       if (result == null) {
          return NullValue.NULL;
       }
@@ -676,8 +675,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * Sets the options for a connection.
     */
    public static boolean mysqli_options(@NotNull Mysqli mysqli,
-           int option,
-           Value value) {
+                                        int option,
+                                        Value value) {
       if (mysqli == null) {
          return false;
       }
@@ -689,8 +688,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * Alias of {@link #mysqli_options}.
     */
    public static boolean mysqli_set_opt(@NotNull Mysqli mysqli,
-           int option,
-           Value value) {
+                                        int option,
+                                        Value value) {
       return mysqli_options(mysqli, option, value);
    }
 
@@ -698,7 +697,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Alias of {@link #mysqli_stmt_param_count}.
     */
    public static int mysqli_param_count(Env env,
-           @NotNull MysqliStatement stmt) {
+                                        @NotNull MysqliStatement stmt) {
       return mysqli_stmt_param_count(env, stmt);
    }
 
@@ -719,8 +718,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * Sets the character set for a conneciton.
     */
    public static boolean mysqli_set_charset(Env env,
-           @NotNull Mysqli mysqli,
-           String charset) {
+                                            @NotNull Mysqli mysqli,
+                                            String charset) {
       if (mysqli == null) {
          return false;
       }
@@ -732,7 +731,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns the number of rows.
     */
    public static Value mysqli_stmt_num_rows(Env env,
-           @NotNull MysqliStatement stmt) {
+                                            @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return BooleanValue.FALSE;
       }
@@ -745,7 +744,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * or -1 if no query has been prepared.
     */
    public static int mysqli_stmt_param_count(Env env,
-           @NotNull MysqliStatement stmt) {
+                                             @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return -1;
       }
@@ -757,8 +756,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * Prepares a statment with a query.
     */
    public static boolean mysqli_stmt_prepare(Env env,
-           @NotNull MysqliStatement stmt,
-           StringValue query) {
+                                             @NotNull MysqliStatement stmt,
+                                             StringValue query) {
       if (stmt == null) {
          return false;
       }
@@ -770,7 +769,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Resets a statment.
     */
    public static boolean mysqli_stmt_reset(Env env,
-           @NotNull MysqliStatement stmt) {
+                                           @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return false;
       }
@@ -783,7 +782,7 @@ public class MysqliModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static JdbcResultResource mysqli_stmt_result_metadata(Env env,
-           @NotNull MysqliStatement stmt) {
+                                                                @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return null;
       }
@@ -795,7 +794,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns an error string.
     */
    public static Value mysqli_sqlstate(Env env,
-           @NotNull Mysqli conn) {
+                                       @NotNull Mysqli conn) {
       if (conn == null) {
          return NullValue.NULL;
       }
@@ -807,7 +806,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns an error string.
     */
    public static Value mysqli_stmt_sqlstate(Env env,
-           @NotNull MysqliStatement stmt) {
+                                            @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return NullValue.NULL;
       }
@@ -819,7 +818,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Saves the result.
     */
    public static boolean mysqli_stmt_store_result(Env env,
-           @NotNull MysqliStatement stmt) {
+                                                  @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return false;
       }
@@ -830,12 +829,12 @@ public class MysqliModule extends AbstractBiancaModule {
    /**
     * Transfers the result set from the last query on the
     * database connection represented by conn.
-    *
+    * <p/>
     * Used in conjunction with {@link #mysqli_multi_query}
     */
    @ReturnNullAsFalse
    public static JdbcResultResource mysqli_store_result(Env env,
-           @NotNull Mysqli conn) {
+                                                        @NotNull Mysqli conn) {
       if (conn == null) {
          return null;
       }
@@ -851,7 +850,7 @@ public class MysqliModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static JdbcResultResource mysqli_use_result(Env env,
-           @NotNull Mysqli conn) {
+                                                      @NotNull Mysqli conn) {
       if (conn == null) {
          return null;
       }
@@ -866,7 +865,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * @return number of warnings
     */
    public static int mysqli_warning_count(Env env,
-           @NotNull Mysqli conn) {
+                                          @NotNull Mysqli conn) {
       if (conn == null) {
          return 0;
       }
@@ -878,7 +877,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Checks if the connection is still valid
     */
    public static boolean mysqli_ping(Env env,
-           @NotNull Mysqli conn) {
+                                     @NotNull Mysqli conn) {
       if (conn == null) {
          return false;
       }
@@ -888,13 +887,12 @@ public class MysqliModule extends AbstractBiancaModule {
 
    /**
     * Executes a query and returns the result.
-    *
     */
    public static Value mysqli_query(
-           Env env,
-           @NotNull Mysqli conn,
-           StringValue sql,
-           @Optional("MYSQLI_STORE_RESULT") int resultMode) {
+      Env env,
+      @NotNull Mysqli conn,
+      StringValue sql,
+      @Optional("MYSQLI_STORE_RESULT") int resultMode) {
       // ERRATUM: <i>resultMode</i> is ignored, MYSQLI_USE_RESULT would represent
       //  an unbuffered query, but that is not supported.
 
@@ -908,8 +906,8 @@ public class MysqliModule extends AbstractBiancaModule {
    }
 
    private static Value query(Env env,
-           Mysqli conn,
-           StringValue sql) {
+                              Mysqli conn,
+                              StringValue sql) {
       Value value = null;
 
       try {
@@ -929,21 +927,21 @@ public class MysqliModule extends AbstractBiancaModule {
     * Connects to the database.
     */
    public static boolean mysqli_real_connect(
-           Env env,
-           @NotNull Mysqli mysqli,
-           @Optional("localhost") StringValue host,
-           @Optional StringValue userName,
-           @Optional StringValue password,
-           @Optional StringValue dbname,
-           @Optional("3306") int port,
-           @Optional StringValue socket,
-           @Optional int flags) {
+      Env env,
+      @NotNull Mysqli mysqli,
+      @Optional("localhost") StringValue host,
+      @Optional StringValue userName,
+      @Optional StringValue password,
+      @Optional StringValue dbname,
+      @Optional("3306") int port,
+      @Optional StringValue socket,
+      @Optional int flags) {
       if (mysqli == null) {
          return false;
       }
 
       return mysqli.real_connect(env, host, userName, password,
-              dbname, port, socket, flags);
+         dbname, port, socket, flags);
    }
 
    /**
@@ -952,8 +950,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * @return the escaped string.
     */
    public static Value mysqli_real_escape_string(Env env,
-           @NotNull Mysqli conn,
-           StringValue unescapedString) {
+                                                 @NotNull Mysqli conn,
+                                                 StringValue unescapedString) {
       if (conn == null) {
          return NullValue.NULL;
       }
@@ -1019,8 +1017,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * or mysqli_use_result() functions.
     */
    public static boolean mysqli_real_query(Env env,
-           @NotNull Mysqli conn,
-           StringValue query) {
+                                           @NotNull Mysqli conn,
+                                           StringValue query) {
       if (conn == null) {
          return false;
       }
@@ -1032,9 +1030,9 @@ public class MysqliModule extends AbstractBiancaModule {
     * Execute a query with arguments and return a result.
     */
    static Value mysqli_query(Env env,
-           Mysqli conn,
-           StringValue query,
-           Object... args) {
+                             Mysqli conn,
+                             StringValue query,
+                             Object... args) {
       StringBuilder buf = new StringBuilder();
 
       int size = query.length();
@@ -1049,7 +1047,7 @@ public class MysqliModule extends AbstractBiancaModule {
 
             if (arg == null) {
                throw new IllegalArgumentException(
-                       L.l("argument `{0}' cannot be null", arg));
+                  L.l("argument `{0}' cannot be null", arg));
             }
 
             buf.append('\'');
@@ -1061,7 +1059,7 @@ public class MysqliModule extends AbstractBiancaModule {
       }
 
       return query(env, conn,
-              env.createString(buf.toString()));
+         env.createString(buf.toString()));
    }
 
    /**
@@ -1093,7 +1091,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * the number of rows matched by a SELECT query.
     */
    public static int mysqli_stmt_affected_rows(Env env,
-           @NotNull MysqliStatement stmt) {
+                                               @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return -1;
       }
@@ -1109,7 +1107,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Binds variables for the parameter markers
     * in SQL statement that was passed to
     * {@link #mysqli_prepare}.
-    *
+    * <p/>
     * Type specification chars:
     * <dl>
     * <dt>i<dd>corresponding variable has type integer;
@@ -1120,9 +1118,9 @@ public class MysqliModule extends AbstractBiancaModule {
     * </dl>
     */
    public static boolean mysqli_stmt_bind_param(Env env,
-           @NotNull MysqliStatement stmt,
-           StringValue types,
-           @Reference Value[] params) {
+                                                @NotNull MysqliStatement stmt,
+                                                StringValue types,
+                                                @Reference Value[] params) {
       if (stmt == null) {
          return false;
       }
@@ -1134,8 +1132,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * Binds outparams to result set.
     */
    public static boolean mysqli_stmt_bind_result(Env env,
-           @NotNull MysqliStatement stmt,
-           @Reference Value[] outParams) {
+                                                 @NotNull MysqliStatement stmt,
+                                                 @Reference Value[] outParams) {
       if (stmt == null) {
          return false;
       }
@@ -1162,8 +1160,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * @return NULL on sucess or FALSE on failure
     */
    public Value mysqli_stmt_data_seek(Env env,
-           @NotNull MysqliStatement stmt,
-           int offset) {
+                                      @NotNull MysqliStatement stmt,
+                                      int offset) {
       if (stmt == null) {
          return BooleanValue.FALSE;
       }
@@ -1175,7 +1173,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns the error number.
     */
    public int mysql_stmt_errno(Env env,
-           MysqliStatement stmt) {
+                               MysqliStatement stmt) {
       if (stmt != null) {
          return stmt.errno();
       } else {
@@ -1187,7 +1185,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns a descrption of the error or an empty strng for no error.
     */
    public StringValue mysql_stmt_error(Env env,
-           MysqliStatement stmt) {
+                                       MysqliStatement stmt) {
       if (stmt == null) {
          return null;
       }
@@ -1201,7 +1199,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * @return true on success or false on failure
     */
    public static boolean mysqli_stmt_execute(Env env,
-           @NotNull MysqliStatement stmt) {
+                                             @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return false;
       }
@@ -1211,10 +1209,11 @@ public class MysqliModule extends AbstractBiancaModule {
 
    /**
     * Fetch results from a prepared statement.
+    *
     * @return true on success, false on error, null if no more rows.
     */
    public static Value mysqli_stmt_fetch(Env env,
-           @NotNull MysqliStatement stmt) {
+                                         @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return BooleanValue.FALSE;
       }
@@ -1226,7 +1225,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Frees the result.
     */
    public static boolean mysqli_stmt_free_result(Env env,
-           MysqliStatement stmt) {
+                                                 MysqliStatement stmt) {
       if (stmt == null) {
          return false;
       }
@@ -1240,8 +1239,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * Deprecated alias for {@link #mysqli_stmt_bind_result}.
     */
    public static boolean mysqli_bind_result(Env env,
-           @NotNull MysqliStatement stmt,
-           @Reference Value[] outParams) {
+                                            @NotNull MysqliStatement stmt,
+                                            @Reference Value[] outParams) {
       return mysqli_stmt_bind_result(env, stmt, outParams);
    }
 
@@ -1249,9 +1248,9 @@ public class MysqliModule extends AbstractBiancaModule {
     * Changes the user and database.
     */
    public static boolean mysqli_change_user(@NotNull Mysqli mysqli,
-           String user,
-           String password,
-           String db) {
+                                            String user,
+                                            String password,
+                                            String db) {
       if (mysqli == null) {
          return false;
       }
@@ -1263,7 +1262,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Deprecated alias for {@link #mysqli_stmt_execute}.
     */
    public static boolean mysqli_execute(Env env,
-           @NotNull MysqliStatement stmt) {
+                                        @NotNull MysqliStatement stmt) {
       return mysqli_stmt_execute(env, stmt);
    }
 
@@ -1272,8 +1271,8 @@ public class MysqliModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static JdbcResultResource mysqli_get_metadata(
-           Env env,
-           @NotNull MysqliStatement stmt) {
+      Env env,
+      @NotNull MysqliStatement stmt) {
       return mysqli_stmt_result_metadata(env, stmt);
    }
 
@@ -1289,8 +1288,8 @@ public class MysqliModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static MysqliStatement mysqli_prepare(Env env,
-           @NotNull Mysqli conn,
-           StringValue query) {
+                                                @NotNull Mysqli conn,
+                                                StringValue query) {
       if (conn == null) {
          return null;
       }
@@ -1302,7 +1301,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Closes a statement.
     */
    public static boolean mysqli_stmt_close(Env env,
-           @NotNull MysqliStatement stmt) {
+                                           @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return false;
       }
@@ -1314,7 +1313,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Returns a statement for use with {@link #mysqli_stmt_prepare}
     */
    public static MysqliStatement mysqli_stmt_init(Env env,
-           @NotNull Mysqli conn) {
+                                                  @NotNull Mysqli conn) {
       if (conn == null) {
          return null;
       }
@@ -1337,7 +1336,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * Undocumented
     */
    public static int mysqli_stmt_field_count(Env env,
-           @NotNull MysqliStatement stmt) {
+                                             @NotNull MysqliStatement stmt) {
       if (stmt == null) {
          return -1;
       }
@@ -1351,7 +1350,7 @@ public class MysqliModule extends AbstractBiancaModule {
     * thread, but it is really a connection identifier.
     */
    public static Value mysqli_thread_id(Env env,
-           @NotNull Mysqli conn) {
+                                        @NotNull Mysqli conn) {
       if (conn == null) {
          return BooleanValue.FALSE;
       }
@@ -1367,8 +1366,8 @@ public class MysqliModule extends AbstractBiancaModule {
     * thread can be looked up.
     */
    public static boolean mysqli_kill(Env env,
-           @NotNull Mysqli conn,
-           int threadId) {
+                                     @NotNull Mysqli conn,
+                                     int threadId) {
       if (conn == null) {
          return false;
       }

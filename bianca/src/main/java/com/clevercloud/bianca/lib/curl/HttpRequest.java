@@ -31,22 +31,12 @@
 package com.clevercloud.bianca.lib.curl;
 
 import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.EnvCleanup;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -58,7 +48,7 @@ import java.util.zip.InflaterInputStream;
  * Represents a generic Http request.
  */
 public class HttpRequest
-        implements EnvCleanup {
+   implements EnvCleanup {
 
    private static final Logger log = Logger.getLogger(HttpRequest.class.getName());
    private static final L10N L = new L10N(HttpRequest.class);
@@ -90,7 +80,7 @@ public class HttpRequest
     * Opens the connection.
     */
    protected final void create(Env env)
-           throws MalformedURLException, IOException {
+      throws MalformedURLException, IOException {
       URL url = getURL(env, _curl.getURL(), _curl.getPort());
 
       if (url == null) {
@@ -101,18 +91,18 @@ public class HttpRequest
          URL proxyURL = getURL(env, _curl.getProxyURL(), _curl.getProxyPort());
 
          _conn = HttpConnection.createConnection(url,
-                 _curl.getUsername(),
-                 _curl.getPassword(),
-                 _curl,
-                 proxyURL,
-                 _curl.getProxyUsername(),
-                 _curl.getProxyPassword(),
-                 _curl.getProxyType());
+            _curl.getUsername(),
+            _curl.getPassword(),
+            _curl,
+            proxyURL,
+            _curl.getProxyUsername(),
+            _curl.getProxyPassword(),
+            _curl.getProxyType());
       } else {
          _conn = HttpConnection.createConnection(url,
-                 _curl.getUsername(),
-                 _curl.getPassword(),
-                 _curl);
+            _curl.getUsername(),
+            _curl.getPassword(),
+            _curl);
       }
    }
 
@@ -120,7 +110,7 @@ public class HttpRequest
     * Initializes the connection.
     */
    protected boolean init(Env env)
-           throws ProtocolException {
+      throws ProtocolException {
       if (_conn == null || _curl == null) {
          return false;
       }
@@ -152,8 +142,8 @@ public class HttpRequest
     * Attempt to connect to the server.
     */
    protected void connect(Env env)
-           throws ConnectException, SocketTimeoutException,
-           UnknownHostException, IOException {
+      throws ConnectException, SocketTimeoutException,
+      UnknownHostException, IOException {
       if (_conn != null) {
          _conn.connect(_curl);
       }
@@ -163,14 +153,14 @@ public class HttpRequest
     * Transfer data to the server.
     */
    protected void transfer(Env env)
-           throws IOException {
+      throws IOException {
    }
 
    /**
     * Closes the connection and sends data and connection info to curl.
     */
    protected boolean finish(Env env)
-           throws IOException {
+      throws IOException {
       if (_curl == null || _conn == null) {
          return false;
       }
@@ -224,7 +214,7 @@ public class HttpRequest
          return false;
       } catch (SocketTimeoutException e) {
          error(
-                 env, CurlModule.CURLE_OPERATION_TIMEOUTED, "connection timed out", e);
+            env, CurlModule.CURLE_OPERATION_TIMEOUTED, "connection timed out", e);
 
          return false;
       } catch (ConnectException e) {
@@ -236,7 +226,7 @@ public class HttpRequest
          //error(0, e.getMessage(), e);
       } catch (UnknownHostException e) {
          error(env, CurlModule.CURLE_COULDNT_RESOLVE_HOST,
-                 "unknown host: " + e.getMessage(), e);
+            "unknown host: " + e.getMessage(), e);
 
          return false;
       } catch (IOException e) {
@@ -280,7 +270,7 @@ public class HttpRequest
     * Returns a valid URL or null on error.
     */
    protected final URL getURL(Env env, String urlString, int port)
-           throws MalformedURLException {
+      throws MalformedURLException {
       if (urlString == null) {
          return null;
       }
@@ -341,8 +331,8 @@ public class HttpRequest
             sb.append("\r\n");
 
             Value len = _curl.getHeaderCallback().call(env,
-                    env.wrapJava(_curl),
-                    sb);
+               env.wrapJava(_curl),
+               sb);
 
             if (len.toInt() != sb.length()) {
                _curl.setErrorCode(CurlModule.CURLE_WRITE_ERROR);
@@ -361,8 +351,8 @@ public class HttpRequest
          sb.append("\r\n");
 
          Value len = _curl.getHeaderCallback().call(env,
-                 env.wrapJava(_curl),
-                 sb);
+            env.wrapJava(_curl),
+            sb);
 
          if (len.toInt() != sb.length()) {
             _curl.setErrorCode(CurlModule.CURLE_WRITE_ERROR);
@@ -377,7 +367,7 @@ public class HttpRequest
     * Returns the server response body.
     */
    private Value getBody(Env env, StringValue bb)
-           throws SocketTimeoutException, IOException {
+      throws SocketTimeoutException, IOException {
       InputStream in;
 
       if ((_conn.getResponseCode() < 400)) {

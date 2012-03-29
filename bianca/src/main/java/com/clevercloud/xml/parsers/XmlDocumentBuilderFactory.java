@@ -31,66 +31,57 @@ package com.clevercloud.xml.parsers;
 
 import com.clevercloud.xml.QDOMImplementation;
 import com.clevercloud.xml.Xml;
-
 import org.w3c.dom.DOMImplementation;
 
-import javax.xml.parsers.*;
-import javax.xml.validation.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.validation.Schema;
 
 /**
  * JAXP document builder factory for strict XML parsing.
  */
 public class XmlDocumentBuilderFactory extends DocumentBuilderFactory {
-  public XmlDocumentBuilderFactory()
-  {
-  }
-  
-  /**
-   * Creates a new SAX Parser
-   */
-  public DocumentBuilder newDocumentBuilder()
-  {
-    return new XmlDocumentBuilder();
-  }
+   public XmlDocumentBuilderFactory() {
+   }
 
-  public Object getAttribute(String key)
-  {
-    return null;
-  }
+   /**
+    * Creates a new SAX Parser
+    */
+   public DocumentBuilder newDocumentBuilder() {
+      return new XmlDocumentBuilder();
+   }
 
-  public void setAttribute(String key, Object value)
-  {
-  }
+   public Object getAttribute(String key) {
+      return null;
+   }
 
-  public void setSchema(Schema schema)
-  {
-  }
+   public void setAttribute(String key, Object value) {
+   }
 
-  public boolean getFeature(String key)
-  {
-    return false;
-  }
+   public void setSchema(Schema schema) {
+   }
 
-  public void setFeature(String key, boolean value)
-  {
-  }
+   public boolean getFeature(String key) {
+      return false;
+   }
 
-  public DOMImplementation getDOMImplementation()
-  {
-    return new QDOMImplementation();
-  }
+   public void setFeature(String key, boolean value) {
+   }
 
-  /**
-   * Document builder created from the factory.
-   */
-  class XmlDocumentBuilder extends AbstractDocumentBuilder {
-    /**
-     * Creates a new document builder.
-     */
-    XmlDocumentBuilder()
-    {
-      _parser = new Xml();
-      _parser.setConfig(XmlDocumentBuilderFactory.this);
-    }
-  }
+   public DOMImplementation getDOMImplementation() {
+      return new QDOMImplementation();
+   }
+
+   /**
+    * Document builder created from the factory.
+    */
+   class XmlDocumentBuilder extends AbstractDocumentBuilder {
+      /**
+       * Creates a new document builder.
+       */
+      XmlDocumentBuilder() {
+         _parser = new Xml();
+         _parser.setConfig(XmlDocumentBuilderFactory.this);
+      }
+   }
 }

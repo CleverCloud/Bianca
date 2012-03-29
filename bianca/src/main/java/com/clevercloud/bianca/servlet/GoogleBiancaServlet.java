@@ -50,7 +50,7 @@ public class GoogleBiancaServlet extends BiancaServlet {
 
       try {
          Class cl = Class.forName(
-                 "com.clevercloud.bianca.servlet.ProGoogleBiancaServlet");
+            "com.clevercloud.bianca.servlet.ProGoogleBiancaServlet");
 
          Constructor cons = cl.getConstructor(java.io.File.class);
 
@@ -60,7 +60,7 @@ public class GoogleBiancaServlet extends BiancaServlet {
       } catch (ConfigException e) {
          log.log(Level.FINEST, e.toString(), e);
          log.info(
-                 "Bianca compiled mode requires valid Bianca professional licenses");
+            "Bianca compiled mode requires valid Bianca professional licenses");
          log.info(e.getMessage());
 
       } catch (Exception e) {

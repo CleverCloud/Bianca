@@ -30,24 +30,20 @@
  */
 package com.clevercloud.bianca.lib.reflection;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.bianca.module.IniDefinition;
 import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.bianca.module.ModuleInfo;
 import com.clevercloud.util.L10N;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class ReflectionExtension
-        implements Reflector {
+   implements Reflector {
 
    private static final L10N L = new L10N(ReflectionExtension.class);
    private String _name;
@@ -64,8 +60,8 @@ public class ReflectionExtension
    }
 
    public static String export(Env env,
-           String name,
-           @Optional boolean isReturn) {
+                               String name,
+                               @Optional boolean isReturn) {
       return null;
    }
 
@@ -125,7 +121,7 @@ public class ReflectionExtension
             if (entrySet != null) {
                for (Map.Entry<String, IniDefinition> entry : entrySet) {
                   array.put(StringValue.create(entry.getKey()),
-                          entry.getValue().getValue(env));
+                     entry.getValue().getValue(env));
                }
             }
          }
@@ -142,7 +138,7 @@ public class ReflectionExtension
       if (exts != null) {
          for (String name : exts) {
             array.put(StringValue.create(name),
-                    env.wrapJava(new ReflectionClass(env, name)));
+               env.wrapJava(new ReflectionClass(env, name)));
          }
       }
 

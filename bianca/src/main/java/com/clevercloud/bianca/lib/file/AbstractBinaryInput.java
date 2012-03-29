@@ -31,7 +31,10 @@
 package com.clevercloud.bianca.lib.file;
 
 import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.BooleanValue;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.vfs.i18n.UTF8Reader;
 
@@ -45,7 +48,7 @@ import java.util.logging.Logger;
  * Represents a Bianca file open for reading
  */
 public class AbstractBinaryInput
-        implements BinaryInput {
+   implements BinaryInput {
 
    private static final Logger log = Logger.getLogger(AbstractBinaryInput.class.getName());
    private Env _env;
@@ -71,6 +74,7 @@ public class AbstractBinaryInput
    //
    // read methods
    //
+
    /**
     * Returns the input stream.
     */
@@ -84,12 +88,12 @@ public class AbstractBinaryInput
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       throw new UnsupportedOperationException(getClass().getName());
    }
 
    public void setEncoding(String encoding)
-           throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
       if (_is != null) {
          _is.setEncoding(encoding);
       }
@@ -100,7 +104,7 @@ public class AbstractBinaryInput
     */
    @Override
    public void unread()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          _is.unread();
          _isEOF = false;
@@ -112,7 +116,7 @@ public class AbstractBinaryInput
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          int c = new UTF8Reader(_is).read();
 
@@ -133,7 +137,7 @@ public class AbstractBinaryInput
     */
    @Override
    public int read(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          int c = _is.read(buffer, offset, length);
 
@@ -153,7 +157,7 @@ public class AbstractBinaryInput
     * Reads a buffer from a file, returning -1 on EOF.
     */
    public int read(char[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          int c = _is.read(buffer, offset, length);
 
@@ -174,7 +178,7 @@ public class AbstractBinaryInput
     */
    @Override
    public StringValue read(int length)
-           throws IOException {
+      throws IOException {
       if (_is == null) {
          return null;
       }
@@ -193,7 +197,7 @@ public class AbstractBinaryInput
     */
    @Override
    public boolean readOptionalLinefeed()
-           throws IOException {
+      throws IOException {
       if (_is == null) {
          return false;
       }
@@ -209,7 +213,7 @@ public class AbstractBinaryInput
    }
 
    public void writeToStream(OutputStream os, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          _is.writeToStream(os, length);
       }
@@ -220,7 +224,7 @@ public class AbstractBinaryInput
     */
    @Override
    public StringValue readLine(long length)
-           throws IOException {
+      throws IOException {
       return _lineReader.readLine(_env, this, length);
    }
 
@@ -229,7 +233,7 @@ public class AbstractBinaryInput
     */
    @Override
    public StringValue appendTo(StringValue builder)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return builder.append(_is);
       } else {

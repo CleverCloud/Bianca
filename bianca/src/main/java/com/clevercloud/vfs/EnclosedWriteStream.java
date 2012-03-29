@@ -30,5 +30,5 @@
 package com.clevercloud.vfs;
 
 public interface EnclosedWriteStream {
-  public WriteStream getWriteStream();
+   public WriteStream getWriteStream();
 }

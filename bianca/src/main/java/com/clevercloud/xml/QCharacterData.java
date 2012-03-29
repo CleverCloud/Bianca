@@ -35,135 +35,118 @@ import org.w3c.dom.DOMException;
 import java.io.IOException;
 
 abstract class QCharacterData extends QAbstractNode implements CharacterData {
-  protected String _data;
-  protected boolean _whitespaceOnly;
+   protected String _data;
+   protected boolean _whitespaceOnly;
 
-  /**
-   * Creates new character data with initial data.
-   */
-  QCharacterData()
-  {
-  }
+   /**
+    * Creates new character data with initial data.
+    */
+   QCharacterData() {
+   }
 
-  /**
-   * Creates new character data with initial data.
-   */
-  QCharacterData(String data)
-  {
-    _data = data;
-  }
+   /**
+    * Creates new character data with initial data.
+    */
+   QCharacterData(String data) {
+      _data = data;
+   }
 
-  /**
-   * Returns the node value.  For QCharacterData, this is the text value.
-   */
-  public String getNodeValue()
-  {
-    return _data;
-  }
+   /**
+    * Returns the node value.  For QCharacterData, this is the text value.
+    */
+   public String getNodeValue() {
+      return _data;
+   }
 
-  /**
-   * Sets the node value.  For QCharacterData, this is the text value.
-   */
-  public void setNodeValue(String data)
-  {
-    _data = data;
-  }
+   /**
+    * Sets the node value.  For QCharacterData, this is the text value.
+    */
+   public void setNodeValue(String data) {
+      _data = data;
+   }
 
-  /**
-   * Returns the node value.  For QCharacterData, this is the text value.
-   */
-  public String getData()
-  {
-    return _data;
-  }
+   /**
+    * Returns the node value.  For QCharacterData, this is the text value.
+    */
+   public String getData() {
+      return _data;
+   }
 
-  /**
-   * Sets the node value.  For QCharacterData, this is the text value.
-   */
-  public void setData(String data)
-  {
-    _data = data;
-  }
+   /**
+    * Sets the node value.  For QCharacterData, this is the text value.
+    */
+   public void setData(String data) {
+      _data = data;
+   }
 
-  /**
-   * Returns the length of the text data.
-   */
-  public int getLength()
-  {
-    return _data.length();
-  }
+   /**
+    * Returns the length of the text data.
+    */
+   public int getLength() {
+      return _data.length();
+   }
 
-  public String substringData(int start, int count)
-    throws DOMException
-  { 
-    if (start + count >= _data.length())
+   public String substringData(int start, int count)
+      throws DOMException {
+      if (start + count >= _data.length())
+         return _data.substring(start);
+      else
+         return _data.substring(start, start + count);
+   }
+
+   public String substringData(int start)
+      throws DOMException {
       return _data.substring(start);
-    else
-      return _data.substring(start, start + count);
-  }
+   }
 
-  public String substringData(int start)
-    throws DOMException
-  { 
-    return _data.substring(start);
-  }
+   public void appendData(String arg)
+      throws DOMException {
+      _data = _data + arg;
+   }
 
-  public void appendData(String arg)
-    throws DOMException
-  { 
-    _data = _data + arg;
-  }
+   public void insertData(int offset, String arg)
+      throws DOMException {
+      _data = _data.substring(0, offset) + arg + _data.substring(offset);
+   }
 
-  public void insertData(int offset, String arg)
-    throws DOMException
-  { 
-    _data = _data.substring(0, offset) + arg + _data.substring(offset);
-  }
+   public void deleteData(int offset, int count)
+      throws DOMException {
+      if (_data.length() <= offset + count)
+         _data = _data.substring(0, offset);
+      else
+         _data = _data.substring(0, offset) + _data.substring(offset + count);
+   }
 
-  public void deleteData(int offset, int count)
-    throws DOMException
-  { 
-    if (_data.length() <= offset + count)
+   public void deleteData(int offset)
+      throws DOMException {
       _data = _data.substring(0, offset);
-    else
-      _data = _data.substring(0, offset) + _data.substring(offset + count);
-  }
+   }
 
-  public void deleteData(int offset)
-    throws DOMException
-  { 
-    _data = _data.substring(0, offset);
-  }
+   public void replaceData(int offset, int count, String arg)
+      throws DOMException {
+      if (_data.length() <= offset + count)
+         _data = _data.substring(0, offset) + arg;
+      else
+         _data = _data.substring(0, offset) + arg + _data.substring(offset + count);
+   }
 
-  public void replaceData(int offset, int count, String arg)
-    throws DOMException
-  { 
-    if (_data.length() <= offset + count)
-      _data = _data.substring(0, offset) + arg;
-    else
-      _data = _data.substring(0, offset) + arg + _data.substring(offset + count);
-  }
+   public boolean hasContent() {
+      for (int i = 0; i < _data.length(); i++)
+         if (!Character.isWhitespace(_data.charAt(i)))
+            return true;
 
-  public boolean hasContent() 
-  {
-    for (int i = 0; i < _data.length(); i++)
-      if (! Character.isWhitespace(_data.charAt(i)))
-        return true;
+      return false;
+   }
 
-    return false;
-  }
+   public boolean isElementContentWhitespace() {
+      for (int i = 0; i < _data.length(); i++)
+         if (!Character.isWhitespace(_data.charAt(i)))
+            return false;
 
-  public boolean isElementContentWhitespace() 
-  {
-    for (int i = 0; i < _data.length(); i++)
-      if (! Character.isWhitespace(_data.charAt(i)))
-        return false;
+      return true;
+   }
 
-    return true;
-  }
-
-  public void print(XmlPrinter os) throws IOException
-  {
-    os.text(getData());
-  }
+   public void print(XmlPrinter os) throws IOException {
+      os.text(getData());
+   }
 }

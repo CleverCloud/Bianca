@@ -67,7 +67,7 @@ public abstract class NumberValue extends Value {
    }
 
    /**
-    *  Compare two numbers.
+    * Compare two numbers.
     */
    public static int compareNum(Value lValue, Value rValue) {
       Value lVal = lValue.toValue();

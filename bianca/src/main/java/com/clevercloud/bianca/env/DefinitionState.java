@@ -244,22 +244,22 @@ public final class DefinitionState {
    /**
     * Adds a function from a compiled include
     *
-    * @param name the function name, must be an intern() string
+    * @param name      the function name, must be an intern() string
     * @param lowerName the function name, must be an intern() string
     */
    public Value addFunction(String name, String lowerName, AbstractFunction fun) {
       // TODO: skip the old function check since the include for compiled
       // pages is already verified.  Might have a switch here?
-    /*
-      AbstractFunction oldFun = _lowerFunMap.get(lowerName);
+      /*
+     AbstractFunction oldFun = _lowerFunMap.get(lowerName);
 
-      if (oldFun == null)
-      oldFun = _bianca.findLowerFunctionImpl(lowerName);
+     if (oldFun == null)
+     oldFun = _bianca.findLowerFunctionImpl(lowerName);
 
-      if (oldFun != null) {
-      throw new BiancaException(L.l("can't redefine function {0}", name));
-      }
-       */
+     if (oldFun != null) {
+     throw new BiancaException(L.l("can't redefine function {0}", name));
+     }
+      */
 
       copyOnWrite();
       _funMap.put(name, fun);

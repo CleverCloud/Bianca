@@ -31,58 +31,52 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
  * matches namespace nodes of an element.
  */
 public class FromNamespace extends Axis {
-  public FromNamespace(AbstractPattern parent)
-  {
-    super(parent);
+   public FromNamespace(AbstractPattern parent) {
+      super(parent);
 
-    if (parent == null)
-      throw new RuntimeException();
-  }
+      if (parent == null)
+         throw new RuntimeException();
+   }
 
-  /**
-   * matches if the node is a namespace node.
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
-      return false;
+   /**
+    * matches if the node is a namespace node.
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         return false;
 
-    if (! (node instanceof NamespaceNode))
-      return false;
+      if (!(node instanceof NamespaceNode))
+         return false;
 
-    return _parent.match(node.getParentNode(), env);
-  }
+      return _parent.match(node.getParentNode(), env);
+   }
 
 
-  /**
-   * Creates a new node iterator.
-   *
-   * @param node the starting node
-   * @param env the variable environment
-   * @param match the axis match pattern
-   *
-   * @return the node iterator
-   */
-  public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
-                                         AbstractPattern match)
-    throws XPathException
-  {
-    NodeIterator parentIter;
-    parentIter = _parent.createNodeIterator(node, env, _parent.copyPosition());
+   /**
+    * Creates a new node iterator.
+    *
+    * @param node  the starting node
+    * @param env   the variable environment
+    * @param match the axis match pattern
+    * @return the node iterator
+    */
+   public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
+                                          AbstractPattern match)
+      throws XPathException {
+      NodeIterator parentIter;
+      parentIter = _parent.createNodeIterator(node, env, _parent.copyPosition());
 
-    return new NamespaceIterator(node, parentIter, env, match);
-  }
+      return new NamespaceIterator(node, parentIter, env, match);
+   }
 
-  public String toString()
-  {
-    return getPrefix() + "namespace::";
-  }
+   public String toString() {
+      return getPrefix() + "namespace::";
+   }
 }

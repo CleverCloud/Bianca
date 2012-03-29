@@ -34,30 +34,26 @@ import org.w3c.dom.Node;
 import java.io.IOException;
 
 class QUnescapedText extends QText {
-  QUnescapedText(String data)
-  {
-    super(data);
-  }
+   QUnescapedText(String data) {
+      super(data);
+   }
 
-  Node importNode(QDocument owner, boolean deep)
-  {
-    QUnescapedText text = new QUnescapedText(_data);
-    text._filename = _filename;
-    text._line = _line;
-    text._owner = owner;
-    return text;
-  }
+   Node importNode(QDocument owner, boolean deep) {
+      QUnescapedText text = new QUnescapedText(_data);
+      text._filename = _filename;
+      text._line = _line;
+      text._owner = owner;
+      return text;
+   }
 
-  public void print(XmlPrinter os) throws IOException
-  {
-    boolean oldEscaping = os.getEscaping();
-    os.setEscaping(false);
-    os.text(getData());
-    os.setEscaping(oldEscaping);
-  }
+   public void print(XmlPrinter os) throws IOException {
+      boolean oldEscaping = os.getEscaping();
+      os.setEscaping(false);
+      os.text(getData());
+      os.setEscaping(oldEscaping);
+   }
 
-  private Object writeReplace()
-  {
-    return new SerializedXml(this);
-  }
+   private Object writeReplace() {
+      return new SerializedXml(this);
+   }
 }

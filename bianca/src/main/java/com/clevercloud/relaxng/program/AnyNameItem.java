@@ -37,69 +37,61 @@ import java.util.HashSet;
  * Matches names.
  */
 public class AnyNameItem extends NameClassItem {
-  private NameClassItem _except;
-  
-  public AnyNameItem()
-  {
-  }
+   private NameClassItem _except;
 
-  /**
-   * Sets the exception pattern.
-   */
-  public void setExcept(NameClassItem except)
-  {
-    _except = except;
-  }
-    
-  /**
-   * Adds to the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-  }
+   public AnyNameItem() {
+   }
 
-  /**
-   * Returns true if the name matches.
-   */
-  public boolean matches(QName name)
-  {
-    if (_except == null)
-      return true;
-    else
-      return ! _except.matches(name);
-  }
+   /**
+    * Sets the exception pattern.
+    */
+   public void setExcept(NameClassItem except) {
+      _except = except;
+   }
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(String prefix)
-  {
-    if (_except != null) {
-      if (prefix.equals(""))
-        return "<* -" + _except.toSyntaxDescription(" ") + ">";
+   /**
+    * Adds to the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+   }
+
+   /**
+    * Returns true if the name matches.
+    */
+   public boolean matches(QName name) {
+      if (_except == null)
+         return true;
       else
-        return prefix + "(* -" + _except.toSyntaxDescription(" ") + ")";
-    }
-    else if (prefix.equals(""))
-      return "<*>";
-    else
-      return prefix + "*";
-  }
+         return !_except.matches(name);
+   }
 
-  public int hashCode()
-  {
-    return 321;
-  }
-  
-  public boolean equals(Object o)
-  {
-    if (this == o)
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(String prefix) {
+      if (_except != null) {
+         if (prefix.equals(""))
+            return "<* -" + _except.toSyntaxDescription(" ") + ">";
+         else
+            return prefix + "(* -" + _except.toSyntaxDescription(" ") + ")";
+      } else if (prefix.equals(""))
+         return "<*>";
+      else
+         return prefix + "*";
+   }
+
+   public int hashCode() {
+      return 321;
+   }
+
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof AnyNameItem))
+         return false;
+
       return true;
-
-    if (! (o instanceof AnyNameItem))
-      return false;
-
-    return true;
-  }
+   }
 }
 

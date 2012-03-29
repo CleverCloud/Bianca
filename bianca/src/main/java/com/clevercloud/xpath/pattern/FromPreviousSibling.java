@@ -32,127 +32,115 @@ package com.clevercloud.xpath.pattern;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
  * matches if we can find a following sibling matching the parent pattern.
  */
 public class FromPreviousSibling extends Axis {
-  public FromPreviousSibling(AbstractPattern parent)
-  {
-    super(parent);
+   public FromPreviousSibling(AbstractPattern parent) {
+      super(parent);
 
-    if (parent == null)
-      throw new RuntimeException();
-  }
+      if (parent == null)
+         throw new RuntimeException();
+   }
 
-  /**
-   * matches if we can find a following sibling that matches the parent.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true if the pattern matches
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
-      return false;
+   /**
+    * matches if we can find a following sibling that matches the parent.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true if the pattern matches
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         return false;
 
-    for (node = node.getNextSibling();
-         node != null;
-         node = node.getNextSibling()) {
-      if (_parent.match(node, env))
-        return true;
-    }
-    
-    return false;
-  }
-
-  /**
-   * preceding-sibling's iterator is in reverse document order.
-   */
-  public boolean isAscending()
-  {
-    return false;
-  }
-
-  /**
-   * Returns true if the pattern returns unique values.
-   */
-  public boolean isUnique()
-  {
-    if (_parent == null)
-      return true;
-    else
-      return _parent.isSingleSelect();
-  }
-
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    return node.getPreviousSibling();
-  }
-
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param lastNode the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node lastNOde)
-  {
-    return node.getPreviousSibling();
-  }
-
-  /**
-   * The count of nodes between the test-node and the axis.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    int index = env.getPositionIndex();
-
-    int count = 1;
-    while ((node = node.getNextSibling()) != null) {
-      if (_parent.match(node, env)) {
-        if (--index <= 0) {
-          // Test if there are more possible roots.
-          for (node = node.getNextSibling();
-               node != null;
-               node = node.getNextSibling()) {
-            if (_parent.match(node, env)) {
-              env.setMorePositions(true);
-              break;
-            }
-          }
-          return count;
-        }
+      for (node = node.getNextSibling();
+           node != null;
+           node = node.getNextSibling()) {
+         if (_parent.match(node, env))
+            return true;
       }
 
-      if (pattern.match(node, env))
-        count++;
-    }
+      return false;
+   }
 
-    return count;
-  }
+   /**
+    * preceding-sibling's iterator is in reverse document order.
+    */
+   public boolean isAscending() {
+      return false;
+   }
 
-  public String toString()
-  {
-    return getPrefix() + "preceding-sibling::";
-  }
+   /**
+    * Returns true if the pattern returns unique values.
+    */
+   public boolean isUnique() {
+      if (_parent == null)
+         return true;
+      else
+         return _parent.isSingleSelect();
+   }
+
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      return node.getPreviousSibling();
+   }
+
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node     the current node
+    * @param lastNode the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node lastNOde) {
+      return node.getPreviousSibling();
+   }
+
+   /**
+    * The count of nodes between the test-node and the axis.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    */
+   public int position(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      int index = env.getPositionIndex();
+
+      int count = 1;
+      while ((node = node.getNextSibling()) != null) {
+         if (_parent.match(node, env)) {
+            if (--index <= 0) {
+               // Test if there are more possible roots.
+               for (node = node.getNextSibling();
+                    node != null;
+                    node = node.getNextSibling()) {
+                  if (_parent.match(node, env)) {
+                     env.setMorePositions(true);
+                     break;
+                  }
+               }
+               return count;
+            }
+         }
+
+         if (pattern.match(node, env))
+            count++;
+      }
+
+      return count;
+   }
+
+   public String toString() {
+      return getPrefix() + "preceding-sibling::";
+   }
 }
 

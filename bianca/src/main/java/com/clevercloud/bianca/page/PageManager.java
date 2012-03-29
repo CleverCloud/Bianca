@@ -38,7 +38,8 @@ import com.clevercloud.vfs.IOExceptionWrapper;
 import com.clevercloud.vfs.Path;
 
 import java.io.IOException;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Each "page" refers to a bianca file.
@@ -87,19 +88,21 @@ public class PageManager {
    public void setCompile(boolean isCompile) {
       _isCompile = isCompile;
    }
+
    /**
     * * true if interpreted pages should be used if pages fail to compile.
-    * */
-      public boolean isCompileFailover() {
-                return _isCompileFailover;
-                   }
+    */
+   public boolean isCompileFailover() {
+      return _isCompileFailover;
+   }
 
-         /**
-          * * true if interpreted pages should be used if pages fail to compile.
-          * */
-         public void setCompileFailover(boolean isCompileFailover) {
-                   _isCompileFailover = isCompileFailover;
-                      }
+   /**
+    * * true if interpreted pages should be used if pages fail to compile.
+    */
+   public void setCompileFailover(boolean isCompileFailover) {
+      _isCompileFailover = isCompileFailover;
+   }
+
    /**
     * true if the pages should be compiled lazily.
     */
@@ -173,17 +176,16 @@ public class PageManager {
    return "_bianca." + JavaCompiler.mangleName(relPath);
    }
     */
+
    /**
     * Returns a parsed or compiled bianca program.
     *
     * @param path the source file path
-    *
     * @return the parsed program
-    *
     * @throws IOException
     */
    public BiancaPage parse(Path path)
-           throws IOException {
+      throws IOException {
       return parse(path, null, -1);
    }
 
@@ -191,13 +193,11 @@ public class PageManager {
     * Returns a parsed or compiled bianca program.
     *
     * @param path the source file path
-    *
     * @return the parsed program
-    *
     * @throws IOException
     */
    public BiancaPage parse(Path path, String fileName, int line)
-           throws IOException {
+      throws IOException {
       try {
          BiancaProgram program;
 
@@ -231,10 +231,10 @@ public class PageManager {
                }
 
                program = BiancaParser.parse(_bianca,
-                       path,
-                       _bianca.getScriptEncoding(),
-                       fileName,
-                       line);
+                  path,
+                  _bianca.getScriptEncoding(),
+                  fileName,
+                  line);
             }
 
             _programCache.put(path, program);

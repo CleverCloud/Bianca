@@ -32,46 +32,38 @@ package com.clevercloud.vfs;
 import java.io.IOException;
 
 public class StreamFilter extends StreamImpl {
-  protected StreamImpl next;
+   protected StreamImpl next;
 
-  public void init(StreamImpl next)
-  {
-    this.next = next;
-  }
-  
-  public boolean canRead()
-  {
-    return next.canRead();
-  }
+   public void init(StreamImpl next) {
+      this.next = next;
+   }
 
-  public int read(byte []buffer, int offset, int length) throws IOException
-  {
-    return next.read(buffer, offset, length);
-  }
+   public boolean canRead() {
+      return next.canRead();
+   }
 
-  public int getAvailable() throws IOException
-  {
-    return next.getAvailable();
-  }
+   public int read(byte[] buffer, int offset, int length) throws IOException {
+      return next.read(buffer, offset, length);
+   }
 
-  public boolean canWrite()
-  {
-    return next.canWrite();
-  }
+   public int getAvailable() throws IOException {
+      return next.getAvailable();
+   }
 
-  public void write(byte []buffer, int offset, int length, boolean atEnd)
-    throws IOException
-  {
-    next.write(buffer, offset, length, atEnd);
-  }
+   public boolean canWrite() {
+      return next.canWrite();
+   }
 
-  public void flush() throws IOException
-  {
-    next.flush();
-  }
+   public void write(byte[] buffer, int offset, int length, boolean atEnd)
+      throws IOException {
+      next.write(buffer, offset, length, atEnd);
+   }
 
-  public void close() throws IOException
-  {
-    next.close();
-  }
+   public void flush() throws IOException {
+      next.flush();
+   }
+
+   public void close() throws IOException {
+      next.close();
+   }
 }

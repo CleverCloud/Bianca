@@ -39,62 +39,56 @@ import com.clevercloud.xml.QName;
  * Relax name pattern
  */
 public class NamePattern extends NameClassPattern {
-  private final QName _name;
-  private final NameItem _item;
+   private final QName _name;
+   private final NameItem _item;
 
-  /**
-   * Creates a new element pattern.
-   */
-  public NamePattern(QName name)
-  {
-    _name = name;
-    _item = new NameItem(_name);
-  }
+   /**
+    * Creates a new element pattern.
+    */
+   public NamePattern(QName name) {
+      _name = name;
+      _item = new NameItem(_name);
+   }
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "name";
-  }
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "name";
+   }
 
-  /**
-   * Creates the program.
-   */
-  public NameClassItem createNameItem()
-    throws RelaxException
-  {
-    return _item;
-  }
+   /**
+    * Creates the program.
+    */
+   public NameClassItem createNameItem()
+      throws RelaxException {
+      return _item;
+   }
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return _name.getName();
-  }
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return _name.getName();
+   }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    if (! (o instanceof NamePattern))
-      return false;
+      if (!(o instanceof NamePattern))
+         return false;
 
-    NamePattern elt = (NamePattern) o;
+      NamePattern elt = (NamePattern) o;
 
-    return _name.equals(elt._name);
-  }
+      return _name.equals(elt._name);
+   }
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "Name[" + _name.getName() + "]";
-  }
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "Name[" + _name.getName() + "]";
+   }
 }
 

@@ -34,14 +34,12 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 
 @Entity
-public class DatastoreBlock
-{
-  private Long _blockNumber;
-  
-  @Enumerated
-  private DatastoreBlock _block;
-  
-  public DatastoreBlock(String filename)
-  {
-  }
+public class DatastoreBlock {
+   private Long _blockNumber;
+
+   @Enumerated
+   private DatastoreBlock _block;
+
+   public DatastoreBlock(String filename) {
+   }
 }

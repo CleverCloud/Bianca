@@ -31,20 +31,13 @@
 package com.clevercloud.bianca.program;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.EnvVar;
-import com.clevercloud.bianca.env.EnvVarImpl;
-import com.clevercloud.bianca.env.NullThisValue;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.Var;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.expr.ExprFactory;
 import com.clevercloud.bianca.expr.ParamRequiredExpr;
 import com.clevercloud.bianca.function.AbstractFunction;
-import com.clevercloud.bianca.statement.*;
+import com.clevercloud.bianca.statement.BlockStatement;
+import com.clevercloud.bianca.statement.Statement;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,10 +57,10 @@ public class Function extends AbstractFunction {
    protected Arg[] _closureUseArgs;
 
    Function(Location location,
-           String name,
-           FunctionInfo info,
-           Arg[] args,
-           Statement[] statements) {
+            String name,
+            FunctionInfo info,
+            Arg[] args,
+            Statement[] statements) {
       super(location);
 
       _name = name.intern();
@@ -84,11 +77,11 @@ public class Function extends AbstractFunction {
    }
 
    public Function(ExprFactory exprFactory,
-           Location location,
-           String name,
-           FunctionInfo info,
-           Arg[] args,
-           Statement[] statements) {
+                   Location location,
+                   String name,
+                   FunctionInfo info,
+                   Arg[] args,
+                   Statement[] statements) {
       super(location);
 
       _name = name.intern();
@@ -277,10 +270,10 @@ public class Function extends AbstractFunction {
             return env.error("expected default expression");
          } else if (arg.isReference()) {
             map.put(arg.getName(),
-                    new EnvVarImpl(defaultExpr.evalVar(env).toVar()));
+               new EnvVarImpl(defaultExpr.evalVar(env).toVar()));
          } else {
             map.put(arg.getName(),
-                    new EnvVarImpl(defaultExpr.eval(env).copy().toVar()));
+               new EnvVarImpl(defaultExpr.eval(env).copy().toVar()));
          }
       }
 
@@ -334,7 +327,7 @@ public class Function extends AbstractFunction {
    }
 
    public Value callImpl(Env env, Value[] args, boolean isRef,
-           Arg[] useParams, Value[] useArgs) {
+                         Arg[] useParams, Value[] useArgs) {
       HashMap<StringValue, EnvVar> map = new HashMap<StringValue, EnvVar>(8);
 
       if (useParams != null) {
@@ -358,11 +351,11 @@ public class Function extends AbstractFunction {
             Var var = args[i].toLocalVar();
 
             if (arg.getExpectedClass() != null
-                    && arg.getDefault() instanceof ParamRequiredExpr) {
+               && arg.getDefault() instanceof ParamRequiredExpr) {
                env.checkTypeHint(var,
-                       arg.getExpectedClass(),
-                       arg.getName().toString(),
-                       getName());
+                  arg.getExpectedClass(),
+                  arg.getName().toString(),
+                  getName());
             }
 
             // bianca/0d04
@@ -379,10 +372,10 @@ public class Function extends AbstractFunction {
             return env.error("expected default expression");
          } else if (arg.isReference()) {
             map.put(
-                    arg.getName(), new EnvVarImpl(defaultExpr.evalVar(env).toVar()));
+               arg.getName(), new EnvVarImpl(defaultExpr.evalVar(env).toVar()));
          } else {
             map.put(
-                    arg.getName(), new EnvVarImpl(defaultExpr.eval(env).toLocalVar()));
+               arg.getName(), new EnvVarImpl(defaultExpr.eval(env).toLocalVar()));
          }
       }
 
@@ -423,9 +416,9 @@ public class Function extends AbstractFunction {
    //
    @Override
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value[] args) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value[] args) {
       if (isStatic()) {
          qThis = qClass;
       }
@@ -443,9 +436,9 @@ public class Function extends AbstractFunction {
 
    @Override
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value[] args) {
+                              BiancaClass qClass,
+                              Value qThis,
+                              Value[] args) {
       Value oldThis = env.setThis(qThis);
       BiancaClass oldClass = env.setCallingClass(qClass);
 

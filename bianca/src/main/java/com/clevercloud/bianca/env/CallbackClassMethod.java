@@ -46,8 +46,8 @@ public class CallbackClassMethod extends Callback {
    private final Value _qThis;
 
    public CallbackClassMethod(BiancaClass qClass,
-           StringValue methodName,
-           Value qThis) {
+                              StringValue methodName,
+                              Value qThis) {
       _qClass = qClass;
 
       _methodName = methodName;
@@ -58,7 +58,7 @@ public class CallbackClassMethod extends Callback {
    }
 
    public CallbackClassMethod(BiancaClass qClass,
-           StringValue methodName) {
+                              StringValue methodName) {
       this(qClass, methodName, qClass);
    }
 
@@ -80,7 +80,7 @@ public class CallbackClassMethod extends Callback {
    @Override
    public Value call(Env env, Value a1) {
       return _qClass.callMethod(env, _qThis, _methodName, _hash,
-              a1);
+         a1);
    }
 
    /**
@@ -91,7 +91,7 @@ public class CallbackClassMethod extends Callback {
    @Override
    public Value call(Env env, Value a1, Value a2) {
       return _qClass.callMethod(env, _qThis, _methodName, _hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
@@ -102,7 +102,7 @@ public class CallbackClassMethod extends Callback {
    @Override
    public Value call(Env env, Value a1, Value a2, Value a3) {
       return _qClass.callMethod(env, _qThis, _methodName, _hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
@@ -112,9 +112,9 @@ public class CallbackClassMethod extends Callback {
     */
    @Override
    public Value call(Env env, Value a1, Value a2, Value a3,
-           Value a4) {
+                     Value a4) {
       return _qClass.callMethod(env, _qThis, _methodName, _hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -124,9 +124,9 @@ public class CallbackClassMethod extends Callback {
     */
    @Override
    public Value call(Env env, Value a1, Value a2, Value a3,
-           Value a4, Value a5) {
+                     Value a4, Value a5) {
       return _qClass.callMethod(env, _qThis, _methodName, _hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    @Override
@@ -136,10 +136,10 @@ public class CallbackClassMethod extends Callback {
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print(getClass().getName());
       out.print('[');
       out.print(_qClass.getName());

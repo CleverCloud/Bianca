@@ -32,48 +32,52 @@ package com.clevercloud.bianca.lib.i18n;
 
 import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.UnimplementedException;
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.vfs.*;
+import com.clevercloud.bianca.env.Value;
+import com.clevercloud.vfs.TempBuffer;
+import com.clevercloud.vfs.TempStream;
+import com.clevercloud.vfs.WriteStream;
 
 import javax.mail.internet.MimeUtility;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class IconvUtility {
 
    private static final Logger log = Logger.getLogger(IconvUtility.class.getName());
 
    public static StringValue decodeEncode(Env env,
-           StringValue str,
-           String inCharset,
-           String outCharset)
-           throws UnsupportedEncodingException {
+                                          StringValue str,
+                                          String inCharset,
+                                          String outCharset)
+      throws UnsupportedEncodingException {
       return decodeEncode(env, str, inCharset, outCharset, 0, Integer.MAX_VALUE);
    }
 
    public static StringValue decodeEncode(Env env,
-           StringValue str,
-           String inCharset,
-           String outCharset,
-           int offset)
-           throws UnsupportedEncodingException {
+                                          StringValue str,
+                                          String inCharset,
+                                          String outCharset,
+                                          int offset)
+      throws UnsupportedEncodingException {
       return decodeEncode(env, str, inCharset, outCharset,
-              offset, Integer.MAX_VALUE);
+         offset, Integer.MAX_VALUE);
    }
 
    /**
     * Decodes and encodes to specified charsets at the same time.
     */
    public static StringValue decodeEncode(Env env,
-           StringValue str,
-           String inCharset,
-           String outCharset,
-           int offset,
-           int length)
-           throws UnsupportedEncodingException {
+                                          StringValue str,
+                                          String inCharset,
+                                          String outCharset,
+                                          int offset,
+                                          int length)
+      throws UnsupportedEncodingException {
       char[] charBuf = new char[8192];
 
       try {
@@ -105,7 +109,7 @@ public class IconvUtility {
          int sublen;
 
          while (length > 0
-                 && (sublen = in.read(charBuf, 0, charBuf.length)) >= 0) {
+            && (sublen = in.read(charBuf, 0, charBuf.length)) >= 0) {
 
             sublen = Math.min(length, sublen);
 
@@ -130,28 +134,28 @@ public class IconvUtility {
     * Returns decoded Mime header/field.
     */
    public static StringValue decodeMime(Env env,
-           CharSequence word,
-           String charset)
-           throws UnsupportedEncodingException {
+                                        CharSequence word,
+                                        String charset)
+      throws UnsupportedEncodingException {
       return env.createString(
-              MimeUtility.unfold(MimeUtility.decodeText(word.toString())));
+         MimeUtility.unfold(MimeUtility.decodeText(word.toString())));
    }
 
    public static Value encodeMime(Env env,
-           StringValue name,
-           StringValue value,
-           String inCharset,
-           String outCharset,
-           String scheme)
-           throws UnsupportedEncodingException {
+                                  StringValue name,
+                                  StringValue value,
+                                  String inCharset,
+                                  String outCharset,
+                                  String scheme)
+      throws UnsupportedEncodingException {
       return encodeMime(env,
-              name,
-              value,
-              inCharset,
-              outCharset,
-              scheme,
-              "\r\n",
-              76);
+         name,
+         value,
+         inCharset,
+         outCharset,
+         scheme,
+         "\r\n",
+         76);
    }
 
    /**
@@ -167,21 +171,21 @@ public class IconvUtility {
     * Returns an encoded Mime header.
     */
    public static StringValue encodeMime(Env env,
-           StringValue name,
-           StringValue value,
-           String inCharset,
-           String outCharset,
-           String scheme,
-           String lineBreakChars,
-           int lineLength)
-           throws UnsupportedEncodingException {
+                                        StringValue name,
+                                        StringValue value,
+                                        String inCharset,
+                                        String outCharset,
+                                        String scheme,
+                                        String lineBreakChars,
+                                        int lineLength)
+      throws UnsupportedEncodingException {
       StringValue sb = new StringValue();
       sb.append(name);
       sb.append(':');
       sb.append(' ');
 
       String word = encodeMimeWord(
-              value.toString(), outCharset, scheme, lineBreakChars, lineLength);
+         value.toString(), outCharset, scheme, lineBreakChars, lineLength);
 
       sb.append(MimeUtility.fold(sb.length(), word));
 
@@ -189,11 +193,11 @@ public class IconvUtility {
    }
 
    public static String encodeMimeWord(String value,
-           String charset,
-           String scheme,
-           String lineBreakChars,
-           int lineLength)
-           throws UnsupportedEncodingException {
+                                       String charset,
+                                       String scheme,
+                                       String lineBreakChars,
+                                       int lineLength)
+      throws UnsupportedEncodingException {
       if (lineLength != 76) {
          throw new UnimplementedException("Mime line length option");
       }

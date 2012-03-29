@@ -32,7 +32,6 @@ package com.clevercloud.xml.parsers;
 import com.clevercloud.xml.QDOMImplementation;
 import com.clevercloud.xml.Xml;
 import com.clevercloud.xml.XmlParser;
-
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
@@ -48,81 +47,69 @@ import java.io.InputStream;
  * JAXP document builder factory for strict XML parsing.
  */
 public class AbstractDocumentBuilder extends DocumentBuilder {
-  // The parser implementation.
-  protected XmlParser _parser;
+   // The parser implementation.
+   protected XmlParser _parser;
 
-  public DOMImplementation getDOMImplementation()
-  {
-    return new QDOMImplementation();
-  }
+   public DOMImplementation getDOMImplementation() {
+      return new QDOMImplementation();
+   }
 
-  /**
-   * Parses the document based on an input source.
-   *
-   * @param is the SAX input source
-   *
-   * @return the parsed document
-   */
-  public Document parse(InputSource is)
-    throws IOException, SAXException
-  {
-    return _parser.parseDocument(is);
-  }
+   /**
+    * Parses the document based on an input source.
+    *
+    * @param is the SAX input source
+    * @return the parsed document
+    */
+   public Document parse(InputSource is)
+      throws IOException, SAXException {
+      return _parser.parseDocument(is);
+   }
 
-  /**
-   * Parses the document based on an input stream.
-   *
-   * @param is the input stream.
-   *
-   * @return the parsed document
-   */
-  public Document parse(InputStream is)
-    throws IOException, SAXException
-  {
-    return _parser.parseDocument(is);
-  }
+   /**
+    * Parses the document based on an input stream.
+    *
+    * @param is the input stream.
+    * @return the parsed document
+    */
+   public Document parse(InputStream is)
+      throws IOException, SAXException {
+      return _parser.parseDocument(is);
+   }
 
-  /**
-   * Parses the document based on an input stream.
-   *
-   * @param is the input stream.
-   * @param systemId the stream's URL.
-   *
-   * @return the parsed document
-   */
-  public Document parse(InputStream is, String systemId)
-    throws IOException, SAXException
-  {
-    return _parser.parseDocument(is, systemId);
-  }
+   /**
+    * Parses the document based on an input stream.
+    *
+    * @param is       the input stream.
+    * @param systemId the stream's URL.
+    * @return the parsed document
+    */
+   public Document parse(InputStream is, String systemId)
+      throws IOException, SAXException {
+      return _parser.parseDocument(is, systemId);
+   }
 
-  public boolean isNamespaceAware()
-  {
-    return _parser.isNamespaceAware();
-  }
-    
-  public boolean isValidating()
-  {
-    return false;
-  }
+   public boolean isNamespaceAware() {
+      return _parser.isNamespaceAware();
+   }
 
-  /**
-   * Sets the callback to lookup included files.
-   *
-   * @param er the callback object to find included files.
-   */
-  public void setEntityResolver(EntityResolver er)
-  {
-    _parser.setEntityResolver(er);
-  }
-    
-  public void setErrorHandler(ErrorHandler eh)
-  {
-    _parser.setErrorHandler(eh);
-  }
-    
-  public Document newDocument()
-  {
-    return Xml.createDocument();
-  }
+   public boolean isValidating() {
+      return false;
+   }
+
+   /**
+    * Sets the callback to lookup included files.
+    *
+    * @param er the callback object to find included files.
+    */
+   public void setEntityResolver(EntityResolver er) {
+      _parser.setEntityResolver(er);
+   }
+
+   public void setErrorHandler(ErrorHandler eh) {
+      _parser.setErrorHandler(eh);
+   }
+
+   public Document newDocument() {
+      return Xml.createDocument();
+   }
 }

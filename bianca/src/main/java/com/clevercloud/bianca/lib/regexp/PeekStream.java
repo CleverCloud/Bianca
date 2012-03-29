@@ -29,8 +29,6 @@
  */
 package com.clevercloud.bianca.lib.regexp;
 
-import com.clevercloud.bianca.env.*;
-
 class PeekStream {
 
    int read() {

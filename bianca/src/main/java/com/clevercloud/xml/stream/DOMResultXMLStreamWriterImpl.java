@@ -32,531 +32,469 @@ package com.clevercloud.xml.stream;
 
 import com.clevercloud.util.L10N;
 import com.clevercloud.xml.QDocument;
-
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import static javax.xml.XMLConstants.*;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.dom.DOMResult;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
+import static javax.xml.XMLConstants.*;
+
 public class DOMResultXMLStreamWriterImpl implements XMLStreamWriter {
-  private static final Logger log
-    = Logger.getLogger(DOMResultXMLStreamWriterImpl.class.getName());
-  private static final L10N L
-    = new L10N(DOMResultXMLStreamWriterImpl.class);
+   private static final Logger log
+      = Logger.getLogger(DOMResultXMLStreamWriterImpl.class.getName());
+   private static final L10N L
+      = new L10N(DOMResultXMLStreamWriterImpl.class);
 
-  private DOMResult _result;
-  private Document _document;
-  private Node _current;
-  private boolean _currentIsEmpty = false;
-  private boolean _repair = false;
+   private DOMResult _result;
+   private Document _document;
+   private Node _current;
+   private boolean _currentIsEmpty = false;
+   private boolean _repair = false;
 
-  private NamespaceWriterContext _tracker;
+   private NamespaceWriterContext _tracker;
 
-  public DOMResultXMLStreamWriterImpl(DOMResult result)
-    throws XMLStreamException
-  {
-    this(result, false);
-  }
+   public DOMResultXMLStreamWriterImpl(DOMResult result)
+      throws XMLStreamException {
+      this(result, false);
+   }
 
-  public DOMResultXMLStreamWriterImpl(DOMResult result, boolean repair)
-    throws XMLStreamException
-  {
-    _result = result;
-    _repair = repair;
-    _tracker = new NamespaceWriterContext(repair);
+   public DOMResultXMLStreamWriterImpl(DOMResult result, boolean repair)
+      throws XMLStreamException {
+      _result = result;
+      _repair = repair;
+      _tracker = new NamespaceWriterContext(repair);
 
-    _current = result.getNode();
+      _current = result.getNode();
 
-    if (_current == null) {
-      _current = _document = new QDocument();
-      result.setNode(_document);
-    }
-    else {
-      if (_current.getNodeType() == Node.DOCUMENT_NODE)
-        _document = (Document) _current;
-      else 
-        _document = _current.getOwnerDocument();
-    }
-  }
-
-  public void close() 
-    throws XMLStreamException
-  {
-    writeEndDocument();
-  }
-
-  public void flush() 
-    throws XMLStreamException
-  {
-  }
-
-  public NamespaceContext getNamespaceContext()
-  {
-    return _tracker;
-  }
-
-  public String getPrefix(String uri)
-    throws XMLStreamException
-  {
-    return _tracker.getPrefix(uri);
-  }
-
-  public Object getProperty(String name)
-    throws IllegalArgumentException
-  {
-    throw new PropertyNotSupportedException(name);
-  }
-
-  public void setDefaultNamespace(String uri)
-    throws XMLStreamException
-  {
-    _tracker.declare(DEFAULT_NS_PREFIX, uri, _repair);
-  }
-
-  public void setNamespaceContext(NamespaceContext context)
-    throws XMLStreamException
-  {
-    String message = "please do not set the NamespaceContext";
-    throw new UnsupportedOperationException(message);
-  }
-
-  public void setPrefix(String prefix, String uri)
-    throws XMLStreamException
-  {
-    _tracker.declare(prefix, uri);
-  }
-
-  public void writeAttribute(String localName, String value)
-    throws XMLStreamException
-  {
-    try {
-      ((Element) _current).setAttribute(localName, value);
-    }
-    catch (ClassCastException e) {
-      throw new XMLStreamException(e);
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
-
-  public void writeAttribute(String namespaceURI, String localName,
-                             String value)
-    throws XMLStreamException
-  {
-    if (_repair) {
-      String prefix = _tracker.declare(namespaceURI);
-
-      if (prefix == null)
-        ((Element) _current).setAttributeNS(namespaceURI, localName, value);
-      else {
-        String qname = prefix + ':' + localName;
-        ((Element) _current).setAttributeNS(namespaceURI, qname, value);
+      if (_current == null) {
+         _current = _document = new QDocument();
+         result.setNode(_document);
+      } else {
+         if (_current.getNodeType() == Node.DOCUMENT_NODE)
+            _document = (Document) _current;
+         else
+            _document = _current.getOwnerDocument();
       }
-    }
-    else {
-      String prefix = _tracker.getPrefix(namespaceURI);
+   }
 
-      if (prefix == null)
-        throw new XMLStreamException(L.l("No prefix defined for namespace {0}", namespaceURI));
+   public void close()
+      throws XMLStreamException {
+      writeEndDocument();
+   }
 
-      String qname = prefix + ':' + localName;
-      
-      ((Element) _current).setAttributeNS(namespaceURI, qname, value);
-    }
-  }
+   public void flush()
+      throws XMLStreamException {
+   }
 
-  public void writeAttribute(String prefix, String namespaceURI,
-                             String localName, String value)
-    throws XMLStreamException
-  {
-    try {
-      if (_repair && _tracker.getPrefix(namespaceURI) == null)
-        _tracker.declare(prefix, namespaceURI, true);
-      else
-        _tracker.declare(prefix, namespaceURI);
+   public NamespaceContext getNamespaceContext() {
+      return _tracker;
+   }
 
-      String qname = prefix + ':' + localName;
-      ((Element) _current).setAttributeNS(namespaceURI, qname, value);
-    }
-    catch (ClassCastException e) {
-      throw new XMLStreamException(e);
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public String getPrefix(String uri)
+      throws XMLStreamException {
+      return _tracker.getPrefix(uri);
+   }
 
-  public void writeCData(String data)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty) {
-      popContext();
-      _currentIsEmpty = false;
-    }
+   public Object getProperty(String name)
+      throws IllegalArgumentException {
+      throw new PropertyNotSupportedException(name);
+   }
 
-    try {
-      _current.appendChild(_document.createCDATASection(data));
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void setDefaultNamespace(String uri)
+      throws XMLStreamException {
+      _tracker.declare(DEFAULT_NS_PREFIX, uri, _repair);
+   }
 
-  public void writeCharacters(char[] text, int start, int len)
-    throws XMLStreamException
-  {
-    writeCharacters(new String(text, start, len));
-  }
+   public void setNamespaceContext(NamespaceContext context)
+      throws XMLStreamException {
+      String message = "please do not set the NamespaceContext";
+      throw new UnsupportedOperationException(message);
+   }
 
-  public void writeCharacters(String text)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty) {
-      popContext();
-      _currentIsEmpty = false;
-    }
+   public void setPrefix(String prefix, String uri)
+      throws XMLStreamException {
+      _tracker.declare(prefix, uri);
+   }
 
-    try {
-      _current.appendChild(_document.createTextNode(text));
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void writeAttribute(String localName, String value)
+      throws XMLStreamException {
+      try {
+         ((Element) _current).setAttribute(localName, value);
+      } catch (ClassCastException e) {
+         throw new XMLStreamException(e);
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  public void writeComment(String data)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty) {
-      popContext();
-      _currentIsEmpty = false;
-    }
-
-    try {
-      _current.appendChild(_document.createComment(data));
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
-
-  public void writeDefaultNamespace(String namespaceURI)
-    throws XMLStreamException
-  {
-    _tracker.declare("", namespaceURI, true);
-  }
-
-  public void writeDTD(String dtd)
-    throws XMLStreamException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  public void writeEmptyElement(String localName)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty)
-      popContext();
-
-    try {
-      Node parent = _current;
-      _current = _document.createElement(localName);
-      parent.appendChild(_current);
-
-      if (! (parent instanceof Document))
-        pushContext();
-
-      _currentIsEmpty = true;
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
-
-  public void writeEmptyElement(String namespaceURI, String localName)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty)
-      popContext();
-
-    try {
-      String qname = localName;
-
+   public void writeAttribute(String namespaceURI, String localName,
+                              String value)
+      throws XMLStreamException {
       if (_repair) {
-        String prefix = _tracker.declare(namespaceURI);
+         String prefix = _tracker.declare(namespaceURI);
 
-        if (prefix != null)
-          qname = prefix + ':' + localName;
+         if (prefix == null)
+            ((Element) _current).setAttributeNS(namespaceURI, localName, value);
+         else {
+            String qname = prefix + ':' + localName;
+            ((Element) _current).setAttributeNS(namespaceURI, qname, value);
+         }
+      } else {
+         String prefix = _tracker.getPrefix(namespaceURI);
+
+         if (prefix == null)
+            throw new XMLStreamException(L.l("No prefix defined for namespace {0}", namespaceURI));
+
+         String qname = prefix + ':' + localName;
+
+         ((Element) _current).setAttributeNS(namespaceURI, qname, value);
       }
-      else {
-        String prefix = _tracker.getPrefix(namespaceURI);
+   }
 
-        if (prefix == null)
-          throw new XMLStreamException(L.l("No prefix defined for namespace {0}", namespaceURI));
+   public void writeAttribute(String prefix, String namespaceURI,
+                              String localName, String value)
+      throws XMLStreamException {
+      try {
+         if (_repair && _tracker.getPrefix(namespaceURI) == null)
+            _tracker.declare(prefix, namespaceURI, true);
+         else
+            _tracker.declare(prefix, namespaceURI);
 
-        qname = prefix + ':' + localName;
+         String qname = prefix + ':' + localName;
+         ((Element) _current).setAttributeNS(namespaceURI, qname, value);
+      } catch (ClassCastException e) {
+         throw new XMLStreamException(e);
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
+
+   public void writeCData(String data)
+      throws XMLStreamException {
+      if (_currentIsEmpty) {
+         popContext();
+         _currentIsEmpty = false;
       }
 
-      Node parent = _current;
-      _current = _document.createElementNS(namespaceURI, qname);
-      parent.appendChild(_current);
+      try {
+         _current.appendChild(_document.createCDATASection(data));
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-      if (! (parent instanceof Document))
-        pushContext();
+   public void writeCharacters(char[] text, int start, int len)
+      throws XMLStreamException {
+      writeCharacters(new String(text, start, len));
+   }
 
-      _currentIsEmpty = true;
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void writeCharacters(String text)
+      throws XMLStreamException {
+      if (_currentIsEmpty) {
+         popContext();
+         _currentIsEmpty = false;
+      }
 
-  public void writeEmptyElement(String prefix, String localName,
-                                String namespaceURI)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty)
-      popContext();
+      try {
+         _current.appendChild(_document.createTextNode(text));
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-    try {
-      if (_repair && _tracker.getPrefix(namespaceURI) == null) 
-        _tracker.declare(prefix, namespaceURI, true);
+   public void writeComment(String data)
+      throws XMLStreamException {
+      if (_currentIsEmpty) {
+         popContext();
+         _currentIsEmpty = false;
+      }
 
-      Node parent = _current;
-      String qname = prefix + ':' + localName;
-      _current = _document.createElementNS(namespaceURI, qname);
-      parent.appendChild(_current);
+      try {
+         _current.appendChild(_document.createComment(data));
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-      if (! (parent instanceof Document))
-        pushContext();
+   public void writeDefaultNamespace(String namespaceURI)
+      throws XMLStreamException {
+      _tracker.declare("", namespaceURI, true);
+   }
 
-      _currentIsEmpty = true;
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void writeDTD(String dtd)
+      throws XMLStreamException {
+      throw new UnsupportedOperationException();
+   }
 
-  public void writeEndDocument()
-    throws XMLStreamException
-  {
-  }
-
-  public void writeEndElement()
-    throws XMLStreamException
-  {
-    try {
-      popContext();
-
+   public void writeEmptyElement(String localName)
+      throws XMLStreamException {
       if (_currentIsEmpty)
-        popContext();
+         popContext();
 
-      _currentIsEmpty = false;
-    } 
-    catch (ClassCastException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+      try {
+         Node parent = _current;
+         _current = _document.createElement(localName);
+         parent.appendChild(_current);
 
-  public void writeEntityRef(String name)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty) {
-      popContext();
-      _currentIsEmpty = false;
-    }
+         if (!(parent instanceof Document))
+            pushContext();
 
-    try {
-      _current.appendChild(_document.createEntityReference(name));
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
-
-  public void writeNamespace(String prefix, String namespaceURI)
-    throws XMLStreamException
-  {
-    if (prefix == null || "".equals(prefix) || "xmlns".equals(prefix))
-      writeDefaultNamespace(namespaceURI);
-
-    else {
-      _tracker.declare(prefix, namespaceURI, true);
-
-      if (! (_current instanceof Element))
-        throw new XMLStreamException(L.l("Cannot write namespace without an element"));
-
-      String qname = XMLNS_ATTRIBUTE + ':' + prefix;
-
-      ((Element) _current).setAttributeNS(XML_NS_URI, qname, namespaceURI);
-    }
-  }
-
-  public void writeProcessingInstruction(String target)
-    throws XMLStreamException
-  {
-    writeProcessingInstruction(target, "");
-  }
-
-  public void writeProcessingInstruction(String target, String data)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty) {
-      popContext();
-      _currentIsEmpty = false;
-    }
-
-    try {
-      _current.appendChild(_document.createProcessingInstruction(target, data));
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
-
-  public void writeStartDocument()
-    throws XMLStreamException
-  {
-    writeStartDocument("1.0");
-  }
-
-  public void writeStartDocument(String version)
-    throws XMLStreamException
-  {
-    writeStartDocument(version, "utf-8");
-  }
-
-  public void writeStartDocument(String version, String encoding)
-    throws XMLStreamException
-  {
-    try {
-      _document.setXmlVersion(version);
-      // XXX encoding
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
-
-  public void writeStartElement(String localName)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty) {
-      popContext();
-      _currentIsEmpty = false;
-    }
-
-    try {
-      Node parent = _current;
-      _current = _document.createElement(localName);
-      parent.appendChild(_current);
-
-      if (! (parent instanceof Document))
-        pushContext();
-
-      _currentIsEmpty = false;
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
-
-  public void writeStartElement(String namespaceURI, String localName)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty) {
-      popContext();
-      _currentIsEmpty = false;
-    }
-
-    try {
-      String qname = localName;
-
-      if (_repair) {
-        String prefix = _tracker.declare(namespaceURI);
-
-        if (prefix != null)
-          qname = prefix + ':' + localName;
+         _currentIsEmpty = true;
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
       }
+   }
+
+   public void writeEmptyElement(String namespaceURI, String localName)
+      throws XMLStreamException {
+      if (_currentIsEmpty)
+         popContext();
+
+      try {
+         String qname = localName;
+
+         if (_repair) {
+            String prefix = _tracker.declare(namespaceURI);
+
+            if (prefix != null)
+               qname = prefix + ':' + localName;
+         } else {
+            String prefix = _tracker.getPrefix(namespaceURI);
+
+            if (prefix == null)
+               throw new XMLStreamException(L.l("No prefix defined for namespace {0}", namespaceURI));
+
+            qname = prefix + ':' + localName;
+         }
+
+         Node parent = _current;
+         _current = _document.createElementNS(namespaceURI, qname);
+         parent.appendChild(_current);
+
+         if (!(parent instanceof Document))
+            pushContext();
+
+         _currentIsEmpty = true;
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
+
+   public void writeEmptyElement(String prefix, String localName,
+                                 String namespaceURI)
+      throws XMLStreamException {
+      if (_currentIsEmpty)
+         popContext();
+
+      try {
+         if (_repair && _tracker.getPrefix(namespaceURI) == null)
+            _tracker.declare(prefix, namespaceURI, true);
+
+         Node parent = _current;
+         String qname = prefix + ':' + localName;
+         _current = _document.createElementNS(namespaceURI, qname);
+         parent.appendChild(_current);
+
+         if (!(parent instanceof Document))
+            pushContext();
+
+         _currentIsEmpty = true;
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
+
+   public void writeEndDocument()
+      throws XMLStreamException {
+   }
+
+   public void writeEndElement()
+      throws XMLStreamException {
+      try {
+         popContext();
+
+         if (_currentIsEmpty)
+            popContext();
+
+         _currentIsEmpty = false;
+      } catch (ClassCastException e) {
+         throw new XMLStreamException(e);
+      }
+   }
+
+   public void writeEntityRef(String name)
+      throws XMLStreamException {
+      if (_currentIsEmpty) {
+         popContext();
+         _currentIsEmpty = false;
+      }
+
+      try {
+         _current.appendChild(_document.createEntityReference(name));
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
+
+   public void writeNamespace(String prefix, String namespaceURI)
+      throws XMLStreamException {
+      if (prefix == null || "".equals(prefix) || "xmlns".equals(prefix))
+         writeDefaultNamespace(namespaceURI);
+
       else {
-        String prefix = _tracker.getPrefix(namespaceURI);
+         _tracker.declare(prefix, namespaceURI, true);
 
-        if (prefix == null)
-          throw new XMLStreamException(L.l("No prefix defined for namespace {0}", namespaceURI));
+         if (!(_current instanceof Element))
+            throw new XMLStreamException(L.l("Cannot write namespace without an element"));
 
-        qname = prefix + ':' + localName;
+         String qname = XMLNS_ATTRIBUTE + ':' + prefix;
+
+         ((Element) _current).setAttributeNS(XML_NS_URI, qname, namespaceURI);
+      }
+   }
+
+   public void writeProcessingInstruction(String target)
+      throws XMLStreamException {
+      writeProcessingInstruction(target, "");
+   }
+
+   public void writeProcessingInstruction(String target, String data)
+      throws XMLStreamException {
+      if (_currentIsEmpty) {
+         popContext();
+         _currentIsEmpty = false;
       }
 
-      Node parent = _current;
-      _current = _document.createElementNS(namespaceURI, qname);
-      parent.appendChild(_current);
+      try {
+         _current.appendChild(_document.createProcessingInstruction(target, data));
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-      if (! (parent instanceof Document))
-        pushContext();
+   public void writeStartDocument()
+      throws XMLStreamException {
+      writeStartDocument("1.0");
+   }
 
-      _currentIsEmpty = false;
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void writeStartDocument(String version)
+      throws XMLStreamException {
+      writeStartDocument(version, "utf-8");
+   }
 
-  public void writeStartElement(String prefix, String localName,
-                                String namespaceURI)
-    throws XMLStreamException
-  {
-    if (_currentIsEmpty) {
-      popContext();
-      _currentIsEmpty = false;
-    }
+   public void writeStartDocument(String version, String encoding)
+      throws XMLStreamException {
+      try {
+         _document.setXmlVersion(version);
+         // XXX encoding
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-    try {
-      if (_repair && _tracker.getPrefix(namespaceURI) == null)
-        _tracker.declare(prefix, namespaceURI, true);
+   public void writeStartElement(String localName)
+      throws XMLStreamException {
+      if (_currentIsEmpty) {
+         popContext();
+         _currentIsEmpty = false;
+      }
 
-      Node parent = _current;
-      String qname = prefix + ':' + localName;
-      _current = _document.createElementNS(namespaceURI, qname);
-      parent.appendChild(_current);
+      try {
+         Node parent = _current;
+         _current = _document.createElement(localName);
+         parent.appendChild(_current);
 
-      if (! (parent instanceof Document))
-        pushContext();
+         if (!(parent instanceof Document))
+            pushContext();
 
-      _currentIsEmpty = false;
-    }
-    catch (DOMException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+         _currentIsEmpty = false;
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  //////////////////////////////////////////////////////////////////////////
+   public void writeStartElement(String namespaceURI, String localName)
+      throws XMLStreamException {
+      if (_currentIsEmpty) {
+         popContext();
+         _currentIsEmpty = false;
+      }
 
-  private boolean _flushed = true;
+      try {
+         String qname = localName;
 
-  private void pushContext()
-    throws DOMException
-  {
-    _tracker.push();
-    _flushed = false;
-  }
+         if (_repair) {
+            String prefix = _tracker.declare(namespaceURI);
 
-  private void popContext()
-    throws DOMException, XMLStreamException
-  {
-    _tracker.pop();
-    _current = _current.getParentNode();
-  }
+            if (prefix != null)
+               qname = prefix + ':' + localName;
+         } else {
+            String prefix = _tracker.getPrefix(namespaceURI);
+
+            if (prefix == null)
+               throw new XMLStreamException(L.l("No prefix defined for namespace {0}", namespaceURI));
+
+            qname = prefix + ':' + localName;
+         }
+
+         Node parent = _current;
+         _current = _document.createElementNS(namespaceURI, qname);
+         parent.appendChild(_current);
+
+         if (!(parent instanceof Document))
+            pushContext();
+
+         _currentIsEmpty = false;
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
+
+   public void writeStartElement(String prefix, String localName,
+                                 String namespaceURI)
+      throws XMLStreamException {
+      if (_currentIsEmpty) {
+         popContext();
+         _currentIsEmpty = false;
+      }
+
+      try {
+         if (_repair && _tracker.getPrefix(namespaceURI) == null)
+            _tracker.declare(prefix, namespaceURI, true);
+
+         Node parent = _current;
+         String qname = prefix + ':' + localName;
+         _current = _document.createElementNS(namespaceURI, qname);
+         parent.appendChild(_current);
+
+         if (!(parent instanceof Document))
+            pushContext();
+
+         _currentIsEmpty = false;
+      } catch (DOMException e) {
+         throw new XMLStreamException(e);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////////
+
+   private boolean _flushed = true;
+
+   private void pushContext()
+      throws DOMException {
+      _tracker.push();
+      _flushed = false;
+   }
+
+   private void popContext()
+      throws DOMException, XMLStreamException {
+      _tracker.pop();
+      _current = _current.getParentNode();
+   }
 }

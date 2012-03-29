@@ -30,12 +30,7 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.MethodIntern;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -53,8 +48,8 @@ public class ClassVirtualMethodExpr extends Expr {
    protected boolean _isMethod;
 
    public ClassVirtualMethodExpr(Location location,
-           String methodName,
-           ArrayList<Expr> args) {
+                                 String methodName,
+                                 ArrayList<Expr> args) {
       super(location);
 
       _methodName = MethodIntern.intern(methodName);
@@ -65,8 +60,8 @@ public class ClassVirtualMethodExpr extends Expr {
    }
 
    public ClassVirtualMethodExpr(Location location,
-           String name,
-           Expr[] args) {
+                                 String name,
+                                 Expr[] args) {
       super(location);
 
       _methodName = MethodIntern.intern(name);
@@ -79,7 +74,6 @@ public class ClassVirtualMethodExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

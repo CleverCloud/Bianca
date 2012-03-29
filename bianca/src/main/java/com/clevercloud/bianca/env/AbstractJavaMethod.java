@@ -91,7 +91,7 @@ abstract public class AbstractJavaMethod extends AbstractFunction {
     * the same method.
     */
    private boolean isSameMethod(AbstractJavaMethod funA,
-           AbstractJavaMethod funB) {
+                                AbstractJavaMethod funB) {
       Class[] paramTypesA = funA.getJavaParameterTypes();
       Class[] paramTypesB = funB.getJavaParameterTypes();
 
@@ -114,9 +114,9 @@ abstract public class AbstractJavaMethod extends AbstractFunction {
 
    @Override
    abstract public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value[] args);
+                                    BiancaClass qClass,
+                                    Value qThis,
+                                    Value[] args);
 
    /**
     * Evaluates the function, returning a copy
@@ -134,39 +134,39 @@ abstract public class AbstractJavaMethod extends AbstractFunction {
    @Override
    public Value call(Env env) {
       return callMethod(env, getBiancaClass(), (Value) null,
-              new Value[0]);
+         new Value[0]);
    }
 
    @Override
    public Value call(Env env, Value a1) {
       return callMethod(env, getBiancaClass(), (Value) null,
-              new Value[]{a1});
+         new Value[]{a1});
    }
 
    @Override
    public Value call(Env env, Value a1, Value a2) {
       return callMethod(env, getBiancaClass(), (Value) null,
-              new Value[]{a1, a2});
+         new Value[]{a1, a2});
    }
 
    @Override
    public Value call(Env env, Value a1, Value a2, Value a3) {
       return callMethod(env, getBiancaClass(), (Value) null,
-              new Value[]{a1, a2, a3});
+         new Value[]{a1, a2, a3});
    }
 
    @Override
    public Value call(Env env,
-           Value a1, Value a2, Value a3, Value a4) {
+                     Value a1, Value a2, Value a3, Value a4) {
       return callMethod(env, getBiancaClass(), (Value) null,
-              new Value[]{a1, a2, a3, a4});
+         new Value[]{a1, a2, a3, a4});
    }
 
    @Override
    public Value call(Env env,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                     Value a1, Value a2, Value a3, Value a4, Value a5) {
       return callMethod(env, getBiancaClass(), (Value) null,
-              new Value[]{a1, a2, a3, a4, a5});
+         new Value[]{a1, a2, a3, a4, a5});
    }
 
    @Override
@@ -181,33 +181,33 @@ abstract public class AbstractJavaMethod extends AbstractFunction {
 
    @Override
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1,
-           Value a2) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value a1,
+                           Value a2) {
       return callMethod(env, qClass, qThis, new Value[]{a1, a2});
    }
 
    @Override
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1,
-           Value a2,
-           Value a3) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value a1,
+                           Value a2,
+                           Value a3) {
       return callMethod(env, qClass, qThis, new Value[]{a1, a2, a3});
    }
 
    @Override
    public Value callMethod(Env env, BiancaClass qClass, Value qThis,
-           Value a1, Value a2, Value a3, Value a4) {
+                           Value a1, Value a2, Value a3, Value a4) {
       return callMethod(env, qClass, qThis, new Value[]{a1, a2, a3, a4});
    }
 
    @Override
    public Value callMethod(Env env, BiancaClass qClass, Value qThis,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       return callMethod(env, qClass, qThis,
-              new Value[]{a1, a2, a3, a4, a5});
+         new Value[]{a1, a2, a3, a4, a5});
    }
 }

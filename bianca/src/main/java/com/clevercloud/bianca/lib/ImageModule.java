@@ -45,9 +45,13 @@ import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.*;
 import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * PHP image
@@ -114,27 +118,27 @@ public class ImageModule extends AbstractBiancaModule {
     */
    public static Value gd_info() {
       return (new ArrayValueImpl().append(StringValue.create("GD Version"), // ] => 2.0
-              StringValue.create("2.0")).append(StringValue.create("FreeType Support"), // ] => 1
-              BooleanValue.TRUE).append(
-              StringValue.create("FreeType Linkage"), // ] => with freetype
-              StringValue.create("with freetype")).append(StringValue.create("T1Lib Support"), // ] => 1
-              BooleanValue.TRUE).append(StringValue.create("GIF Read Support"), // ] => 1
-              BooleanValue.TRUE).append(StringValue.create("GIF Create Support"), // ] => 1
-              BooleanValue.TRUE).append(StringValue.create("JPEG Support"), // ] => 1
-              BooleanValue.TRUE).append(StringValue.create("PNG Support"), // ] => 1
-              BooleanValue.TRUE).append(StringValue.create("WBMP Support"), // ] => 1
-              BooleanValue.TRUE).append(StringValue.create("XPM Support"), // ] =>
-              BooleanValue.FALSE).append(StringValue.create("XBM Support"), // ] =>
-              BooleanValue.FALSE).append(StringValue.create("JIS-mapped Japanese Font Support"), // ] =>
-              BooleanValue.FALSE));
+         StringValue.create("2.0")).append(StringValue.create("FreeType Support"), // ] => 1
+         BooleanValue.TRUE).append(
+         StringValue.create("FreeType Linkage"), // ] => with freetype
+         StringValue.create("with freetype")).append(StringValue.create("T1Lib Support"), // ] => 1
+         BooleanValue.TRUE).append(StringValue.create("GIF Read Support"), // ] => 1
+         BooleanValue.TRUE).append(StringValue.create("GIF Create Support"), // ] => 1
+         BooleanValue.TRUE).append(StringValue.create("JPEG Support"), // ] => 1
+         BooleanValue.TRUE).append(StringValue.create("PNG Support"), // ] => 1
+         BooleanValue.TRUE).append(StringValue.create("WBMP Support"), // ] => 1
+         BooleanValue.TRUE).append(StringValue.create("XPM Support"), // ] =>
+         BooleanValue.FALSE).append(StringValue.create("XBM Support"), // ] =>
+         BooleanValue.FALSE).append(StringValue.create("JIS-mapped Japanese Font Support"), // ] =>
+         BooleanValue.FALSE));
    }
 
    /**
     * Returns the environment value.
     */
    public Value getimagesize(Env env,
-           Path file,
-           @Optional ArrayValue imageArray) {
+                             Path file,
+                             @Optional ArrayValue imageArray) {
       if (!file.canRead()) {
          return BooleanValue.FALSE;
       }
@@ -165,7 +169,7 @@ public class ImageModule extends AbstractBiancaModule {
       imageArray.put(LongValue.create(info._height));
       imageArray.put(LongValue.create(info._type));
       imageArray.put(env.createString("width=\"" + info._width
-              + "\" height=\"" + info._height + "\""));
+         + "\" height=\"" + info._height + "\""));
 
       if (info._bits >= 0) {
          imageArray.put(env.createString("bits"), LongValue.create(info._bits));
@@ -266,6 +270,7 @@ public class ImageModule extends AbstractBiancaModule {
    }
 
    // TODO: image2wbmp
+
    /**
     * Returns a copy of the current transform
     */
@@ -281,7 +286,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Returns a copy of the current transform
     */
    public static boolean image_set_transform(BiancaImage image,
-           AffineTransform transform) {
+                                             AffineTransform transform) {
       if (image == null) {
          return false;
       }
@@ -295,10 +300,10 @@ public class ImageModule extends AbstractBiancaModule {
     * Set the blending mode for an image
     */
    public static boolean imagealphablending(BiancaImage image,
-           boolean useAlphaBlending) {
+                                            boolean useAlphaBlending) {
       image.getGraphics().setComposite(useAlphaBlending
-              ? AlphaComposite.SrcOver
-              : AlphaComposite.Src);
+         ? AlphaComposite.SrcOver
+         : AlphaComposite.Src);
       return true;
    }
 
@@ -306,11 +311,11 @@ public class ImageModule extends AbstractBiancaModule {
     * Should antialias functions be used or not
     */
    public static boolean imageantialias(BiancaImage image,
-           boolean useAntiAliasing) {
+                                        boolean useAntiAliasing) {
       image.getGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-              useAntiAliasing
-              ? RenderingHints.VALUE_ANTIALIAS_ON
-              : RenderingHints.VALUE_ANTIALIAS_OFF);
+         useAntiAliasing
+            ? RenderingHints.VALUE_ANTIALIAS_ON
+            : RenderingHints.VALUE_ANTIALIAS_OFF);
       return true;
    }
 
@@ -318,13 +323,13 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a partial ellipse
     */
    public static boolean imagearc(BiancaImage image,
-           double cx, double cy,
-           double width, double height,
-           double start, double end,
-           int color) {
+                                  double cx, double cy,
+                                  double width, double height,
+                                  double start, double end,
+                                  int color) {
       Arc2D arc = new Arc2D.Double(cx - width / 2, cy - height / 2,
-              width, height, -1 * start, -1 * (end - start),
-              Arc2D.OPEN);
+         width, height, -1 * start, -1 * (end - start),
+         Arc2D.OPEN);
       image.stroke(arc, color);
       return true;
    }
@@ -333,7 +338,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a character horizontally
     */
    public static boolean imagechar(BiancaImage image, int font,
-           int x, int y, String c, int color) {
+                                   int x, int y, String c, int color) {
       Graphics2D g = image.getGraphics();
       g.setColor(intToColor(color));
       Font awtfont = image.getFont(font);
@@ -347,7 +352,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a character vertically
     */
    public static boolean imagecharup(BiancaImage image, int font,
-           int x, int y, String c, int color) {
+                                     int x, int y, String c, int color) {
       Graphics2D g = (Graphics2D) image.getGraphics().create();
       g.rotate(-1 * Math.PI / 2);
       g.setColor(intToColor(color));
@@ -362,7 +367,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Allocate a color for an image
     */
    public static long imagecolorallocate(BiancaImage image,
-           int r, int g, int b) {
+                                         int r, int g, int b) {
       if (image != null) {
          return image.allocateColor(r, g, b);
       } else {
@@ -374,13 +379,13 @@ public class ImageModule extends AbstractBiancaModule {
     * Allocate a color for an image
     */
    public static long imagecolorallocatealpha(BiancaImage image,
-           int r, int g, int b, int a) {
+                                              int r, int g, int b, int a) {
       // PHP's alpha values are inverted and only 7 bits.
       int alpha = 0x7f - (a & 0xff);
       return ((alpha << 24)
-              | ((r & 0xff) << 16)
-              | ((g & 0xff) << 8)
-              | ((b & 0xff) << 0));
+         | ((r & 0xff) << 16)
+         | ((g & 0xff) << 8)
+         | ((b & 0xff) << 0));
    }
 
    /**
@@ -401,7 +406,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Get the index of the closest color to the specified color + alpha
     */
    public static long imagecolorclosestalpha(BiancaImage image,
-           int r, int g, int b, int a) {
+                                             int r, int g, int b, int a) {
       return imagecolorallocatealpha(image, r, g, b, a);
    }
 
@@ -410,7 +415,7 @@ public class ImageModule extends AbstractBiancaModule {
     * nearest to the given color
     */
    public static long imagecolorclosesthwb(BiancaImage image,
-           int r, int g, int b) {
+                                           int r, int g, int b) {
       throw new BiancaException("imagecolorclosesthwb is not supported");
    }
 
@@ -433,7 +438,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Get the index of the specified color + alpha
     */
    public static long imagecolorexactalpha(BiancaImage image,
-           int r, int g, int b, int a) {
+                                           int r, int g, int b, int a) {
       return imagecolorallocatealpha(image, r, g, b, a);
    }
 
@@ -442,7 +447,7 @@ public class ImageModule extends AbstractBiancaModule {
     * match the true color version
     */
    public static boolean imagecolormatch(BiancaImage image1,
-           BiancaImage image2) {
+                                         BiancaImage image2) {
       // no-op
       return true;
    }
@@ -459,7 +464,7 @@ public class ImageModule extends AbstractBiancaModule {
     * alternative
     */
    public static long imagecolorresolvealpha(BiancaImage image,
-           int r, int g, int b, int a) {
+                                             int r, int g, int b, int a) {
       return imagecolorallocatealpha(image, r, g, b, a);
    }
 
@@ -467,7 +472,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Set the color for the specified palette index
     */
    public static boolean imagecolorset(BiancaImage image, int index,
-           int r, int g, int b) {
+                                       int r, int g, int b) {
       // no-op since we currently only support true-color, full-alpha channel
       return true;
    }
@@ -498,7 +503,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Define a color as transparent
     */
    public static long imagecolortransparent(BiancaImage image,
-           @Optional int color) {
+                                            @Optional int color) {
       // form that includes the optional argument is a no-op since we
       // currently only support true-color, full-alpha channel
       return 0xFF000000;
@@ -508,23 +513,23 @@ public class ImageModule extends AbstractBiancaModule {
     * Apply a 3x3 convolution matrix, using coefficient div and offset
     */
    public static boolean imageconvolution(BiancaImage image, ArrayValue matrix,
-           double div, double offset) {
+                                          double div, double offset) {
       // TODO: implement div and offset
       float[] kernelValues = new float[9];
 
       for (int y = 0; y < 3; y++) {
          for (int x = 0; x < 3; x++) {
             kernelValues[x + y * 3] =
-                    (float) matrix.get(LongValue.create(y)).get(LongValue.create(x)).toDouble();
+               (float) matrix.get(LongValue.create(y)).get(LongValue.create(x)).toDouble();
          }
       }
 
       ConvolveOp convolveOp = new ConvolveOp(new Kernel(3, 3, kernelValues),
-              ConvolveOp.EDGE_NO_OP,
-              null);
+         ConvolveOp.EDGE_NO_OP,
+         null);
 
       BufferedImage bufferedImage =
-              convolveOp.filter(image._bufferedImage, null);
+         convolveOp.filter(image._bufferedImage, null);
 
       image._bufferedImage.getGraphics().drawImage(bufferedImage, 1, 0, null);
       return true;
@@ -534,10 +539,10 @@ public class ImageModule extends AbstractBiancaModule {
     * Copy part of an image
     */
    public static boolean imagecopy(BiancaImage dest, BiancaImage src,
-           int dx, int dy, int sx, int sy, int w, int h) {
+                                   int dx, int dy, int sx, int sy, int w, int h) {
       dest.getGraphics().drawImage(src._bufferedImage,
-              dx, dy, dx + w, dy + h,
-              sx, sy, sx + w, sy + h, null);
+         dx, dy, dx + w, dy + h,
+         sx, sy, sx + w, sy + h, null);
       return true;
    }
 
@@ -545,23 +550,23 @@ public class ImageModule extends AbstractBiancaModule {
     * Copy and merge part of an image
     */
    public static boolean imagecopymerge(BiancaImage dest, BiancaImage src,
-           int dx, int dy, int sx, int sy,
-           int w, int h, int pct) {
+                                        int dx, int dy, int sx, int sy,
+                                        int w, int h, int pct) {
       BufferedImage rgba =
-              new BufferedImage(dest.getWidth(), dest.getHeight(),
-              BufferedImage.TYPE_INT_ARGB);
+         new BufferedImage(dest.getWidth(), dest.getHeight(),
+            BufferedImage.TYPE_INT_ARGB);
       rgba.getGraphics().drawImage(src._bufferedImage, 0, 0, null);
       BufferedImageOp rescaleOp =
-              new RescaleOp(new float[]{1, 1, 1, ((float) pct) / 100},
-              new float[]{0, 0, 0, 0},
-              null);
+         new RescaleOp(new float[]{1, 1, 1, ((float) pct) / 100},
+            new float[]{0, 0, 0, 0},
+            null);
       BufferedImage rescaledImage =
-              rescaleOp.filter(rgba, null);
+         rescaleOp.filter(rgba, null);
       Graphics2D g = (Graphics2D) dest.getGraphics().create();
       g.setComposite(AlphaComposite.SrcOver);
       g.drawImage(rescaledImage,
-              dx, dy, dx + w, dy + h,
-              sx, sy, sx + w, sy + h, null);
+         dx, dy, dx + w, dy + h,
+         sx, sy, sx + w, sy + h, null);
       return true;
    }
 
@@ -569,28 +574,28 @@ public class ImageModule extends AbstractBiancaModule {
     * Copy and merge part of an image with gray scale
     */
    public static boolean imagecopymergegray(BiancaImage dest, BiancaImage src,
-           int dx, int dy, int sx, int sy,
-           int w, int h, int pct) {
+                                            int dx, int dy, int sx, int sy,
+                                            int w, int h, int pct) {
       BufferedImage rgba =
-              new BufferedImage(dest.getWidth(), dest.getHeight(),
-              BufferedImage.TYPE_INT_ARGB);
+         new BufferedImage(dest.getWidth(), dest.getHeight(),
+            BufferedImage.TYPE_INT_ARGB);
       rgba.getGraphics().drawImage(src._bufferedImage, 0, 0, null);
       BufferedImageOp rescaleOp =
-              new RescaleOp(new float[]{1, 1, 1, ((float) pct) / 100},
-              new float[]{0, 0, 0, 0},
-              null);
+         new RescaleOp(new float[]{1, 1, 1, ((float) pct) / 100},
+            new float[]{0, 0, 0, 0},
+            null);
       BufferedImage rescaledImage =
-              rescaleOp.filter(rgba, null);
+         rescaleOp.filter(rgba, null);
 
       ColorConvertOp colorConvertOp =
-              new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+         new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
       colorConvertOp.filter(dest._bufferedImage, dest._bufferedImage);
 
       Graphics2D g = (Graphics2D) dest.getGraphics().create();
       g.setComposite(AlphaComposite.SrcOver);
       g.drawImage(rescaledImage,
-              dx, dy, dx + w, dy + h,
-              sx, sy, sx + w, sy + h, null);
+         dx, dy, dx + w, dy + h,
+         sx, sy, sx + w, sy + h, null);
       return true;
    }
 
@@ -598,16 +603,16 @@ public class ImageModule extends AbstractBiancaModule {
     * Copy and resize part of an image with resampling
     */
    public static boolean imagecopyresampled(BiancaImage dest, BiancaImage src,
-           int dx, int dy, int sx, int sy,
-           int dw, int dh, int sw, int sh) {
+                                            int dx, int dy, int sx, int sy,
+                                            int dw, int dh, int sw, int sh) {
       Graphics2D g = (Graphics2D) dest.getGraphics().create();
       g.setRenderingHint(RenderingHints.KEY_RENDERING,
-              RenderingHints.VALUE_RENDER_QUALITY);
+         RenderingHints.VALUE_RENDER_QUALITY);
       g.drawImage(src._bufferedImage,
-              dx, dy, dx + dw, dy + dh,
-              sx, sy, sx + sw, sy + sh, null);
+         dx, dy, dx + dw, dy + dh,
+         sx, sy, sx + sw, sy + sh, null);
       g.setRenderingHint(RenderingHints.KEY_RENDERING,
-              RenderingHints.VALUE_RENDER_DEFAULT);
+         RenderingHints.VALUE_RENDER_DEFAULT);
       return true;
    }
 
@@ -615,12 +620,12 @@ public class ImageModule extends AbstractBiancaModule {
     * Copy and resize part of an image
     */
    public static boolean imagecopyresized(BiancaImage dest, BiancaImage src,
-           int dx, int dy, int sx, int sy,
-           int dw, int dh, int sw, int sh) {
+                                          int dx, int dy, int sx, int sy,
+                                          int dw, int dh, int sw, int sh) {
       Graphics2D g = (Graphics2D) dest.getGraphics().create();
       g.drawImage(src._bufferedImage,
-              dx, dy, dx + dw, dy + dh,
-              sx, sy, sx + sw, sy + sh, null);
+         dx, dy, dx + dw, dy + dh,
+         sx, sy, sx + sw, sy + sh, null);
       return true;
    }
 
@@ -646,8 +651,8 @@ public class ImageModule extends AbstractBiancaModule {
     * Create a new image from a given part of GD2 file or URL
     */
    public static void imagecreatefromgd2part(Path file,
-           int srcX, int srcY,
-           int width, int height) {
+                                             int srcX, int srcY,
+                                             int width, int height) {
       throw new BiancaException(".gd images are not supported");
    }
 
@@ -674,7 +679,7 @@ public class ImageModule extends AbstractBiancaModule {
          return new BiancaImage(env, filename);
       } catch (Exception e) {
          env.warning(L.l("Can't open {0} as a jpeg image.\n{1}",
-                 filename, e));
+            filename, e));
          log.log(Level.FINE, e.toString(), e);
 
          return null;
@@ -731,14 +736,14 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a dashed line
     */
    public static boolean imagedashedline(BiancaImage image,
-           int x1, int y1, int x2, int y2,
-           int color) {
+                                         int x1, int y1, int x2, int y2,
+                                         int color) {
       Graphics2D g = image.getGraphics();
       Stroke stroke = g.getStroke();
       g.setColor(intToColor(color));
       g.setStroke(new BasicStroke(1, BasicStroke.JOIN_ROUND,
-              BasicStroke.CAP_ROUND, 1,
-              new float[]{5, 5}, 0));
+         BasicStroke.CAP_ROUND, 1,
+         new float[]{5, 5}, 0));
       g.draw(new Line2D.Float(x1, y1, x2, y2));
       g.setStroke(stroke);
       return true;
@@ -756,11 +761,11 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw an ellipse
     */
    public static boolean imageellipse(BiancaImage image,
-           double cx, double cy,
-           double width, double height,
-           int color) {
+                                      double cx, double cy,
+                                      double width, double height,
+                                      int color) {
       Shape shape = new Ellipse2D.Double(
-              cx - width / 2, cy - height / 2, width, height);
+         cx - width / 2, cy - height / 2, width, height);
       image.stroke(shape, color);
       return true;
    }
@@ -777,11 +782,11 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a partial ellipse and fill it
     */
    public static boolean imagefilledarc(BiancaImage image,
-           double cx, double cy,
-           double width, double height,
-           double start, double end,
-           int color,
-           int style) {
+                                        double cx, double cy,
+                                        double width, double height,
+                                        double start, double end,
+                                        int color,
+                                        int style) {
       int type = Arc2D.PIE;
 
       if ((style & IMG_ARC_CHORD) != 0) {
@@ -789,9 +794,9 @@ public class ImageModule extends AbstractBiancaModule {
       }
 
       Arc2D arc =
-              new Arc2D.Double(cx - width / 2, cy - height / 2,
-              width, height, -1 * start,
-              -1 * (end - start), type);
+         new Arc2D.Double(cx - width / 2, cy - height / 2,
+            width, height, -1 * start,
+            -1 * (end - start), type);
       if ((style & IMG_ARC_NOFILL) == 0) {
          image.fill(arc, color);
       }
@@ -806,11 +811,11 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a filled ellipse
     */
    public static boolean imagefilledellipse(BiancaImage image,
-           double cx, double cy,
-           double width, double height,
-           int color) {
+                                            double cx, double cy,
+                                            double width, double height,
+                                            int color) {
       Ellipse2D ellipse =
-              new Ellipse2D.Double(cx - width / 2, cy - height / 2, width, height);
+         new Ellipse2D.Double(cx - width / 2, cy - height / 2, width, height);
       image.fill(ellipse, color);
       return true;
    }
@@ -819,9 +824,9 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a filled polygon
     */
    public static boolean imagefilledpolygon(Env env,
-           BiancaImage image,
-           ArrayValue points,
-           int numPoints, int color) {
+                                            BiancaImage image,
+                                            ArrayValue points,
+                                            int numPoints, int color) {
       image.fill(arrayToPolygon(env, points, numPoints), color);
       return true;
    }
@@ -830,7 +835,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a filled rectangle
     */
    public static boolean imagefilledrectangle(BiancaImage image, int x1, int y1,
-           int x2, int y2, int color) {
+                                              int x2, int y2, int color) {
       image.fill(new Rectangle2D.Float(x1, y1, x2 - x1 + 1, y2 - y1 + 1), color);
       return true;
    }
@@ -839,18 +844,19 @@ public class ImageModule extends AbstractBiancaModule {
     * Flood fill to specific color
     */
    public static boolean imagefilltoborder(BiancaImage image, int x, int y,
-           int border, int color) {
+                                           int border, int color) {
       image.flood(x, y, color, border);
       return true;
    }
 
    // Filters /////////////////////////////////////////////////////////
+
    /**
     * Applies a filter to an image
     */
    public static boolean imagefilter(Env env, BiancaImage image, int filterType,
-           @Optional int arg1, @Optional int arg2,
-           @Optional int arg3) {
+                                     @Optional int arg1, @Optional int arg2,
+                                     @Optional int arg3) {
       switch (filterType) {
          case IMG_FILTER_NEGATE:
             // Reverses all colors of the image.
@@ -892,19 +898,19 @@ public class ImageModule extends AbstractBiancaModule {
          case IMG_FILTER_GAUSSIAN_BLUR:
             // Blurs the image using the Gaussian method.
             env.warning(L.l("imagefilter(IMG_FILTER_GAUSSIAN_BLUR) "
-                    + "unimplemented"));
+               + "unimplemented"));
             return false;
 
          case IMG_FILTER_SELECTIVE_BLUR:
             // Blurs the image.
             env.warning(L.l("imagefilter(IMG_FILTER_SELECTIVE_BLUR) "
-                    + "unimplemented"));
+               + "unimplemented"));
             return false;
 
          case IMG_FILTER_MEAN_REMOVAL:
             // Uses mean removal to achieve a "sketchy" effect.
             env.warning(L.l("imagefilter(IMG_FILTER_MEAN_REMOVAL) "
-                    + "unimplemented"));
+               + "unimplemented"));
             return false;
 
          case IMG_FILTER_SMOOTH:
@@ -969,11 +975,11 @@ public class ImageModule extends AbstractBiancaModule {
     * draws a true type font image
     */
    public static Value imageftbbox(Env env,
-           double size,
-           double angle,
-           StringValue fontFile,
-           String text,
-           @Optional ArrayValue extra) {
+                                   double size,
+                                   double angle,
+                                   StringValue fontFile,
+                                   String text,
+                                   @Optional ArrayValue extra) {
       try {
          BiancaImage image = new BiancaImage(100, 100);
 
@@ -1025,15 +1031,15 @@ public class ImageModule extends AbstractBiancaModule {
     * draws a true type font image
     */
    public static Value imagefttext(Env env,
-           @NotNull BiancaImage image,
-           double size,
-           double angle,
-           int x,
-           int y,
-           int color,
-           StringValue fontFile,
-           String text,
-           @Optional ArrayValue extra) {
+                                   @NotNull BiancaImage image,
+                                   double size,
+                                   double angle,
+                                   int x,
+                                   int y,
+                                   int color,
+                                   StringValue fontFile,
+                                   String text,
+                                   @Optional ArrayValue extra) {
       try {
          Graphics2D g = image.getGraphics();
          g.setColor(intToColor(color));
@@ -1052,7 +1058,7 @@ public class ImageModule extends AbstractBiancaModule {
          Object oldAntiAlias = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 
          g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                 RenderingHints.VALUE_ANTIALIAS_ON);
+            RenderingHints.VALUE_ANTIALIAS_ON);
 
          AffineTransform oldTransform = g.getTransform();
 
@@ -1093,7 +1099,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Apply a gamma correction to a GD image
     */
    public static boolean imagegammacorrect(BiancaImage image,
-           float gammaBefore, float gammaAfter) {
+                                           float gammaBefore, float gammaAfter) {
       // this is a no-op in PHP; apparently the GD library dropped
       // support for gamma correction between v1.8 and v2.0
       return true;
@@ -1117,7 +1123,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Output image to browser or file
     */
    public static boolean imagegif(Env env, BiancaImage image,
-           @Optional Path path) {
+                                  @Optional Path path) {
       try {
          if (path != null) {
             WriteStream os = path.openWrite();
@@ -1141,11 +1147,12 @@ public class ImageModule extends AbstractBiancaModule {
 
    // TODO: imagegrabscreen
    // TODO: imagegrabwindow
+
    /**
     * Enable or disable interlace
     */
    public static boolean imageinterlace(BiancaImage image,
-           @Optional Boolean enable) {
+                                        @Optional Boolean enable) {
       if (enable != null) {
          image.setInterlace(enable);
       }
@@ -1165,9 +1172,9 @@ public class ImageModule extends AbstractBiancaModule {
     * Output image to browser or file
     */
    public static boolean imagejpeg(Env env,
-           BiancaImage image,
-           @Optional Path path,
-           @Optional int quality) {
+                                   BiancaImage image,
+                                   @Optional Path path,
+                                   @Optional int quality) {
       try {
          if (path != null) {
             WriteStream os = path.openWrite();
@@ -1202,7 +1209,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a line
     */
    public static boolean imageline(BiancaImage image,
-           int x1, int y1, int x2, int y2, int color) {
+                                   int x1, int y1, int x2, int y2, int color) {
       image.stroke(new Line2D.Float(x1, y1, x2, y2), color);
       return true;
    }
@@ -1218,7 +1225,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Copy the palette from one image to another
     */
    public static boolean imagepalettecopy(BiancaImage source,
-           BiancaImage dest) {
+                                          BiancaImage dest) {
       return true;
    }
 
@@ -1226,8 +1233,8 @@ public class ImageModule extends AbstractBiancaModule {
     * Output a PNG image to either the browser or a file
     */
    public static boolean imagepng(Env env,
-           BiancaImage image,
-           @Optional Path path) {
+                                  BiancaImage image,
+                                  @Optional Path path) {
       try {
          if (path != null) {
             WriteStream os = path.openWrite();
@@ -1253,9 +1260,9 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a polygon
     */
    public static boolean imagepolygon(Env env,
-           BiancaImage image,
-           ArrayValue points,
-           int numPoints, int color) {
+                                      BiancaImage image,
+                                      ArrayValue points,
+                                      int numPoints, int color) {
       image.stroke(arrayToPolygon(env, points, numPoints), color);
       return true;
    }
@@ -1264,9 +1271,9 @@ public class ImageModule extends AbstractBiancaModule {
     * Give the bounding box of a text rectangle using PostScript Type1 fonts
     */
    public static ArrayValue imagepsbbox(String text, int font, int size,
-           @Optional int space,
-           @Optional int tightness,
-           @Optional float angle) {
+                                        @Optional int space,
+                                        @Optional int tightness,
+                                        @Optional float angle) {
       throw new BiancaException("imagepsbbox() not implemented");
    }
 
@@ -1316,13 +1323,13 @@ public class ImageModule extends AbstractBiancaModule {
     * To draw a text string over an image using PostScript Type1 fonts
     */
    public static ArrayValue imagepstext(BiancaImage image,
-           String text,
-           Value fontIndex,
-           int size, int fg, int bg, int x, int y,
-           @Optional int space,
-           @Optional int tightness,
-           @Optional float angle,
-           @Optional int antialias_steps) {
+                                        String text,
+                                        Value fontIndex,
+                                        int size, int fg, int bg, int x, int y,
+                                        @Optional int space,
+                                        @Optional int tightness,
+                                        @Optional float angle,
+                                        @Optional int antialias_steps) {
       throw new BiancaException("imagepstext() not implemented");
    }
 
@@ -1330,7 +1337,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a rectangle
     */
    public static boolean imagerectangle(BiancaImage image, int x1, int y1,
-           int x2, int y2, int color) {
+                                        int x2, int y2, int color) {
       if (x2 < x1) {
          int tmp = x1;
          x1 = x2;
@@ -1349,8 +1356,8 @@ public class ImageModule extends AbstractBiancaModule {
     * Rotate an image with a given angle
     */
    public static boolean imagerotate(BiancaImage image, float angle,
-           int backgroundColor,
-           @Optional int ignoreTransparent) {
+                                     int backgroundColor,
+                                     @Optional int ignoreTransparent) {
       // this function is broken on most PHP installs: "Note: This
       // function is only available if PHP is compiled with the bundled
       // version of the GD library."
@@ -1378,7 +1385,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Set a single pixel
     */
    public static boolean imagesetpixel(BiancaImage image,
-           int x, int y, int color) {
+                                       int x, int y, int color) {
       image.setPixel(x, y, color);
       return true;
    }
@@ -1387,8 +1394,8 @@ public class ImageModule extends AbstractBiancaModule {
     * Set the style for line drawing
     */
    public static boolean imagesetstyle(Env env,
-           BiancaImage image,
-           ArrayValue style) {
+                                       BiancaImage image,
+                                       ArrayValue style) {
       image.setStyle(env, style);
       return true;
    }
@@ -1402,11 +1409,12 @@ public class ImageModule extends AbstractBiancaModule {
    }
 
    // TODO: imagesettile
+
    /**
     * Draw a string horizontally
     */
    public static boolean imagestring(BiancaImage image, int font,
-           int x, int y, String s, int color) {
+                                     int x, int y, String s, int color) {
       Graphics2D g = image.getGraphics();
       g.setColor(intToColor(color));
       Font awtfont = image.getFont(font);
@@ -1421,7 +1429,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Draw a string vertically
     */
    public static boolean imagestringup(BiancaImage image, int font,
-           int x, int y, String s, int color) {
+                                       int x, int y, String s, int color) {
       Graphics2D g = image.getGraphics();
 
       AffineTransform oldTransform = g.getTransform();
@@ -1466,9 +1474,9 @@ public class ImageModule extends AbstractBiancaModule {
     * general affine transformation
     */
    public static boolean image_transform(BiancaImage image,
-           double m00, double m10,
-           double m01, double m11,
-           double m02, double m12) {
+                                         double m00, double m10,
+                                         double m01, double m11,
+                                         double m02, double m12) {
       if (image == null) {
          return false;
       }
@@ -1484,7 +1492,7 @@ public class ImageModule extends AbstractBiancaModule {
     * scaling transformation
     */
    public static boolean image_transform_scale(BiancaImage image,
-           double sx, double sy) {
+                                               double sx, double sy) {
       if (image == null) {
          return false;
       }
@@ -1498,7 +1506,7 @@ public class ImageModule extends AbstractBiancaModule {
     * shearing transformation
     */
    public static boolean image_transform_shear(BiancaImage image,
-           double shx, double shy) {
+                                               double shx, double shy) {
       if (image == null) {
          return false;
       }
@@ -1512,7 +1520,7 @@ public class ImageModule extends AbstractBiancaModule {
     * translation transformation
     */
    public static boolean image_transform_translate(BiancaImage image,
-           double x, double y) {
+                                                   double x, double y) {
       if (image == null) {
          return false;
       }
@@ -1526,10 +1534,10 @@ public class ImageModule extends AbstractBiancaModule {
     * draws a true type font image
     */
    public static Value imagettfbbox(Env env,
-           double size,
-           double angle,
-           StringValue fontFile,
-           String text) {
+                                    double size,
+                                    double angle,
+                                    StringValue fontFile,
+                                    String text) {
       return imageftbbox(env, size, angle, fontFile, text, null);
    }
 
@@ -1537,16 +1545,16 @@ public class ImageModule extends AbstractBiancaModule {
     * draws a true type font image
     */
    public static Value imagettftext(Env env,
-           @NotNull BiancaImage image,
-           double size,
-           double angle,
-           int x,
-           int y,
-           int color,
-           StringValue fontFile,
-           String text) {
+                                    @NotNull BiancaImage image,
+                                    double size,
+                                    double angle,
+                                    int x,
+                                    int y,
+                                    int color,
+                                    StringValue fontFile,
+                                    String text) {
       return imagefttext(env, image, size, angle, x, y,
-              color, fontFile, text, null);
+         color, fontFile, text, null);
    }
 
    /**
@@ -1560,17 +1568,18 @@ public class ImageModule extends AbstractBiancaModule {
     * Output image to browser or file
     */
    public static void imagewbmp(BiancaImage image,
-           @Optional Path filename,
-           @Optional int threshhold) {
+                                @Optional Path filename,
+                                @Optional int threshhold) {
       throw new BiancaException("not supported");
    }
 
    // TODO: imagexbm
+
    /**
     * Embe into single tags.
     */
    public static boolean iptcembed(String iptcdata, String jpegFileName,
-           @Optional int spool) {
+                                   @Optional int spool) {
       throw new BiancaException("iptcembed is not [yet] supported");
    }
 
@@ -1578,10 +1587,10 @@ public class ImageModule extends AbstractBiancaModule {
     * Convert JPEG image file to WBMP image file
     */
    public static void jpeg2wbmp(String jpegFilename,
-           String wbmpName,
-           int d_height,
-           int d_width,
-           int threshhold) {
+                                String wbmpName,
+                                int d_height,
+                                int d_width,
+                                int threshhold) {
       throw new BiancaException("not supported");
    }
 
@@ -1589,17 +1598,17 @@ public class ImageModule extends AbstractBiancaModule {
     * Convert PNG image file to WBM
     */
    public static void png2wbmp(String pngFilename,
-           String wbmpName,
-           int d_height,
-           int d_width,
-           int threshhold) {
+                               String wbmpName,
+                               int d_height,
+                               int d_width,
+                               int threshhold) {
       throw new BiancaException("not supported");
    }
 
    // Private Helpers ////////////////////////////////////////////////////////
    private static Polygon arrayToPolygon(Env env,
-           ArrayValue points,
-           int numPoints) {
+                                         ArrayValue points,
+                                         int numPoints) {
       Polygon polygon = new Polygon();
 
       Iterator<Value> iter = points.getValueIterator(env);
@@ -1619,16 +1628,16 @@ public class ImageModule extends AbstractBiancaModule {
       alpha |= ((alpha & 0x2) >> 1);  // copy bit #2 to LSB
 
       return new Color((argb >> 16) & 0xff,
-              (argb >> 8) & 0xff,
-              (argb >> 0) & 0xff,
-              alpha);
+         (argb >> 8) & 0xff,
+         (argb >> 0) & 0xff,
+         alpha);
    }
 
    /**
     * Parses the image size from the file.
     */
    private static boolean parseImageSize(ReadStream is, ImageInfo info)
-           throws IOException {
+      throws IOException {
       int ch;
 
       ch = is.read();
@@ -1636,12 +1645,12 @@ public class ImageModule extends AbstractBiancaModule {
       if (ch == 137) {
          // PNG - http://www.libpng.org/pub/png/spec/iso/index-object.html
          if (is.read() != 'P'
-                 || is.read() != 'N'
-                 || is.read() != 'G'
-                 || is.read() != '\r'
-                 || is.read() != '\n'
-                 || is.read() != 26
-                 || is.read() != '\n') {
+            || is.read() != 'N'
+            || is.read() != 'G'
+            || is.read() != '\r'
+            || is.read() != '\n'
+            || is.read() != 26
+            || is.read() != '\n') {
             return false;
          }
 
@@ -1649,10 +1658,10 @@ public class ImageModule extends AbstractBiancaModule {
       } else if (ch == 'G') {
          // GIF
          if (is.read() != 'I'
-                 || is.read() != 'F'
-                 || is.read() != '8'
-                 || ((ch = is.read()) != '7' && ch != '9')
-                 || is.read() != 'a') {
+            || is.read() != 'F'
+            || is.read() != '8'
+            || ((ch = is.read()) != '7' && ch != '9')
+            || is.read() != 'a') {
             return false;
          }
 
@@ -1673,7 +1682,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Parses the image size from the PNG file.
     */
    private static boolean parsePNGImageSize(ReadStream is, ImageInfo info)
-           throws IOException {
+      throws IOException {
       int length;
 
       while ((length = readInt(is)) > 0) {
@@ -1715,7 +1724,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Parses the image size from the PNG file.
     */
    private static boolean parseGIFImageSize(ReadStream is, ImageInfo info)
-           throws IOException {
+      throws IOException {
       int length;
 
       int width = (is.read() & 0xff) + 256 * (is.read() & 0xff);
@@ -1738,7 +1747,7 @@ public class ImageModule extends AbstractBiancaModule {
     * Parses the image size from the PNG file.
     */
    private static boolean parseJPEGImageSize(ReadStream is, ImageInfo info)
-           throws IOException {
+      throws IOException {
       int ch;
 
       while ((ch = is.read()) == 0xff) {
@@ -1779,17 +1788,17 @@ public class ImageModule extends AbstractBiancaModule {
 
    private static int pngCode(String code) {
       return ((code.charAt(0) << 24)
-              | (code.charAt(1) << 16)
-              | (code.charAt(2) << 8)
-              | (code.charAt(3)));
+         | (code.charAt(1) << 16)
+         | (code.charAt(2) << 8)
+         | (code.charAt(3)));
    }
 
    private static int readInt(ReadStream is)
-           throws IOException {
+      throws IOException {
       return (((is.read() & 0xff) << 24)
-              | ((is.read() & 0xff) << 16)
-              | ((is.read() & 0xff) << 8)
-              | ((is.read() & 0xff)));
+         | ((is.read() & 0xff) << 16)
+         | ((is.read() & 0xff) << 8)
+         | ((is.read() & 0xff)));
    }
 
    // Inner Classes ////////////////////////////////////////////////////////
@@ -1820,7 +1829,7 @@ public class ImageModule extends AbstractBiancaModule {
          _width = width;
          _height = height;
          _bufferedImage = new BufferedImage(width, height,
-                 BufferedImage.TYPE_INT_RGB);
+            BufferedImage.TYPE_INT_RGB);
          _graphics = (Graphics2D) _bufferedImage.getGraphics();
       }
 
@@ -1907,8 +1916,8 @@ public class ImageModule extends AbstractBiancaModule {
       }
 
       public Font getTrueTypeFont(Env env, StringValue fontPath)
-              throws FontFormatException,
-              IOException {
+         throws FontFormatException,
+         IOException {
          Font font = _fontMap.get(fontPath);
 
          if (font != null) {
@@ -2011,10 +2020,10 @@ public class ImageModule extends AbstractBiancaModule {
          for (int i = 0; i < _style.length; i++) {
             _graphics.setColor(intToColor(_style[i]));
             Stroke stroke =
-                    new BasicStroke(_thickness,
-                    BasicStroke.JOIN_ROUND, BasicStroke.CAP_ROUND, 1,
-                    new float[]{1, _style.length - 1},
-                    i);
+               new BasicStroke(_thickness,
+                  BasicStroke.JOIN_ROUND, BasicStroke.CAP_ROUND, 1,
+                  new float[]{1, _style.length - 1},
+                  i);
             _graphics.setStroke(stroke);
             _graphics.draw(shape);
          }
@@ -2024,7 +2033,7 @@ public class ImageModule extends AbstractBiancaModule {
          // TODO: support "styled brushes" (see imagesetstyle() example on php.net)
          Graphics2D g = _graphics;
          FlatteningPathIterator fpi =
-                 new FlatteningPathIterator(shape.getPathIterator(g.getTransform()), 1);
+            new FlatteningPathIterator(shape.getPathIterator(g.getTransform()), 1);
          float[] floats = new float[6];
          fpi.currentSegment(floats);
          float last_x = floats[0];
@@ -2032,8 +2041,8 @@ public class ImageModule extends AbstractBiancaModule {
          while (!fpi.isDone()) {
             fpi.currentSegment(floats);
             int distance = (int) Math.sqrt(
-                    (floats[0] - last_x) * (floats[0] - last_x)
-                    + (floats[1] - last_y) * (floats[1] - last_y));
+               (floats[0] - last_x) * (floats[0] - last_x)
+                  + (floats[1] - last_y) * (floats[1] - last_y));
             if (distance <= 1) {
                distance = 1;
             }
@@ -2079,9 +2088,9 @@ public class ImageModule extends AbstractBiancaModule {
 
       public long allocateColor(int r, int g, int b) {
          int color = ((0x7f << 24)
-                 | ((r & 0xff) << 16)
-                 | ((g & 0xff) << 8)
-                 | ((b & 0xff) << 0));
+            | ((r & 0xff) << 16)
+            | ((g & 0xff) << 8)
+            | ((b & 0xff) << 0));
 
          if (_isToFill) {
             _isToFill = false;
@@ -2100,7 +2109,7 @@ public class ImageModule extends AbstractBiancaModule {
       }
 
       private void flood(
-              int startx, int starty, int color, int border, boolean useBorder) {
+         int startx, int starty, int color, int border, boolean useBorder) {
          java.util.Queue<Integer> xq = new LinkedList<Integer>();
          java.util.Queue<Integer> yq = new LinkedList<Integer>();
          xq.add(startx);

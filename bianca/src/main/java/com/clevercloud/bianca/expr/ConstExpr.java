@@ -61,6 +61,7 @@ public class ConstExpr extends Expr {
    //
    // expression creation
    //
+
    /**
     * Creates a class field Foo::bar
     */
@@ -160,7 +161,6 @@ public class ConstExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

@@ -38,7 +38,7 @@ import java.util.IdentityHashMap;
  * Represents a PHP resource
  */
 public class ResourceValue extends Value
-        implements EnvCleanup {
+   implements EnvCleanup {
 
    /**
     * Implements the EnvCleanup interface.
@@ -82,19 +82,19 @@ public class ResourceValue extends Value
 
    @Override
    protected void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                              WriteStream out,
+                              int depth,
+                              IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("resource(" + toString(env) + ")");
    }
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("resource(" + toString(env) + ")");
    }
 }

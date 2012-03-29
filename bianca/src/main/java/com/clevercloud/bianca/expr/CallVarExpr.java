@@ -31,8 +31,8 @@ package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.NullValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.util.L10N;
 
@@ -72,6 +72,7 @@ public class CallVarExpr extends Expr {
 
    /**
     * Returns the reference of the value.
+    *
     * @param location
     */
    @Override
@@ -81,6 +82,7 @@ public class CallVarExpr extends Expr {
 
    /**
     * Returns the copy of the value.
+    *
     * @param location
     */
    @Override
@@ -107,7 +109,6 @@ public class CallVarExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Value evalImpl(Env env, boolean isRef, boolean isCopy) {

@@ -29,78 +29,73 @@
 
 package com.clevercloud.vfs.i18n;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
 import com.clevercloud.util.ByteAppendable;
 import com.clevercloud.vfs.OutputStreamWithBuffer;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 /**
  * Abstract class for a character-to-byte encoding writer.
- *
+ * <p/>
  * <p/>Implementations need to implement <code>create</code>
  * and <code>write()</code> at minimum.  Efficient implementations will
  * also implement the <code>write</code> into a buffer.
- *
+ * <p/>
  * <p/>Implementations should not buffer the bytes.
  */
 abstract public class EncodingWriter {
-  protected static final Logger log
-    = Logger.getLogger(EncodingWriter.class.getName());
-  
-  /**
-   * Returns the Java encoding for the writer.
-   */
-  public String getJavaEncoding()
-  {
-    return "unknown";
-  }
-  
-  /**
-   * Sets the Java encoding for the writer.
-   */
-  public void setJavaEncoding(String encoding)
-  {
-  }
-  
-  /**
-   * Returns a new encoding writer for the given stream and javaEncoding.
-   *
-   * @param javaEncoding the JDK name for the encoding.
-   *
-   * @return the encoding writer
-   */
-  public abstract EncodingWriter create(String javaEncoding);
-  
-  /**
-   * Returns a new encoding writer using the saved writer.
-   *
-   * @return the encoding writer
-   */
-  public EncodingWriter create()
-  {
-    return create(getJavaEncoding());
-  }
+   protected static final Logger log
+      = Logger.getLogger(EncodingWriter.class.getName());
 
-  /**
-   * Writes the next character using the correct encoding.
-   *
-   * @param ch the character to write
-   */
-  public abstract void write(ByteAppendable os, char ch)
-    throws IOException;
+   /**
+    * Returns the Java encoding for the writer.
+    */
+   public String getJavaEncoding() {
+      return "unknown";
+   }
 
-  /**
-   * Writes a character buffer using the correct encoding.
-   *
-   * @param cbuf character buffer receiving the data.
-   * @param off starting offset into the buffer.
-   * @param len number of characters to write
-   */
-  public void write(OutputStreamWithBuffer os, char []cbuf, int off, int len)
-    throws IOException
-  {
-    for (int i = 0; i < len; i++)
-      write(os, cbuf[off + i]);
-  }  
+   /**
+    * Sets the Java encoding for the writer.
+    */
+   public void setJavaEncoding(String encoding) {
+   }
+
+   /**
+    * Returns a new encoding writer for the given stream and javaEncoding.
+    *
+    * @param javaEncoding the JDK name for the encoding.
+    * @return the encoding writer
+    */
+   public abstract EncodingWriter create(String javaEncoding);
+
+   /**
+    * Returns a new encoding writer using the saved writer.
+    *
+    * @return the encoding writer
+    */
+   public EncodingWriter create() {
+      return create(getJavaEncoding());
+   }
+
+   /**
+    * Writes the next character using the correct encoding.
+    *
+    * @param ch the character to write
+    */
+   public abstract void write(ByteAppendable os, char ch)
+      throws IOException;
+
+   /**
+    * Writes a character buffer using the correct encoding.
+    *
+    * @param cbuf character buffer receiving the data.
+    * @param off  starting offset into the buffer.
+    * @param len  number of characters to write
+    */
+   public void write(OutputStreamWithBuffer os, char[] cbuf, int off, int len)
+      throws IOException {
+      for (int i = 0; i < len; i++)
+         write(os, cbuf[off + i]);
+   }
 }

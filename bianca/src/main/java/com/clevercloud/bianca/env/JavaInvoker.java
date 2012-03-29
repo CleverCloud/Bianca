@@ -45,7 +45,7 @@ import java.lang.annotation.Annotation;
  * Represents the introspected static function information.
  */
 abstract public class JavaInvoker
-        extends AbstractJavaMethod {
+   extends AbstractJavaMethod {
 
    private static final L10N L = new L10N(JavaInvoker.class);
    private static final Object[] NULL_ARGS = new Object[0];
@@ -73,11 +73,11 @@ abstract public class JavaInvoker
     * Creates the statically introspected function.
     */
    public JavaInvoker(ModuleContext moduleContext,
-           String name,
-           Class[] param,
-           Annotation[][] paramAnn,
-           Annotation[] methodAnn,
-           Class retType) {
+                      String name,
+                      Class[] param,
+                      Annotation[][] paramAnn,
+                      Annotation[] methodAnn,
+                      Class retType) {
       _moduleContext = moduleContext;
       _name = name;
       _param = param;
@@ -140,8 +140,8 @@ abstract public class JavaInvoker
             boolean isRestReference = false;
 
             if (_param.length > 0
-                    && (_param[_param.length - 1].equals(Value[].class)
-                    || _param[_param.length - 1].equals(Object[].class))) {
+               && (_param[_param.length - 1].equals(Value[].class)
+               || _param[_param.length - 1].equals(Object[].class))) {
                hasRestArgs = true;
 
                for (Annotation ann : _paramAnn[_param.length - 1]) {
@@ -190,20 +190,20 @@ abstract public class JavaInvoker
                         _defaultExprs[i] = exprFactory.createLiteral(StringValue.EMPTY);
                      } else {
                         _defaultExprs[i] = BiancaParser.parseDefault(exprFactory,
-                                opt.value());
+                           opt.value());
                      }
                   } else if (Reference.class.isAssignableFrom(ann.annotationType())) {
                      if (!Value.class.equals(argType)
-                             && !Var.class.equals(argType)) {
+                        && !Var.class.equals(argType)) {
                         throw new BiancaException(
-                                L.l("reference must be Value or Var for {0}", _name));
+                           L.l("reference must be Value or Var for {0}", _name));
                      }
 
                      isReference = true;
                   } else if (PassThru.class.isAssignableFrom(ann.annotationType())) {
                      if (!Value.class.equals(argType)) {
                         throw new BiancaException(
-                                L.l("pass thru must be Value for {0}", _name));
+                           L.l("pass thru must be Value for {0}", _name));
                      }
 
                      isPassThru = true;
@@ -212,8 +212,8 @@ abstract public class JavaInvoker
                   } else if (Expect.class.isAssignableFrom(ann.annotationType())) {
                      if (!Value.class.equals(argType)) {
                         throw new BiancaException(L.l(
-                                "Expect type must be Value for {0}",
-                                _name));
+                           "Expect type must be Value for {0}",
+                           _name));
                      }
 
                      Expect.Type type = ((Expect) ann).type();
@@ -244,8 +244,8 @@ abstract public class JavaInvoker
             }
 
             _unmarshalReturn = marshalFactory.create(_retType,
-                    false,
-                    returnNullAsFalse);
+               false,
+               returnNullAsFalse);
          } finally {
             _isInit = true;
          }
@@ -639,9 +639,9 @@ abstract public class JavaInvoker
 
    @Override
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value[] args) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value[] args) {
       if (!_isInit) {
          init();
       }
@@ -671,15 +671,15 @@ abstract public class JavaInvoker
             javaArgs[k] = _marshalArgs[i].marshal(env, args[i], _param[k]);
          } else if (_defaultExprs[i] != null) {
             javaArgs[k] = _marshalArgs[i].marshal(env,
-                    _defaultExprs[i],
-                    _param[k]);
+               _defaultExprs[i],
+               _param[k]);
          } else {
             warnMessage = L.l(
-                    "function '{0}' has {1} required arguments, "
-                    + "but only {2} were provided",
-                    _name,
-                    _minArgumentLength,
-                    args.length);
+               "function '{0}' has {1} required arguments, "
+                  + "but only {2} were provided",
+               _name,
+               _minArgumentLength,
+               args.length);
 
             //return NullValue.NULL;
 
@@ -721,11 +721,11 @@ abstract public class JavaInvoker
       } else if (_marshalArgs.length < args.length) {
          // php/153o
          env.warning(L.l(
-                 "function '{0}' called with {1} arguments, "
-                 + "but only expects {2} arguments",
-                 _name,
-                 args.length,
-                 _marshalArgs.length));
+            "function '{0}' called with {1} arguments, "
+               + "but only expects {2} arguments",
+            _name,
+            args.length,
+            _marshalArgs.length));
       }
 
       Object result = invoke(obj, javaArgs);

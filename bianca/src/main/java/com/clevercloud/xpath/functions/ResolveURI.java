@@ -36,65 +36,60 @@ import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.XPathParseException;
 import com.clevercloud.xpath.expr.AbstractStringExpr;
-
 import org.w3c.dom.Node;
 
 /**
  * Returns a relative URI against another.
  */
 public class ResolveURI extends AbstractStringExpr {
-  private static final L10N L = new L10N(ResolveURI.class);
-  
-  private Expr _relExpr;
-  private Expr _baseExpr;
+   private static final L10N L = new L10N(ResolveURI.class);
 
-  public ResolveURI(Expr relExpr, Expr baseExpr)
-    throws XPathParseException
-  {
-    _relExpr = relExpr;
-    _baseExpr = baseExpr;
+   private Expr _relExpr;
+   private Expr _baseExpr;
 
-    if (relExpr == null)
-      throw new XPathParseException(L.l("fn:resolve-uri(relative,[base])"));
-  }
+   public ResolveURI(Expr relExpr, Expr baseExpr)
+      throws XPathParseException {
+      _relExpr = relExpr;
+      _baseExpr = baseExpr;
 
-  /**
-   * Evaluates the expression as an string.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the string representation of the expression.
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    String rel = _relExpr.evalString(node, env);
+      if (relExpr == null)
+         throw new XPathParseException(L.l("fn:resolve-uri(relative,[base])"));
+   }
 
-    if (rel.startsWith("/") ||
-        rel.indexOf(':') > 0 && rel.indexOf(':') < '/')
-      return rel;
+   /**
+    * Evaluates the expression as an string.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the string representation of the expression.
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      String rel = _relExpr.evalString(node, env);
 
-    String base;
+      if (rel.startsWith("/") ||
+         rel.indexOf(':') > 0 && rel.indexOf(':') < '/')
+         return rel;
 
-    if (_baseExpr != null)
-      base = _baseExpr.evalString(node, env);
-    else
-      base = QAbstractNode.baseURI(node);
+      String base;
 
-    int last = base.lastIndexOf('/');
+      if (_baseExpr != null)
+         base = _baseExpr.evalString(node, env);
+      else
+         base = QAbstractNode.baseURI(node);
 
-    if (last < 0)
-      return rel;
-    else
-      return base.substring(0, last + 1) + rel;
-  }
+      int last = base.lastIndexOf('/');
 
-  public String toString()
-  {
-    if (_baseExpr != null)
-      return "fn:resolve-uri(" + _relExpr + "," + _baseExpr + ")";
-    else
-      return "fn:resolve-uri(" + _relExpr + ")";
-  }
+      if (last < 0)
+         return rel;
+      else
+         return base.substring(0, last + 1) + rel;
+   }
+
+   public String toString() {
+      if (_baseExpr != null)
+         return "fn:resolve-uri(" + _relExpr + "," + _baseExpr + ")";
+      else
+         return "fn:resolve-uri(" + _relExpr + ")";
+   }
 }

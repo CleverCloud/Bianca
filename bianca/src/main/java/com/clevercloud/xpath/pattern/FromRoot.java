@@ -30,7 +30,6 @@
 package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -38,80 +37,69 @@ import org.w3c.dom.Node;
  * Represents a match with the document root.
  */
 public class FromRoot extends Axis {
-  public FromRoot()
-  {
-    super(null);
-  }
+   public FromRoot() {
+      super(null);
+   }
 
-  /**
-   * Matches the owner document.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true if the node is the owner document.
-   */
-  public boolean match(Node node, ExprEnvironment env)
-  {
-    return (node instanceof Document);
-  }
+   /**
+    * Matches the owner document.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true if the node is the owner document.
+    */
+   public boolean match(Node node, ExprEnvironment env) {
+      return (node instanceof Document);
+   }
 
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    Node doc = node.getOwnerDocument();
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      Node doc = node.getOwnerDocument();
 
-    if (doc != null)
-      return doc;
-    else
-      return node;
-  }
+      if (doc != null)
+         return doc;
+      else
+         return node;
+   }
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param lastNode the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node lastNode)
-  {
-    return null;
-  }
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node     the current node
+    * @param lastNode the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node lastNode) {
+      return null;
+   }
 
-  /**
-   * The root is strictly ascending.
-   */
-  public boolean isStrictlyAscending()
-  {
-    return true;
-  }
-  
-  /**
-   * Returns true if the pattern selects a single node
-   */
-  boolean isSingleSelect()
-  {
-    return true;
-  }
+   /**
+    * The root is strictly ascending.
+    */
+   public boolean isStrictlyAscending() {
+      return true;
+   }
 
-  /**
-   * Returns true if the two patterns are equal.
-   */
-  public boolean equals(Object b)
-  {
-    return b instanceof FromRoot;
-  }
+   /**
+    * Returns true if the pattern selects a single node
+    */
+   boolean isSingleSelect() {
+      return true;
+   }
 
-  public String toString()
-  {
-    return "/";
-  }
+   /**
+    * Returns true if the two patterns are equal.
+    */
+   public boolean equals(Object b) {
+      return b instanceof FromRoot;
+   }
+
+   public String toString() {
+      return "/";
+   }
 }

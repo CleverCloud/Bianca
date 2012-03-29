@@ -30,7 +30,6 @@
  */
 package com.clevercloud.bianca.lib.gettext;
 
-import com.clevercloud.vfs.Dependency;
 import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
@@ -58,10 +57,10 @@ class GettextResource {
    private String _charset;
 
    protected GettextResource(Env env,
-           Path root,
-           Locale locale,
-           CharSequence category,
-           CharSequence domain) {
+                             Path root,
+                             Locale locale,
+                             CharSequence category,
+                             CharSequence domain) {
       _env = env;
 
       StringBuilder sb = new StringBuilder(locale.toString());
@@ -156,9 +155,8 @@ class GettextResource {
    /**
     * Returns the translation for this key at the specified index in the array.
     *
-    * @param key to find translation of
+    * @param key   to find translation of
     * @param index in the array for this key
-    *
     * @return translated string, else null on error.
     */
    protected StringValue getTranslationImpl(StringValue key, int index) {

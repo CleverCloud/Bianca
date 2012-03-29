@@ -43,489 +43,456 @@ import java.util.Iterator;
  * Generates programs from patterns.
  */
 public class ChoiceItem extends Item {
-  protected final static L10N L = new L10N(ChoiceItem.class);
+   protected final static L10N L = new L10N(ChoiceItem.class);
 
-  private ArrayList<Item> _items = new ArrayList<Item>();
+   private ArrayList<Item> _items = new ArrayList<Item>();
 
-  private boolean _allowEmpty = false;
+   private boolean _allowEmpty = false;
 
-  public ChoiceItem()
-  {
-  }
+   public ChoiceItem() {
+   }
 
-  public static Item create(Item left, Item right)
-  {
-    ChoiceItem choice = new ChoiceItem();
-    choice.addItem(left);
-    choice.addItem(right);
+   public static Item create(Item left, Item right) {
+      ChoiceItem choice = new ChoiceItem();
+      choice.addItem(left);
+      choice.addItem(right);
 
-    return choice.getMin();
-  }
-
-  public void addItem(Item item)
-  {
-    if (item == null)
-      return;
-    else if (item instanceof EmptyItem) {
-      _allowEmpty = true;
-      return;
-    }
-    else if (item instanceof ChoiceItem) {
-      ChoiceItem choice = (ChoiceItem) item;
-
-      if (choice._allowEmpty)
-        _allowEmpty = true;
-      
-      for (int i = 0; i < choice._items.size(); i++)
-        addItem(choice._items.get(i));
-
-      return;
-    }
-
-    for (int i = 0; i < _items.size(); i++) {
-      Item subItem = _items.get(i);
-
-      if (item.equals(subItem))
-        return;
-
-      if (item instanceof InElementItem &&
-          subItem instanceof InElementItem) {
-        InElementItem elt1 = (InElementItem) item;
-        InElementItem elt2 = (InElementItem) subItem;
-
-        if (elt1.getElementItem().equals(elt2.getElementItem())) {
-          subItem = InElementItem.create(elt1.getElementItem(),
-                                         create(elt1.getContinuationItem(),
-                                                elt2.getContinuationItem()));
-          _items.remove(i);
-          addItem(subItem);
-          return;
-        }
-      }
-      
-      if (item instanceof GroupItem
-          && subItem instanceof GroupItem) {
-        GroupItem group1 = (GroupItem) item;
-        GroupItem group2 = (GroupItem) subItem;
-
-        if (group1.getFirst().equals(group2.getFirst())) {
-          subItem = GroupItem.create(group1.getFirst(),
-                                     create(group1.getSecond(),
-                                            group2.getSecond()));
-          _items.remove(i);
-          addItem(subItem);
-          return;
-        }
-      }
-    }
-
-    _items.add(item);
-  }
-
-  public Item getMin()
-  {
-    if (! _allowEmpty && _items.size() == 0)
-      return null;
-    else if (_allowEmpty && _items.size() == 0)
-      return EmptyItem.create();
-    else if (_items.size() == 1
-             && (! _allowEmpty || _items.get(0).allowEmpty()))
-      return _items.get(0);
-    else
-      return this;
-  }
-
-  /**
-   * Returns the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-    for (int i = 0; i < _items.size(); i++)
-      _items.get(i).firstSet(set);
-  }
-
-  /**
-   * Returns the first set, the set of element names possible.
-   */
-  public void requiredFirstSet(HashSet<QName> set)
-  {
-    if (allowEmpty())
-      return;
-    
-    for (int i = 0; i < _items.size(); i++)
-      _items.get(i).requiredFirstSet(set);
-  }
-  
-  /**
-   * Allows empty if any item allows empty.
-   */
-  public boolean allowEmpty()
-  {
-    if (_allowEmpty)
-      return true;
-    
-    for (int i = 0; i < _items.size(); i++)
-      if (_items.get(i).allowEmpty())
-        return true;
-
-    return false;
-  }
-
-  /**
-   * Interleaves a continuation.
-   */
-  public Item interleaveContinuation(Item cont)
-  {
-    ChoiceItem item = new ChoiceItem();
-
-    for (int i = 0; i < _items.size(); i++)
-      item.addItem(_items.get(i).interleaveContinuation(cont));
-
-    return item.getMin();
-  }
-
-  /**
-   * Adds an inElement continuation.
-   */
-  public Item inElementContinuation(Item cont)
-  {
-    ChoiceItem item = new ChoiceItem();
-
-    for (int i = 0; i < _items.size(); i++)
-      item.addItem(_items.get(i).inElementContinuation(cont));
-
-    return item.getMin();
-  }
-
-  /**
-   * Adds a group continuation.
-   */
-  public Item groupContinuation(Item cont)
-  {
-    ChoiceItem item = new ChoiceItem();
-
-    for (int i = 0; i < _items.size(); i++)
-      item.addItem(_items.get(i).groupContinuation(cont));
-
-    return item.getMin();
-  }
-  
-  /**
-   * Return all possible child items or null
-   */
-  public Iterator<Item> getItemsIterator()
-  {
-    if ( _items.size() == 0 )
-      return emptyItemIterator();
-    else
-      return _items.iterator();
-  }
-
-  /**
-   * Returns the next item on the match.
-   */
-  public Item startElement(QName name)
-    throws RelaxException
-  {
-    Item result = null;
-    ChoiceItem choice = null;
-
-    for (int i = 0; i < _items.size(); i++) {
-      Item next = _items.get(i).startElement(name);
-
-      if (next == null) {
-      }
-      else if (result == null)
-        result = next;
-      else {
-        if (choice == null) {
-          choice = new ChoiceItem();
-          choice.addItem(result);
-        }
-
-        choice.addItem(next);
-      }
-    }
-
-    if (choice != null)
       return choice.getMin();
-    else
-      return result;
-  }
+   }
 
-  /**
-   * Returns the first set, the set of attribute names possible.
-   */
-  public void attributeSet(HashSet<QName> set)
-  {
-    for (int i = 0; i < _items.size(); i++)
-      _items.get(i).attributeSet(set);
-  }
-  
-  /**
-   * Returns true if the attribute is allowed.
-   *
-   * @param name the name of the attribute
-   * @param value the value of the attribute
-   *
-   * @return true if the attribute is allowed
-   */
-  public boolean allowAttribute(QName name, String value)
-    throws RelaxException
-  {
-    for (int i = _items.size() - 1; i >= 0; i--)
-      if (_items.get(i).allowAttribute(name, value))
-        return true;
+   public void addItem(Item item) {
+      if (item == null)
+         return;
+      else if (item instanceof EmptyItem) {
+         _allowEmpty = true;
+         return;
+      } else if (item instanceof ChoiceItem) {
+         ChoiceItem choice = (ChoiceItem) item;
 
-    return false;
-  }
-  
-  /**
-   * Sets an attribute.
-   *
-   * @param name the name of the attribute
-   * @param value the value of the attribute
-   *
-   * @return the program for handling the element
-   */
-  public Item setAttribute(QName name, String value)
-    throws RelaxException
-  {
-    if (! allowAttribute(name, value))
-      return this;
+         if (choice._allowEmpty)
+            _allowEmpty = true;
 
-    ChoiceItem choice = new ChoiceItem();
+         for (int i = 0; i < choice._items.size(); i++)
+            addItem(choice._items.get(i));
 
-    if (_allowEmpty)
-      choice.addItem(EmptyItem.create());
-
-    for (int i = _items.size() - 1; i >= 0; i--) {
-      Item next = _items.get(i).setAttribute(name, value);
-
-      if (next == null)
-        return null;
-      
-      choice.addItem(next);
-    }
-
-    return choice.getMin();
-  }
-
-  /**
-   * Returns true if the item can match empty.
-   */
-  public Item attributeEnd()
-  {
-    ChoiceItem choice = new ChoiceItem();
-
-    if (_allowEmpty)
-      choice._allowEmpty = true;
-
-    for (int i = _items.size() - 1; i >= 0; i--) {
-      Item next = _items.get(i).attributeEnd();
-
-      if (next == null)
-        continue;
-
-      choice.addItem(next);
-    }
-
-    if (choice.equals(this))
-      return this;
-    else
-      return choice.getMin();
-  }
-  
-  /**
-   * Returns the next item on the match.
-   */
-  @Override
-  public Item text(CharSequence data)
-    throws RelaxException
-  {
-    Item result = null;
-    ChoiceItem choice = null;
-
-    for (int i = 0; i < _items.size(); i++) {
-      Item next = _items.get(i).text(data);
-
-      if (next == null) {
+         return;
       }
-      else if (result == null)
-        result = next;
-      else {
-        if (choice == null) {
-          choice = new ChoiceItem();
-          choice.addItem(result);
-        }
 
-        choice.addItem(next);
+      for (int i = 0; i < _items.size(); i++) {
+         Item subItem = _items.get(i);
+
+         if (item.equals(subItem))
+            return;
+
+         if (item instanceof InElementItem &&
+            subItem instanceof InElementItem) {
+            InElementItem elt1 = (InElementItem) item;
+            InElementItem elt2 = (InElementItem) subItem;
+
+            if (elt1.getElementItem().equals(elt2.getElementItem())) {
+               subItem = InElementItem.create(elt1.getElementItem(),
+                  create(elt1.getContinuationItem(),
+                     elt2.getContinuationItem()));
+               _items.remove(i);
+               addItem(subItem);
+               return;
+            }
+         }
+
+         if (item instanceof GroupItem
+            && subItem instanceof GroupItem) {
+            GroupItem group1 = (GroupItem) item;
+            GroupItem group2 = (GroupItem) subItem;
+
+            if (group1.getFirst().equals(group2.getFirst())) {
+               subItem = GroupItem.create(group1.getFirst(),
+                  create(group1.getSecond(),
+                     group2.getSecond()));
+               _items.remove(i);
+               addItem(subItem);
+               return;
+            }
+         }
       }
-    }
 
-    if (choice != null)
-      return choice.getMin();
-    else
-      return result;
-  }
-  
-  /**
-   * Returns the next item when the element closes
-   */
-  public Item endElement()
-    throws RelaxException
-  {
-    ChoiceItem choice = new ChoiceItem();
+      _items.add(item);
+   }
 
-    if (_allowEmpty)
-      choice._allowEmpty = true;
+   public Item getMin() {
+      if (!_allowEmpty && _items.size() == 0)
+         return null;
+      else if (_allowEmpty && _items.size() == 0)
+         return EmptyItem.create();
+      else if (_items.size() == 1
+         && (!_allowEmpty || _items.get(0).allowEmpty()))
+         return _items.get(0);
+      else
+         return this;
+   }
 
-    for (int i = _items.size() - 1; i >= 0; i--) {
-      Item next = _items.get(i).endElement();
+   /**
+    * Returns the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+      for (int i = 0; i < _items.size(); i++)
+         _items.get(i).firstSet(set);
+   }
 
-      if (next == null)
-        continue;
+   /**
+    * Returns the first set, the set of element names possible.
+    */
+   public void requiredFirstSet(HashSet<QName> set) {
+      if (allowEmpty())
+         return;
 
-      choice.addItem(next);
-    }
+      for (int i = 0; i < _items.size(); i++)
+         _items.get(i).requiredFirstSet(set);
+   }
 
-    if (choice.equals(this))
-      return this;
-    else
-      return choice.getMin();
-  }
+   /**
+    * Allows empty if any item allows empty.
+    */
+   public boolean allowEmpty() {
+      if (_allowEmpty)
+         return true;
 
-  /**
-   * Returns the hash code for the empty item.
-   */
-  public int hashCode()
-  {
-    int hash = 37;
+      for (int i = 0; i < _items.size(); i++)
+         if (_items.get(i).allowEmpty())
+            return true;
 
-    for (int i = 0; i < _items.size(); i++)
-      hash += _items.get(i).hashCode();
-
-    return hash;
-  }
-
-  /**
-   * Returns true if the object is an empty item.
-   */
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
-    
-    if (! (o instanceof ChoiceItem))
       return false;
+   }
 
-    ChoiceItem choice = (ChoiceItem) o;
+   /**
+    * Interleaves a continuation.
+    */
+   public Item interleaveContinuation(Item cont) {
+      ChoiceItem item = new ChoiceItem();
 
-    return isSubset(choice) && choice.isSubset(this);
-  }
+      for (int i = 0; i < _items.size(); i++)
+         item.addItem(_items.get(i).interleaveContinuation(cont));
 
-  private boolean isSubset(ChoiceItem item)
-  {
-    if (_items.size() != item._items.size())
+      return item.getMin();
+   }
+
+   /**
+    * Adds an inElement continuation.
+    */
+   public Item inElementContinuation(Item cont) {
+      ChoiceItem item = new ChoiceItem();
+
+      for (int i = 0; i < _items.size(); i++)
+         item.addItem(_items.get(i).inElementContinuation(cont));
+
+      return item.getMin();
+   }
+
+   /**
+    * Adds a group continuation.
+    */
+   public Item groupContinuation(Item cont) {
+      ChoiceItem item = new ChoiceItem();
+
+      for (int i = 0; i < _items.size(); i++)
+         item.addItem(_items.get(i).groupContinuation(cont));
+
+      return item.getMin();
+   }
+
+   /**
+    * Return all possible child items or null
+    */
+   public Iterator<Item> getItemsIterator() {
+      if (_items.size() == 0)
+         return emptyItemIterator();
+      else
+         return _items.iterator();
+   }
+
+   /**
+    * Returns the next item on the match.
+    */
+   public Item startElement(QName name)
+      throws RelaxException {
+      Item result = null;
+      ChoiceItem choice = null;
+
+      for (int i = 0; i < _items.size(); i++) {
+         Item next = _items.get(i).startElement(name);
+
+         if (next == null) {
+         } else if (result == null)
+            result = next;
+         else {
+            if (choice == null) {
+               choice = new ChoiceItem();
+               choice.addItem(result);
+            }
+
+            choice.addItem(next);
+         }
+      }
+
+      if (choice != null)
+         return choice.getMin();
+      else
+         return result;
+   }
+
+   /**
+    * Returns the first set, the set of attribute names possible.
+    */
+   public void attributeSet(HashSet<QName> set) {
+      for (int i = 0; i < _items.size(); i++)
+         _items.get(i).attributeSet(set);
+   }
+
+   /**
+    * Returns true if the attribute is allowed.
+    *
+    * @param name  the name of the attribute
+    * @param value the value of the attribute
+    * @return true if the attribute is allowed
+    */
+   public boolean allowAttribute(QName name, String value)
+      throws RelaxException {
+      for (int i = _items.size() - 1; i >= 0; i--)
+         if (_items.get(i).allowAttribute(name, value))
+            return true;
+
       return false;
+   }
 
-    for (int i = 0; i < _items.size(); i++) {
-      Item subItem = _items.get(i);
+   /**
+    * Sets an attribute.
+    *
+    * @param name  the name of the attribute
+    * @param value the value of the attribute
+    * @return the program for handling the element
+    */
+   public Item setAttribute(QName name, String value)
+      throws RelaxException {
+      if (!allowAttribute(name, value))
+         return this;
 
-      if (! item._items.contains(subItem))
-        return false;
-    }
+      ChoiceItem choice = new ChoiceItem();
 
-    return true;
-  }
-  
-  /**
-   * Returns true if the element is allowed somewhere in the item.
-   * allowsElement is used for error messages to give more information
-   * in cases of order dependency.
-   *
-   * @param name the name of the element
-   *
-   * @return true if the element is allowed somewhere
-   */
-  public boolean allowsElement(QName name)
-  {
-    for (int i = 0; i < _items.size(); i++) {
-      Item subItem = _items.get(i);
+      if (_allowEmpty)
+         choice.addItem(EmptyItem.create());
 
-      if (subItem.allowsElement(name))
-        return true;
-    }
+      for (int i = _items.size() - 1; i >= 0; i--) {
+         Item next = _items.get(i).setAttribute(name, value);
 
-    return false;
-  }
+         if (next == null)
+            return null;
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(int depth)
-  {
-    CharBuffer cb = CharBuffer.allocate();
-
-    if (_items.size() > 1)
-      cb.append("(");
-    
-    boolean isSimple = true;
-    for (int i = 0; i < _items.size(); i++) {
-      Item item = _items.get(i);
-      if (! item.isSimpleSyntax())
-        isSimple = false;
-
-      if (i == 0) {
-        if (! isSimple)
-          cb.append(" ");
-      }
-      else if (isSimple) {
-        cb.append(" | ");
-      }
-      else {
-        addSyntaxNewline(cb, depth);
-        cb.append("| ");
+         choice.addItem(next);
       }
 
-      cb.append(item.toSyntaxDescription(depth + 2));
-    }
+      return choice.getMin();
+   }
 
-    if (_items.size() > 1)
-      cb.append(')');
+   /**
+    * Returns true if the item can match empty.
+    */
+   public Item attributeEnd() {
+      ChoiceItem choice = new ChoiceItem();
 
-    if (_allowEmpty)
-      cb.append('?');
-    
-    return cb.close();
-  }
+      if (_allowEmpty)
+         choice._allowEmpty = true;
 
-  /**
-   * Returns true for an element with simple syntax.
-   */
-  protected boolean isSimpleSyntax()
-  {
-    return (_items.size() == 1) && _items.get(0).isSimpleSyntax();
-  }
+      for (int i = _items.size() - 1; i >= 0; i--) {
+         Item next = _items.get(i).attributeEnd();
 
-  public String toString()
-  {
-    StringBuffer sb = new StringBuffer();
+         if (next == null)
+            continue;
 
-    sb.append("ChoiceItem[");
-    for (int i = 0; i < _items.size(); i++) {
-      if (i != 0)
-        sb.append(", ");
-      sb.append(_items.get(i));
-    }
+         choice.addItem(next);
+      }
 
-    if (_allowEmpty) {
-      sb.append(",empty");
-    }
+      if (choice.equals(this))
+         return this;
+      else
+         return choice.getMin();
+   }
 
-    sb.append("]");
+   /**
+    * Returns the next item on the match.
+    */
+   @Override
+   public Item text(CharSequence data)
+      throws RelaxException {
+      Item result = null;
+      ChoiceItem choice = null;
 
-    return sb.toString();
-  }
+      for (int i = 0; i < _items.size(); i++) {
+         Item next = _items.get(i).text(data);
+
+         if (next == null) {
+         } else if (result == null)
+            result = next;
+         else {
+            if (choice == null) {
+               choice = new ChoiceItem();
+               choice.addItem(result);
+            }
+
+            choice.addItem(next);
+         }
+      }
+
+      if (choice != null)
+         return choice.getMin();
+      else
+         return result;
+   }
+
+   /**
+    * Returns the next item when the element closes
+    */
+   public Item endElement()
+      throws RelaxException {
+      ChoiceItem choice = new ChoiceItem();
+
+      if (_allowEmpty)
+         choice._allowEmpty = true;
+
+      for (int i = _items.size() - 1; i >= 0; i--) {
+         Item next = _items.get(i).endElement();
+
+         if (next == null)
+            continue;
+
+         choice.addItem(next);
+      }
+
+      if (choice.equals(this))
+         return this;
+      else
+         return choice.getMin();
+   }
+
+   /**
+    * Returns the hash code for the empty item.
+    */
+   public int hashCode() {
+      int hash = 37;
+
+      for (int i = 0; i < _items.size(); i++)
+         hash += _items.get(i).hashCode();
+
+      return hash;
+   }
+
+   /**
+    * Returns true if the object is an empty item.
+    */
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof ChoiceItem))
+         return false;
+
+      ChoiceItem choice = (ChoiceItem) o;
+
+      return isSubset(choice) && choice.isSubset(this);
+   }
+
+   private boolean isSubset(ChoiceItem item) {
+      if (_items.size() != item._items.size())
+         return false;
+
+      for (int i = 0; i < _items.size(); i++) {
+         Item subItem = _items.get(i);
+
+         if (!item._items.contains(subItem))
+            return false;
+      }
+
+      return true;
+   }
+
+   /**
+    * Returns true if the element is allowed somewhere in the item.
+    * allowsElement is used for error messages to give more information
+    * in cases of order dependency.
+    *
+    * @param name the name of the element
+    * @return true if the element is allowed somewhere
+    */
+   public boolean allowsElement(QName name) {
+      for (int i = 0; i < _items.size(); i++) {
+         Item subItem = _items.get(i);
+
+         if (subItem.allowsElement(name))
+            return true;
+      }
+
+      return false;
+   }
+
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(int depth) {
+      CharBuffer cb = CharBuffer.allocate();
+
+      if (_items.size() > 1)
+         cb.append("(");
+
+      boolean isSimple = true;
+      for (int i = 0; i < _items.size(); i++) {
+         Item item = _items.get(i);
+         if (!item.isSimpleSyntax())
+            isSimple = false;
+
+         if (i == 0) {
+            if (!isSimple)
+               cb.append(" ");
+         } else if (isSimple) {
+            cb.append(" | ");
+         } else {
+            addSyntaxNewline(cb, depth);
+            cb.append("| ");
+         }
+
+         cb.append(item.toSyntaxDescription(depth + 2));
+      }
+
+      if (_items.size() > 1)
+         cb.append(')');
+
+      if (_allowEmpty)
+         cb.append('?');
+
+      return cb.close();
+   }
+
+   /**
+    * Returns true for an element with simple syntax.
+    */
+   protected boolean isSimpleSyntax() {
+      return (_items.size() == 1) && _items.get(0).isSimpleSyntax();
+   }
+
+   public String toString() {
+      StringBuffer sb = new StringBuffer();
+
+      sb.append("ChoiceItem[");
+      for (int i = 0; i < _items.size(); i++) {
+         if (i != 0)
+            sb.append(", ");
+         sb.append(_items.get(i));
+      }
+
+      if (_allowEmpty) {
+         sb.append(",empty");
+      }
+
+      sb.append("]");
+
+      return sb.toString();
+   }
 }
 

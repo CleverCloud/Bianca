@@ -31,12 +31,11 @@
 package com.clevercloud.xml.stream;
 
 public class JAXPNotSupportedInStAXException
-  extends UnsupportedOperationException {
+   extends UnsupportedOperationException {
 
-  public JAXPNotSupportedInStAXException()
-  {
-    super("JAXP is not supported by this StAX parser; it is listed as "+
-          "optional in the Sun Javadoc");
-  }
+   public JAXPNotSupportedInStAXException() {
+      super("JAXP is not supported by this StAX parser; it is listed as " +
+         "optional in the Sun Javadoc");
+   }
 
 }

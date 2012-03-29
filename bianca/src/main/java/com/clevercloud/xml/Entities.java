@@ -32,16 +32,15 @@ package com.clevercloud.xml;
 import java.io.IOException;
 
 abstract class Entities {
-  abstract int getEntity(String entity);
+   abstract int getEntity(String entity);
 
-  abstract void printText(XmlPrinter os,
-                          char []text, int offset, int length,
-                          boolean attr)
-    throws IOException;
+   abstract void printText(XmlPrinter os,
+                           char[] text, int offset, int length,
+                           boolean attr)
+      throws IOException;
 
-  void printURIAttr(XmlPrinter os, char []text, int offset, int length)
-    throws IOException
-  {
-    printText(os, text, offset, length, true);
-  }
+   void printURIAttr(XmlPrinter os, char[] text, int offset, int length)
+      throws IOException {
+      printText(os, text, offset, length, true);
+   }
 }

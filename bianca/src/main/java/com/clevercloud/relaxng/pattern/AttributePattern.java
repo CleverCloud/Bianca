@@ -39,138 +39,127 @@ import com.clevercloud.relaxng.program.Item;
  */
 public class AttributePattern extends Pattern {
 
-  private NameClassPattern _name;
-  private Pattern _children;
+   private NameClassPattern _name;
+   private Pattern _children;
 
-  private Item _item;
+   private Item _item;
 
-  /**
-   * Creates a new attribute pattern.
+   /**
+    * Creates a new attribute pattern.
+    */
+   public AttributePattern() {
+   }
+
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "attribute";
+   }
+
+   /**
+    * Returns the children pattern.
+    */
+   /*
+   public GroupPattern getChildren()
+   {
+     return _children;
+   }
    */
-  public AttributePattern()
-  {
-  }
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "attribute";
-  }
+   /**
+    * Adds an element.
+    */
+   public void addNameChild(NameClassPattern child)
+      throws RelaxException {
+      _name = child;
+      setElementName(_name.toProduction());
+   }
 
-  /**
-   * Returns the children pattern.
-   */
-  /*
-  public GroupPattern getChildren()
-  {
-    return _children;
-  }
-  */
+   /**
+    * get the name child
+    */
+   public NameClassPattern getNameChild()
+      throws RelaxException {
+      return _name;
+   }
 
-  /**
-   * Adds an element.
-   */
-  public void addNameChild(NameClassPattern child)
-    throws RelaxException
-  {
-    _name = child;
-    setElementName(_name.toProduction());
-  }
+   /**
+    * Adds an attribute.
+    */
+   public void addChild(Pattern child)
+      throws RelaxException {
+      if (_name == null)
+         throw new RelaxException(L.l("<attribute> must have a <name> definition before any children."));
 
-  /**
-   * get the name child
-   */
-  public NameClassPattern getNameChild()
-    throws RelaxException
-  {
-    return _name;
-  }
+      child.setParent(_children);
+      // XXX: (group always null?)
+      // child.setElementName(_children.getElementName());
 
-  /**
-   * Adds an attribute.
-   */
-  public void addChild(Pattern child)
-    throws RelaxException
-  {
-    if (_name == null)
-      throw new RelaxException(L.l("<attribute> must have a <name> definition before any children."));
-    
-    child.setParent(_children);
-    // XXX: (group always null?)
-    // child.setElementName(_children.getElementName());
+      if (_children == null)
+         _children = child;
+      else if (_children instanceof GroupPattern) {
+         GroupPattern group = (GroupPattern) _children;
+         group.addChild(child);
+      } else {
+         GroupPattern group = new GroupPattern();
+         group.addChild(_children);
+         group.addChild(child);
+         _children = group;
+      }
+   }
 
-    if (_children == null)
-      _children = child;
-    else if (_children instanceof GroupPattern) {
-      GroupPattern group = (GroupPattern) _children;
-      group.addChild(child);
-    }
-    else {
-      GroupPattern group = new GroupPattern();
-      group.addChild(_children);
-      group.addChild(child);
-      _children = group;
-    }
-  }
-  
-  /**
-   * Ends the element.
-   */
-  public void endElement()
-    throws RelaxException
-  {
-    if (_name == null)
-      throw new RelaxException(L.l("<attribute> must have a <name> definition."));
-  }
+   /**
+    * Ends the element.
+    */
+   public void endElement()
+      throws RelaxException {
+      if (_name == null)
+         throw new RelaxException(L.l("<attribute> must have a <name> definition."));
+   }
 
-  /**
-   * Creates the program (somewhat bogus)
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    if (_item == null)
-      _item = new AttributeItem(_name.createNameItem());
-    
-    return _item;
-  }
+   /**
+    * Creates the program (somewhat bogus)
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      if (_item == null)
+         _item = new AttributeItem(_name.createNameItem());
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return "@" + _name.toProduction();
-  }
+      return _item;
+   }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return "@" + _name.toProduction();
+   }
 
-    if (! (o instanceof AttributePattern))
-      return false;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    AttributePattern elt = (AttributePattern) o;
+      if (!(o instanceof AttributePattern))
+         return false;
 
-    if (! _name.equals(elt._name))
-      return false;
-    else if (_children == elt._children)
-      return true;
-    else if (_children == null || elt._children == null)
-      return false;
-    else
-      return _children.equals(elt._children);
-  }
+      AttributePattern elt = (AttributePattern) o;
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "AttributePattern[" + _name.toProduction() + "]";
-  }
+      if (!_name.equals(elt._name))
+         return false;
+      else if (_children == elt._children)
+         return true;
+      else if (_children == null || elt._children == null)
+         return false;
+      else
+         return _children.equals(elt._children);
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "AttributePattern[" + _name.toProduction() + "]";
+   }
 }
 

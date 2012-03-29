@@ -30,5 +30,5 @@
 package com.clevercloud.util;
 
 public interface ExceptionWrapper {
-  public Throwable getRootCause();
+   public Throwable getRootCause();
 }

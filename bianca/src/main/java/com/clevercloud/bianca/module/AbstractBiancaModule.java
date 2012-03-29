@@ -30,10 +30,9 @@
  */
 package com.clevercloud.bianca.module;
 
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.LongValue;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,17 +70,17 @@ public class AbstractBiancaModule implements BiancaModule {
    }
 
    protected static void addConstant(Map<StringValue, Value> map,
-           String name, Value value) {
+                                     String name, Value value) {
       map.put(new StringValue(name), value);
    }
 
    protected static void addConstant(Map<StringValue, Value> map,
-           String name, long value) {
+                                     String name, long value) {
       map.put(new StringValue(name), LongValue.create(value));
    }
 
    protected static void addConstant(Map<StringValue, Value> map,
-           String name, String value) {
+                                     String name, String value) {
       map.put(new StringValue(name), StringValue.create(value));
    }
 }

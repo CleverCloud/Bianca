@@ -31,11 +31,11 @@ package com.clevercloud.bianca;
 
 public class BiancaVersion {
 
-    public static String getVersionNumber() {
-	return "6.0.x-dev";
-    }
+   public static String getVersionNumber() {
+      return "6.0.x-dev";
+   }
 
-    public static String getVersionDate() {
-	return "20111127";
-    }
+   public static String getVersionDate() {
+      return "20111127";
+   }
 }

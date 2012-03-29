@@ -34,7 +34,8 @@ import com.clevercloud.bianca.BiancaException;
 import com.clevercloud.bianca.annotation.Name;
 import com.clevercloud.bianca.module.ModuleContext;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Represents the introspected static function information.
@@ -50,13 +51,13 @@ public class JavaConstructor extends JavaInvoker {
     * @param method the introspected method.
     */
    public JavaConstructor(ModuleContext moduleContext,
-           Constructor cons) {
+                          Constructor cons) {
       super(moduleContext,
-              getName(cons),
-              cons.getParameterTypes(),
-              cons.getParameterAnnotations(),
-              cons.getAnnotations(),
-              cons.getDeclaringClass());
+         getName(cons),
+         cons.getParameterTypes(),
+         cons.getParameterAnnotations(),
+         cons.getAnnotations(),
+         cons.getDeclaringClass());
 
       _constructor = cons;
       _argLength = cons.getParameterTypes().length;

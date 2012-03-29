@@ -51,7 +51,7 @@ import java.util.logging.Logger;
  * Interface for marshalled Java data structures.
  */
 abstract public class JavaAdapter extends ArrayValue
-        implements Serializable {
+   implements Serializable {
 
    private static final Logger log = Logger.getLogger(JavaAdapter.class.getName());
    private WeakReference<Env> _envRef;
@@ -100,7 +100,7 @@ abstract public class JavaAdapter extends ArrayValue
          return _object;
       } else {
          env.warning(L.l("Can't assign {0} to {1}",
-                 _object.getClass().getName(), type.getName()));
+            _object.getClass().getName(), type.getName()));
 
          return null;
       }
@@ -109,6 +109,7 @@ abstract public class JavaAdapter extends ArrayValue
    //
    // Conversions
    //
+
    /**
     * Converts to an object.
     */
@@ -361,7 +362,7 @@ abstract public class JavaAdapter extends ArrayValue
 
    /**
     * Appends as an argument - only called from compiled code
-    *
+    * <p/>
     * XXX: change name to appendArg
     */
    @Override
@@ -471,9 +472,7 @@ abstract public class JavaAdapter extends ArrayValue
     * Returns the corresponding key if this array contains the given value
     *
     * @param value to search for in the array
-    *
     * @return the key if it is found in the array, NULL otherwise
-    *
     * @throws NullPointerException
     */
    @Override
@@ -491,7 +490,6 @@ abstract public class JavaAdapter extends ArrayValue
     * Returns the corresponding key if this array contains the given value
     *
     * @param value to search for in the array
-    *
     * @return the key if it is found in the array, NULL otherwise
     */
    @Override
@@ -509,7 +507,6 @@ abstract public class JavaAdapter extends ArrayValue
     * Returns the corresponding valeu if this array contains the given key
     *
     * @param key to search for in the array
-    *
     * @return the value if it is found in the array, NULL otherwise
     */
    @Override
@@ -533,11 +530,11 @@ abstract public class JavaAdapter extends ArrayValue
     *
     * @param comparator the comparator for sorting the array
     * @param resetKeys  true if the keys should not be preserved
-    * @param strict  true if alphabetic keys should not be preserved
+    * @param strict     true if alphabetic keys should not be preserved
     */
    @Override
    public void sort(Comparator<Map.Entry<Value, Value>> comparator,
-           boolean resetKeys, boolean strict) {
+                    boolean resetKeys, boolean strict) {
       Map.Entry<Value, Value>[] entries = new Map.Entry[getSize()];
 
       int i = 0;
@@ -585,8 +582,8 @@ abstract public class JavaAdapter extends ArrayValue
    /**
     * Resets all numerical keys with the first index as base
     *
-    * @param base  the initial index
-    * @param strict  if true, string keys are also reset
+    * @param base   the initial index
+    * @param strict if true, string keys are also reset
     */
    @Override
    public boolean keyReset(long base, boolean strict) {
@@ -626,8 +623,8 @@ abstract public class JavaAdapter extends ArrayValue
 
       for (Map.Entry<Value, Value> entry : entrySet()) {
          Array.set(array, i++, elementMarshal.marshal(env,
-                 entry.getValue(),
-                 elementType));
+            entry.getValue(),
+            elementType));
       }
 
       return array;
@@ -640,8 +637,8 @@ abstract public class JavaAdapter extends ArrayValue
 
    @Override
    public Value putField(Env env,
-           StringValue name,
-           Value value) {
+                         StringValue name,
+                         Value value) {
       return _classDef.putField(env, this, name, value);
    }
 
@@ -669,10 +666,10 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value[] args) {
+                           Value[] args) {
       return _classDef.callMethod(env, this,
-              methodName, hash,
-              args);
+         methodName, hash,
+         args);
    }
 
    /**
@@ -688,9 +685,9 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1) {
+                           Value a1) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1);
+         a1);
    }
 
    /**
@@ -698,9 +695,9 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           Value a1, Value a2) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
@@ -708,9 +705,9 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           Value a1, Value a2, Value a3) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
@@ -718,9 +715,9 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           Value a1, Value a2, Value a3, Value a4) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -728,9 +725,9 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
@@ -738,8 +735,8 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                              StringValue methodName, int hash,
+                              Value[] args) {
       return _classDef.callMethod(env, this, methodName, hash, args);
    }
 
@@ -756,11 +753,11 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                              StringValue methodName, int hash,
+                              Value a1) {
       return _classDef.callMethod(env, this,
-              methodName, hash,
-              a1);
+         methodName, hash,
+         a1);
    }
 
    /**
@@ -768,9 +765,9 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2) {
+                              Value a1, Value a2) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
@@ -778,9 +775,9 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                              Value a1, Value a2, Value a3) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
@@ -788,9 +785,9 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                              Value a1, Value a2, Value a3, Value a4) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -798,17 +795,17 @@ abstract public class JavaAdapter extends ArrayValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                              Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.println("array(" + getSize() + ") {");
 
       int nestedDepth = depth + 1;
@@ -841,10 +838,10 @@ abstract public class JavaAdapter extends ArrayValue
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.println("Array");
       printDepth(out, 8 * depth);
       out.println("(");
@@ -872,13 +869,13 @@ abstract public class JavaAdapter extends ArrayValue
    // Java Serialization
    //
    private void writeObject(ObjectOutputStream out)
-           throws IOException {
+      throws IOException {
       out.writeObject(_object);
       out.writeObject(_classDef.getName());
    }
 
    private void readObject(ObjectInputStream in)
-           throws ClassNotFoundException, IOException {
+      throws ClassNotFoundException, IOException {
       _envRef = new WeakReference<Env>(Env.getInstance());
 
       _object = in.readObject();

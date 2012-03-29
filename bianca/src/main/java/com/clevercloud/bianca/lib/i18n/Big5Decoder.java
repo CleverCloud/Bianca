@@ -36,7 +36,7 @@ import java.nio.charset.CoderResult;
 
 
 public class Big5Decoder
-        extends GenericDecoder {
+   extends GenericDecoder {
 
    public Big5Decoder(String charsetName) {
       super(charsetName);
@@ -47,8 +47,8 @@ public class Big5Decoder
          int errorPosition = in.position();
 
          if (errorPosition + 1 < in.limit()
-                 && in.get(errorPosition) == '\u00a3'
-                 && in.get(errorPosition + 1) == '\u00e1') {
+            && in.get(errorPosition) == '\u00a3'
+            && in.get(errorPosition + 1) == '\u00e1') {
             return false;
          } else {
             return true;
@@ -60,7 +60,7 @@ public class Big5Decoder
 
    @Override
    protected boolean fill(StringBuilder sb, ByteBuffer in,
-           CharBuffer out, CoderResult coder) {
+                          CharBuffer out, CoderResult coder) {
       int len = out.position();
 
       if (len > 0) {
@@ -72,8 +72,8 @@ public class Big5Decoder
          int errorPosition = in.position();
 
          if (errorPosition + 1 < in.limit()
-                 && (in.get(errorPosition) & 0xFF) == '\u00a3'
-                 && (in.get(errorPosition + 1) & 0xFF) == '\u00e1') {
+            && (in.get(errorPosition) & 0xFF) == '\u00a3'
+            && (in.get(errorPosition + 1) & 0xFF) == '\u00e1') {
 
             sb.append('\u20AC');
             in.position(errorPosition + 2);

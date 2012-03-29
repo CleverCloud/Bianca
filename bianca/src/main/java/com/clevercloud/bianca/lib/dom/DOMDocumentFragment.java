@@ -32,7 +32,7 @@ package com.clevercloud.bianca.lib.dom;
 import org.w3c.dom.DocumentFragment;
 
 public class DOMDocumentFragment
-        extends DOMNode<DocumentFragment> {
+   extends DOMNode<DocumentFragment> {
 
    DOMDocumentFragment(DOMImplementation impl, DocumentFragment delegate) {
       super(impl, delegate);

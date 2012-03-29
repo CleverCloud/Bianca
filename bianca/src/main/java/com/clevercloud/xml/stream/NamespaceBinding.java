@@ -29,101 +29,90 @@
 
 package com.clevercloud.xml.stream;
 
-import java.io.IOException;
-import static javax.xml.XMLConstants.*;
-import org.w3c.dom.*;
 import com.clevercloud.vfs.WriteStream;
+
+import java.io.IOException;
+
+import static javax.xml.XMLConstants.DEFAULT_NS_PREFIX;
+import static javax.xml.XMLConstants.XMLNS_ATTRIBUTE;
 
 /**
  * Binding to a namespace URL.
  */
-final class NamespaceBinding
-{
-  private String _prefix;
-  
-  private String _uri;
-  
-  private int _version;
+final class NamespaceBinding {
+   private String _prefix;
 
-  // namespaces are only emitted (written) when writeNamespace() or
-  // writeDefaultNamespace() is called explicitly.
-  private boolean _emit = false;
+   private String _uri;
 
-  NamespaceBinding(String prefix, String uri, int version)
-  {
-    _prefix = prefix;
-    _uri = uri;
-    _version = version;
-  }
+   private int _version;
 
-  String getUri()
-  {
-    return _uri;
-  }
+   // namespaces are only emitted (written) when writeNamespace() or
+   // writeDefaultNamespace() is called explicitly.
+   private boolean _emit = false;
 
-  void setUri(String uri)
-  {
-    _uri = uri;
-  }
-  
-  void setVersion(int version)
-  {
-    _version = version;
-  }
+   NamespaceBinding(String prefix, String uri, int version) {
+      _prefix = prefix;
+      _uri = uri;
+      _version = version;
+   }
 
-  int getVersion()
-  {
-    return _version;
-  }
+   String getUri() {
+      return _uri;
+   }
 
-  String getPrefix()
-  {
-    return _prefix;
-  }
+   void setUri(String uri) {
+      _uri = uri;
+   }
 
-  void setPrefix(String prefix)
-  {
-    _prefix = prefix;
-  }
+   void setVersion(int version) {
+      _version = version;
+   }
 
-  void emit(WriteStream ws)
-    throws IOException
-  {
-    if (_emit) {
-      if (DEFAULT_NS_PREFIX.equals(_prefix)) {
-        ws.print(" ");
-        ws.print(XMLNS_ATTRIBUTE);
+   int getVersion() {
+      return _version;
+   }
+
+   String getPrefix() {
+      return _prefix;
+   }
+
+   void setPrefix(String prefix) {
+      _prefix = prefix;
+   }
+
+   void emit(WriteStream ws)
+      throws IOException {
+      if (_emit) {
+         if (DEFAULT_NS_PREFIX.equals(_prefix)) {
+            ws.print(" ");
+            ws.print(XMLNS_ATTRIBUTE);
+         } else {
+            ws.print(" ");
+            ws.print(XMLNS_ATTRIBUTE);
+            ws.print(":");
+            ws.print(Escapifier.escape(_prefix));
+         }
+
+         ws.print("=\"");
+         ws.print(Escapifier.escape(_uri));
+         ws.print('"');
+
+         _emit = false;
       }
-      else {
-        ws.print(" ");
-        ws.print(XMLNS_ATTRIBUTE);
-        ws.print(":");
-        ws.print(Escapifier.escape(_prefix));
-      }
+   }
 
-      ws.print("=\"");
-      ws.print(Escapifier.escape(_uri));
-      ws.print('"');
+   boolean isEmit() {
+      return _emit;
+   }
 
-      _emit = false;
-    }
-  }
+   void setEmit(boolean emit) {
+      _emit = emit;
+   }
 
-  boolean isEmit()
-  {
-    return _emit;
-  }
-
-  void setEmit(boolean emit)
-  {
-    _emit = emit;
-  }
-
-  public String toString()
-  {
-    return "NamespaceBinding[prefix=" + _prefix + 
-                           ",uri=" + _uri + 
-                           ",version=" + _version + 
-                           ",emit=" + _emit + "]";
-  }
+   public String toString() {
+      return "NamespaceBinding[prefix=" + _prefix +
+         ",uri=" + _uri +
+         ",version=" + _version +
+         ",emit=" + _emit + "]";
+   }
 }

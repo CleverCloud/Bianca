@@ -54,12 +54,12 @@ public class GZInputStream extends InputStream {
    private long _totalInputSize;        //total decompressed bytes read
 
    public GZInputStream(InputStream in)
-           throws IOException {
+      throws IOException {
       this(in, 512);
    }
 
    public GZInputStream(InputStream in, int size)
-           throws IOException {
+      throws IOException {
       // Need to use same buffer size for pushback and _readBuffer
       // because will need to unread <= _readBuffer.length.
       _in = new PushbackInputStream(in, size);
@@ -81,7 +81,7 @@ public class GZInputStream extends InputStream {
     */
    @Override
    public int available()
-           throws IOException {
+      throws IOException {
       if (!_isGzip) {
          return _in.available();
       }
@@ -94,12 +94,13 @@ public class GZInputStream extends InputStream {
 
    @Override
    public void close()
-           throws IOException {
+      throws IOException {
       _inflater.end();
    }
 
    /**
     * mark() and reset() are not supported by this class.
+    *
     * @return false always
     */
    @Override
@@ -109,6 +110,7 @@ public class GZInputStream extends InputStream {
 
    /**
     * Returns the byte read, -1 if EOF
+    *
     * @return number of bytes read, or -1 if EOF
     */
    @Override
@@ -124,23 +126,25 @@ public class GZInputStream extends InputStream {
 
    /**
     * Reads from the compressed stream and
-    *  stores the resulting uncompressed data into the byte array.
+    * stores the resulting uncompressed data into the byte array.
+    *
     * @return number of bytes read, or -1 upon EOF
     */
    @Override
    public int read(byte[] b)
-           throws IOException {
+      throws IOException {
       return read(b, 0, b.length);
    }
 
    /**
     * Reads from the compressed stream and
-    *  stores the resulting uncompressed data into the byte array.
+    * stores the resulting uncompressed data into the byte array.
+    *
     * @return number of bytes read, or -1 upon EOF
     */
    @Override
    public int read(byte[] b, int off, int len)
-           throws IOException {
+      throws IOException {
       if (len <= 0 || off < 0 || off + len > b.length) {
          return 0;
       }
@@ -196,12 +200,13 @@ public class GZInputStream extends InputStream {
 
    /**
     * Skips over and discards n bytes.
+    *
     * @param n number of bytes to skip
     * @return actual number of bytes skipped
     */
    @Override
    public long skip(long n)
-           throws IOException {
+      throws IOException {
       if (_eof || n <= 0) {
          return 0;
       }
@@ -224,7 +229,7 @@ public class GZInputStream extends InputStream {
     * Inits/resets this class to be ready to read the start of a gzip stream.
     */
    private void init()
-           throws IOException {
+      throws IOException {
       _inflater.reset();
       _crc.reset();
       _inputSize = 0;
@@ -302,7 +307,7 @@ public class GZInputStream extends InputStream {
     * of an appended gzip stream.
     */
    private void readTrailer()
-           throws IOException {
+      throws IOException {
       int length = _in.read(_tbuffer, 0, 8);
       if (length != 8) {
          throw new IOException("Bad GZIP trailer.");

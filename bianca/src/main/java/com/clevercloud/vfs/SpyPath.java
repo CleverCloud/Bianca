@@ -38,40 +38,36 @@ import java.util.logging.Logger;
  * Logs usage of the path.
  */
 public class SpyPath extends PathWrapper {
-  protected final static Logger log
-    = Logger.getLogger(SpyPath.class.getName());
+   protected final static Logger log
+      = Logger.getLogger(SpyPath.class.getName());
 
-  /**
-   * Creates a new Path object.
-   *
-   * @param root the new Path root.
-   */
-  public SpyPath(Path path)
-  {
-    super(path);
-  }
-
-  /**
-   * Returns a new path relative to the current one.
-   *
-   * <p>Path only handles scheme:xxx.  Subclasses of Path will specialize
-   * the xxx.
-   *
-   * @param userPath relative or absolute path, essentially any url.
-   * @param newAttributes attributes for the new path.
-   *
-   * @return the new path or null if the scheme doesn't exist
-   */
-   public Path lookup(String userPath, Map<String,Object> newAttributes)
-   {
-     return new SpyPath(super.lookup(userPath, newAttributes));
+   /**
+    * Creates a new Path object.
+    *
+    * @param root the new Path root.
+    */
+   public SpyPath(Path path) {
+      super(path);
    }
 
-  /**
-   * Opens a random-access stream.
-   */
-  public RandomAccessStream openRandomAccess() throws IOException
-  {
-    return new SpyRandomAccessStream(getWrappedPath().openRandomAccess());
-  }
+   /**
+    * Returns a new path relative to the current one.
+    * <p/>
+    * <p>Path only handles scheme:xxx.  Subclasses of Path will specialize
+    * the xxx.
+    *
+    * @param userPath      relative or absolute path, essentially any url.
+    * @param newAttributes attributes for the new path.
+    * @return the new path or null if the scheme doesn't exist
+    */
+   public Path lookup(String userPath, Map<String, Object> newAttributes) {
+      return new SpyPath(super.lookup(userPath, newAttributes));
+   }
+
+   /**
+    * Opens a random-access stream.
+    */
+   public RandomAccessStream openRandomAccess() throws IOException {
+      return new SpyRandomAccessStream(getWrappedPath().openRandomAccess());
+   }
 }

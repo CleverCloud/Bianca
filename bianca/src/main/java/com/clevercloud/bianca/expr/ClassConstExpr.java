@@ -29,14 +29,14 @@
  */
 package com.clevercloud.bianca.expr;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.util.L10N;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Represents a PHP parent::FOO constant call expression.
@@ -62,14 +62,15 @@ public class ClassConstExpr extends Expr {
    //
    // function call creation
    //
+
    /**
     * Creates a function call expression
     */
    @Override
    public Expr createCall(BiancaParser parser,
-           Location location,
-           ArrayList<Expr> args)
-           throws IOException {
+                          Location location,
+                          ArrayList<Expr> args)
+      throws IOException {
       /*
       if (_className.equals(_name))
       return factory.createClassConstructor(location, _className, _name, args);
@@ -85,7 +86,6 @@ public class ClassConstExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

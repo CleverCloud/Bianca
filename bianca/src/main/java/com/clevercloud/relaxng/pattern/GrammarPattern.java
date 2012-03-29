@@ -33,100 +33,89 @@ import com.clevercloud.relaxng.RelaxException;
 import com.clevercloud.util.L10N;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Relax grammar pattern
  */
 public class GrammarPattern extends Pattern {
-  protected static final L10N L = new L10N(GrammarPattern.class);
-  
-  private Pattern _start;
-  private int _id;
+   protected static final L10N L = new L10N(GrammarPattern.class);
 
-  private HashMap<String,Pattern> _definitions = new HashMap<String,Pattern>();
+   private Pattern _start;
+   private int _id;
 
-  /**
-   * Creates a new grammar pattern.
-   */
-  public GrammarPattern()
-  {
-  }
+   private HashMap<String, Pattern> _definitions = new HashMap<String, Pattern>();
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "grammar";
-  }
+   /**
+    * Creates a new grammar pattern.
+    */
+   public GrammarPattern() {
+   }
 
-  /**
-   * Returns the start pattern.
-   */
-  public Pattern getStart()
-  {
-    return _start;
-  }
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "grammar";
+   }
 
-  /**
-   * Sets the start element
-   */
-  public void setStart(Pattern start)
-    throws RelaxException
-  {
-    if (_start != null)
-      throw new RelaxException(L.l("Duplicate <start> in <grammar>.  The <grammar> element can only have one <start>."));
+   /**
+    * Returns the start pattern.
+    */
+   public Pattern getStart() {
+      return _start;
+   }
 
-    _start = start;
-  }
+   /**
+    * Sets the start element
+    */
+   public void setStart(Pattern start)
+      throws RelaxException {
+      if (_start != null)
+         throw new RelaxException(L.l("Duplicate <start> in <grammar>.  The <grammar> element can only have one <start>."));
 
-  /**
-   * Generates a name.
-   */
-  public String generateId()
-  {
-    return "__clevercloud_" + _id++;
-  }
+      _start = start;
+   }
 
-  /**
-   * Start definition.
-   */
-  public void setDefinition(String name, Pattern pattern)
-  {
-    _definitions.put(name, pattern);
-  }
+   /**
+    * Generates a name.
+    */
+   public String generateId() {
+      return "__clevercloud_" + _id++;
+   }
 
-  /**
-   * Gets a definition.
-   */
-  public Pattern getDefinition(String name)
-  {
-    return _definitions.get(name);
-  }
+   /**
+    * Start definition.
+    */
+   public void setDefinition(String name, Pattern pattern) {
+      _definitions.put(name, pattern);
+   }
 
-  /**
-   * Merges an include.
-   */
-  public void mergeInclude(GrammarPattern grammar)
-  {
-    _definitions.putAll(grammar._definitions);
-  }
+   /**
+    * Gets a definition.
+    */
+   public Pattern getDefinition(String name) {
+      return _definitions.get(name);
+   }
 
-  /**
-   * Returns equals.
-   */
-  public boolean equals(Object o)
-  {
-    return this == o;
-  }
+   /**
+    * Merges an include.
+    */
+   public void mergeInclude(GrammarPattern grammar) {
+      _definitions.putAll(grammar._definitions);
+   }
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "GrammarPattern[" + _start + "]";
-  }
+   /**
+    * Returns equals.
+    */
+   public boolean equals(Object o) {
+      return this == o;
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "GrammarPattern[" + _start + "]";
+   }
 }
 

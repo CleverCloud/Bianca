@@ -37,7 +37,6 @@ import com.clevercloud.xpath.Expr;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.pattern.NodeIterator;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,208 +46,190 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class IdExpr extends Expr {
-  private Expr _expr;
+   private Expr _expr;
 
-  private ExprEnvironment _lastEnv;
-  private int _lastUseCount;
-  private Node _lastContext;
-  private ArrayList _lastList;
+   private ExprEnvironment _lastEnv;
+   private int _lastUseCount;
+   private Node _lastContext;
+   private ArrayList _lastList;
 
-  public IdExpr(ArrayList<Expr> args)
-  {
-    if (args.size() > 0)
-      _expr = args.get(0);
-  }
+   public IdExpr(ArrayList<Expr> args) {
+      if (args.size() > 0)
+         _expr = args.get(0);
+   }
 
-  public boolean isNodeSet()
-  {
-    return true;
-  }
+   public boolean isNodeSet() {
+      return true;
+   }
 
-  /**
-   * Evaluates the expression as a number
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the number representation of id
-   */
-  public double evalNumber(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    String string = evalString(node, env);
+   /**
+    * Evaluates the expression as a number
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the number representation of id
+    */
+   public double evalNumber(Node node, ExprEnvironment env)
+      throws XPathException {
+      String string = evalString(node, env);
 
-    return stringToNumber(string);
-  }
+      return stringToNumber(string);
+   }
 
-  /**
-   * Evaluates the expression as a boolean
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return true if the node exists
-   */
-  public boolean evalBoolean(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return id(node, env).size() > 0;
-  }
+   /**
+    * Evaluates the expression as a boolean
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return true if the node exists
+    */
+   public boolean evalBoolean(Node node, ExprEnvironment env)
+      throws XPathException {
+      return id(node, env).size() > 0;
+   }
 
-  /**
-   * The string value of the id expression is just the text value of the
-   * first node.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return true if the node exists
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    NodeIterator iter = evalNodeSet(node, env);
+   /**
+    * The string value of the id expression is just the text value of the
+    * first node.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return true if the node exists
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      NodeIterator iter = evalNodeSet(node, env);
 
-    if (! iter.hasNext())
-      return "";
+      if (!iter.hasNext())
+         return "";
 
-    Node qNode = (Node) iter.next();
-    return XmlUtil.textValue(qNode);
-  }
+      Node qNode = (Node) iter.next();
+      return XmlUtil.textValue(qNode);
+   }
 
-  /**
-   * The string value of the id expression is just the list of nodes.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return true if the node exists
-   */
-  public Object evalObject(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    ArrayList<Element> list = id(node, env);
+   /**
+    * The string value of the id expression is just the list of nodes.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return true if the node exists
+    */
+   public Object evalObject(Node node, ExprEnvironment env)
+      throws XPathException {
+      ArrayList<Element> list = id(node, env);
 
-    return list;
-  }
-
-  /**
-   * Returns the list of string ids.
-   */
-  private ArrayList<Element> id(Node context, ExprEnvironment env)
-    throws XPathException
-  {
-    ArrayList idList = getIdList(context, env);
-    ArrayList<Element> list = new ArrayList<Element>();
-
-    if (idList == null || idList.size() == 0)
       return list;
-    
-    Node ptr;
+   }
 
-    if (context instanceof Document)
-      ptr = context;
-    else
-      ptr = context.getOwnerDocument();
-    
-    while ((ptr = XmlUtil.getNext(ptr)) != null) {
-      if (ptr instanceof Element) {
-        Element elt = (Element) ptr;
+   /**
+    * Returns the list of string ids.
+    */
+   private ArrayList<Element> id(Node context, ExprEnvironment env)
+      throws XPathException {
+      ArrayList idList = getIdList(context, env);
+      ArrayList<Element> list = new ArrayList<Element>();
 
-        QDocumentType dtd;
-        dtd = (QDocumentType) elt.getOwnerDocument().getDoctype();
-        String id = null;
-        if (dtd != null)
-          id = (String) dtd.getElementId(elt.getNodeName());
+      if (idList == null || idList.size() == 0)
+         return list;
 
-        if (id != null) {
-          String idValue = elt.getAttribute(id);
-          if (idList.contains(idValue) && ! list.contains(elt))
-            list.add(elt);
-        }
+      Node ptr;
+
+      if (context instanceof Document)
+         ptr = context;
+      else
+         ptr = context.getOwnerDocument();
+
+      while ((ptr = XmlUtil.getNext(ptr)) != null) {
+         if (ptr instanceof Element) {
+            Element elt = (Element) ptr;
+
+            QDocumentType dtd;
+            dtd = (QDocumentType) elt.getOwnerDocument().getDoctype();
+            String id = null;
+            if (dtd != null)
+               id = (String) dtd.getElementId(elt.getNodeName());
+
+            if (id != null) {
+               String idValue = elt.getAttribute(id);
+               if (idList.contains(idValue) && !list.contains(elt))
+                  list.add(elt);
+            }
+         }
       }
-    }
 
-    return list;
-  }
+      return list;
+   }
 
-  /**
-   * Evaluates the id expression, returning a list of strings.
-   *
-   * @param env the XPath environment
-   * @param node the context node.
-   *
-   * @return a list of string values.
-   */
-  private ArrayList<String> getIdList(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    ArrayList<String> idList = new ArrayList<String>();
+   /**
+    * Evaluates the id expression, returning a list of strings.
+    *
+    * @param env  the XPath environment
+    * @param node the context node.
+    * @return a list of string values.
+    */
+   private ArrayList<String> getIdList(Node node, ExprEnvironment env)
+      throws XPathException {
+      ArrayList<String> idList = new ArrayList<String>();
 
-    Object obj = _expr.evalObject(node, env);
-    if (obj instanceof NodeList) {
-      NodeList list = (NodeList) obj;
+      Object obj = _expr.evalObject(node, env);
+      if (obj instanceof NodeList) {
+         NodeList list = (NodeList) obj;
 
-      int length = list.getLength();
-      for (int i = 0; i < length; i++) {
-        Node value = list.item(i);
+         int length = list.getLength();
+         for (int i = 0; i < length; i++) {
+            Node value = list.item(i);
 
-        addText(idList, XmlUtil.textValue(value));
-      }
-    }
-    else if (obj instanceof ArrayList) {
-      ArrayList list = (ArrayList) obj;
+            addText(idList, XmlUtil.textValue(value));
+         }
+      } else if (obj instanceof ArrayList) {
+         ArrayList list = (ArrayList) obj;
 
-      for (int i = 0; i < list.size(); i++) {
-        Node value = (Node) list.get(i);
+         for (int i = 0; i < list.size(); i++) {
+            Node value = (Node) list.get(i);
 
-        addText(idList, XmlUtil.textValue(value));
-      }
-    }
-    else if (obj instanceof Iterator) {
-      Iterator iter = (Iterator) obj;
+            addText(idList, XmlUtil.textValue(value));
+         }
+      } else if (obj instanceof Iterator) {
+         Iterator iter = (Iterator) obj;
 
-      while (iter.hasNext()) {
-        Node value = (Node) iter.next();
+         while (iter.hasNext()) {
+            Node value = (Node) iter.next();
 
-        addText(idList, XmlUtil.textValue(value));
-      }
-    }
-    else
-      addText(idList, toString(obj));
+            addText(idList, XmlUtil.textValue(value));
+         }
+      } else
+         addText(idList, toString(obj));
 
-    return idList;
-  }
+      return idList;
+   }
 
-  private void addText(ArrayList<String> idList, String text)
-  {
-    int len = text.length();
-    CharBuffer cb = new CharBuffer();
-    int i = 0;
-    int ch = 0;
-    for (; i < len && XmlChar.isWhitespace(text.charAt(i)); i++) {
-    }
-    
-    if (i == len)
-      return;
-    
-    while (i < len) {
-      cb.clear();
-      for (; i < len && ! XmlChar.isWhitespace(text.charAt(i)); i++)
-        cb.append(text.charAt(i));
-
-      idList.add(cb.toString());
-
+   private void addText(ArrayList<String> idList, String text) {
+      int len = text.length();
+      CharBuffer cb = new CharBuffer();
+      int i = 0;
+      int ch = 0;
       for (; i < len && XmlChar.isWhitespace(text.charAt(i)); i++) {
       }
-    }
-  }
 
-  public String toString()
-  {
-    if (_expr != null)
-      return "id(" + _expr + ")";
-    else
-      return "id()";
-  }
+      if (i == len)
+         return;
+
+      while (i < len) {
+         cb.clear();
+         for (; i < len && !XmlChar.isWhitespace(text.charAt(i)); i++)
+            cb.append(text.charAt(i));
+
+         idList.add(cb.toString());
+
+         for (; i < len && XmlChar.isWhitespace(text.charAt(i)); i++) {
+         }
+      }
+   }
+
+   public String toString() {
+      if (_expr != null)
+         return "id(" + _expr + ")";
+      else
+         return "id()";
+   }
 }

@@ -36,92 +36,85 @@ import com.clevercloud.relaxng.program.Item;
  * Relax reference pattern
  */
 public class RefPattern extends Pattern {
-  private GrammarPattern _grammar;
-  
-  private String _refName;
+   private GrammarPattern _grammar;
 
-  /**
-   * Creates a new element pattern.
-   */
-  public RefPattern(GrammarPattern grammar, String refName)
-  {
-    _grammar = grammar;
-    
-    _refName = refName;
-  }
+   private String _refName;
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "ref";
-  }
+   /**
+    * Creates a new element pattern.
+    */
+   public RefPattern(GrammarPattern grammar, String refName) {
+      _grammar = grammar;
 
-  /**
-   * Returns the definition name.
-   */
-  public String getRefName()
-  {
-    return _refName;
-  }
+      _refName = refName;
+   }
 
-  /**
-   * Creates the item.
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    Pattern pattern = grammar.getDefinition(_refName);
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "ref";
+   }
 
-    if (pattern == null) {
-      // XXX: line #
-      throw error(L.l("<ref name=\"{0}\"/> is an unknown reference.",
-                      _refName));
-    }
+   /**
+    * Returns the definition name.
+    */
+   public String getRefName() {
+      return _refName;
+   }
 
-    for (Pattern ptr = this;
-         ptr != null && ! (ptr instanceof ElementPattern);
-         ptr = ptr.getParent()) {
-      if (ptr == pattern) {
-        throw error(L.l("<define name=\"{0}\"/> calls itself recursively in a <ref/>.",
-                        _refName));
+   /**
+    * Creates the item.
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      Pattern pattern = grammar.getDefinition(_refName);
+
+      if (pattern == null) {
+         // XXX: line #
+         throw error(L.l("<ref name=\"{0}\"/> is an unknown reference.",
+            _refName));
       }
-    }
 
-    return pattern.createItem(grammar);
-  }
+      for (Pattern ptr = this;
+           ptr != null && !(ptr instanceof ElementPattern);
+           ptr = ptr.getParent()) {
+         if (ptr == pattern) {
+            throw error(L.l("<define name=\"{0}\"/> calls itself recursively in a <ref/>.",
+               _refName));
+         }
+      }
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    Pattern pattern = _grammar.getDefinition(_refName);
+      return pattern.createItem(grammar);
+   }
 
-    return pattern.toProduction();
-  }
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      Pattern pattern = _grammar.getDefinition(_refName);
 
-  /**
-   * Returns true if the pattern equals.
-   */
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+      return pattern.toProduction();
+   }
 
-    if (! (o instanceof Pattern))
-      return false;
+   /**
+    * Returns true if the pattern equals.
+    */
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    return o.equals(_grammar.getDefinition(_refName));
-  }
+      if (!(o instanceof Pattern))
+         return false;
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "RefPattern[" + _refName + "]";
-  }
+      return o.equals(_grammar.getDefinition(_refName));
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "RefPattern[" + _refName + "]";
+   }
 }
 

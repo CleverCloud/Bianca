@@ -34,8 +34,10 @@ import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.Reference;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
-
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,27 +58,28 @@ public class Xml {
    private static final L10N L = new L10N(Xml.class);
    /**
     * XML_OPTION_CASE_FOLDING is enabled by default
-    *
+    * <p/>
     * only affects startElement (including attribute
     * names) and endElement handlers.
     */
    private boolean _xmlOptionCaseFolding = true;
    private String _xmlOptionTargetEncoding;
    /**
-    *  XML_OPTION_SKIP_TAGSTART specifies how many chars
-    *  should be skipped in the beginning of a tag name (default = 0)
-    *
-    *  XXX: Not yet implemented
+    * XML_OPTION_SKIP_TAGSTART specifies how many chars
+    * should be skipped in the beginning of a tag name (default = 0)
+    * <p/>
+    * XXX: Not yet implemented
     */
    private long _xmlOptionSkipTagstart = 0;
    /**
-    *  XXX: _xmlOptionSkipWhite not yet implemented
+    * XXX: _xmlOptionSkipWhite not yet implemented
     */
    private boolean _xmlOptionSkipWhite = false;
-   /** XXX: _separator is set by xml_parse_create_ns but
-    *  not yet used.  Default value is ":"
-    *  Possibly should report error if user wants to use
-    *  anything other than ":"
+   /**
+    * XXX: _separator is set by xml_parse_create_ns but
+    * not yet used.  Default value is ":"
+    * Possibly should report error if user wants to use
+    * anything other than ":"
     */
    private String _separator;
    private int _errorCode = XmlModule.XML_ERROR_NONE;
@@ -97,8 +100,8 @@ public class Xml {
    private XmlHandler _xmlHandler;
 
    public Xml(Env env,
-           String outputEncoding,
-           String separator) {
+              String outputEncoding,
+              String separator) {
       _xmlOptionTargetEncoding = outputEncoding;
       _parser = env.wrapJava(this);
       _separator = separator;
@@ -136,12 +139,12 @@ public class Xml {
     * Sets the element handler functions for the XML parser.
     *
     * @param startElementHandler must exist when xml_parse is called
-    * @param endElementHandler must exist when xml_parse is called
+    * @param endElementHandler   must exist when xml_parse is called
     * @return true always even if handlers are disabled
     */
    public boolean xml_set_element_handler(Env env,
-           Value startElementHandler,
-           Value endElementHandler) {
+                                          Value startElementHandler,
+                                          Value endElementHandler) {
       if (_obj == null) {
          _startElementHandler = startElementHandler.toCallable(env);
          _endElementHandler = endElementHandler.toCallable(env);
@@ -185,13 +188,13 @@ public class Xml {
    /**
     * The php documentation is very vague as to the purpose
     * of the default handler.
-    *
+    * <p/>
     * We are interpreting it as an alternative to the character
     * data handler.
-    *
+    * <p/>
     * If character handler is defined, then use that.  Otherwise,
     * use default handler, if it is defined.
-    *
+    * <p/>
     * XXX: Need to confirm that this is appropriate
     *
     * @param handler
@@ -216,8 +219,8 @@ public class Xml {
     * @return true always even if handler is disabled
     */
    public boolean xml_set_processing_instruction_handler(
-           Env env,
-           Value processingInstructionHandler) {
+      Env env,
+      Value processingInstructionHandler) {
       if (_obj == null) {
          _processingInstructionHandler = processingInstructionHandler.toCallable(env);
       } else {
@@ -236,8 +239,8 @@ public class Xml {
     * @return true always even if handler is disabled
     */
    public boolean xml_set_start_namespace_decl_handler(
-           Env env,
-           Value startNamespaceDeclHandler) {
+      Env env,
+      Value startNamespaceDeclHandler) {
       if (_obj == null) {
          _startNamespaceDeclHandler = startNamespaceDeclHandler.toCallable(env);
       } else {
@@ -274,8 +277,8 @@ public class Xml {
     * @return true always even if handler is disabled
     */
    public boolean xml_set_end_namespace_decl_handler(
-           Env env,
-           Value endNamespaceDeclHandler) {
+      Env env,
+      Value endNamespaceDeclHandler) {
       if (_obj == null) {
          _endNamespaceDeclHandler = endNamespaceDeclHandler.toCallable(env);
       } else {
@@ -333,9 +336,9 @@ public class Xml {
     * @throws ParserConfigurationException
     */
    public int xml_parse(Env env,
-           StringValue data,
-           @Optional("true") boolean isFinal)
-           throws Exception {
+                        StringValue data,
+                        @Optional("true") boolean isFinal)
+      throws Exception {
       if (_xmlString == null) {
          _xmlString = new StringValue();
       }
@@ -391,10 +394,10 @@ public class Xml {
     * @return 0 for failure, 1 for success
     */
    public int xml_parse_into_struct(Env env,
-           StringValue data,
-           @Reference Value valsV,
-           @Optional @Reference Value indexV)
-           throws Exception {
+                                    StringValue data,
+                                    @Reference Value valsV,
+                                    @Optional @Reference Value indexV)
+      throws Exception {
       ArrayValueImpl valueArray = new ArrayValueImpl();
       ArrayValueImpl indexArray = new ArrayValueImpl();
 
@@ -441,12 +444,12 @@ public class Xml {
    }
 
    /**
-    *  sets one of the following:
-    *  _xmlOptionCaseFolding (ENABLED / DISABLED)
-    *  _xmlOptionTargetEncoding (String)
-    *  _xmlOptionSkipTagstart (int)
-    *  _xmlOptionSkipWhite (ENABLED / DISABLED)
-    *
+    * sets one of the following:
+    * _xmlOptionCaseFolding (ENABLED / DISABLED)
+    * _xmlOptionTargetEncoding (String)
+    * _xmlOptionSkipTagstart (int)
+    * _xmlOptionSkipWhite (ENABLED / DISABLED)
+    * <p/>
     * XXX: currently only _xmlOptionCaseFolding actually does something
     *
     * @param option
@@ -454,7 +457,7 @@ public class Xml {
     * @return true unless value could not be set
     */
    public boolean xml_parser_set_option(int option,
-           Value value) {
+                                        Value value) {
       switch (option) {
          case XmlModule.XML_OPTION_CASE_FOLDING:
             _xmlOptionCaseFolding = value.toBoolean();
@@ -474,7 +477,6 @@ public class Xml {
    }
 
    /**
-    *
     * @param option
     * @return relevant value
     */
@@ -509,11 +511,11 @@ public class Xml {
       //startElement increments, endElement decrements
       private int _level = 1;
       private HashMap<Integer, String> _paramHashMap =
-              new HashMap<Integer, String>();
+         new HashMap<Integer, String>();
       private HashMap<StringValue, ArrayValueImpl> _indexArrayHashMap =
-              new HashMap<StringValue, ArrayValueImpl>();
+         new HashMap<StringValue, ArrayValueImpl>();
       private ArrayList<StringValue> _indexArrayKeys =
-              new ArrayList<StringValue>();
+         new ArrayList<StringValue>();
       // Used to determine whether a given element has sub elements
       private boolean _isComplete = true;
       private boolean _isOutside = true;
@@ -522,8 +524,8 @@ public class Xml {
       private Env _env;
 
       public StructHandler(Env env,
-              ArrayValueImpl valueArray,
-              ArrayValueImpl indexArray) {
+                           ArrayValueImpl valueArray,
+                           ArrayValueImpl indexArray) {
          _env = env;
 
          _valueArray = valueArray;
@@ -553,6 +555,7 @@ public class Xml {
 
       /**
        * helper function to create an array of attributes for a tag
+       *
        * @param attrs
        * @return array of attributes
        */
@@ -569,7 +572,7 @@ public class Xml {
                aName = aName.toUpperCase();
             }
             result.put(
-                    env.createString(aName), env.createString(attrs.getValue(i)));
+               env.createString(aName), env.createString(attrs.getValue(i)));
          }
 
          return result;
@@ -577,7 +580,7 @@ public class Xml {
 
       @Override
       public void endDocument()
-              throws SAXException {
+         throws SAXException {
          for (StringValue sv : _indexArrayKeys) {
             _indexArray.put(sv, _indexArrayHashMap.get(sv));
          }
@@ -585,10 +588,10 @@ public class Xml {
 
       @Override
       public void startElement(String namespaceURI,
-              String lName,
-              String qName,
-              Attributes attrs)
-              throws SAXException {
+                               String lName,
+                               String qName,
+                               Attributes attrs)
+         throws SAXException {
          Value elementArray = new ArrayValueImpl();
 
          String eName = lName; // element name
@@ -606,7 +609,7 @@ public class Xml {
 
          if (attrs.getLength() > 0) {
             elementArray.put(_env.createString("attributes"),
-                    createAttributeArray(_env, attrs));
+               createAttributeArray(_env, attrs));
          }
 
          _valueArray.put(LongValue.create(_valueArrayIndex), elementArray);
@@ -621,9 +624,9 @@ public class Xml {
 
       @Override
       public void endElement(String namespaceURI,
-              String sName,
-              String qName)
-              throws SAXException {
+                             String sName,
+                             String qName)
+         throws SAXException {
          Value elementArray;
 
          _level--;
@@ -631,7 +634,7 @@ public class Xml {
          if (_isComplete) {
             elementArray = _valueArray.get(LongValue.create(_valueArrayIndex - 1));
             elementArray.put(
-                    _env.createString("type"), _env.createString("complete"));
+               _env.createString("type"), _env.createString("complete"));
          } else {
             elementArray = new ArrayValueImpl();
             String eName = sName; // element name
@@ -669,32 +672,32 @@ public class Xml {
 
       @Override
       public void characters(char[] ch,
-              int start,
-              int length)
-              throws SAXException {
+                             int start,
+                             int length)
+         throws SAXException {
          String s = new String(ch, start, length);
 
          if (_isOutside) {
             Value elementArray = new ArrayValueImpl();
             elementArray.put(
-                    _env.createString("tag"),
-                    _env.createString(_paramHashMap.get(_level - 1)));
+               _env.createString("tag"),
+               _env.createString(_paramHashMap.get(_level - 1)));
             elementArray.put(
-                    _env.createString("value"), _env.createString(s));
+               _env.createString("value"), _env.createString(s));
             elementArray.put(
-                    _env.createString("type"), _env.createString("cdata"));
+               _env.createString("type"), _env.createString("cdata"));
             elementArray.put(
-                    _env.createString("level"), LongValue.create(_level - 1));
+               _env.createString("level"), LongValue.create(_level - 1));
             _valueArray.put(LongValue.create(_valueArrayIndex), elementArray);
 
             Value indexArray = _indexArray.get(
-                    _env.createString(_paramHashMap.get(_level - 1)));
+               _env.createString(_paramHashMap.get(_level - 1)));
             indexArray.put(LongValue.create(_valueArrayIndex));
 
             _valueArrayIndex++;
          } else {
             Value elementArray = _valueArray.get(
-                    LongValue.create(_valueArrayIndex - 1));
+               LongValue.create(_valueArrayIndex - 1));
             elementArray.put(_env.createString("value"), _env.createString(s));
          }
       }
@@ -741,10 +744,10 @@ public class Xml {
        */
       @Override
       public void startElement(String namespaceURI,
-              String lName,
-              String qName,
-              Attributes attrs)
-              throws SAXException {
+                               String lName,
+                               String qName,
+                               Attributes attrs)
+         throws SAXException {
          /**
           *  args[0] reference to this parser
           *  args[1] name of element
@@ -783,8 +786,8 @@ public class Xml {
             }
 
             args[2].put(
-                    _env.createString(aName),
-                    _env.createString(attrs.getValue(i)));
+               _env.createString(aName),
+               _env.createString(attrs.getValue(i)));
          }
 
          try {
@@ -811,9 +814,9 @@ public class Xml {
        */
       @Override
       public void endElement(String namespaceURI,
-              String sName,
-              String qName)
-              throws SAXException {
+                             String sName,
+                             String qName)
+         throws SAXException {
          try {
             String eName = sName; // element name
             if ("".equals(eName)) {
@@ -846,12 +849,12 @@ public class Xml {
        */
       @Override
       public void characters(char[] buf,
-              int start,
-              int length)
-              throws SAXException {
+                             int start,
+                             int length)
+         throws SAXException {
          StringValue value;
 
-         value = _env.createString(new String(buf).substring(start, start+length));
+         value = _env.createString(new String(buf).substring(start, start + length));
 
          try {
             if (_characterDataHandler != null) {
@@ -871,19 +874,20 @@ public class Xml {
 
       /**
        * wrapper for _processingInstructionHandler
+       *
        * @param target
        * @param data
        * @throws SAXException
        */
       @Override
       public void processingInstruction(String target,
-              String data)
-              throws SAXException {
+                                        String data)
+         throws SAXException {
          try {
             if (_processingInstructionHandler != null) {
                _processingInstructionHandler.call(_env, _parser,
-                       _env.createString(target),
-                       _env.createString(data));
+                  _env.createString(target),
+                  _env.createString(data));
             } else {
                if (log.isLoggable(Level.FINER)) {
                   log.log(Level.FINER, "{0} processingInstruction {1}", new Object[]{this, target});
@@ -897,20 +901,21 @@ public class Xml {
 
       /**
        * wrapper for _startNamespaceDeclHandler
+       *
        * @param prefix
        * @param uri
        * @throws SAXException
        */
       @Override
       public void startPrefixMapping(String prefix,
-              String uri)
-              throws SAXException {
+                                     String uri)
+         throws SAXException {
          try {
             if (_startNamespaceDeclHandler != null) {
                _startNamespaceDeclHandler.call(
-                       _env,
-                       _env.createString(prefix),
-                       _env.createString(uri));
+                  _env,
+                  _env.createString(prefix),
+                  _env.createString(uri));
             } else {
                if (log.isLoggable(Level.FINER)) {
                   log.log(Level.FINER, "{0} startPrefixMapping {1} {2}", new Object[]{this, prefix, uri});
@@ -930,7 +935,7 @@ public class Xml {
        */
       @Override
       public void endPrefixMapping(String prefix)
-              throws SAXException {
+         throws SAXException {
          try {
             if (_endNamespaceDeclHandler != null) {
                _endNamespaceDeclHandler.call(_env, _env.createString(prefix));
@@ -947,17 +952,17 @@ public class Xml {
 
       @Override
       public void notationDecl(String name,
-              String publicId,
-              String systemId)
-              throws SAXException {
+                               String publicId,
+                               String systemId)
+         throws SAXException {
          try {
             if (_notationDeclHandler != null) {
                _notationDeclHandler.call(_env,
-                       _parser,
-                       _env.createString(name),
-                       _env.createString(""),
-                       _env.createString(systemId),
-                       _env.createString(publicId));
+                  _parser,
+                  _env.createString(name),
+                  _env.createString(""),
+                  _env.createString(systemId),
+                  _env.createString(publicId));
             } else {
                if (log.isLoggable(Level.FINER)) {
                   log.log(Level.FINER, "{0} notation {1}", new Object[]{this, name});
@@ -971,10 +976,10 @@ public class Xml {
 
       @Override
       public void unparsedEntityDecl(String name,
-              String publicId,
-              String systemId,
-              String notationName)
-              throws SAXException {
+                                     String publicId,
+                                     String systemId,
+                                     String notationName)
+         throws SAXException {
          /**
           * args[0] reference to this parser
           * args[1] name

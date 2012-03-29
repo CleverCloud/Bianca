@@ -29,8 +29,8 @@
  */
 package com.clevercloud.bianca.module;
 
-import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 
 import java.util.Map;
 

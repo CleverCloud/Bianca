@@ -33,21 +33,13 @@ package com.clevercloud.bianca.lib.db;
 import com.clevercloud.bianca.UnimplementedException;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.EnvCleanup;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -162,10 +154,10 @@ public class PDO implements EnvCleanup {
    }
 
    public PDO(Env env,
-           String dsn,
-           @Optional("null") String user,
-           @Optional("null") String password,
-           @Optional ArrayValue options) {
+              String dsn,
+              @Optional("null") String user,
+              @Optional("null") String password,
+              @Optional ArrayValue options) {
       _env = env;
       _dsn = dsn;
       _user = user;
@@ -308,7 +300,7 @@ public class PDO implements EnvCleanup {
     * Executes a statement, returning the number of rows.
     */
    public final int exec(String query)
-           throws SQLException {
+      throws SQLException {
       if (_conn == null) {
          return -1;
       }
@@ -505,7 +497,7 @@ public class PDO implements EnvCleanup {
     */
    @ReturnNullAsFalse
    public PDOStatement prepare(String statement,
-           @Optional ArrayValue driverOptions) {
+                               @Optional ArrayValue driverOptions) {
       if (_conn == null) {
          return null;
       }
@@ -537,7 +529,7 @@ public class PDO implements EnvCleanup {
          closeStatements();
 
          PDOStatement pdoStatement = new PDOStatement(
-                 _env, _conn, query, false, null);
+            _env, _conn, query, false, null);
          _lastPDOStatement = pdoStatement;
          return _env.wrapJava(pdoStatement);
       } catch (SQLException e) {
@@ -670,6 +662,7 @@ public class PDO implements EnvCleanup {
 
    /**
     * Sets the auto commit, if true commit every statement.
+    *
     * @return true on success, false on error.
     */
    private boolean setAutocommit(boolean autoCommit) {
@@ -689,7 +682,7 @@ public class PDO implements EnvCleanup {
 
    /**
     * Force column names to a specific case.
-    *
+    * <p/>
     * <dl>
     * <dt>{@link CASE_LOWER}
     * <dt>{@link CASE_NATURAL}
@@ -712,7 +705,7 @@ public class PDO implements EnvCleanup {
    /**
     * Sets whether or not the convert nulls and empty strings, works for
     * all drivers.
-    *
+    * <p/>
     * <dl>
     * <dt> {@link NULL_NATURAL}
     * <dd> no conversion
@@ -749,7 +742,6 @@ public class PDO implements EnvCleanup {
     * Sets a custom statement  class derived from PDOStatement.
     *
     * @param value an array(classname, array(constructor args)).
-    *
     * @return true on success, false on error.
     */
    private boolean setStatementClass(Value value) {
@@ -773,7 +765,7 @@ public class PDO implements EnvCleanup {
     * Opens a connection based on the dsn.
     */
    private DataSource getDataSource(Env env, String dsn)
-           throws Exception {
+      throws Exception {
       if (dsn.startsWith("mysql:")) {
          return getMysqlDataSource(env, dsn);
       }
@@ -789,7 +781,7 @@ public class PDO implements EnvCleanup {
          return getResinDataSource(env, dsn);
       } else {
          env.error(L.l("'{0}' is an unknown PDO data source.",
-                 dsn));
+            dsn));
 
          return null;
       }
@@ -800,7 +792,7 @@ public class PDO implements EnvCleanup {
     * you can also use "driver-class:jdbc-url"
     */
    private DataSource getJdbcDataSource(Env env, String dsn)
-           throws Exception {
+      throws Exception {
       if (dsn.indexOf(":jdbc:") > 0) {
          return env.getDataSource(dsn.substring(0, dsn.indexOf(":jdbc:")), dsn.substring(dsn.indexOf(":jdbc:") + 1));
       }
@@ -819,7 +811,7 @@ public class PDO implements EnvCleanup {
     * Opens a mysql connection based on the dsn.
     */
    private DataSource getMysqlDataSource(Env env, String dsn)
-           throws Exception {
+      throws Exception {
       HashMap<String, String> attr = parseAttr(dsn, dsn.indexOf(':'));
 
       // TODO: more robust to get attribute values as is done in getPgsqlDataSource
@@ -870,7 +862,7 @@ public class PDO implements EnvCleanup {
 
       // TODO: mysql options?
       String url = Mysqli.getUrl(host, port, dbname, ENCODING,
-              false, false, false);
+         false, false, false);
 
       return env.getDataSource(driver, url);
    }
@@ -879,7 +871,7 @@ public class PDO implements EnvCleanup {
     * Opens a postgres connection based on the dsn.
     */
    private DataSource getPgsqlDataSource(Env env, String dsn)
-           throws Exception {
+      throws Exception {
       HashMap<String, String> attr = parseAttr(dsn, dsn.indexOf(':'));
 
       String host = "localhost";
@@ -937,7 +929,7 @@ public class PDO implements EnvCleanup {
     * Opens a resin connection based on the dsn.
     */
    private DataSource getResinDataSource(Env env, String dsn)
-           throws Exception {
+      throws Exception {
       String driver = "com.clevercloud.db.jdbc.ConnectionPoolDataSourceImpl";
 
       String url = "jdbc:" + dsn;
@@ -980,8 +972,8 @@ public class PDO implements EnvCleanup {
 
          StringBuilder name = new StringBuilder();
          for (;
-                 i < length && Character.isJavaIdentifierPart((ch = dsn.charAt(i)));
-                 i++) {
+              i < length && Character.isJavaIdentifierPart((ch = dsn.charAt(i)));
+              i++) {
             name.append(ch);
          }
 

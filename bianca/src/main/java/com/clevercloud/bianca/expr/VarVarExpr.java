@@ -30,13 +30,7 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.Var;
+import com.clevercloud.bianca.env.*;
 
 /**
  * Represents a PHP variable expression.
@@ -63,7 +57,6 @@ public class VarVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -83,7 +76,6 @@ public class VarVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -100,7 +92,6 @@ public class VarVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -114,7 +105,6 @@ public class VarVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -128,7 +118,6 @@ public class VarVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -148,7 +137,6 @@ public class VarVarExpr extends AbstractVarExpr {
     * Evaluates the expression, converting to an array if necessary.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

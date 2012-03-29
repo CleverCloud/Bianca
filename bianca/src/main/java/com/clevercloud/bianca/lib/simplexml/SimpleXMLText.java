@@ -29,10 +29,12 @@
  */
 package com.clevercloud.bianca.lib.simplexml;
 
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.BiancaClass;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.util.L10N;
 
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * SimpleXMLElement object oriented API facade.
@@ -44,13 +46,13 @@ public class SimpleXMLText extends SimpleXMLElement {
    private static final L10N L = new L10N(SimpleXMLText.class);
 
    protected SimpleXMLText(Env env,
-           BiancaClass cls) {
+                           BiancaClass cls) {
       super(env, cls, null, "#text");
    }
 
    protected SimpleXMLText(Env env,
-           BiancaClass cls,
-           StringValue text) {
+                           BiancaClass cls,
+                           StringValue text) {
       super(env, cls, null, "#text");
 
       _text = text;

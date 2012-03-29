@@ -42,144 +42,129 @@ import java.util.Iterator;
  * Generates programs from patterns.
  */
 public class ElementItem extends Item {
-  protected final static L10N L = new L10N(ElementItem.class);
+   protected final static L10N L = new L10N(ElementItem.class);
 
-  private ElementPattern _element;
+   private ElementPattern _element;
 
-  private NameClassItem _nameItem;
-  private Item _item;
-  private Item _childrenItem;
+   private NameClassItem _nameItem;
+   private Item _item;
+   private Item _childrenItem;
 
-  public ElementItem(ElementPattern element, NameClassItem nameItem)
-  {
-    _element = element;
-    _nameItem = nameItem;
-  }
+   public ElementItem(ElementPattern element, NameClassItem nameItem) {
+      _element = element;
+      _nameItem = nameItem;
+   }
 
-  public NameClassItem getNameClassItem()
-  {
-    return _nameItem;
-  }
+   public NameClassItem getNameClassItem() {
+      return _nameItem;
+   }
 
-  public void setChildrenItem(Item item)
-  {
-    _childrenItem = item;
-  }
+   public void setChildrenItem(Item item) {
+      _childrenItem = item;
+   }
 
-  /**
-   * Returns the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-    _nameItem.firstSet(set);
-  }
+   /**
+    * Returns the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+      _nameItem.firstSet(set);
+   }
 
-  /**
-   * Returns the first set, the set of element names possible.
-   */
-  public void requiredFirstSet(HashSet<QName> set)
-  {
-    _nameItem.firstSet(set);
-  }
-  
-  /**
-   * The element does not allow the empty match.
-   */
-  public boolean allowEmpty()
-  {
-    return false;
-  }
-  
-  /**
-   * Return all possible child items or null
-   */
-  public Iterator<Item> getItemsIterator()
-  {
-    if (_item == null) {
-      _item = InElementItem.create(_childrenItem,
-                                   EmptyItem.create());
-    }
+   /**
+    * Returns the first set, the set of element names possible.
+    */
+   public void requiredFirstSet(HashSet<QName> set) {
+      _nameItem.firstSet(set);
+   }
 
-    return itemIterator( _item );
-  }
-
-
-  /**
-   * Returns the next item on the match.
-   *
-   * @param name the name of the element
-   */
-  public Item startElement(QName name)
-    throws RelaxException
-  {
-    if (! _nameItem.matches(name))
-      return null;
-
-    if (_item == null) {
-      _item = InElementItem.create(_childrenItem,
-                                   EmptyItem.create());
-    }
-
-    return _item;
-  }
-  
-  /**
-   * Returns true if the element is allowed somewhere in the item.
-   * allowsElement is used for error messages to give more information
-   * in cases of order dependency.
-   *
-   * @param name the name of the element
-   *
-   * @return true if the element is allowed somewhere
-   */
-  public boolean allowsElement(QName name)
-  {
-    return _nameItem.matches(name);
-  }
-
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(int depth)
-  {
-    return _nameItem.toSyntaxDescription("");
-  }
-
-  /**
-   * Returns true for an element with simple syntax.
-   */
-  protected boolean isSimpleSyntax()
-  {
-    return true;
-  }
-
-  /**
-   * Returns the hash code for the empty item.
-   */
-  public int hashCode()
-  {
-    return 87 + _element.getDefName().hashCode();
-  }
-
-  /**
-   * Returns true if the object is an empty item.
-   */
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
-    
-    if (! (o instanceof ElementItem))
+   /**
+    * The element does not allow the empty match.
+    */
+   public boolean allowEmpty() {
       return false;
+   }
 
-    ElementItem elt = (ElementItem) o;
+   /**
+    * Return all possible child items or null
+    */
+   public Iterator<Item> getItemsIterator() {
+      if (_item == null) {
+         _item = InElementItem.create(_childrenItem,
+            EmptyItem.create());
+      }
 
-    return _element.getDefName().equals(elt._element.getDefName());
-  }
+      return itemIterator(_item);
+   }
 
-  public String toString()
-  {
-    return "ElementItem[" + _nameItem + "]";
-  }
+
+   /**
+    * Returns the next item on the match.
+    *
+    * @param name the name of the element
+    */
+   public Item startElement(QName name)
+      throws RelaxException {
+      if (!_nameItem.matches(name))
+         return null;
+
+      if (_item == null) {
+         _item = InElementItem.create(_childrenItem,
+            EmptyItem.create());
+      }
+
+      return _item;
+   }
+
+   /**
+    * Returns true if the element is allowed somewhere in the item.
+    * allowsElement is used for error messages to give more information
+    * in cases of order dependency.
+    *
+    * @param name the name of the element
+    * @return true if the element is allowed somewhere
+    */
+   public boolean allowsElement(QName name) {
+      return _nameItem.matches(name);
+   }
+
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(int depth) {
+      return _nameItem.toSyntaxDescription("");
+   }
+
+   /**
+    * Returns true for an element with simple syntax.
+    */
+   protected boolean isSimpleSyntax() {
+      return true;
+   }
+
+   /**
+    * Returns the hash code for the empty item.
+    */
+   public int hashCode() {
+      return 87 + _element.getDefName().hashCode();
+   }
+
+   /**
+    * Returns true if the object is an empty item.
+    */
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof ElementItem))
+         return false;
+
+      ElementItem elt = (ElementItem) o;
+
+      return _element.getDefName().equals(elt._element.getDefName());
+   }
+
+   public String toString() {
+      return "ElementItem[" + _nameItem + "]";
+   }
 }
 

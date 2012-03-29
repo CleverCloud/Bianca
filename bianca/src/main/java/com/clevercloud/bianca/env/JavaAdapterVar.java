@@ -203,6 +203,7 @@ public class JavaAdapterVar extends Value {
    return getValue().isScalar();
    }
     */
+
    /**
     * Returns true for a StringValue.
     */
@@ -261,6 +262,7 @@ public class JavaAdapterVar extends Value {
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override
@@ -484,6 +486,7 @@ public class JavaAdapterVar extends Value {
    //
    // Operations
    //
+
    /**
     * Copy the value.
     */
@@ -977,8 +980,8 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public void initField(StringValue key,
-           Value value,
-           FieldVisibility visibility) {
+                         Value value,
+                         FieldVisibility visibility) {
       setRaw(getValue());
 
       super.initField(key, value, visibility);
@@ -1039,13 +1042,13 @@ public class JavaAdapterVar extends Value {
    public boolean hasCurrent() {
       Value v = getValue();
       if (v instanceof ArgRef)
-         return ((ArgRef)v).hasCurrent();
+         return ((ArgRef) v).hasCurrent();
       else if (v instanceof ArrayValue)
-         return ((ArrayValue)v).hasCurrent();
+         return ((ArrayValue) v).hasCurrent();
       else if (v instanceof Var)
-         return ((Var)v).hasCurrent();
+         return ((Var) v).hasCurrent();
       else if (v instanceof JavaAdapterVar)
-         return ((JavaAdapterVar)v).hasCurrent();
+         return ((JavaAdapterVar) v).hasCurrent();
       return false;
    }
 
@@ -1118,7 +1121,7 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value[] args) {
+                           Value[] args) {
       return getValue().callMethod(env, methodName, hash, args);
    }
 
@@ -1135,7 +1138,7 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a0) {
+                           Value a0) {
       return getValue().callMethod(env, methodName, hash, a0);
    }
 
@@ -1144,7 +1147,7 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a0, Value a1) {
+                           Value a0, Value a1) {
       return getValue().callMethod(env, methodName, hash, a0, a1);
    }
 
@@ -1153,7 +1156,7 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a0, Value a1, Value a2) {
+                           Value a0, Value a1, Value a2) {
       return getValue().callMethod(env, methodName, hash, a0, a1, a2);
    }
 
@@ -1162,9 +1165,9 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a0, Value a1, Value a2, Value a3) {
+                           Value a0, Value a1, Value a2, Value a3) {
       return getValue().callMethod(env, methodName, hash,
-              a0, a1, a2, a3);
+         a0, a1, a2, a3);
    }
 
    /**
@@ -1172,9 +1175,9 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a0, Value a1, Value a2, Value a3, Value a4) {
+                           Value a0, Value a1, Value a2, Value a3, Value a4) {
       return getValue().callMethod(env, methodName, hash,
-              a0, a1, a2, a3, a4);
+         a0, a1, a2, a3, a4);
    }
 
    /**
@@ -1182,8 +1185,8 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                              StringValue methodName, int hash,
+                              Value[] args) {
       return getValue().callMethodRef(env, methodName, hash, args);
    }
 
@@ -1200,7 +1203,7 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a0) {
+                              Value a0) {
       return getValue().callMethodRef(env, methodName, hash, a0);
    }
 
@@ -1209,9 +1212,9 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a0, Value a1) {
+                              Value a0, Value a1) {
       return getValue().callMethodRef(env, methodName, hash,
-              a0, a1);
+         a0, a1);
    }
 
    /**
@@ -1219,9 +1222,9 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a0, Value a1, Value a2) {
+                              Value a0, Value a1, Value a2) {
       return getValue().callMethodRef(env, methodName, hash,
-              a0, a1, a2);
+         a0, a1, a2);
    }
 
    /**
@@ -1229,9 +1232,9 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a0, Value a1, Value a2, Value a3) {
+                              Value a0, Value a1, Value a2, Value a3) {
       return getValue().callMethodRef(env, methodName, hash,
-              a0, a1, a2, a3);
+         a0, a1, a2, a3);
    }
 
    /**
@@ -1239,9 +1242,9 @@ public class JavaAdapterVar extends Value {
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a0, Value a1, Value a2, Value a3, Value a4) {
+                              Value a0, Value a1, Value a2, Value a3, Value a4) {
       return getValue().callMethodRef(env, methodName, hash,
-              a0, a1, a2, a3, a4);
+         a0, a1, a2, a3, a4);
    }
 
    /**
@@ -1254,6 +1257,7 @@ public class JavaAdapterVar extends Value {
    return getValue().callClassMethod(env, fun, args);
    }
     */
+
    /**
     * Prints the value.
     */
@@ -1272,10 +1276,10 @@ public class JavaAdapterVar extends Value {
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("&");
       getValue().varDump(env, out, depth, valueSet);
    }

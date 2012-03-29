@@ -29,9 +29,8 @@
  */
 package com.clevercloud.bianca.lib.db;
 
-import com.clevercloud.util.L10N;
-
 import com.clevercloud.bianca.env.Env;
+import com.clevercloud.util.L10N;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -50,13 +49,13 @@ public class OracleResult extends JdbcResultResource {
     * Constructor for OracleResult
     *
     * @param stmt the corresponding statement
-    * @param rs the corresponding result set
+    * @param rs   the corresponding result set
     * @param conn the corresponding connection
     */
    public OracleResult(Env env,
-           Statement stmt,
-           ResultSet rs,
-           Oracle conn) {
+                       Statement stmt,
+                       ResultSet rs,
+                       Oracle conn) {
       super(env, stmt, rs, conn);
    }
 
@@ -64,11 +63,11 @@ public class OracleResult extends JdbcResultResource {
     * Constructor for OracleResult
     *
     * @param metaData the corresponding result set meta data
-    * @param conn the corresponding connection
+    * @param conn     the corresponding connection
     */
    public OracleResult(Env env,
-           ResultSetMetaData metaData,
-           Oracle conn) {
+                       ResultSetMetaData metaData,
+                       Oracle conn) {
       super(env, metaData, conn);
    }
 }

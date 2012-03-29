@@ -34,7 +34,7 @@ import com.clevercloud.bianca.env.StringValue;
 public class UnicodeEregi extends UnicodeEreg {
 
    public UnicodeEregi(StringValue rawRegexp)
-           throws IllegalRegexpException {
+      throws IllegalRegexpException {
       super(rawRegexp);
    }
 

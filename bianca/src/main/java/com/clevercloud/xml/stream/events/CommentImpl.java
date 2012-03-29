@@ -36,46 +36,40 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class CommentImpl extends XMLEventImpl implements Comment {
-  private final String _text;
+   private final String _text;
 
-  public CommentImpl(String text)
-  {
-    _text = text;
-  }
+   public CommentImpl(String text) {
+      _text = text;
+   }
 
-  public String getText()
-  {
-    return _text;
-  }
+   public String getText() {
+      return _text;
+   }
 
-  public int getEventType()
-  {
-    return COMMENT;
-  }
+   public int getEventType() {
+      return COMMENT;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    try {
-      writer.write("<!--" + _text + "-->");
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      try {
+         writer.write("<!--" + _text + "-->");
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof Comment))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof Comment))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    Comment comment = (Comment) o;
+      Comment comment = (Comment) o;
 
-    return getText().equals(comment.getText());
-  }
+      return getText().equals(comment.getText());
+   }
 }
 

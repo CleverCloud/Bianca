@@ -36,7 +36,6 @@ import com.clevercloud.xml.QElement;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -45,174 +44,160 @@ import org.w3c.dom.Node;
  * matches attributes of an element.
  */
 public class FromAttributes extends Axis {
-  public FromAttributes(AbstractPattern parent)
-  {
-    super(parent);
-  }
+   public FromAttributes(AbstractPattern parent) {
+      super(parent);
+   }
 
-  /**
-   * matches if the node is an attribute.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true if the pattern matches
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (! (node instanceof Attr))
-      return false;
+   /**
+    * matches if the node is an attribute.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true if the pattern matches
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (!(node instanceof Attr))
+         return false;
 
-    if (node instanceof QAttr
-        && ((QAttr) node).getNamespaceURI() == XMLNS)
-      return false;
+      if (node instanceof QAttr
+         && ((QAttr) node).getNamespaceURI() == XMLNS)
+         return false;
 
-    return _parent == null || _parent.match(node.getParentNode(), env);
-  }
+      return _parent == null || _parent.match(node.getParentNode(), env);
+   }
 
-  /**
-   * The position of the child is the count of previous siblings
-   * matching the pattern.
-   *
-   * Technically, attributes don't have positions, but our DOM allows it.
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    int count = 1;
+   /**
+    * The position of the child is the count of previous siblings
+    * matching the pattern.
+    * <p/>
+    * Technically, attributes don't have positions, but our DOM allows it.
+    */
+   public int position(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      int count = 1;
 
-    for (node = node.getPreviousSibling();
-         node != null;
-         node = node.getPreviousSibling()) {
-      if (pattern.match(node, env))
-        count++;
-    }
+      for (node = node.getPreviousSibling();
+           node != null;
+           node = node.getPreviousSibling()) {
+         if (pattern.match(node, env))
+            count++;
+      }
 
-    return count;
-  }
-  
-  /**
-   * counts all siblings matching the pattern.
-   */
-  public int count(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    int count = 0;
+      return count;
+   }
 
-    CleverCloudElement parent = (CleverCloudElement) node.getParentNode();
+   /**
+    * counts all siblings matching the pattern.
+    */
+   public int count(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      int count = 0;
 
-    for (node = parent.getFirstAttribute();
-         node != null;
-         node = node.getNextSibling()) {
-      if (pattern.match(node, env))
-        count++;
-    }
+      CleverCloudElement parent = (CleverCloudElement) node.getParentNode();
 
-    return count;
-  }
-  
-  /**
-   * Creates a new node iterator.
-   *
-   * @param node the starting node
-   * @param env the variable environment
-   * @param match the axis match pattern
-   *
-   * @return the node iterator
-   */
-  public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
-                                         AbstractPattern match)
-    throws XPathException
-  {
-    if (node instanceof CleverCloudNode) {
+      for (node = parent.getFirstAttribute();
+           node != null;
+           node = node.getNextSibling()) {
+         if (pattern.match(node, env))
+            count++;
+      }
+
+      return count;
+   }
+
+   /**
+    * Creates a new node iterator.
+    *
+    * @param node  the starting node
+    * @param env   the variable environment
+    * @param match the axis match pattern
+    * @return the node iterator
+    */
+   public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
+                                          AbstractPattern match)
+      throws XPathException {
+      if (node instanceof CleverCloudNode) {
+         if (_parent == null)
+            return new AttributeIterator(null, this, node, env, match);
+         else if (_parent instanceof FromRoot) {
+            if (node instanceof Document)
+               return new AttributeIterator(null, this, node, env, match);
+            else
+               return new AttributeIterator(null, this, node.getOwnerDocument(),
+                  env, match);
+         }
+
+         NodeIterator parentIter;
+         parentIter = _parent.createNodeIterator(node, env,
+            _parent.copyPosition());
+
+         return new AttributeIterator(parentIter, this, null, env, match);
+      }
+
       if (_parent == null)
-        return new AttributeIterator(null, this, node, env, match);
+         return new AttributeListIterator(null, env, match);
       else if (_parent instanceof FromRoot) {
-        if (node instanceof Document)
-          return new AttributeIterator(null, this, node, env, match);
-        else
-          return new AttributeIterator(null, this, node.getOwnerDocument(),
-                                       env, match);
+         if (node instanceof Document)
+            return new AttributeListIterator(null, env, match);
+         else
+            return new AttributeListIterator(null, env, match);
       }
 
       NodeIterator parentIter;
-      parentIter = _parent.createNodeIterator(node, env,
-                                              _parent.copyPosition());
+      parentIter = _parent.createNodeIterator(node, env, _parent.copyPosition());
 
-      return new AttributeIterator(parentIter, this, null, env, match);
-    }
-    
-    if (_parent == null)
-      return new AttributeListIterator(null, env, match);
-    else if (_parent instanceof FromRoot) {
-      if (node instanceof Document)
-        return new AttributeListIterator(null, env, match);
+      return new AttributeListIterator(parentIter, env, match);
+   }
+
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      if (node instanceof QElement)
+         return ((QElement) node).getFirstAttribute();
       else
-        return new AttributeListIterator(null, env, match);
-    }
+         return null;
+   }
 
-    NodeIterator parentIter;
-    parentIter = _parent.createNodeIterator(node, env, _parent.copyPosition());
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node     the current node
+    * @param lastNode the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node lastNode) {
+      return node.getNextSibling();
+   }
 
-    return new AttributeListIterator(parentIter, env, match);
-  }
+   /**
+    * Returns true if the pattern is strictly ascending.
+    */
+   public boolean isStrictlyAscending() {
+      if (_parent == null)
+         return true;
+      else
+         return _parent.isStrictlyAscending();
+   }
 
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    if (node instanceof QElement)
-      return ((QElement) node).getFirstAttribute();
-    else
-      return null;
-  }
+   /**
+    * Returns true if the two patterns are equal.
+    */
+   public boolean equals(Object b) {
+      if (!(b instanceof FromAttributes))
+         return false;
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param lastNode the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node lastNode)
-  {
-    return node.getNextSibling();
-  }
+      FromAttributes bPattern = (FromAttributes) b;
 
-  /**
-   * Returns true if the pattern is strictly ascending.
-   */
-  public boolean isStrictlyAscending()
-  {
-    if (_parent == null)
-      return true;
-    else
-      return _parent.isStrictlyAscending();
-  }
+      return (_parent == bPattern._parent ||
+         (_parent != null && _parent.equals(bPattern._parent)));
+   }
 
-  /**
-   * Returns true if the two patterns are equal.
-   */
-  public boolean equals(Object b)
-  {
-    if (! (b instanceof FromAttributes))
-      return false;
-
-    FromAttributes bPattern = (FromAttributes) b;
-    
-    return (_parent == bPattern._parent ||
-            (_parent != null && _parent.equals(bPattern._parent)));
-  }
-
-  public String toString()
-  {
-    return getPrefix() + "attribute::";
-  }
+   public String toString() {
+      return getPrefix() + "attribute::";
+   }
 }

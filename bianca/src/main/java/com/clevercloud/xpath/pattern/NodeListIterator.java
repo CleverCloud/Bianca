@@ -30,7 +30,6 @@
 package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -38,65 +37,58 @@ import org.w3c.dom.NodeList;
  * Iterates through matching nodes.
  */
 public class NodeListIterator extends NodeIterator {
-  protected NodeList _list;
-  protected int _position;
+   protected NodeList _list;
+   protected int _position;
 
-  public NodeListIterator(ExprEnvironment env, NodeList list)
-  {
-    super(env);
-    
-    _list = list;
-  }
-  
-  /**
-   * Returns the current position.
-   */
-  public int getContextPosition()
-  {
-    return _position;
-  }
-  
-  /**
-   * Returns the current position.
-   */
-  public int getContextSize()
-  {
-    return _list.getLength();
-  }
-  
-  /**
-   * True if there's more data.
-   */
-  public boolean hasNext()
-  {
-    return _position < _list.getLength();
-  }
-  
-  /**
-   * Returns the next node.
-   */
-  public Node next()
-  {
-    return nextNode();
-  }
-  
-  /**
-   * Returns the next node.
-   */
-  public Node nextNode()
-  {
-    return _list.item(_position++);
-  }
+   public NodeListIterator(ExprEnvironment env, NodeList list) {
+      super(env);
 
-  /**
-   * clones the iterator
-   */
-  public Object clone()
-  {
-    NodeListIterator clone = new NodeListIterator(_env, _list);
-    
-    clone._position = _position;
+      _list = list;
+   }
 
-    return clone;
-  }
+   /**
+    * Returns the current position.
+    */
+   public int getContextPosition() {
+      return _position;
+   }
+
+   /**
+    * Returns the current position.
+    */
+   public int getContextSize() {
+      return _list.getLength();
+   }
+
+   /**
+    * True if there's more data.
+    */
+   public boolean hasNext() {
+      return _position < _list.getLength();
+   }
+
+   /**
+    * Returns the next node.
+    */
+   public Node next() {
+      return nextNode();
+   }
+
+   /**
+    * Returns the next node.
+    */
+   public Node nextNode() {
+      return _list.item(_position++);
+   }
+
+   /**
+    * clones the iterator
+    */
+   public Object clone() {
+      NodeListIterator clone = new NodeListIterator(_env, _list);
+
+      clone._position = _position;
+
+      return clone;
+   }
 }

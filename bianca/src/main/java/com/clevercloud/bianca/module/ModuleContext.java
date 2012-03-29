@@ -30,7 +30,6 @@
  */
 package com.clevercloud.bianca.module;
 
-import com.clevercloud.config.ConfigException;
 import com.clevercloud.bianca.BiancaRuntimeException;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.ExprFactory;
@@ -38,12 +37,15 @@ import com.clevercloud.bianca.marshal.Marshal;
 import com.clevercloud.bianca.marshal.MarshalFactory;
 import com.clevercloud.bianca.program.ClassDef;
 import com.clevercloud.bianca.program.InterpretedClassDef;
-import com.clevercloud.bianca.program.JavaClassDef;
 import com.clevercloud.bianca.program.JavaArrayClassDef;
+import com.clevercloud.bianca.program.JavaClassDef;
+import com.clevercloud.config.ConfigException;
 import com.clevercloud.util.L10N;
-import com.clevercloud.vfs.*;
+import com.clevercloud.vfs.ReadStream;
+import com.clevercloud.vfs.VfsStream;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -157,7 +159,7 @@ public class ModuleContext {
     * Adds module info.
     */
    public ModuleInfo addModule(String name, BiancaModule module)
-           throws ConfigException {
+      throws ConfigException {
       synchronized (this) {
          ModuleInfo info = _moduleInfoMap.get(name);
 
@@ -171,11 +173,11 @@ public class ModuleContext {
    }
 
    public JavaClassDef addClass(String name, Class type,
-           String extension, Class javaClassDefClass)
-           throws NoSuchMethodException,
-           InvocationTargetException,
-           IllegalAccessException,
-           InstantiationException {
+                                String extension, Class javaClassDefClass)
+      throws NoSuchMethodException,
+      InvocationTargetException,
+      IllegalAccessException,
+      InstantiationException {
       synchronized (_javaClassWrappers) {
          JavaClassDef def = _javaClassWrappers.get(name);
 
@@ -183,21 +185,21 @@ public class ModuleContext {
             if (log.isLoggable(Level.FINEST)) {
                if (extension == null) {
                   log.finest(L.l("PHP loading class {0} with type {1}",
-                          name,
-                          type.getName()));
+                     name,
+                     type.getName()));
                } else {
                   log.finest(L.l(
-                          "PHP loading class {0} with type {1} providing extension {2}",
-                          name,
-                          type.getName(),
-                          extension));
+                     "PHP loading class {0} with type {1} providing extension {2}",
+                     name,
+                     type.getName(),
+                     extension));
                }
             }
 
             if (javaClassDefClass != null) {
                Constructor constructor = javaClassDefClass.getConstructor(ModuleContext.class,
-                       String.class,
-                       Class.class);
+                  String.class,
+                  Class.class);
 
                def = (JavaClassDef) constructor.newInstance(this, name, type);
             } else {
@@ -275,9 +277,9 @@ public class ModuleContext {
                type = Class.forName(className, false, _loader);
             } catch (ClassNotFoundException e) {
                throw new ClassNotFoundException(
-                       L.l("'{0}' is not a known Java class: {1}",
-                       className,
-                       e.toString()), e);
+                  L.l("'{0}' is not a known Java class: {1}",
+                     className,
+                     e.toString()), e);
             }
 
             def = JavaClassDef.create(this, className, type);
@@ -310,7 +312,7 @@ public class ModuleContext {
    }
 
    protected JavaClassDef createDefaultJavaClassDef(String className,
-           Class type) {
+                                                    Class type) {
       if (type.isArray()) {
          return new JavaArrayClassDef(this, className, type);
       } else {
@@ -319,8 +321,8 @@ public class ModuleContext {
    }
 
    protected JavaClassDef createDefaultJavaClassDef(String className,
-           Class type,
-           String extension) {
+                                                    Class type,
+                                                    String extension) {
       if (type.isArray()) {
          return new JavaArrayClassDef(this, className, type, extension);
       } else {
@@ -353,8 +355,8 @@ public class ModuleContext {
    }
 
    public Marshal createMarshal(Class type,
-           boolean isNotNull,
-           boolean isNullAsFalse) {
+                                boolean isNotNull,
+                                boolean isNullAsFalse) {
       return getMarshalFactory().create(type, isNotNull, isNullAsFalse);
    }
 
@@ -375,6 +377,7 @@ public class ModuleContext {
    return internal;
    }
     */
+
    /**
     * Returns the stdClass definition.
     */
@@ -398,6 +401,7 @@ public class ModuleContext {
    }
    }
     */
+
    /**
     * Returns the class maps.
     */
@@ -468,7 +472,7 @@ public class ModuleContext {
     * Creates a static function.
     */
    public StaticFunction createStaticFunction(BiancaModule module,
-           Method method) {
+                                              Method method) {
       return new StaticFunction(this, module, method);
    }
 
@@ -537,8 +541,8 @@ public class ModuleContext {
     * Parses the services file, looking for PHP services.
     */
    private void parseServicesModule(ReadStream in)
-           throws IOException, ClassNotFoundException,
-           IllegalAccessException, InstantiationException {
+      throws IOException, ClassNotFoundException,
+      IllegalAccessException, InstantiationException {
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       String line;
 
@@ -560,7 +564,7 @@ public class ModuleContext {
                   cl = Class.forName(className, false, loader);
                } catch (ClassNotFoundException e) {
                   throw new ClassNotFoundException(L.l(
-                          "'{0}' not valid {1}", className, e.toString()));
+                     "'{0}' not valid {1}", className, e.toString()));
                }
 
                introspectPhpModuleClass(cl);
@@ -602,7 +606,7 @@ public class ModuleContext {
     * @param cl the class to introspect.
     */
    private void introspectPhpModuleClass(Class cl)
-           throws IllegalAccessException, InstantiationException, ConfigException {
+      throws IllegalAccessException, InstantiationException, ConfigException {
       synchronized (_moduleInfoMap) {
          if (_moduleInfoMap.get(cl.getName()) != null) {
             return;
@@ -702,9 +706,9 @@ public class ModuleContext {
     * Parses the services file, looking for PHP services.
     */
    private void parseClassServicesModule(ReadStream in)
-           throws IOException, ClassNotFoundException,
-           IllegalAccessException, InstantiationException,
-           ConfigException, NoSuchMethodException, InvocationTargetException {
+      throws IOException, ClassNotFoundException,
+      IllegalAccessException, InstantiationException,
+      ConfigException, NoSuchMethodException, InvocationTargetException {
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       String line;
 
@@ -739,11 +743,11 @@ public class ModuleContext {
                   i++;
                   if (i >= args.length) {
                      throw new IOException(
-                             L.l(
-                             "expecting Bianca class name after '{0}' "
-                             + "in definition for class {1}",
-                             "as",
-                             className));
+                        L.l(
+                           "expecting Bianca class name after '{0}' "
+                              + "in definition for class {1}",
+                           "as",
+                           className));
                   }
 
                   phpClassName = args[i];
@@ -751,11 +755,11 @@ public class ModuleContext {
                   i++;
                   if (i >= args.length) {
                      throw new IOException(
-                             L.l(
-                             "expecting name of extension after '{0}' "
-                             + "in definition for class {1}",
-                             "extension",
-                             className));
+                        L.l(
+                           "expecting name of extension after '{0}' "
+                              + "in definition for class {1}",
+                           "extension",
+                           className));
                   }
 
                   extension = args[i];
@@ -763,18 +767,18 @@ public class ModuleContext {
                   i++;
                   if (i >= args.length) {
                      throw new IOException(L.l(
-                             "expecting name of class implementing JavaClassDef after '{0}' "
-                             + "in definition for class {1}",
-                             "definedBy",
-                             className));
+                        "expecting name of class implementing JavaClassDef after '{0}' "
+                           + "in definition for class {1}",
+                        "definedBy",
+                        className));
                   }
 
                   definedBy = args[i];
                } else {
                   throw new IOException(L.l(
-                          "unknown token '{0}' in definition for class {1} ",
-                          args[i],
-                          className));
+                     "unknown token '{0}' in definition for class {1} ",
+                     args[i],
+                     className));
                }
             }
 
@@ -801,15 +805,15 @@ public class ModuleContext {
    /**
     * Introspects the module class for functions.
     *
-    * @param name the php class name
-    * @param type the class to introspect.
-    * @param extension the extension provided by the class, or null
+    * @param name              the php class name
+    * @param type              the class to introspect.
+    * @param extension         the extension provided by the class, or null
     * @param javaClassDefClass
     */
    public void introspectJavaClass(String name, Class type, String extension,
-           Class javaClassDefClass)
-           throws IllegalAccessException, InstantiationException, ConfigException,
-           NoSuchMethodException, InvocationTargetException {
+                                   Class javaClassDefClass)
+      throws IllegalAccessException, InstantiationException, ConfigException,
+      NoSuchMethodException, InvocationTargetException {
       JavaClassDef def = addClass(name, type, extension, javaClassDefClass);
 
       synchronized (_javaClassWrappers) {
@@ -826,25 +830,25 @@ public class ModuleContext {
    /**
     * Introspects the module class for functions.
     *
-    * @param name the php class name
-    * @param type the class to introspect.
+    * @param name      the php class name
+    * @param type      the class to introspect.
     * @param extension the extension provided by the class, or null
     */
    public void introspectJavaImplClass(String name,
-           Class type,
-           String extension)
-           throws IllegalAccessException, InstantiationException, ConfigException {
+                                       Class type,
+                                       String extension)
+      throws IllegalAccessException, InstantiationException, ConfigException {
       if (log.isLoggable(Level.FINEST)) {
          if (extension == null) {
             log.finest(L.l("Bianca loading class {0} with type {1}",
-                    name,
-                    type.getName()));
+               name,
+               type.getName()));
          } else {
             log.finest(
-                    L.l("Bianca loading class {0} with type {1} providing extension {2}",
-                    name,
-                    type.getName(),
-                    extension));
+               L.l("Bianca loading class {0} with type {1} providing extension {2}",
+                  name,
+                  type.getName(),
+                  extension));
          }
       }
 
@@ -896,12 +900,12 @@ public class ModuleContext {
       if (obj == null) {
          return NullValue.NULL;
       } else if (Byte.class.equals(obj.getClass())
-              || Short.class.equals(obj.getClass())
-              || Integer.class.equals(obj.getClass())
-              || Long.class.equals(obj.getClass())) {
+         || Short.class.equals(obj.getClass())
+         || Integer.class.equals(obj.getClass())
+         || Long.class.equals(obj.getClass())) {
          return LongValue.create(((Number) obj).longValue());
       } else if (Float.class.equals(obj.getClass())
-              || Double.class.equals(obj.getClass())) {
+         || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
          // TODO: i18n

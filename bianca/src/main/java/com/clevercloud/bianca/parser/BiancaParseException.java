@@ -36,8 +36,8 @@ import com.clevercloud.util.LineCompileException;
  * PHP parse exception
  */
 public class BiancaParseException
-        extends RuntimeException
-        implements LineCompileException {
+   extends RuntimeException
+   implements LineCompileException {
 
    public BiancaParseException() {
    }

@@ -42,7 +42,7 @@ import java.util.IdentityHashMap;
  * Represents a PHP double value.
  */
 public class DoubleValue extends NumberValue
-        implements Serializable {
+   implements Serializable {
 
    public static final DoubleValue ZERO = new DoubleValue(0);
    private final double _value;
@@ -132,6 +132,7 @@ public class DoubleValue extends NumberValue
    //
    // marshal cost
    //
+
    /**
     * Cost to convert to a double
     */
@@ -175,6 +176,7 @@ public class DoubleValue extends NumberValue
    //
    // conversions
    //
+
    /**
     * Converts to a boolean.
     */
@@ -189,7 +191,7 @@ public class DoubleValue extends NumberValue
    @Override
    public long toLong() {
       if ((_value > (double) Long.MAX_VALUE)
-              || (_value < (double) Long.MIN_VALUE)) {
+         || (_value < (double) Long.MIN_VALUE)) {
          return 0;
       } else {
          return (long) _value;
@@ -441,6 +443,7 @@ public class DoubleValue extends NumberValue
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    @Override
@@ -469,6 +472,7 @@ public class DoubleValue extends NumberValue
    //
    // Java generator code
    //
+
    /**
     * Generates code to recreate the expression.
     *
@@ -476,7 +480,7 @@ public class DoubleValue extends NumberValue
     */
    @Override
    public void generate(PrintWriter out)
-           throws IOException {
+      throws IOException {
       if (_value == 0) {
          out.print("DoubleValue.ZERO");
       } else if (_value == Double.POSITIVE_INFINITY) {
@@ -514,10 +518,10 @@ public class DoubleValue extends NumberValue
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("float(" + toString() + ")");
    }
 

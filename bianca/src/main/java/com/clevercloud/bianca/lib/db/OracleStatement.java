@@ -43,14 +43,14 @@ import java.util.logging.Logger;
 public class OracleStatement extends JdbcStatementResource {
 
    private static final Logger log = Logger.getLogger(
-           OracleStatement.class.getName());
+      OracleStatement.class.getName());
    private static final L10N L = new L10N(OracleStatement.class);
    // Oracle statement has a notion of number of fetched rows
    // (See also: OracleModule.oci_num_rows)
    private int _fetchedRows;
    // Binding variables for Oracle statements
    private HashMap<String, Integer> _bindingVariables =
-           new HashMap<String, Integer>();
+      new HashMap<String, Integer>();
    private OracleOciLob _outParameter;
    // Oracle internal result buffer
    private Value _resultBuffer;
@@ -89,7 +89,7 @@ public class OracleStatement extends JdbcStatementResource {
    /**
     * Assigns a variable name to the corresponding index
     *
-    * @param name the variable name
+    * @param name  the variable name
     * @param value the corresponding index
     */
    public void putBindingVariable(String name, Integer value) {
@@ -151,7 +151,7 @@ public class OracleStatement extends JdbcStatementResource {
    /**
     * Assigns a value to a variable
     *
-    * @param name a variable name
+    * @param name  a variable name
     * @param value the variable value
     */
    public void putByNameVariable(String name, Value value) {

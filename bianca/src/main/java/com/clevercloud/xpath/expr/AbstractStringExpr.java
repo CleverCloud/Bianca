@@ -34,105 +34,93 @@ import com.clevercloud.xml.XmlChar;
 import com.clevercloud.xpath.Expr;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
  * Implements the builtin XPath string expressions.
  */
 abstract public class AbstractStringExpr extends Expr {
-  /**
-   * The StringExpr returns a string value.
-   */
-  public boolean isString()
-  {
-    return true;
-  }
+   /**
+    * The StringExpr returns a string value.
+    */
+   public boolean isString() {
+      return true;
+   }
 
-  /**
-   * Evaluates the expression as an string.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the string representation of the expression.
-   */
-  abstract public String evalString(Node node, ExprEnvironment env)
-    throws XPathException;
+   /**
+    * Evaluates the expression as an string.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the string representation of the expression.
+    */
+   abstract public String evalString(Node node, ExprEnvironment env)
+      throws XPathException;
 
-  /**
-   * Evaluate the expression as a boolean, i.e. evaluate it as a string
-   * and then convert it to a boolean.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the boolean representation of the expression.
-   */
-  public boolean evalBoolean(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    String string = evalString(node, env);
+   /**
+    * Evaluate the expression as a boolean, i.e. evaluate it as a string
+    * and then convert it to a boolean.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the boolean representation of the expression.
+    */
+   public boolean evalBoolean(Node node, ExprEnvironment env)
+      throws XPathException {
+      String string = evalString(node, env);
 
-    return string != null && string.length() > 0;
-  }
+      return string != null && string.length() > 0;
+   }
 
-  /**
-   * Evaluate the expression as a double, i.e. evaluate it as a string
-   * and then convert it to a double.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the numeric representation of the expression.
-   */
-  public double evalNumber(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return stringToNumber(evalString(node, env));
-  }
+   /**
+    * Evaluate the expression as a double, i.e. evaluate it as a string
+    * and then convert it to a double.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the numeric representation of the expression.
+    */
+   public double evalNumber(Node node, ExprEnvironment env)
+      throws XPathException {
+      return stringToNumber(evalString(node, env));
+   }
 
-  /**
-   * Evaluate the expression as an object, i.e. return the string value.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the boolean representation of the expression.
-   */
-  public Object evalObject(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return evalString(node, env);
-  }
+   /**
+    * Evaluate the expression as an object, i.e. return the string value.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the boolean representation of the expression.
+    */
+   public Object evalObject(Node node, ExprEnvironment env)
+      throws XPathException {
+      return evalString(node, env);
+   }
 
-  /**
-   * Normalize the string, converting all whitespace to a space and
-   * eliminating consecutive spaces.
-   */
-  protected static String normalize(String string)
-  {
-    CharBuffer result = new CharBuffer();
+   /**
+    * Normalize the string, converting all whitespace to a space and
+    * eliminating consecutive spaces.
+    */
+   protected static String normalize(String string) {
+      CharBuffer result = new CharBuffer();
 
-    int i = 0;
-    int len = string.length();
-    for (; i < len && XmlChar.isWhitespace(string.charAt(i)); i++) {
-    }
-
-    boolean lastIsWhitespace = false;
-    for (; i < len; i++) {
-      if (XmlChar.isWhitespace(string.charAt(i))) {
-        lastIsWhitespace = true;
+      int i = 0;
+      int len = string.length();
+      for (; i < len && XmlChar.isWhitespace(string.charAt(i)); i++) {
       }
-      else if (lastIsWhitespace) {
-        result.append(' ');
-        result.append(string.charAt(i));
-        lastIsWhitespace = false;
-      }
-      else
-        result.append(string.charAt(i));
-    }
 
-    return result.toString();
-  }
+      boolean lastIsWhitespace = false;
+      for (; i < len; i++) {
+         if (XmlChar.isWhitespace(string.charAt(i))) {
+            lastIsWhitespace = true;
+         } else if (lastIsWhitespace) {
+            result.append(' ');
+            result.append(string.charAt(i));
+            lastIsWhitespace = false;
+         } else
+            result.append(string.charAt(i));
+      }
+
+      return result.toString();
+   }
 }

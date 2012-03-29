@@ -34,98 +34,92 @@ package com.clevercloud.xml;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.Iterator;
-
 public class QDeepNodeList implements NodeList {
-  QNode _top;
-  QNodePredicate _predicate;
-  QAbstractNode _first;
-  QAbstractNode _node;
-  int _index = -2;
-  int _length = -2;
-  int _changeCount;
+   QNode _top;
+   QNodePredicate _predicate;
+   QAbstractNode _first;
+   QAbstractNode _node;
+   int _index = -2;
+   int _length = -2;
+   int _changeCount;
 
-  QDeepNodeList(QNode top, QAbstractNode first, QNodePredicate predicate)
-  {
-    _top = top;
-    _first = first;
-    _predicate = predicate;
-  }
+   QDeepNodeList(QNode top, QAbstractNode first, QNodePredicate predicate) {
+      _top = top;
+      _first = first;
+      _predicate = predicate;
+   }
 
-  public Node item(int index)
-  {
-    QAbstractNode next = _node;
+   public Node item(int index) {
+      QAbstractNode next = _node;
 
-    int i = _index;
+      int i = _index;
 
-    if (next == null || index < i ||
-        _changeCount != _top._owner._changeCount) {
-      _changeCount = _top._owner._changeCount;
-      next = _first;
+      if (next == null || index < i ||
+         _changeCount != _top._owner._changeCount) {
+         _changeCount = _top._owner._changeCount;
+         next = _first;
 
-      if (_predicate != null && next != null && _predicate.isMatch(next))
-        i = 0;
-      else
-        i = -1;
-    }
-
-    QAbstractNode end = getEnd();
-    while (i < index && next != end) {
-      next = next.getNextPreorder();
-      if (next != end && _predicate.isMatch(next)) {
-        i++;
+         if (_predicate != null && next != null && _predicate.isMatch(next))
+            i = 0;
+         else
+            i = -1;
       }
-    }
 
-    if (next == end) {
-      next = null;
-      i = -1;
-    }
-    _index = i;
-    _node = next;
+      QAbstractNode end = getEnd();
+      while (i < index && next != end) {
+         next = next.getNextPreorder();
+         if (next != end && _predicate.isMatch(next)) {
+            i++;
+         }
+      }
 
-    return i == _index ? next : null;
-  }
+      if (next == end) {
+         next = null;
+         i = -1;
+      }
+      _index = i;
+      _node = next;
 
-  public int getLength()
-  {
-    if (_changeCount != _top._owner._changeCount)
-      _length = -1;
+      return i == _index ? next : null;
+   }
 
-    if (_length >= 0)
+   public int getLength() {
+      if (_changeCount != _top._owner._changeCount)
+         _length = -1;
+
+      if (_length >= 0)
+         return _length;
+
+      QAbstractNode end = getEnd();
+      _length = 0;
+      for (QAbstractNode ptr = _first; ptr != end; ptr = ptr.getNextPreorder()) {
+         if (_predicate.isMatch(ptr))
+            _length++;
+      }
+
       return _length;
+   }
 
-    QAbstractNode end = getEnd();
-    _length = 0;
-    for (QAbstractNode ptr = _first; ptr != end; ptr = ptr.getNextPreorder()) {
-      if (_predicate.isMatch(ptr))
-        _length++;
-    }
+   /**
+    * Returns the final node in the preorder.
+    */
+   QAbstractNode getEnd() {
+      QAbstractNode end = _top;
 
-    return _length;
-  }
+      if (_first == null)
+         return null;
 
-  /**
-   * Returns the final node in the preorder.
+      while (end != null && end._next == null)
+         end = end._parent;
+
+      return end == null ? null : end._next;
+   }
+
+   /*
+   // for bianca
+   public Iterator<Node> iterator()
+   {
+     return new NodeListIterator(null, this);
+   }
    */
-  QAbstractNode getEnd()
-  {
-    QAbstractNode end = _top;
-
-    if (_first == null)
-      return null;
-
-    while (end != null && end._next == null)
-      end = end._parent;
-
-    return end == null ? null : end._next;
-  }
-
-  /*
-  // for bianca
-  public Iterator<Node> iterator()
-  {
-    return new NodeListIterator(null, this);
-  }
-  */
 }

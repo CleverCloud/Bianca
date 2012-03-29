@@ -30,7 +30,9 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.BooleanValue;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.util.L10N;
 
 /**
@@ -48,7 +50,6 @@ public class FunGetCalledClassExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

@@ -56,8 +56,8 @@ public class ThrowStatement extends Statement {
    @Override
    public Value execute(Env env) {
       throw _expr.eval(env).toException(env,
-              getLocation().getFileName(),
-              getLocation().getLineNumber());
+         getLocation().getFileName(),
+         getLocation().getLineNumber());
    }
 
    /**

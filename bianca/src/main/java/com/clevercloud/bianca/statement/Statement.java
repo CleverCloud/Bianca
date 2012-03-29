@@ -29,8 +29,8 @@
  */
 package com.clevercloud.bianca.statement;
 
-import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.BiancaExecutionException;
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
 
@@ -85,12 +85,12 @@ abstract public class Statement {
    }
 
    final protected void rethrow(Throwable t)
-           throws Throwable {
+      throws Throwable {
       rethrow(t, Throwable.class);
    }
 
    final protected <E extends Throwable> void rethrow(Throwable t, Class<E> cl)
-           throws E {
+      throws E {
       E typedT;
 
       if (!cl.isAssignableFrom(t.getClass())) {
@@ -200,8 +200,8 @@ abstract public class Statement {
 
       // early return if function and class are same as last one
       if (lastElement != null
-              && (functionName.equals(lastElement.getMethodName()))
-              && (className.equals(lastElement.getClassName()))) {
+         && (functionName.equals(lastElement.getMethodName()))
+         && (className.equals(lastElement.getClassName()))) {
          throw typedT;
       }
 
@@ -210,9 +210,9 @@ abstract public class Statement {
       System.arraycopy(existingElements, 0, elements, 0, len);
 
       elements[len] = new StackTraceElement(className,
-              functionName,
-              fileName,
-              lineNumber);
+         functionName,
+         fileName,
+         lineNumber);
 
       rootCause.setStackTrace(elements);
 

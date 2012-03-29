@@ -33,18 +33,16 @@ import com.clevercloud.xpath.expr.ObjectVar;
 import com.clevercloud.xpath.expr.Var;
 
 public class VarEnv {
-  public Var getVar(String name)
-  {
-    Object value = getValue(name);
+   public Var getVar(String name) {
+      Object value = getValue(name);
 
-    if (value == null)
+      if (value == null)
+         return null;
+      else
+         return new ObjectVar(value);
+   }
+
+   public Object getValue(String name) {
       return null;
-    else
-      return new ObjectVar(value);
-  }
-
-  public Object getValue(String name)
-  {
-    return null;
-  }
+   }
 }

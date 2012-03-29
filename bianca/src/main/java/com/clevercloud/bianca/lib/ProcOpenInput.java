@@ -31,7 +31,6 @@ package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.EnvCleanup;
-
 import com.clevercloud.bianca.lib.file.BinaryInput;
 import com.clevercloud.bianca.lib.file.FileInput;
 import com.clevercloud.bianca.lib.file.FileOutput;
@@ -48,7 +47,7 @@ import java.util.logging.Logger;
  * Represents an input stream for a proc_open process.
  */
 public class ProcOpenInput extends ReadStreamInput
-        implements EnvCleanup {
+   implements EnvCleanup {
 
    private static final Logger log = Logger.getLogger(FileInput.class.getName());
    private Env _env;
@@ -56,7 +55,7 @@ public class ProcOpenInput extends ReadStreamInput
    private FileOutput _out;
 
    public ProcOpenInput(Env env, InputStream in)
-           throws IOException {
+      throws IOException {
       super(env);
 
       _env = env;
@@ -90,7 +89,7 @@ public class ProcOpenInput extends ReadStreamInput
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       return new ProcOpenInput(_env, _in, _out);
    }
 

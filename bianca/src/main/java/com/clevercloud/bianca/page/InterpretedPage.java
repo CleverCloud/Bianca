@@ -33,9 +33,9 @@ import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.LongValue;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.function.AbstractFunction;
+import com.clevercloud.bianca.program.BiancaProgram;
 import com.clevercloud.bianca.program.ClassDef;
 import com.clevercloud.bianca.program.InterpretedClassDef;
-import com.clevercloud.bianca.program.BiancaProgram;
 import com.clevercloud.vfs.Path;
 
 import java.util.HashMap;
@@ -148,6 +148,7 @@ public class InterpretedPage extends BiancaPage {
       //return _program.getClassMap();
       return null;
    }
+
    // runtime function list for compilation
    private AbstractFunction[] _runtimeFunList;
 

@@ -36,83 +36,73 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class CharactersImpl extends XMLEventImpl implements Characters {
-  private final String _data;
-  private final boolean _isCData;
-  private final boolean _isIgnorableWhiteSpace;
-  private final boolean _isWhiteSpace;
+   private final String _data;
+   private final boolean _isCData;
+   private final boolean _isIgnorableWhiteSpace;
+   private final boolean _isWhiteSpace;
 
-  public CharactersImpl(String data, boolean isCData, 
-                        boolean isIgnorableWhiteSpace, boolean isWhiteSpace)
-  {
-    _data = data;
-    _isCData = isCData;
-    _isIgnorableWhiteSpace = isIgnorableWhiteSpace;
-    _isWhiteSpace = isWhiteSpace;
-  }
+   public CharactersImpl(String data, boolean isCData,
+                         boolean isIgnorableWhiteSpace, boolean isWhiteSpace) {
+      _data = data;
+      _isCData = isCData;
+      _isIgnorableWhiteSpace = isIgnorableWhiteSpace;
+      _isWhiteSpace = isWhiteSpace;
+   }
 
-  public String getData()
-  {
-    return _data;
-  }
+   public String getData() {
+      return _data;
+   }
 
-  public boolean isCData()
-  {
-    return _isCData;
-  }
+   public boolean isCData() {
+      return _isCData;
+   }
 
-  public boolean isIgnorableWhiteSpace()
-  {
-    return _isIgnorableWhiteSpace;
-  }
+   public boolean isIgnorableWhiteSpace() {
+      return _isIgnorableWhiteSpace;
+   }
 
-  public boolean isWhiteSpace()
-  {
-    return _isWhiteSpace;
-  }
+   public boolean isWhiteSpace() {
+      return _isWhiteSpace;
+   }
 
-  public int getEventType()
-  {
-    if (_isCData)
-      return CDATA;
-    else if (_isWhiteSpace)
-      return SPACE;
-    else if (_isIgnorableWhiteSpace)
-      return SPACE;
+   public int getEventType() {
+      if (_isCData)
+         return CDATA;
+      else if (_isWhiteSpace)
+         return SPACE;
+      else if (_isIgnorableWhiteSpace)
+         return SPACE;
 
-    return CHARACTERS;
-  }
+      return CHARACTERS;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    try {
-      writer.write(_data);
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      try {
+         writer.write(_data);
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  public String toString()
-  {
-    return "Characters[" + _data + "]";
-  }
+   public String toString() {
+      return "Characters[" + _data + "]";
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof Characters))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof Characters))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    Characters characters = (Characters) o;
+      Characters characters = (Characters) o;
 
-    return getData().equals(characters.getData()) &&
-           isCData() == characters.isCData() &&
-           isIgnorableWhiteSpace() == characters.isIgnorableWhiteSpace() &&
-           isWhiteSpace() == characters.isWhiteSpace();
-  }
+      return getData().equals(characters.getData()) &&
+         isCData() == characters.isCData() &&
+         isIgnorableWhiteSpace() == characters.isIgnorableWhiteSpace() &&
+         isWhiteSpace() == characters.isWhiteSpace();
+   }
 }
 

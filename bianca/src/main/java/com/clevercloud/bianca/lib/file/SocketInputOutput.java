@@ -38,21 +38,23 @@ import java.net.SocketAddress;
  * Represents read/write stream
  */
 public interface SocketInputOutput
-        extends BinaryInput, BinaryOutput, EnvCleanup {
+   extends BinaryInput, BinaryOutput, EnvCleanup {
 
    public enum Domain {
 
       AF_INET, AF_INET6, AF_UNIX
-   };
+   }
+
+   ;
 
    public void init()
-           throws IOException;
+      throws IOException;
 
    public void bind(SocketAddress address)
-           throws IOException;
+      throws IOException;
 
    public void connect(SocketAddress address)
-           throws IOException;
+      throws IOException;
 
    public void setError(int error);
 

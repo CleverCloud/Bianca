@@ -33,17 +33,17 @@ package com.clevercloud.bianca.lib.jms;
 import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.annotation.ClassImplementation;
 import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.module.IniDefinition;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
+import com.clevercloud.bianca.module.IniDefinition;
+import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.util.L10N;
-import java.util.logging.Level;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -65,7 +65,7 @@ public class JMSModule extends AbstractBiancaModule {
    }
 
    static JMSQueue message_get_queue(Env env, String queueName,
-           ConnectionFactory connectionFactory) {
+                                     ConnectionFactory connectionFactory) {
       if (connectionFactory == null) {
          connectionFactory = getConnectionFactory(env);
       }
@@ -80,7 +80,7 @@ public class JMSModule extends AbstractBiancaModule {
 
          if (queueName != null && !queueName.equals("")) {
             queue = (Destination) new InitialContext().lookup(
-                    "java:comp/env/" + queueName);
+               "java:comp/env/" + queueName);
          }
 
          return new JMSQueue(connectionFactory, queue);
@@ -102,7 +102,7 @@ public class JMSModule extends AbstractBiancaModule {
          Context context = (Context) new InitialContext().lookup("java:comp/env");
 
          ConnectionFactory connectionFactory =
-                 (ConnectionFactory) context.lookup(factoryName.toString());
+            (ConnectionFactory) context.lookup(factoryName.toString());
 
          if (connectionFactory == null) {
             log.log(Level.WARNING, "Couldn''t find factory {0}", factoryName.toString());
@@ -115,6 +115,7 @@ public class JMSModule extends AbstractBiancaModule {
          throw new BiancaModuleException(e);
       }
    }
+
    static final IniDefinition INI_JMS_CONNECTION_FACTORY = _iniDefinitions.add(
-           "jms.connection_factory", "jms/ConnectionFactory", PHP_INI_SYSTEM);
+      "jms.connection_factory", "jms/ConnectionFactory", PHP_INI_SYSTEM);
 }

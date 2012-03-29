@@ -31,11 +31,7 @@ package com.clevercloud.bianca.lib.simplexml;
 import com.clevercloud.bianca.UnimplementedException;
 import com.clevercloud.bianca.annotation.NotNull;
 import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 
@@ -45,7 +41,7 @@ import java.util.logging.Logger;
  * PHP SimpleXML
  */
 public class SimpleXMLModule
-        extends AbstractBiancaModule {
+   extends AbstractBiancaModule {
 
    private static final Logger log = Logger.getLogger(SimpleXMLModule.class.getName());
    private static final L10N L = new L10N(SimpleXMLModule.class);
@@ -56,11 +52,11 @@ public class SimpleXMLModule
    }
 
    public Value simplexml_load_string(Env env,
-           Value data,
-           @Optional String className,
-           @Optional int options,
-           @Optional Value namespaceV,
-           @Optional boolean isPrefix) {
+                                      Value data,
+                                      @Optional String className,
+                                      @Optional int options,
+                                      @Optional Value namespaceV,
+                                      @Optional boolean isPrefix) {
       if (data.isNull() || data == BooleanValue.FALSE) {
          return BooleanValue.FALSE;
       }
@@ -72,16 +68,16 @@ public class SimpleXMLModule
       BiancaClass cls = env.getClass(className);
 
       return SimpleXMLElement.create(env, cls,
-              data, options, false,
-              namespaceV, isPrefix);
+         data, options, false,
+         namespaceV, isPrefix);
    }
 
    public Value simplexml_load_file(Env env,
-           @NotNull StringValue file,
-           @Optional String className,
-           @Optional int options,
-           @Optional Value namespaceV,
-           @Optional boolean isPrefix) {
+                                    @NotNull StringValue file,
+                                    @Optional String className,
+                                    @Optional int options,
+                                    @Optional Value namespaceV,
+                                    @Optional boolean isPrefix) {
       if (className == null || className.length() == 0) {
          className = "SimpleXMLElement";
       }
@@ -89,8 +85,8 @@ public class SimpleXMLModule
       BiancaClass cls = env.getClass(className);
 
       return SimpleXMLElement.create(env, cls,
-              file, options, true,
-              namespaceV, isPrefix);
+         file, options, true,
+         namespaceV, isPrefix);
    }
 
    public SimpleXMLElement simplexml_import_dom(Env env) {

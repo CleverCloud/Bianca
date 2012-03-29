@@ -31,11 +31,10 @@ package com.clevercloud.bianca.lib.dom;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.Env;
-
 import org.w3c.dom.Text;
 
 public class DOMText
-        extends DOMCharacterData<Text> {
+   extends DOMCharacterData<Text> {
 
    public static DOMText __construct(Env env, @Optional String value) {
       DOMText text = getImpl(env).createText();
@@ -64,7 +63,7 @@ public class DOMText
    }
 
    public DOMText replaceWholeText(String content)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.replaceWholeText(content));
       } catch (org.w3c.dom.DOMException ex) {
@@ -73,7 +72,7 @@ public class DOMText
    }
 
    public DOMText splitText(int offset)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.splitText(offset));
       } catch (org.w3c.dom.DOMException ex) {

@@ -30,11 +30,11 @@
  */
 package com.clevercloud.bianca.env;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.*;
-
-import javax.sql.DataSource;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConnectionEntry implements EnvCleanup {
 
@@ -57,7 +57,7 @@ public class ConnectionEntry implements EnvCleanup {
    }
 
    public void connect(boolean isReuse)
-           throws SQLException {
+      throws SQLException {
       if (_conn != null) {
          throw new IllegalStateException();
       }
@@ -82,7 +82,7 @@ public class ConnectionEntry implements EnvCleanup {
    }
 
    public void setCatalog(String catalog)
-           throws SQLException {
+      throws SQLException {
       _isReuse = false;
 
       _conn.setCatalog(catalog);
@@ -144,7 +144,7 @@ public class ConnectionEntry implements EnvCleanup {
 
    @Override
    public void cleanup()
-           throws SQLException {
+      throws SQLException {
       Connection conn = _conn;
       _conn = null;
 

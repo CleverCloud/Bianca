@@ -34,56 +34,49 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.events.Namespace;
 
 public class NamespaceImpl extends AttributeImpl implements Namespace {
-  private final String _namespaceURI;
-  private final String _prefix;
+   private final String _namespaceURI;
+   private final String _prefix;
 
-  public NamespaceImpl(String namespaceURI, String prefix)
-  {
-    super("".equals(prefix) || prefix == null 
-            ? new QName("http://www.w3.org/2000/xmlns/", "xmlns")
-            : new QName("http://www.w3.org/2000/xmlns/", prefix, "xmlns"),
-          namespaceURI);
-    _namespaceURI = namespaceURI;
-    _prefix = prefix;
-  }
+   public NamespaceImpl(String namespaceURI, String prefix) {
+      super("".equals(prefix) || prefix == null
+         ? new QName("http://www.w3.org/2000/xmlns/", "xmlns")
+         : new QName("http://www.w3.org/2000/xmlns/", prefix, "xmlns"),
+         namespaceURI);
+      _namespaceURI = namespaceURI;
+      _prefix = prefix;
+   }
 
-  public String getNamespaceURI()
-  {
-    return _namespaceURI;
-  }
+   public String getNamespaceURI() {
+      return _namespaceURI;
+   }
 
-  public String getPrefix()
-  {
-    return _prefix;
-  }
+   public String getPrefix() {
+      return _prefix;
+   }
 
-  public boolean isDefaultNamespaceDeclaration()
-  {
-    return _prefix == null || "".equals(_prefix);
-  }
+   public boolean isDefaultNamespaceDeclaration() {
+      return _prefix == null || "".equals(_prefix);
+   }
 
-  public int getEventType()
-  {
-    return NAMESPACE;
-  }
+   public int getEventType() {
+      return NAMESPACE;
+   }
 
-  public String toString()
-  {
-    return "xmlns:" + _prefix + "=" + _namespaceURI;
-  }
+   public String toString() {
+      return "xmlns:" + _prefix + "=" + _namespaceURI;
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof Namespace))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof Namespace))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    Namespace namespace = (Namespace) o;
-    
-    return getNamespaceURI().equals(namespace.getNamespaceURI()) &&
-           getPrefix().equals(namespace.getPrefix());
-  }
+      Namespace namespace = (Namespace) o;
+
+      return getNamespaceURI().equals(namespace.getNamespaceURI()) &&
+         getPrefix().equals(namespace.getPrefix());
+   }
 }

@@ -29,13 +29,12 @@
  */
 package com.clevercloud.bianca.lib.mail;
 
-import java.util.logging.Logger;
+import com.clevercloud.util.L10N;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-
-import com.clevercloud.util.L10N;
+import java.util.logging.Logger;
 
 /**
  * Extended MimeMessage that allows overriding Message-ID header
@@ -43,7 +42,7 @@ import com.clevercloud.util.L10N;
 public class BiancaMimeMessage extends MimeMessage {
 
    private static final Logger log =
-           Logger.getLogger(BiancaMimeMessage.class.getName());
+      Logger.getLogger(BiancaMimeMessage.class.getName());
    private static final L10N L = new L10N(BiancaMimeMessage.class);
    private String _messageId;
 
@@ -57,7 +56,7 @@ public class BiancaMimeMessage extends MimeMessage {
 
    @Override
    public String getMessageID()
-           throws MessagingException {
+      throws MessagingException {
       if (_messageId == null) {
          return super.getMessageID();
       }
@@ -67,7 +66,7 @@ public class BiancaMimeMessage extends MimeMessage {
 
    @Override
    protected void updateHeaders()
-           throws MessagingException {
+      throws MessagingException {
       super.updateHeaders();
 
       if (_messageId != null) {

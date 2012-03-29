@@ -31,14 +31,17 @@ package com.clevercloud.bianca.env;
 
 import com.clevercloud.bianca.program.JavaClassDef;
 
-import java.util.*;
-import java.util.logging.*;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a marshalled Collection argument.
  */
 public class JavaListAdapter
-        extends JavaCollectionAdapter {
+   extends JavaCollectionAdapter {
 
    private static final Logger log = Logger.getLogger(JavaListAdapter.class.getName());
    //XXX: parameterized type
@@ -121,10 +124,8 @@ public class JavaListAdapter
    /**
     * Returns the corresponding key if this array contains the given value
     *
-    * @param value  the value to search for in the array
-    *
+    * @param value the value to search for in the array
     * @return the key if it is found in the array, NULL otherwise
-    *
     * @throws NullPointerException
     */
    @Override

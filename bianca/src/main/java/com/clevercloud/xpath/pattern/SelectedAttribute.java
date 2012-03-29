@@ -35,52 +35,48 @@ import org.w3c.dom.Node;
  * Represents a selected node.
  */
 public class SelectedAttribute extends SelectedNode {
-  /**
-   * Creates new selected node, calculating the index.
-   *
-   * @param node the underlying DOM node.
-   */
-  public SelectedAttribute(Node node)
-  {
-    super(node);
+   /**
+    * Creates new selected node, calculating the index.
+    *
+    * @param node the underlying DOM node.
+    */
+   public SelectedAttribute(Node node) {
+      super(node);
 
-    _level = 0;
-    for (Node ptr = node; ptr != null; ptr = ptr.getPreviousSibling())
-      _level--;
-  }
+      _level = 0;
+      for (Node ptr = node; ptr != null; ptr = ptr.getPreviousSibling())
+         _level--;
+   }
 
-  /**
-   * Returns the node's index
-   */
-  public int compareTo(SelectedNode b)
-  {
-    Node aPtr = getNode();
-    Node bPtr = b.getNode();
+   /**
+    * Returns the node's index
+    */
+   public int compareTo(SelectedNode b) {
+      Node aPtr = getNode();
+      Node bPtr = b.getNode();
 
-    int aDepth = _depth;
-    int bDepth = b._depth;
+      int aDepth = _depth;
+      int bDepth = b._depth;
 
-    if (aPtr == bPtr)
-      return 0;
-    
-    if (b instanceof SelectedAttribute) {
-      if (aPtr.getParentNode() == bPtr.getParentNode()) {
-        // Using getNextSibling() because QAttr doesn't
-        // implement getPreviousSibling
-        for (; bPtr != null; bPtr = bPtr.getNextSibling()) {
-          if (aPtr == bPtr)
-            return 1;
-        }
+      if (aPtr == bPtr)
+         return 0;
 
-        return -1;
-      }
-      else
-        return compareTo(aPtr.getParentNode(), aDepth - 1,
-                         bPtr.getParentNode(), bDepth - 1);
-    }
-    else if (bPtr.getParentNode() == aPtr.getParentNode())
-      return -1;
+      if (b instanceof SelectedAttribute) {
+         if (aPtr.getParentNode() == bPtr.getParentNode()) {
+            // Using getNextSibling() because QAttr doesn't
+            // implement getPreviousSibling
+            for (; bPtr != null; bPtr = bPtr.getNextSibling()) {
+               if (aPtr == bPtr)
+                  return 1;
+            }
 
-    return compareTo(aPtr, aDepth, bPtr, bDepth);
-  }
+            return -1;
+         } else
+            return compareTo(aPtr.getParentNode(), aDepth - 1,
+               bPtr.getParentNode(), bDepth - 1);
+      } else if (bPtr.getParentNode() == aPtr.getParentNode())
+         return -1;
+
+      return compareTo(aPtr, aDepth, bPtr, bDepth);
+   }
 }

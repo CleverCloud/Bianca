@@ -30,17 +30,17 @@
  */
 package com.clevercloud.bianca.lib.i18n;
 
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.StringValue;
-
 public class GenericDecoder
-        extends Decoder {
+   extends Decoder {
 
    private Charset _charset;
    protected CharsetDecoder _decoder;
@@ -62,34 +62,34 @@ public class GenericDecoder
    protected StringBuilder decodeImpl(Env env, StringValue str) {
       ByteBuffer in = ByteBuffer.wrap(str.toString().getBytes());
 
-         CharBuffer out = CharBuffer.wrap(new char[8192]);
+      CharBuffer out = CharBuffer.wrap(new char[8192]);
 
-         StringBuilder sb = new StringBuilder();
+      StringBuilder sb = new StringBuilder();
 
-         while (in.hasRemaining()) {
-            CoderResult coder = _decoder.decode(in, out, false);
-            if (!fill(sb, in, out, coder)) {
-               return sb;
-            }
-
-            out.clear();
-         }
-
-         CoderResult coder = _decoder.decode(in, out, true);
+      while (in.hasRemaining()) {
+         CoderResult coder = _decoder.decode(in, out, false);
          if (!fill(sb, in, out, coder)) {
             return sb;
          }
 
          out.clear();
+      }
 
-         coder = _decoder.flush(out);
-         fill(sb, in, out, coder);
-
+      CoderResult coder = _decoder.decode(in, out, true);
+      if (!fill(sb, in, out, coder)) {
          return sb;
+      }
+
+      out.clear();
+
+      coder = _decoder.flush(out);
+      fill(sb, in, out, coder);
+
+      return sb;
    }
 
    protected boolean fill(StringBuilder sb, ByteBuffer in,
-           CharBuffer out, CoderResult coder) {
+                          CharBuffer out, CoderResult coder) {
       int len = out.position();
 
       if (len > 0) {

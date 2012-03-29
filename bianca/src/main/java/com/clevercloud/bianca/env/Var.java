@@ -43,7 +43,7 @@ import java.util.*;
  * Represents a PHP variable value.
  */
 public class Var extends Value
-        implements Serializable {
+   implements Serializable {
 
    private Value _value;
 
@@ -74,7 +74,7 @@ public class Var extends Value
 
    /**
     * Sets the value, possibly replacing if a var and returning the resulting var
-    *
+    * <p/>
     * $a =& (...).
     */
    public Var setRef(Value value) {
@@ -214,6 +214,7 @@ public class Var extends Value
    return _value.isScalar();
    }
     */
+
    /**
     * Returns true for a StringValue.
     */
@@ -312,6 +313,7 @@ public class Var extends Value
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override
@@ -458,6 +460,7 @@ public class Var extends Value
    //
    // marshal costs
    //
+
    /**
     * Cost to convert to a boolean
     */
@@ -603,9 +606,9 @@ public class Var extends Value
 
    /**
     * Convert to a function argument value, e.g. for
-    *
+    * <p/>
     * function foo($a)
-    *
+    * <p/>
     * where $a may be assigned.
     */
    @Override
@@ -714,6 +717,7 @@ public class Var extends Value
    //
    // Operations
    //
+
    /**
     * Copy the value.
     */
@@ -1241,6 +1245,7 @@ public class Var extends Value
    //
    // Field references
    //
+
    /**
     * Returns the field value.
     */
@@ -1366,8 +1371,8 @@ public class Var extends Value
     */
    @Override
    public void initField(StringValue key,
-           Value value,
-           FieldVisibility visibility) {
+                         Value value,
+                         FieldVisibility visibility) {
       _value.initField(key, value, visibility);
    }
 
@@ -1398,6 +1403,7 @@ public class Var extends Value
    //
    // array routines
    //
+
    /**
     * Takes the values of this array, unmarshalls them to objects of type
     * <i>elementType</i>, and puts them in a java array.
@@ -1432,13 +1438,13 @@ public class Var extends Value
     */
    public boolean hasCurrent() {
       if (_value instanceof ArgRef)
-         return ((ArgRef)_value).hasCurrent();
+         return ((ArgRef) _value).hasCurrent();
       else if (_value instanceof ArrayValue)
-         return ((ArrayValue)_value).hasCurrent();
+         return ((ArrayValue) _value).hasCurrent();
       else if (_value instanceof Var)
-         return ((Var)_value).hasCurrent();
+         return ((Var) _value).hasCurrent();
       else if (_value instanceof JavaAdapterVar)
-         return ((JavaAdapterVar)_value).hasCurrent();
+         return ((JavaAdapterVar) _value).hasCurrent();
       return false;
    }
 
@@ -1509,6 +1515,7 @@ public class Var extends Value
    //
    // function calls
    //
+
    /**
     * Evaluates the function.
     */
@@ -1626,19 +1633,20 @@ public class Var extends Value
     */
    @Override
    public Value callRef(Env env,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                        Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _value.callRef(env, a1, a2, a3, a4, a5);
    }
 
    //
    // method calls
    //
+
    /**
     * Evaluates a method.
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value[] args) {
+                           Value[] args) {
       return _value.callMethod(env, methodName, hash, args);
    }
 
@@ -1647,7 +1655,7 @@ public class Var extends Value
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value[] args) {
+                              Value[] args) {
       return _value.callMethodRef(env, methodName, hash, args);
    }
 
@@ -1672,8 +1680,8 @@ public class Var extends Value
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                           StringValue methodName, int hash,
+                           Value a1) {
       return _value.callMethod(env, methodName, hash, a1);
    }
 
@@ -1682,8 +1690,8 @@ public class Var extends Value
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                              StringValue methodName, int hash,
+                              Value a1) {
       return _value.callMethodRef(env, methodName, hash, a1);
    }
 
@@ -1692,10 +1700,10 @@ public class Var extends Value
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2) {
       return _value.callMethod(env, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
@@ -1703,10 +1711,10 @@ public class Var extends Value
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2) {
       return _value.callMethodRef(env, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
@@ -1714,10 +1722,10 @@ public class Var extends Value
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3) {
       return _value.callMethod(env, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
@@ -1725,10 +1733,10 @@ public class Var extends Value
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3) {
       return _value.callMethodRef(env, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
@@ -1736,8 +1744,8 @@ public class Var extends Value
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4) {
       return _value.callMethod(env, methodName, hash, a1, a2, a3, a4);
    }
 
@@ -1746,8 +1754,8 @@ public class Var extends Value
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4) {
       return _value.callMethodRef(env, methodName, hash, a1, a2, a3, a4);
    }
 
@@ -1756,10 +1764,10 @@ public class Var extends Value
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _value.callMethod(env, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
@@ -1767,10 +1775,10 @@ public class Var extends Value
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _value.callMethodRef(env, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
@@ -1783,8 +1791,10 @@ public class Var extends Value
    return _value.callClassMethod(env, fun, args);
    }
     */
+
    /**
     * Prints the value.
+    *
     * @param env
     */
    @Override
@@ -1794,6 +1804,7 @@ public class Var extends Value
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    @Override
@@ -1817,7 +1828,7 @@ public class Var extends Value
     */
    @Override
    public void serialize(Env env,
-           StringBuilder sb, SerializeMap serializeMap) {
+                         StringBuilder sb, SerializeMap serializeMap) {
       Integer index = serializeMap.get(this);
 
       if (index != null) {
@@ -1841,10 +1852,10 @@ public class Var extends Value
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("&");
       _value.varDump(env, out, depth, valueSet);
    }

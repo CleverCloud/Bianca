@@ -37,12 +37,7 @@ import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.CharBuffer;
 import com.clevercloud.util.L10N;
 
-import javax.mail.Address;
-import javax.mail.AuthenticationFailedException;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -58,18 +53,18 @@ import java.util.logging.Logger;
 public class MailModule extends AbstractBiancaModule {
 
    private static final Logger log =
-           Logger.getLogger(MailModule.class.getName());
+      Logger.getLogger(MailModule.class.getName());
    private static final L10N L = new L10N(MailModule.class);
 
    /**
     * Send mail using JavaMail.
     */
    public static boolean mail(Env env,
-           String to,
-           String subject,
-           StringValue message,
-           @Optional String additionalHeaders,
-           @Optional String additionalParameters) {
+                              String to,
+                              String subject,
+                              StringValue message,
+                              @Optional String additionalHeaders,
+                              @Optional String additionalParameters) {
       Transport smtp = null;
 
       try {
@@ -120,7 +115,7 @@ public class MailModule extends AbstractBiancaModule {
                InetAddress addr = InetAddress.getLocalHost();
 
                String email = (System.getProperty("user.name")
-                       + "@" + addr.getHostName());
+                  + "@" + addr.getHostName());
 
 
                int index = email.indexOf('@');
@@ -168,7 +163,7 @@ public class MailModule extends AbstractBiancaModule {
          Address[] from = msg.getFrom();
          if (from == null || from.length == 0) {
             log.fine(L.l(
-                    "mail 'From' not set, setting to Java System property 'user.name'"));
+               "mail 'From' not set, setting to Java System property 'user.name'"));
             msg.setFrom();
          }
 
@@ -199,10 +194,10 @@ public class MailModule extends AbstractBiancaModule {
          throw e;
       } catch (AuthenticationFailedException e) {
          log.warning(L.l(
-                 "Bianca[] mail could not send mail to '{0}' "
-                 + "because authentication failed\n{1}",
-                 to,
-                 e.getMessage()));
+            "Bianca[] mail could not send mail to '{0}' "
+               + "because authentication failed\n{1}",
+            to,
+            e.getMessage()));
 
          log.log(Level.FINE, e.toString(), e);
 
@@ -213,8 +208,8 @@ public class MailModule extends AbstractBiancaModule {
          Throwable cause = e;
 
          log.warning(L.l("Bianca[] mail could not send mail to '{0}'\n{1}",
-                 to,
-                 cause.getMessage()));
+            to,
+            cause.getMessage()));
 
          log.log(Level.FINE, cause.toString(), cause);
 
@@ -225,8 +220,8 @@ public class MailModule extends AbstractBiancaModule {
          Throwable cause = e;
 
          log.warning(L.l("Bianca[] mail could not send mail to '{0}'\n{1}",
-                 to,
-                 cause.getMessage()));
+            to,
+            cause.getMessage()));
 
          log.log(Level.FINE, cause.toString(), cause);
 
@@ -245,10 +240,10 @@ public class MailModule extends AbstractBiancaModule {
    }
 
    private static void addRecipients(BiancaMimeMessage msg,
-           Message.RecipientType type,
-           String to,
-           ArrayList<Address> addrList)
-           throws MessagingException {
+                                     Message.RecipientType type,
+                                     String to,
+                                     ArrayList<Address> addrList)
+      throws MessagingException {
       String[] split = to.split(",");
 
       for (int i = 0; i < split.length; i++) {
@@ -287,9 +282,9 @@ public class MailModule extends AbstractBiancaModule {
    }
 
    private static void addHeaders(BiancaMimeMessage msg,
-           HashMap<String, String> headerMap,
-           ArrayList<Address> addrList)
-           throws MessagingException {
+                                  HashMap<String, String> headerMap,
+                                  ArrayList<Address> addrList)
+      throws MessagingException {
       for (Map.Entry<String, String> entry : headerMap.entrySet()) {
          String name = entry.getKey();
          String value = entry.getValue();
@@ -327,8 +322,8 @@ public class MailModule extends AbstractBiancaModule {
          char ch;
 
          for (;
-                 i < len && Character.isWhitespace(headers.charAt(i));
-                 i++) {
+              i < len && Character.isWhitespace(headers.charAt(i));
+              i++) {
          }
 
          if (len <= i) {
@@ -338,27 +333,27 @@ public class MailModule extends AbstractBiancaModule {
          buffer.clear();
 
          for (;
-                 i < len && (!Character.isWhitespace(ch = headers.charAt(i))
+              i < len && (!Character.isWhitespace(ch = headers.charAt(i))
                  && ch != ':');
-                 i++) {
+              i++) {
             buffer.append((char) ch);
          }
 
          for (;
-                 i < len && ((ch = headers.charAt(i)) == ' '
+              i < len && ((ch = headers.charAt(i)) == ' '
                  || ch == '\t'
                  || ch == '\f'
                  || ch == ':');
-                 i++) {
+              i++) {
          }
 
          String name = buffer.toString();
          buffer.clear();
 
          for (;
-                 i < len
+              i < len
                  && ((ch = headers.charAt(i)) != '\r' && ch != '\n');
-                 i++) {
+              i++) {
             buffer.append((char) ch);
          }
 
@@ -367,31 +362,31 @@ public class MailModule extends AbstractBiancaModule {
          //
 
          for (;
-                 i < len
+              i < len
                  && ((ch = headers.charAt(i)) == '\r' || ch == '\n');
-                 i++) {
+              i++) {
             buffer.append((char) ch);
          }
 
          while (i < len
-                 && ((ch = headers.charAt(i)) == '\t' || ch == ' ')) {
+            && ((ch = headers.charAt(i)) == '\t' || ch == ' ')) {
             for (;
-                    i < len
+                 i < len
                     && ((ch = headers.charAt(i)) != '\r' && ch != '\n');
-                    i++) {
+                 i++) {
                buffer.append((char) ch);
             }
 
             for (;
-                    i < len
+                 i < len
                     && ((ch = headers.charAt(i)) == '\r' || ch == '\n');
-                    i++) {
+                 i++) {
                buffer.append((char) ch);
             }
          }
 
          while (buffer.length() > 0
-                 && ((ch = buffer.getLastChar()) == '\r' || ch == '\n')) {
+            && ((ch = buffer.getLastChar()) == '\r' || ch == '\n')) {
             buffer.deleteCharAt(buffer.length() - 1);
          }
 

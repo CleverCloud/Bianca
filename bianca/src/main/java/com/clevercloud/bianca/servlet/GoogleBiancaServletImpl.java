@@ -31,8 +31,8 @@
 package com.clevercloud.bianca.servlet;
 
 import com.clevercloud.bianca.*;
-import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.BiancaValueException;
+import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.page.BiancaPage;
 import com.clevercloud.util.L10N;
@@ -65,7 +65,7 @@ public class GoogleBiancaServletImpl extends BiancaServletImpl {
     */
    @Override
    protected void initImpl(ServletConfig config)
-           throws ServletException {
+      throws ServletException {
       _webApp = config.getServletContext();
 
       // _bianca.setWebApp(_webApp);
@@ -79,7 +79,7 @@ public class GoogleBiancaServletImpl extends BiancaServletImpl {
 
    @Override
    protected WriteStream openWrite(HttpServletResponse response)
-           throws IOException {
+      throws IOException {
       WriteStream ws;
 
       OutputStream out = response.getOutputStream();
@@ -134,13 +134,14 @@ public class GoogleBiancaServletImpl extends BiancaServletImpl {
    }
    }
     */
+
    /**
     * Service.
     */
    @Override
    public void service(HttpServletRequest request,
-           HttpServletResponse response)
-           throws ServletException, IOException {
+                       HttpServletResponse response)
+      throws ServletException, IOException {
       Env env = null;
       WriteStream ws = null;
 

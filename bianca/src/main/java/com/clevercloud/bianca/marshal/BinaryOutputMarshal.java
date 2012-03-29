@@ -68,7 +68,7 @@ public class BinaryOutputMarshal extends Marshal {
          return new WriteStreamOutput((OutputStream) javaObj);
       } else {
          throw new IllegalStateException(L.l("Cannot marshal {0} to BinaryOutput",
-                 javaObj));
+            javaObj));
       }
    }
 
@@ -87,7 +87,7 @@ public class BinaryOutputMarshal extends Marshal {
          return new WriteStreamOutput((OutputStream) javaObj);
       } else {
          throw new IllegalStateException(L.l("Cannot marshal {0} to BinaryOutput",
-                 javaObj));
+            javaObj));
       }
    }
 
@@ -99,8 +99,8 @@ public class BinaryOutputMarshal extends Marshal {
    @Override
    protected int getMarshalingCostImpl(Value argValue) {
       if (argValue instanceof JavaValue
-              && OutputStream.class.isAssignableFrom(
-              argValue.toJavaObject().getClass())) {
+         && OutputStream.class.isAssignableFrom(
+         argValue.toJavaObject().getClass())) {
          return Marshal.ZERO;
       } else {
          return Marshal.FOUR;

@@ -41,33 +41,31 @@ import java.util.logging.Logger;
  * Matches names.
  */
 abstract public class NameClassItem {
-  protected final static L10N L = new L10N(NameClassItem.class);
-  protected final static Logger log
-    = Logger.getLogger(NameClassItem.class.getName());
+   protected final static L10N L = new L10N(NameClassItem.class);
+   protected final static Logger log
+      = Logger.getLogger(NameClassItem.class.getName());
 
-  /**
-   * Adds to the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-  }
+   /**
+    * Adds to the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+   }
 
-  /**
-   * Returns true if the name matches.
-   */
-  abstract public boolean matches(QName name);
+   /**
+    * Returns true if the name matches.
+    */
+   abstract public boolean matches(QName name);
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  abstract public String toSyntaxDescription(String prefix);
+   /**
+    * Returns the pretty printed syntax.
+    */
+   abstract public String toSyntaxDescription(String prefix);
 
-  /**
-   * Throws an error.
-   */
-  protected RelaxException error(String msg)
-  {
-    return new RelaxException(msg);
-  }
+   /**
+    * Throws an error.
+    */
+   protected RelaxException error(String msg) {
+      return new RelaxException(msg);
+   }
 }
 

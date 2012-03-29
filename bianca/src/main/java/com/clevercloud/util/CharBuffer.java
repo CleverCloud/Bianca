@@ -35,681 +35,628 @@ import java.io.InputStream;
  * CharBuffer is an unsynchronized version of StringBuffer.
  */
 public final class CharBuffer extends CharSegment {
-  private static final int MIN_CAPACITY = 64;
+   private static final int MIN_CAPACITY = 64;
 
-  /**
-   * Constructs a char buffer with no characters.
-   */
-  public CharBuffer()
-  {
-    _buffer = new char[MIN_CAPACITY];
-    _length = 0;
-  }
+   /**
+    * Constructs a char buffer with no characters.
+    */
+   public CharBuffer() {
+      _buffer = new char[MIN_CAPACITY];
+      _length = 0;
+   }
 
-  /**
-   * Constructs a char buffer with the given initial capacity
-   *
-   * @param capacity initial capacity
-   */
-  public CharBuffer(int capacity)
-  {
-    if (capacity < 0)
-      throw new IllegalArgumentException();
-    if (capacity < MIN_CAPACITY)
-      capacity = MIN_CAPACITY;
+   /**
+    * Constructs a char buffer with the given initial capacity
+    *
+    * @param capacity initial capacity
+    */
+   public CharBuffer(int capacity) {
+      if (capacity < 0)
+         throw new IllegalArgumentException();
+      if (capacity < MIN_CAPACITY)
+         capacity = MIN_CAPACITY;
 
-    _buffer = new char[capacity];
-    _length = 0;
-  }
+      _buffer = new char[capacity];
+      _length = 0;
+   }
 
-  /**
-   * Constructs a char buffer with the given initial string
-   *
-   * @param string initial string
-   */
-  public CharBuffer(String string)
-  {
-    int length = string.length();
-    int capacity = length + MIN_CAPACITY;
+   /**
+    * Constructs a char buffer with the given initial string
+    *
+    * @param string initial string
+    */
+   public CharBuffer(String string) {
+      int length = string.length();
+      int capacity = length + MIN_CAPACITY;
 
-    _buffer = new char[capacity];
-    _length = length;
-    string.getChars(0, length, _buffer, 0);
-  }
+      _buffer = new char[capacity];
+      _length = length;
+      string.getChars(0, length, _buffer, 0);
+   }
 
-  /**
-   * Constructs a char buffer with the given initial string
-   *
-   * @param string initial string
-   */
-  public CharBuffer(String string, int offset, int length)
-  {
-    int capacity = length;
-    if (capacity < MIN_CAPACITY)
-      capacity = MIN_CAPACITY;
+   /**
+    * Constructs a char buffer with the given initial string
+    *
+    * @param string initial string
+    */
+   public CharBuffer(String string, int offset, int length) {
+      int capacity = length;
+      if (capacity < MIN_CAPACITY)
+         capacity = MIN_CAPACITY;
 
-    _buffer = new char[capacity];
-    _length = length;
-    string.getChars(offset, length, _buffer, 0);
-  }
+      _buffer = new char[capacity];
+      _length = length;
+      string.getChars(offset, length, _buffer, 0);
+   }
 
-  public static CharBuffer allocate()
-  {
-    return new CharBuffer();
-  }
+   public static CharBuffer allocate() {
+      return new CharBuffer();
+   }
 
-  public void free()
-  {
-  }
+   public void free() {
+   }
 
-  /**
-   * Returns the capacity of the buffer, i.e. how many chars it
-   * can hold.
-   */
-  public int capacity()
-  {
-    return _buffer.length;
-  }
-  
-  public int getCapacity()
-  {
-    return _buffer.length;
-  }
+   /**
+    * Returns the capacity of the buffer, i.e. how many chars it
+    * can hold.
+    */
+   public int capacity() {
+      return _buffer.length;
+   }
 
-  /**
-   * Ensure the buffer can hold at least 'minimumCapacity' chars.
-   */
-  public final void ensureCapacity(int minimumCapacity)
-  {
-    if (minimumCapacity <= _buffer.length) {
-      return;
-    }
+   public int getCapacity() {
+      return _buffer.length;
+   }
 
-    expandCapacity(minimumCapacity);
-  }
+   /**
+    * Ensure the buffer can hold at least 'minimumCapacity' chars.
+    */
+   public final void ensureCapacity(int minimumCapacity) {
+      if (minimumCapacity <= _buffer.length) {
+         return;
+      }
 
-  /**
-   * Expands the capacity to a new value.
-   */
-  private final void expandCapacity(int minimumCapacity)
-  {
-    int oldCapacity = _buffer.length;
-    int newCapacity = oldCapacity * 2;
+      expandCapacity(minimumCapacity);
+   }
 
-    if (newCapacity < 0)
-      newCapacity = Integer.MAX_VALUE;
-    else if (newCapacity < minimumCapacity)
-      newCapacity = minimumCapacity;
+   /**
+    * Expands the capacity to a new value.
+    */
+   private final void expandCapacity(int minimumCapacity) {
+      int oldCapacity = _buffer.length;
+      int newCapacity = oldCapacity * 2;
 
-    char []chars = new char[newCapacity];
-    
-    System.arraycopy(_buffer, 0, chars, 0, oldCapacity); 
+      if (newCapacity < 0)
+         newCapacity = Integer.MAX_VALUE;
+      else if (newCapacity < minimumCapacity)
+         newCapacity = minimumCapacity;
 
-    _buffer = chars;
-  }
+      char[] chars = new char[newCapacity];
 
-  /**
-   * Clears the buffer.  Equivalent to setLength(0)
-   */
-  public final void clear()
-  {
-    _length = 0;
-  }
+      System.arraycopy(_buffer, 0, chars, 0, oldCapacity);
 
-  /**
-   * Set the length of the buffer.
-   */
-  public final void setLength(int newLength)
-  {
-    if (newLength < 0)
-      throw new IndexOutOfBoundsException("illegal argument");
-    else if (_buffer.length < newLength)
-      expandCapacity(newLength);
+      _buffer = chars;
+   }
 
-    _length = newLength;
-  }
+   /**
+    * Clears the buffer.  Equivalent to setLength(0)
+    */
+   public final void clear() {
+      _length = 0;
+   }
 
-  /**
-   * Returns the char at the specified offset.
-   */
-  public char charAt(int i)
-  {
-    if (i < 0 || _length <= i)
-      throw new IndexOutOfBoundsException();
+   /**
+    * Set the length of the buffer.
+    */
+   public final void setLength(int newLength) {
+      if (newLength < 0)
+         throw new IndexOutOfBoundsException("illegal argument");
+      else if (_buffer.length < newLength)
+         expandCapacity(newLength);
 
-    return _buffer[i];
-  }
+      _length = newLength;
+   }
 
-  /**
-   * Returns the last character of the buffer
-   *
-   * @throws IndexOutOfBoundsException for an empty buffer
-   */
-  public char getLastChar()
-  {
-    if (_length == 0)
-      throw new IndexOutOfBoundsException();
+   /**
+    * Returns the char at the specified offset.
+    */
+   public char charAt(int i) {
+      if (i < 0 || _length <= i)
+         throw new IndexOutOfBoundsException();
 
-    return _buffer[_length - 1];
-  }
-  
-  /**
-   * Returns the buffer's char array.
-   */
-  public final char []getBuffer()
-  {
-    return _buffer;
-  }
+      return _buffer[i];
+   }
 
-  /**
-   * Copies characters to the destination buffer.
-   */
-  public void getChars(int srcBegin, int srcEnd, char []dst, int dstBegin)
-  {
-    char []buffer = _buffer;
-    while (srcBegin < srcEnd)
-      dst[dstBegin++] = buffer[srcBegin++];
-  }
+   /**
+    * Returns the last character of the buffer
+    *
+    * @throws IndexOutOfBoundsException for an empty buffer
+    */
+   public char getLastChar() {
+      if (_length == 0)
+         throw new IndexOutOfBoundsException();
 
-  /**
-   * Sets the character at the given index.
-   */
-  public void setCharAt(int index, char ch)
-  {
-    if (index < 0 || _length <= index)
-      throw new IndexOutOfBoundsException();
+      return _buffer[_length - 1];
+   }
 
-    _buffer[index] = ch;
-  }
+   /**
+    * Returns the buffer's char array.
+    */
+   public final char[] getBuffer() {
+      return _buffer;
+   }
 
-  /**
-   * Appends the string representation of the object to the buffer.
-   */
-  public CharBuffer append(Object obj)
-  {
-    return append(String.valueOf(obj));
-  }
+   /**
+    * Copies characters to the destination buffer.
+    */
+   public void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin) {
+      char[] buffer = _buffer;
+      while (srcBegin < srcEnd)
+         dst[dstBegin++] = buffer[srcBegin++];
+   }
 
-  /**
-   * Appends the string representation of the object to the buffer.
-   */
-  public CharBuffer append(CharBuffer cb)
-  {
-    return append(cb._buffer, 0, cb._length);
-  }
+   /**
+    * Sets the character at the given index.
+    */
+   public void setCharAt(int index, char ch) {
+      if (index < 0 || _length <= index)
+         throw new IndexOutOfBoundsException();
 
-  /**
-   * Appends the string.
-   */
-  public CharBuffer append(String string)
-  {
-    if (string == null)
-      string = "null";
+      _buffer[index] = ch;
+   }
 
-    int len = string.length();
-    int newLength = _length + len;
-    int length = _length;
-    if (_buffer.length <= newLength)
-      expandCapacity(newLength);
+   /**
+    * Appends the string representation of the object to the buffer.
+    */
+   public CharBuffer append(Object obj) {
+      return append(String.valueOf(obj));
+   }
 
-    string.getChars(0, len, _buffer, length);
+   /**
+    * Appends the string representation of the object to the buffer.
+    */
+   public CharBuffer append(CharBuffer cb) {
+      return append(cb._buffer, 0, cb._length);
+   }
 
-    _length = newLength;
+   /**
+    * Appends the string.
+    */
+   public CharBuffer append(String string) {
+      if (string == null)
+         string = "null";
 
-    return this;
-  }
+      int len = string.length();
+      int newLength = _length + len;
+      int length = _length;
+      if (_buffer.length <= newLength)
+         expandCapacity(newLength);
 
-  public CharBuffer append(String string, int offset, int len)
-  {
-    if (_buffer.length <= len + _length)
-      expandCapacity(len + _length);
+      string.getChars(0, len, _buffer, length);
 
-    string.getChars(offset, offset + len, _buffer, _length);
+      _length = newLength;
 
-    _length += len;
-
-    return this;
-  }
-  
-  /**
-   * Appends the characters to the buffer.
-   */
-  public CharBuffer append(char []buffer)
-  {
-    return append(buffer, 0, buffer.length);
-  }
-
-  /**
-   * Appends the characters to the buffer.
-   */
-  public CharBuffer append(char []buffer, int offset, int length)
-  {
-    if (_buffer.length < _length + length)
-      expandCapacity(_length + length);
-
-    System.arraycopy(buffer, offset, _buffer, _length, length);
-
-    _length += length;
-
-    return this;
-  }
-
-  /**
-   * Appends the boolean representation to the buffer
-   */
-  public final CharBuffer append(boolean b)
-  {
-    return append(String.valueOf(b));
-  }
-  
-  /**
-   * Appends the character to the buffer
-   */
-  public final CharBuffer append(char ch)
-  {
-    if (_buffer.length <= _length)
-      expandCapacity(_length + 1);
-
-    _buffer[_length++] = ch;
-
-    return this;
-  }
-  
-  /**
-   * Add an int to the buffer.
-   */
-  public CharBuffer append(int i)
-  {
-    if (i == 0x80000000) {
-      return append("-2147483648");
-    }
-    
-    int length = _length;
-    
-    if (_buffer.length <= length + 16)
-      expandCapacity(length + 16);
-
-    char []buffer = _buffer;
-
-    if (i < 0) {
-      buffer[length++] = '-';
-      i = -i;
-    }
-    else if (i == 0) {
-      buffer[_length++] = '0';
       return this;
-    }
+   }
 
-    int start = length;
-    while (i > 0) {
-      buffer[length++] = (char) ((i % 10) + '0');
-      i /= 10;
-    }
+   public CharBuffer append(String string, int offset, int len) {
+      if (_buffer.length <= len + _length)
+         expandCapacity(len + _length);
 
-    for (int j = (length - start) / 2; j > 0; j--) {
-      char temp = buffer[length - j];
-      buffer[length - j] = buffer[start + j - 1];
-      buffer[start + j - 1] = temp;
-    }
+      string.getChars(offset, offset + len, _buffer, _length);
 
-    _length = length;
+      _length += len;
 
-    return this;
-  }
-  
-  /**
-   * Add a long to the buffer.
-   */
-  public CharBuffer append(long i)
-  {
-    if (i == 0x8000000000000000L) {
-      return append("-9223372036854775808");
-    }
-    
-    int length = _length;
-    
-    if (_buffer.length < length + 32)
-      expandCapacity(length + 32);
-
-    char []buffer = _buffer;
-
-    if (i < 0) {
-      buffer[length++] = '-';
-      i = -i;
-    }
-    else if (i == 0) {
-      buffer[_length++] = '0';
       return this;
-    }
+   }
 
-    int start = length;
-    while (i > 0) {
-      buffer[length++] = (char) ((i % 10) + '0');
-      i /= 10;
-    }
+   /**
+    * Appends the characters to the buffer.
+    */
+   public CharBuffer append(char[] buffer) {
+      return append(buffer, 0, buffer.length);
+   }
 
-    for (int j = (length - start) / 2; j > 0; j--) {
-      char temp = buffer[length - j];
-      buffer[length - j] = buffer[start + j - 1];
-      buffer[start + j - 1] = temp;
-    }
+   /**
+    * Appends the characters to the buffer.
+    */
+   public CharBuffer append(char[] buffer, int offset, int length) {
+      if (_buffer.length < _length + length)
+         expandCapacity(_length + length);
 
-    _length = length;
+      System.arraycopy(buffer, offset, _buffer, _length, length);
 
-    return this;
-  }
+      _length += length;
 
-  /**
-   * Add a float to the buffer.
-   */
-  public CharBuffer append(float f)
-  {
-    return append(String.valueOf(f));
-  }
-
-  /**
-   * Add a double to the buffer.
-   */
-  public CharBuffer append(double d)
-  {
-    return append(String.valueOf(d));
-  }
-  
-  /**
-   * Appends iso-8859-1 bytes to the buffer
-   */
-  public final CharBuffer append(byte []buf, int offset, int len)
-  {
-    int length = _length;
-    if (_buffer.length < _length + len)
-      expandCapacity(_length + len);
-
-    char []buffer = _buffer;
-    for (; len > 0; len--)
-      buffer[length++] = (char) (buf[offset++] & 0xff);
-
-    _length = length;
-
-    return this;
-  }
-
-  /**
-   * Deletes characters from the buffer.
-   */
-  public CharBuffer delete(int start, int end)
-  {
-    if (start < 0 || end < start || _length < start)
-      throw new StringIndexOutOfBoundsException();
-
-    if (_length < end)
-      end = _length;
-    
-    int tail = _length - end;
-    char []buffer = _buffer;
-    
-    for (int i = 0; i < tail; i++)
-      buffer[start + i] = buffer[end + i];
-
-    _length -= end - start;
-
-    return this;
-  }
-
-  /**
-   * Deletes a character from the buffer.
-   */
-  public CharBuffer deleteCharAt(int index)
-  {
-    if (index < 0 || _length < index)
-      throw new StringIndexOutOfBoundsException();
-
-    if (index == _length)
       return this;
-    
-    int tail = _length - index + 1;
-    char []buffer = _buffer;
+   }
 
-    for (int i = 0; i < tail; i++)
-      buffer[index + i] = buffer[index + i + 1];
+   /**
+    * Appends the boolean representation to the buffer
+    */
+   public final CharBuffer append(boolean b) {
+      return append(String.valueOf(b));
+   }
 
-    _length--;
+   /**
+    * Appends the character to the buffer
+    */
+   public final CharBuffer append(char ch) {
+      if (_buffer.length <= _length)
+         expandCapacity(_length + 1);
 
-    return this;
-  }
+      _buffer[_length++] = ch;
 
-  /**
-   * Replaces a range with a string
-   */
-  public CharBuffer replace(int start, int end, String string)
-  {
-    if (start < 0 || end < start || _length < start)
-      throw new StringIndexOutOfBoundsException();
+      return this;
+   }
 
-    int len = string.length();
-    int length = _length;
+   /**
+    * Add an int to the buffer.
+    */
+   public CharBuffer append(int i) {
+      if (i == 0x80000000) {
+         return append("-2147483648");
+      }
 
-    if (_buffer.length < len + length - (end - start))
-      expandCapacity(len + length - (end - start));
+      int length = _length;
 
-    char []buffer = _buffer;
+      if (_buffer.length <= length + 16)
+         expandCapacity(length + 16);
 
-    if (len < end - start) {
-      int tail = length - end;
-      for (int i = 0; i < tail; i++)
-        buffer[start + len + i] = buffer[end + i];
-    }
-    else {
-      int tail = length - end;
-      for (int i = tail - 1; i >= 0; i--)
-        buffer[end + i] = buffer[start + len + i];
-    }
+      char[] buffer = _buffer;
 
-    string.getChars(0, len, buffer, start);
+      if (i < 0) {
+         buffer[length++] = '-';
+         i = -i;
+      } else if (i == 0) {
+         buffer[_length++] = '0';
+         return this;
+      }
 
-    _length = length + len - (end - start);
+      int start = length;
+      while (i > 0) {
+         buffer[length++] = (char) ((i % 10) + '0');
+         i /= 10;
+      }
 
-    return this;
-  }
+      for (int j = (length - start) / 2; j > 0; j--) {
+         char temp = buffer[length - j];
+         buffer[length - j] = buffer[start + j - 1];
+         buffer[start + j - 1] = temp;
+      }
 
-  /**
-   * Replaces a range with a character array
-   */
-  public CharBuffer replace(int start, int end,
-                            char []buffer, int offset, int len)
-  {
-    if (start < 0 || end < start || _length < start)
-      throw new StringIndexOutOfBoundsException();
+      _length = length;
 
-    if (_buffer.length < len + _length - (end - start))
-      expandCapacity(len + _length - (end - start));
+      return this;
+   }
 
-    char []thisBuffer = _buffer;
+   /**
+    * Add a long to the buffer.
+    */
+   public CharBuffer append(long i) {
+      if (i == 0x8000000000000000L) {
+         return append("-9223372036854775808");
+      }
 
-    if (len < end - start) {
+      int length = _length;
+
+      if (_buffer.length < length + 32)
+         expandCapacity(length + 32);
+
+      char[] buffer = _buffer;
+
+      if (i < 0) {
+         buffer[length++] = '-';
+         i = -i;
+      } else if (i == 0) {
+         buffer[_length++] = '0';
+         return this;
+      }
+
+      int start = length;
+      while (i > 0) {
+         buffer[length++] = (char) ((i % 10) + '0');
+         i /= 10;
+      }
+
+      for (int j = (length - start) / 2; j > 0; j--) {
+         char temp = buffer[length - j];
+         buffer[length - j] = buffer[start + j - 1];
+         buffer[start + j - 1] = temp;
+      }
+
+      _length = length;
+
+      return this;
+   }
+
+   /**
+    * Add a float to the buffer.
+    */
+   public CharBuffer append(float f) {
+      return append(String.valueOf(f));
+   }
+
+   /**
+    * Add a double to the buffer.
+    */
+   public CharBuffer append(double d) {
+      return append(String.valueOf(d));
+   }
+
+   /**
+    * Appends iso-8859-1 bytes to the buffer
+    */
+   public final CharBuffer append(byte[] buf, int offset, int len) {
+      int length = _length;
+      if (_buffer.length < _length + len)
+         expandCapacity(_length + len);
+
+      char[] buffer = _buffer;
+      for (; len > 0; len--)
+         buffer[length++] = (char) (buf[offset++] & 0xff);
+
+      _length = length;
+
+      return this;
+   }
+
+   /**
+    * Deletes characters from the buffer.
+    */
+   public CharBuffer delete(int start, int end) {
+      if (start < 0 || end < start || _length < start)
+         throw new StringIndexOutOfBoundsException();
+
+      if (_length < end)
+         end = _length;
+
       int tail = _length - end;
+      char[] buffer = _buffer;
+
       for (int i = 0; i < tail; i++)
-        thisBuffer[start + len + i] = thisBuffer[end + i];
-    }
-    else {
-      int tail = _length - end;
+         buffer[start + i] = buffer[end + i];
+
+      _length -= end - start;
+
+      return this;
+   }
+
+   /**
+    * Deletes a character from the buffer.
+    */
+   public CharBuffer deleteCharAt(int index) {
+      if (index < 0 || _length < index)
+         throw new StringIndexOutOfBoundsException();
+
+      if (index == _length)
+         return this;
+
+      int tail = _length - index + 1;
+      char[] buffer = _buffer;
+
+      for (int i = 0; i < tail; i++)
+         buffer[index + i] = buffer[index + i + 1];
+
+      _length--;
+
+      return this;
+   }
+
+   /**
+    * Replaces a range with a string
+    */
+   public CharBuffer replace(int start, int end, String string) {
+      if (start < 0 || end < start || _length < start)
+         throw new StringIndexOutOfBoundsException();
+
+      int len = string.length();
+      int length = _length;
+
+      if (_buffer.length < len + length - (end - start))
+         expandCapacity(len + length - (end - start));
+
+      char[] buffer = _buffer;
+
+      if (len < end - start) {
+         int tail = length - end;
+         for (int i = 0; i < tail; i++)
+            buffer[start + len + i] = buffer[end + i];
+      } else {
+         int tail = length - end;
+         for (int i = tail - 1; i >= 0; i--)
+            buffer[end + i] = buffer[start + len + i];
+      }
+
+      string.getChars(0, len, buffer, start);
+
+      _length = length + len - (end - start);
+
+      return this;
+   }
+
+   /**
+    * Replaces a range with a character array
+    */
+   public CharBuffer replace(int start, int end,
+                             char[] buffer, int offset, int len) {
+      if (start < 0 || end < start || _length < start)
+         throw new StringIndexOutOfBoundsException();
+
+      if (_buffer.length < len + _length - (end - start))
+         expandCapacity(len + _length - (end - start));
+
+      char[] thisBuffer = _buffer;
+
+      if (len < end - start) {
+         int tail = _length - end;
+         for (int i = 0; i < tail; i++)
+            thisBuffer[start + len + i] = thisBuffer[end + i];
+      } else {
+         int tail = _length - end;
+         for (int i = tail - 1; i >= 0; i--)
+            thisBuffer[end + i] = thisBuffer[start + len + i];
+      }
+
+      System.arraycopy(buffer, offset, thisBuffer, start, len);
+
+      _length += len - (end - start);
+
+      return this;
+   }
+
+   /**
+    * Returns a substring
+    */
+   public String substring(int start) {
+      if (_length < start || start < 0)
+         throw new StringIndexOutOfBoundsException();
+
+      return new String(_buffer, start, _length - start);
+   }
+
+   /**
+    * Returns a substring
+    */
+   public String substring(int start, int end) {
+      if (_length < start || start < 0 || end < start)
+         throw new StringIndexOutOfBoundsException();
+
+      return new String(_buffer, start, end - start);
+   }
+
+   /**
+    * Inserts a string.
+    */
+   public CharBuffer insert(int index, String string) {
+      if (string == null)
+         string = "null";
+
+      if (index < 0 || _length < index)
+         throw new StringIndexOutOfBoundsException();
+
+      int len = string.length();
+
+      if (_buffer.length < _length + len)
+         expandCapacity(len + _length);
+
+      int tail = _length - index;
+      char[] buffer = _buffer;
+
       for (int i = tail - 1; i >= 0; i--)
-        thisBuffer[end + i] = thisBuffer[start + len + i];
-    }
+         buffer[index + len + i] = buffer[index + i];
 
-    System.arraycopy(buffer, offset, thisBuffer, start, len);
+      string.getChars(0, len, buffer, index);
+      _length += len;
 
-    _length += len - (end - start);
+      return this;
+   }
 
-    return this;
-  }
+   /**
+    * Inserts a character buffer.
+    */
+   public CharBuffer insert(int index, char[] buffer, int offset, int len) {
+      if (index < 0 || _length < index)
+         throw new StringIndexOutOfBoundsException();
 
-  /**
-   * Returns a substring
-   */
-  public String substring(int start)
-  {
-    if (_length < start || start < 0)
-      throw new StringIndexOutOfBoundsException();
+      if (_buffer.length < len + _length)
+         expandCapacity(len + _length);
 
-    return new String(_buffer, start, _length - start);
-  }
+      int tail = _length - index;
+      char[] thisBuffer = _buffer;
+      for (int i = tail - 1; i >= 0; i--)
+         buffer[index + len + i] = thisBuffer[index + i];
 
-  /**
-   * Returns a substring
-   */
-  public String substring(int start, int end)
-  {
-    if (_length < start || start < 0 || end < start)
-      throw new StringIndexOutOfBoundsException();
+      System.arraycopy(buffer, offset, thisBuffer, index, len);
+      _length += len;
 
-    return new String(_buffer, start, end - start);
-  }
-  /**
-   * Inserts a string.
-   */
-  public CharBuffer insert(int index, String string)
-  {
-    if (string == null)
-      string = "null";
+      return this;
+   }
 
-    if (index < 0 || _length < index)
-      throw new StringIndexOutOfBoundsException();
+   /**
+    * Inserts an object at a given offset.
+    */
+   public CharBuffer insert(int offset, Object o) {
+      return insert(offset, String.valueOf(o));
+   }
 
-    int len = string.length();
+   /**
+    * Inserts a character at a given offset.
+    */
+   public CharBuffer insert(int offset, char ch) {
+      return insert(offset, String.valueOf(ch));
+   }
 
-    if (_buffer.length < _length + len) 
-      expandCapacity(len + _length);
+   /**
+    * Inserts an integer at a given offset.
+    */
+   public CharBuffer insert(int offset, int i) {
+      return insert(offset, String.valueOf(i));
+   }
 
-    int tail = _length - index;
-    char []buffer = _buffer;
-    
-    for (int i = tail - 1; i >= 0; i--)
-      buffer[index + len + i] = buffer[index + i];
+   /**
+    * Inserts a long at a given offset.
+    */
+   public CharBuffer insert(int offset, long l) {
+      return insert(offset, String.valueOf(l));
+   }
 
-    string.getChars(0, len, buffer, index);
-    _length += len;
+   /**
+    * Inserts a float at a given offset.
+    */
+   public CharBuffer insert(int offset, float f) {
+      return insert(offset, String.valueOf(f));
+   }
 
-    return this;
-  }
+   /**
+    * Inserts a double at a given offset.
+    */
+   public CharBuffer insert(int offset, double d) {
+      return insert(offset, String.valueOf(d));
+   }
 
-  /**
-   * Inserts a character buffer.
-   */
-  public CharBuffer insert(int index, char []buffer, int offset, int len)
-  {
-    if (index < 0 || _length < index)
-      throw new StringIndexOutOfBoundsException();
+   public int indexOf(char ch) {
+      return indexOf(ch, 0);
+   }
 
-    if (_buffer.length < len + _length)
-      expandCapacity(len + _length);
+   /**
+    * Clones the buffer
+    */
+   public Object clone() {
+      CharBuffer newBuffer = new CharBuffer();
 
-    int tail = _length - index;
-    char []thisBuffer = _buffer;
-    for (int i = tail - 1; i >= 0; i--)
-      buffer[index + len + i] = thisBuffer[index + i];
+      newBuffer.setLength(_length);
 
-    System.arraycopy(buffer, offset, thisBuffer, index, len);
-    _length += len;
+      System.arraycopy(_buffer, 0, newBuffer._buffer, 0, _length);
 
-    return this;
-  }
+      return newBuffer;
+   }
 
-  /**
-   * Inserts an object at a given offset.
-   */
-  public CharBuffer insert(int offset, Object o)
-  {
-    return insert(offset, String.valueOf(o));
-  }
+   /**
+    * String representation of the buffer.
+    */
+   public String toString() {
+      return new String(_buffer, 0, _length);
+   }
 
-  /**
-   * Inserts a character at a given offset.
-   */
-  public CharBuffer insert(int offset, char ch)
-  {
-    return insert(offset, String.valueOf(ch));
-  }
+   public String close() {
+      String string = new String(_buffer, 0, _length);
+      free();
+      return string;
+   }
 
-  /**
-   * Inserts an integer at a given offset.
-   */
-  public CharBuffer insert(int offset, int i)
-  {
-    return insert(offset, String.valueOf(i));
-  }
+   class CBInputStream extends InputStream {
+      int _index = 0;
 
-  /**
-   * Inserts a long at a given offset.
-   */
-  public CharBuffer insert(int offset, long l)
-  {
-    return insert(offset, String.valueOf(l));
-  }
+      public int read() {
+         if (_length <= _index)
+            return -1;
 
-  /**
-   * Inserts a float at a given offset.
-   */
-  public CharBuffer insert(int offset, float f)
-  {
-    return insert(offset, String.valueOf(f));
-  }
+         return _buffer[_index++];
+      }
+   }
 
-  /**
-   * Inserts a double at a given offset.
-   */
-  public CharBuffer insert(int offset, double d)
-  {
-    return insert(offset, String.valueOf(d));
-  }
-
-  public int indexOf(char ch)
-  {
-    return indexOf(ch, 0);
-  }
-
-  /**
-   * Clones the buffer
-   */
-  public Object clone()
-  {
-    CharBuffer newBuffer = new CharBuffer();
-
-    newBuffer.setLength(_length);
-
-    System.arraycopy(_buffer, 0, newBuffer._buffer, 0, _length);
-
-    return newBuffer;
-  }
-
-  /**
-   * String representation of the buffer.
-   */
-  public String toString()
-  {
-    return new String(_buffer, 0, _length);
-  }
-
-  public String close()
-  {
-    String string = new String(_buffer, 0, _length);
-    free();
-    return string;
-  }
-
-  class CBInputStream extends InputStream {
-    int _index = 0;
-
-    public int read()
-    {
-      if (_length <= _index)
-        return -1;
-
-      return _buffer[_index++];
-    }
-  }
-
-  public InputStream getInputStream()
-  {
-    return new CBInputStream();
-  }
+   public InputStream getInputStream() {
+      return new CBInputStream();
+   }
 }

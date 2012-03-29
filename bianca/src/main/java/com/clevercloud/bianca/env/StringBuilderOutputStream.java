@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class StringBuilderOutputStream
-        extends OutputStream {
+   extends OutputStream {
 
    private StringValue _sb;
 
@@ -44,13 +44,13 @@ public class StringBuilderOutputStream
 
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       _sb.append(new String(buffer), offset, length);
    }
 
    @Override
    public void write(int ch)
-           throws IOException {
+      throws IOException {
       _sb.append(ch);
    }
 

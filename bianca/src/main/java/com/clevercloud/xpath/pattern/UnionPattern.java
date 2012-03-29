@@ -32,129 +32,116 @@ package com.clevercloud.xpath.pattern;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
- * Implementation of the 'a|b' pattern.  It's made public 
+ * Implementation of the 'a|b' pattern.  It's made public
  * so XSLT can separate the left and right sides.
  */
 public class UnionPattern extends AbstractPattern {
-  private AbstractPattern _left;
-  private AbstractPattern _right;
+   private AbstractPattern _left;
+   private AbstractPattern _right;
 
-  public UnionPattern(AbstractPattern left, AbstractPattern right)
-  {
-    super(null);
+   public UnionPattern(AbstractPattern left, AbstractPattern right) {
+      super(null);
 
-    if (right.getParent() instanceof FromAttributes &&
-        left.getParent() instanceof FromChildren) {
-      _left = right;
-      _right = left;
-    }
-    else {
-      _left = left;
-      _right = right;
-    }
-  }
+      if (right.getParent() instanceof FromAttributes &&
+         left.getParent() instanceof FromChildren) {
+         _left = right;
+         _right = left;
+      } else {
+         _left = left;
+         _right = right;
+      }
+   }
 
-  /**
-   * Match if either pattern matches.
-   *
-   * @param node the node to test
-   * @param env the variable environment
-   *
-   * @return true if the pattern matches.
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return (_left.match(node, env) || _right.match(node, env));
-  }
+   /**
+    * Match if either pattern matches.
+    *
+    * @param node the node to test
+    * @param env  the variable environment
+    * @return true if the pattern matches.
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      return (_left.match(node, env) || _right.match(node, env));
+   }
 
-  /**
-   * Returns true if the nodes are ascending.
-   */
-  public boolean isStrictlyAscending()
-  {
-    // @*|node()
-    if (_left.getParent() instanceof FromAttributes &&
-        _right.getParent() instanceof FromChildren)
-      return true;
-    else
-      return false;
-  }
+   /**
+    * Returns true if the nodes are ascending.
+    */
+   public boolean isStrictlyAscending() {
+      // @*|node()
+      if (_left.getParent() instanceof FromAttributes &&
+         _right.getParent() instanceof FromChildren)
+         return true;
+      else
+         return false;
+   }
 
 
-  /**
-   * Creates a new node iterator.
-   *
-   * @param node the starting node
-   * @param env the xpath environment
-   * @param match the axis match pattern
-   *
-   * @return the node iterator
-   */
-  public NodeIterator createNodeIterator(Node node, ExprEnvironment env, 
-                                         AbstractPattern match)
-    throws XPathException
-  {
-    NodeIterator leftIter = _left.createNodeIterator(node, env,
-                                                     _left.copyPosition());
-    NodeIterator rightIter = _right.createNodeIterator(node, env, 
-                                                       _right.copyPosition());
+   /**
+    * Creates a new node iterator.
+    *
+    * @param node  the starting node
+    * @param env   the xpath environment
+    * @param match the axis match pattern
+    * @return the node iterator
+    */
+   public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
+                                          AbstractPattern match)
+      throws XPathException {
+      NodeIterator leftIter = _left.createNodeIterator(node, env,
+         _left.copyPosition());
+      NodeIterator rightIter = _right.createNodeIterator(node, env,
+         _right.copyPosition());
 
-    return new UnionIterator(env, leftIter, rightIter);
-  }
+      return new UnionIterator(env, leftIter, rightIter);
+   }
 
-  public int position(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    NodeIterator iter = select(node, env);
+   public int position(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      NodeIterator iter = select(node, env);
 
-    int i = 1;
-    while (iter.hasNext()) {
-      if (iter.next() == node)
-        return i;
-      i++;
-    }
+      int i = 1;
+      while (iter.hasNext()) {
+         if (iter.next() == node)
+            return i;
+         i++;
+      }
 
-    return 0;
-  }
+      return 0;
+   }
 
-  public int count(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    NodeIterator iter = select(node, env);
-    int count = 0;
+   public int count(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      NodeIterator iter = select(node, env);
+      int count = 0;
 
-    while (iter.hasNext()) {
-      iter.next();
-      count++;
-    }
+      while (iter.hasNext()) {
+         iter.next();
+         count++;
+      }
 
-    return count;
-  }
+      return count;
+   }
 
-  /**
-   * Return left node of the union.
-   */
-  public AbstractPattern getLeft()
-  {
-    return _left;
-  }
+   /**
+    * Return left node of the union.
+    */
+   public AbstractPattern getLeft() {
+      return _left;
+   }
 
-  /**
-   * Return right node of the union.
-   */
-  public AbstractPattern getRight()
-  {
-    return _right;
-  }
+   /**
+    * Return right node of the union.
+    */
+   public AbstractPattern getRight() {
+      return _right;
+   }
 
-  public String toString()
-  {
-    // XXX: '(' ?? ')'
-    return _left.toString() + "|" + _right.toString();
-  }
+   public String toString() {
+      // XXX: '(' ?? ')'
+      return _left.toString() + "|" + _right.toString();
+   }
 }

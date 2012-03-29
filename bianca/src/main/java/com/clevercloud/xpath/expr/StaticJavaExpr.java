@@ -33,7 +33,6 @@ import com.clevercloud.util.CharBuffer;
 import com.clevercloud.xpath.Expr;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 import java.lang.reflect.Method;
@@ -43,211 +42,197 @@ import java.util.ArrayList;
  * Implements the static java extension functions.
  */
 public class StaticJavaExpr extends Expr {
-  private static final int J_BOOLEAN = 1;
-  private static final int J_BYTE = J_BOOLEAN + 1;
-  private static final int J_SHORT = J_BYTE + 1;
-  private static final int J_INT = J_SHORT + 1;
-  private static final int J_LONG = J_INT + 1;
-  private static final int J_FLOAT = J_LONG + 1;
-  private static final int J_DOUBLE = J_FLOAT + 1;
-  private static final int J_STRING = J_DOUBLE + 1;
-  private static final int J_OBJECT = J_STRING + 1;
-  
-  // Code of the expression defined in Expr
-  private Method _method;
-  // Arguments for more than 3.
-  private ArrayList args;
-  private int []argTypes;
+   private static final int J_BOOLEAN = 1;
+   private static final int J_BYTE = J_BOOLEAN + 1;
+   private static final int J_SHORT = J_BYTE + 1;
+   private static final int J_INT = J_SHORT + 1;
+   private static final int J_LONG = J_INT + 1;
+   private static final int J_FLOAT = J_LONG + 1;
+   private static final int J_DOUBLE = J_FLOAT + 1;
+   private static final int J_STRING = J_DOUBLE + 1;
+   private static final int J_OBJECT = J_STRING + 1;
 
-  private int retType;
+   // Code of the expression defined in Expr
+   private Method _method;
+   // Arguments for more than 3.
+   private ArrayList args;
+   private int[] argTypes;
 
-  /**
-   * Create a StringExpression with three arguments.
-   *
-   * @param method Java method
-   * @param args the arguments
-   */
-  public StaticJavaExpr(Method method, ArrayList args)
-  {
-    _method = method;
-    this.args = args;
+   private int retType;
 
-    argTypes = new int[args.size()];
-    Class []paramClasses = _method.getParameterTypes();
-    for (int i = 0; i < paramClasses.length; i++)
-      argTypes[i] = classToType(paramClasses[i]);
-    
-    retType = classToType(_method.getReturnType());
-  }
+   /**
+    * Create a StringExpression with three arguments.
+    *
+    * @param method Java method
+    * @param args   the arguments
+    */
+   public StaticJavaExpr(Method method, ArrayList args) {
+      _method = method;
+      this.args = args;
 
-  private int classToType(Class cl)
-  {
-    if (boolean.class.equals(cl) || Boolean.class.equals(cl))
-      return J_BOOLEAN;
-    else if (byte.class.equals(cl) || Byte.class.equals(cl))
-      return J_BYTE;
-    else if (short.class.equals(cl) || Short.class.equals(cl))
-      return J_SHORT;
-    else if (int.class.equals(cl) || Integer.class.equals(cl))
-      return J_INT;
-    else if (long.class.equals(cl) || Long.class.equals(cl))
-      return J_LONG;
-    else if (float.class.equals(cl) || Float.class.equals(cl))
-      return J_FLOAT;
-    else if (double.class.equals(cl) || Double.class.equals(cl))
-      return J_DOUBLE;
-    else if (String.class.equals(cl))
-      return J_STRING;
-    else
-      return J_OBJECT;
-  }
+      argTypes = new int[args.size()];
+      Class[] paramClasses = _method.getParameterTypes();
+      for (int i = 0; i < paramClasses.length; i++)
+         argTypes[i] = classToType(paramClasses[i]);
 
-  /**
-   * True if it returns a string.
-   */
-  public boolean isString()
-  {
-    return retType == J_STRING;
-  }
+      retType = classToType(_method.getReturnType());
+   }
 
-  /**
-   * True if this returns a boolean.
-   */
-  public boolean isBoolean()
-  {
-    return retType == J_BOOLEAN;
-  }
+   private int classToType(Class cl) {
+      if (boolean.class.equals(cl) || Boolean.class.equals(cl))
+         return J_BOOLEAN;
+      else if (byte.class.equals(cl) || Byte.class.equals(cl))
+         return J_BYTE;
+      else if (short.class.equals(cl) || Short.class.equals(cl))
+         return J_SHORT;
+      else if (int.class.equals(cl) || Integer.class.equals(cl))
+         return J_INT;
+      else if (long.class.equals(cl) || Long.class.equals(cl))
+         return J_LONG;
+      else if (float.class.equals(cl) || Float.class.equals(cl))
+         return J_FLOAT;
+      else if (double.class.equals(cl) || Double.class.equals(cl))
+         return J_DOUBLE;
+      else if (String.class.equals(cl))
+         return J_STRING;
+      else
+         return J_OBJECT;
+   }
 
-  /**
-   * True if this returns a boolean.
-   */
-  public boolean isNumber()
-  {
-    return retType >= J_BYTE && retType <= J_DOUBLE;
-  }
+   /**
+    * True if it returns a string.
+    */
+   public boolean isString() {
+      return retType == J_STRING;
+   }
 
-  /**
-   * Evaluates the expression as an string.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the string representation of the expression.
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Object value = evalObject(node, env);
+   /**
+    * True if this returns a boolean.
+    */
+   public boolean isBoolean() {
+      return retType == J_BOOLEAN;
+   }
 
-    return String.valueOf(value);
-  }
+   /**
+    * True if this returns a boolean.
+    */
+   public boolean isNumber() {
+      return retType >= J_BYTE && retType <= J_DOUBLE;
+   }
 
-  /**
-   * Evaluate the expression as a boolean, i.e. evaluate it as a string
-   * and then convert it to a boolean.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the boolean representation of the expression.
-   */
-  public boolean evalBoolean(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return toBoolean(evalObject(node, env));
-  }
+   /**
+    * Evaluates the expression as an string.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the string representation of the expression.
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      Object value = evalObject(node, env);
 
-  /**
-   * Evaluate the expression as a double, i.e. evaluate it as a string
-   * and then convert it to a double.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the numeric representation of the expression.
-   */
-  public double evalNumber(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return toDouble(evalObject(node, env));
-  }
+      return String.valueOf(value);
+   }
 
-  /**
-   * Evaluate the expression as an object, i.e. return the string value.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the boolean representation of the expression.
-   */
-  public Object evalObject(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Object []argArray = new Object[args.size()];
+   /**
+    * Evaluate the expression as a boolean, i.e. evaluate it as a string
+    * and then convert it to a boolean.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the boolean representation of the expression.
+    */
+   public boolean evalBoolean(Node node, ExprEnvironment env)
+      throws XPathException {
+      return toBoolean(evalObject(node, env));
+   }
 
-    for (int i = 0; i < argArray.length; i++) {
-      Expr expr = (Expr) args.get(i);
+   /**
+    * Evaluate the expression as a double, i.e. evaluate it as a string
+    * and then convert it to a double.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the numeric representation of the expression.
+    */
+   public double evalNumber(Node node, ExprEnvironment env)
+      throws XPathException {
+      return toDouble(evalObject(node, env));
+   }
 
-      switch (argTypes[i]) {
-      case J_BOOLEAN:
-        argArray[i] = new Boolean(expr.evalBoolean(node, env));
-        break;
-      case J_BYTE:
-        argArray[i] = new Byte((byte) expr.evalNumber(node, env));
-        break;
-      case J_SHORT:
-        argArray[i] = new Short((short) expr.evalNumber(node, env));
-        break;
-      case J_INT:
-        argArray[i] = new Integer((int) expr.evalNumber(node, env));
-        break;
-      case J_LONG:
-        argArray[i] = new Long((long) expr.evalNumber(node, env));
-        break;
-      case J_FLOAT:
-        argArray[i] = new Float((float) expr.evalNumber(node, env));
-        break;
-      case J_DOUBLE:
-        argArray[i] = new Double(expr.evalNumber(node, env));
-        break;
-      case J_STRING:
-        argArray[i] = expr.evalString(node, env);
-        break;
-      default:
-        argArray[i] = expr.evalObject(node, env);
-        break;
+   /**
+    * Evaluate the expression as an object, i.e. return the string value.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the boolean representation of the expression.
+    */
+   public Object evalObject(Node node, ExprEnvironment env)
+      throws XPathException {
+      Object[] argArray = new Object[args.size()];
+
+      for (int i = 0; i < argArray.length; i++) {
+         Expr expr = (Expr) args.get(i);
+
+         switch (argTypes[i]) {
+            case J_BOOLEAN:
+               argArray[i] = new Boolean(expr.evalBoolean(node, env));
+               break;
+            case J_BYTE:
+               argArray[i] = new Byte((byte) expr.evalNumber(node, env));
+               break;
+            case J_SHORT:
+               argArray[i] = new Short((short) expr.evalNumber(node, env));
+               break;
+            case J_INT:
+               argArray[i] = new Integer((int) expr.evalNumber(node, env));
+               break;
+            case J_LONG:
+               argArray[i] = new Long((long) expr.evalNumber(node, env));
+               break;
+            case J_FLOAT:
+               argArray[i] = new Float((float) expr.evalNumber(node, env));
+               break;
+            case J_DOUBLE:
+               argArray[i] = new Double(expr.evalNumber(node, env));
+               break;
+            case J_STRING:
+               argArray[i] = expr.evalString(node, env);
+               break;
+            default:
+               argArray[i] = expr.evalObject(node, env);
+               break;
+         }
       }
-    }
 
-    try {
-      return _method.invoke(null, argArray);
-    } catch (Exception e) {
-      throw new XPathException(e);
-    }
-  }
+      try {
+         return _method.invoke(null, argArray);
+      } catch (Exception e) {
+         throw new XPathException(e);
+      }
+   }
 
-  /**
-   * Return the expression as a string.  toString() returns a valid
-   * XPath expression.  This lets applications like XSLT use toString()
-   * to print the string in the generated Java.
-   */
-  public String toString()
-  {
-    CharBuffer cb = CharBuffer.allocate();
-    cb.append("java:");
-    cb.append(_method.getDeclaringClass().getName());
-    cb.append(".");
-    cb.append(_method.getName());
+   /**
+    * Return the expression as a string.  toString() returns a valid
+    * XPath expression.  This lets applications like XSLT use toString()
+    * to print the string in the generated Java.
+    */
+   public String toString() {
+      CharBuffer cb = CharBuffer.allocate();
+      cb.append("java:");
+      cb.append(_method.getDeclaringClass().getName());
+      cb.append(".");
+      cb.append(_method.getName());
 
-    cb.append("(");
-    for (int i = 0; i < args.size(); i++) {
-      if (i != 0)
-        cb.append(",");
-      cb.append(args.get(i));
-    }
-    cb.append(")");
+      cb.append("(");
+      for (int i = 0; i < args.size(); i++) {
+         if (i != 0)
+            cb.append(",");
+         cb.append(args.get(i));
+      }
+      cb.append(")");
 
-    return cb.close();
-  }
+      return cb.close();
+   }
 }
 

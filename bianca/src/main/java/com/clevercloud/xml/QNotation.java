@@ -35,52 +35,67 @@ import org.w3c.dom.Notation;
 import java.io.IOException;
 
 class QNotation extends QNode implements Notation {
-  String _name;
-  String _publicId;
-  String _systemId;
+   String _name;
+   String _publicId;
+   String _systemId;
 
-  QNotation(String name, String publicId, String systemId)
-  {
-    _name = name;
-    _publicId = publicId;
-    _systemId = systemId;
-  }
+   QNotation(String name, String publicId, String systemId) {
+      _name = name;
+      _publicId = publicId;
+      _systemId = systemId;
+   }
 
-  public String getNodeName() { return _name; }
-  public String getTagName() { return _name; }
-  public short getNodeType() { return Node.NOTATION_NODE; }
+   public String getNodeName() {
+      return _name;
+   }
 
-  public String getPublicId() { return _publicId; }
-  public void setPublicId(String arg) { _publicId = arg; }
+   public String getTagName() {
+      return _name;
+   }
 
-  public String getSystemId() { return _systemId; }
-  public void setSystemId(String arg) { _systemId = arg; }
+   public short getNodeType() {
+      return Node.NOTATION_NODE;
+   }
 
-  Node importNode(QDocument owner, boolean deep) 
-  {
-    QNotation notation = new QNotation(_name, _publicId, _systemId);
+   public String getPublicId() {
+      return _publicId;
+   }
 
-    return notation;
-  }
+   public void setPublicId(String arg) {
+      _publicId = arg;
+   }
 
-  public void print(XmlPrinter os) throws IOException
-  {
-    os.print("<!NOTATION ");
-    os.print(_name);
-    if (_publicId != null) {
-      os.print(" PUBLIC \"");
-      os.print(_publicId);
-      os.print("\"");
-      if (_systemId != null) {
-        os.print(" \"");
-        os.print(_systemId);
-        os.print("\"");
+   public String getSystemId() {
+      return _systemId;
+   }
+
+   public void setSystemId(String arg) {
+      _systemId = arg;
+   }
+
+   Node importNode(QDocument owner, boolean deep) {
+      QNotation notation = new QNotation(_name, _publicId, _systemId);
+
+      return notation;
+   }
+
+   public void print(XmlPrinter os) throws IOException {
+      os.print("<!NOTATION ");
+      os.print(_name);
+      if (_publicId != null) {
+         os.print(" PUBLIC \"");
+         os.print(_publicId);
+         os.print("\"");
+         if (_systemId != null) {
+            os.print(" \"");
+            os.print(_systemId);
+            os.print("\"");
+         }
+      } else if (_systemId != null) {
+         os.print(" SYSTEM \"");
+         os.print(_systemId);
+         os.print("\"");
       }
-    } else if (_systemId != null) {
-      os.print(" SYSTEM \"");
-      os.print(_systemId);
-      os.print("\"");
-    }
-    os.println(">");
-  }
+      os.println(">");
+   }
 }

@@ -102,20 +102,20 @@ class PluralExprParser {
       boolean isNplurals;
 
       if (ch == 'n'
-              && read() == 'p'
-              && read() == 'l'
-              && read() == 'u'
-              && read() == 'r'
-              && read() == 'a'
-              && read() == 'l'
-              && read() == 's') {
+         && read() == 'p'
+         && read() == 'l'
+         && read() == 'u'
+         && read() == 'r'
+         && read() == 'a'
+         && read() == 'l'
+         && read() == 's') {
          isNplurals = true;
       } else if (ch == 'p'
-              && read() == 'l'
-              && read() == 'u'
-              && read() == 'r'
-              && read() == 'a'
-              && read() == 'l') {
+         && read() == 'l'
+         && read() == 'u'
+         && read() == 'r'
+         && read() == 'a'
+         && read() == 'l') {
          isNplurals = false;
       } else {
          return;

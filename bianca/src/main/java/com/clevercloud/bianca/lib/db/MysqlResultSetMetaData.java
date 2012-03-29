@@ -29,14 +29,14 @@
  */
 package com.clevercloud.bianca.lib.db;
 
+import com.clevercloud.bianca.BiancaException;
+import com.clevercloud.util.L10N;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.logging.Logger;
-
-import com.clevercloud.bianca.BiancaException;
-import com.clevercloud.util.L10N;
 
 /**
  * Extra Mysql metadata.

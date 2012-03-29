@@ -32,74 +32,72 @@ package com.clevercloud.xml;
 import java.io.IOException;
 
 class XmlLatin1Entities extends XmlEntities {
-  private static Entities xmlEntities = new XmlLatin1Entities();
+   private static Entities xmlEntities = new XmlLatin1Entities();
 
-  static Entities create()
-  {
-    return xmlEntities;
-  }
+   static Entities create() {
+      return xmlEntities;
+   }
 
-  void printText(XmlPrinter os,
-                 char []text, int offset, int length,
-                 boolean attr)
-    throws IOException
-  {
-    for (int i = 0; i < length; i++) {
-      char ch = text[offset + i];
+   void printText(XmlPrinter os,
+                  char[] text, int offset, int length,
+                  boolean attr)
+      throws IOException {
+      for (int i = 0; i < length; i++) {
+         char ch = text[offset + i];
 
-      switch (ch) {
-      case '\t': 
-        os.print(ch); break;
-        
-      case '\n':
-      case '\r': 
-        if (! attr)
-          os.print(ch);
-        else {
-          os.print("&#");
-          os.print((int) ch);
-          os.print(";");
-        }
-        break;
+         switch (ch) {
+            case '\t':
+               os.print(ch);
+               break;
 
-        /*
-      case '<':
-        if (! attr)
-          os.print("&lt;");
-        else
-          os.print("<");
-        break;
-        */
-        
-      case '<':
-        os.print("&lt;");
-        break;
-        
-      case '>':
-        os.print("&gt;");
-        break;
-        
-      case '&':
-        os.print("&amp;");
-        break;
-        
-      case '"':
-        if (attr)
-          os.print("&quot;");
-        else
-          os.print('"');
-        break;
+            case '\n':
+            case '\r':
+               if (!attr)
+                  os.print(ch);
+               else {
+                  os.print("&#");
+                  os.print((int) ch);
+                  os.print(";");
+               }
+               break;
 
-      default:
-        if (ch >= 0x20 && ch < 0x7f || ch > 160 && ch < 255) {
-          os.print(ch);
-        }
-        else {
-          os.print("&#");
-          os.print((int) ch);
-          os.print(';');
-        }
+            /*
+          case '<':
+            if (! attr)
+              os.print("&lt;");
+            else
+              os.print("<");
+            break;
+            */
+
+            case '<':
+               os.print("&lt;");
+               break;
+
+            case '>':
+               os.print("&gt;");
+               break;
+
+            case '&':
+               os.print("&amp;");
+               break;
+
+            case '"':
+               if (attr)
+                  os.print("&quot;");
+               else
+                  os.print('"');
+               break;
+
+            default:
+               if (ch >= 0x20 && ch < 0x7f || ch > 160 && ch < 255) {
+                  os.print(ch);
+               } else {
+                  os.print("&#");
+                  os.print((int) ch);
+                  os.print(';');
+               }
+         }
       }
-    }
-  }
+   }
 }

@@ -30,8 +30,8 @@
 package com.clevercloud.bianca.env;
 
 import java.util.HashMap;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Handles Java function overloading.

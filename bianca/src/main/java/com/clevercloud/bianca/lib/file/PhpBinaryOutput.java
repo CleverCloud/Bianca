@@ -49,13 +49,13 @@ public class PhpBinaryOutput extends AbstractBinaryOutput {
     */
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       _env.getOut().write(buffer, offset, length);
    }
 
    @Override
    public void write(int b)
-           throws IOException {
+      throws IOException {
       _env.getOut().write(b);
    }
 }

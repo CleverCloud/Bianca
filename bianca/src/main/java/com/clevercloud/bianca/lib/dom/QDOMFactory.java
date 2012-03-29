@@ -30,7 +30,6 @@
 package com.clevercloud.bianca.lib.dom;
 
 import com.clevercloud.xml.*;
-
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -38,7 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class QDOMFactory
-        implements DOMFactory {
+   implements DOMFactory {
 
    @Override
    public Attr createAttr(String name) {
@@ -67,8 +66,8 @@ public class QDOMFactory
 
    @Override
    public DocumentType createDocumentType(String qualifiedName,
-           String publicId,
-           String systemId) {
+                                          String publicId,
+                                          String systemId) {
       return new QDocumentType(qualifiedName, publicId, systemId);
    }
 
@@ -104,14 +103,14 @@ public class QDOMFactory
 
    @Override
    public void parseXMLDocument(Document document, InputStream is, String path)
-           throws IOException, SAXException {
+      throws IOException, SAXException {
       Xml xml = new Xml();
       xml.parseDocument((QDocument) document, is, path);
    }
 
    @Override
    public void parseHTMLDocument(Document document, InputStream is, String path)
-           throws IOException, SAXException {
+      throws IOException, SAXException {
       Html html = new Html();
       html.parseDocument((QDocument) document, is, path);
    }

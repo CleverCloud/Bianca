@@ -43,8 +43,8 @@ import java.util.logging.Logger;
  * Represents read/write stream
  */
 public class UdpInputOutput
-        extends AbstractBinaryInputOutput
-        implements SocketInputOutput {
+   extends AbstractBinaryInputOutput
+   implements SocketInputOutput {
 
    private static final Logger log = Logger.getLogger(UdpInputOutput.class.getName());
    private DatagramSocket _socket;
@@ -54,7 +54,7 @@ public class UdpInputOutput
    private byte _unread;
 
    public UdpInputOutput(Env env, String host, int port, Domain domain)
-           throws IOException {
+      throws IOException {
       super(env);
 
       _socket = new DatagramSocket();
@@ -72,13 +72,13 @@ public class UdpInputOutput
 
    @Override
    public void bind(SocketAddress address)
-           throws IOException {
+      throws IOException {
       _socket.bind(address);
    }
 
    @Override
    public void connect(SocketAddress address)
-           throws IOException {
+      throws IOException {
       _socket.connect(address);
 
       init();
@@ -143,7 +143,7 @@ public class UdpInputOutput
     */
    @Override
    public void unread()
-           throws IOException {
+      throws IOException {
       if (_stream != null) {
          _stream.unread();
          _isEOF = false;
@@ -167,7 +167,7 @@ public class UdpInputOutput
    public String toString() {
       if (_socket != null) {
          return "UdpInputOutput["
-                 + _socket.getInetAddress() + "," + _socket.getPort() + "]";
+            + _socket.getInetAddress() + "," + _socket.getPort() + "]";
       } else {
          return "UdpInputOutput[closed]";
       }

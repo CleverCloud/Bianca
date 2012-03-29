@@ -34,86 +34,75 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.EntityDeclaration;
 import java.io.Writer;
 
-public class EntityDeclarationImpl extends XMLEventImpl 
-  implements EntityDeclaration
-{
-  private final String _baseURI;
-  private final String _name;
-  private final String _notationName;
-  private final String _publicId;
-  private final String _replacementText;
-  private final String _systemId;
+public class EntityDeclarationImpl extends XMLEventImpl
+   implements EntityDeclaration {
+   private final String _baseURI;
+   private final String _name;
+   private final String _notationName;
+   private final String _publicId;
+   private final String _replacementText;
+   private final String _systemId;
 
-  public EntityDeclarationImpl(String baseURI, String name, String notationName,
-                               String publicId, String replacementText,
-                               String systemId)
-  {
-    _baseURI = baseURI;
-    _name = name;
-    _notationName = notationName;
-    _publicId = publicId;
-    _replacementText = replacementText;
-    _systemId = systemId;
-  }
+   public EntityDeclarationImpl(String baseURI, String name, String notationName,
+                                String publicId, String replacementText,
+                                String systemId) {
+      _baseURI = baseURI;
+      _name = name;
+      _notationName = notationName;
+      _publicId = publicId;
+      _replacementText = replacementText;
+      _systemId = systemId;
+   }
 
-  public String getBaseURI()
-  {
-    return _baseURI;
-  }
+   public String getBaseURI() {
+      return _baseURI;
+   }
 
-  public String getName()
-  {
-    return _name;
-  }
+   public String getName() {
+      return _name;
+   }
 
-  public String getNotationName()
-  {
-    return _notationName;
-  }
+   public String getNotationName() {
+      return _notationName;
+   }
 
-  public String getPublicId()
-  {
-    return _publicId;
-  }
+   public String getPublicId() {
+      return _publicId;
+   }
 
-  public String getReplacementText()
-  {
-    return _replacementText;
-  }
+   public String getReplacementText() {
+      return _replacementText;
+   }
 
-  public String getSystemId()
-  {
-    return _systemId;
-  }
+   public String getSystemId() {
+      return _systemId;
+   }
 
-  public int getEventType()
-  {
-    return ENTITY_DECLARATION;
-  }
+   public int getEventType() {
+      return ENTITY_DECLARATION;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    // XXX
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      // XXX
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof EntityDeclaration))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof EntityDeclaration))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    EntityDeclaration entity = (EntityDeclaration) o;
-    
-    return getBaseURI().equals(entity.getBaseURI()) &&
-           getName().equals(entity.getName()) &&
-           getNotationName().equals(entity.getNotationName()) &&
-           getPublicId().equals(entity.getPublicId()) &&
-           getReplacementText().equals(entity.getReplacementText()) &&
-           getSystemId().equals(entity.getSystemId());
-  }
+      EntityDeclaration entity = (EntityDeclaration) o;
+
+      return getBaseURI().equals(entity.getBaseURI()) &&
+         getName().equals(entity.getName()) &&
+         getNotationName().equals(entity.getNotationName()) &&
+         getPublicId().equals(entity.getPublicId()) &&
+         getReplacementText().equals(entity.getReplacementText()) &&
+         getSystemId().equals(entity.getSystemId());
+   }
 }
 

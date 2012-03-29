@@ -35,46 +35,41 @@ import java.util.Map;
  * JarScheme implements the lookup of the jar scheme.
  */
 public class JarScheme extends FilesystemPath {
-  JarScheme(String path)
-  {
-    super(null, "/", "/");
-  }
+   JarScheme(String path) {
+      super(null, "/", "/");
+   }
 
-  /**
-   * Lookup the path, handling windows weirdness
-   */
-  protected Path schemeWalk(String userPath,
-                            Map<String,Object> attributes,
-                            String filePath,
-                            int offset)
-  {
-    int p = filePath.indexOf('!', offset);
-    String backingPath;
-    String jarPath;
+   /**
+    * Lookup the path, handling windows weirdness
+    */
+   protected Path schemeWalk(String userPath,
+                             Map<String, Object> attributes,
+                             String filePath,
+                             int offset) {
+      int p = filePath.indexOf('!', offset);
+      String backingPath;
+      String jarPath;
 
-    if (p > 0) {
-      backingPath = filePath.substring(offset, p);
-      jarPath = filePath.substring(p + 1);
-    }
-    else {
-      backingPath = filePath.substring(offset);
-      jarPath = "";
-    }
+      if (p > 0) {
+         backingPath = filePath.substring(offset, p);
+         jarPath = filePath.substring(p + 1);
+      } else {
+         backingPath = filePath.substring(offset);
+         jarPath = "";
+      }
 
-    Path backing = Vfs.lookup(backingPath);
+      Path backing = Vfs.lookup(backingPath);
 
-    return JarPath.create(backing).lookup(jarPath);
-  }
+      return JarPath.create(backing).lookup(jarPath);
+   }
 
-  public Path fsWalk(String userPath,
-                        Map<String,Object> attributes,
-                        String path)
-  {
-    return schemeWalk(userPath, attributes, path, 0);
-  }
+   public Path fsWalk(String userPath,
+                      Map<String, Object> attributes,
+                      String path) {
+      return schemeWalk(userPath, attributes, path, 0);
+   }
 
-  public String getScheme()
-  {
-    return "jar";
-  }
+   public String getScheme() {
+      return "jar";
+   }
 }

@@ -29,18 +29,10 @@
  */
 package com.clevercloud.bianca.lib.spl;
 
-import com.clevercloud.bianca.env.ArrayAccess;
 import com.clevercloud.bianca.annotation.Name;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.This;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.Callback;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.MethodIntern;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.UnsetValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.lib.ArrayModule;
 import com.clevercloud.vfs.WriteStream;
 
@@ -49,9 +41,9 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 public class ArrayIterator
-        implements SeekableIterator,
-        ArrayAccess,
-        Countable {
+   implements SeekableIterator,
+   ArrayAccess,
+   Countable {
 
    public static final int STD_PROP_LIST = 0x00000001;
    public static final int ARRAY_AS_PROPS = 0x00000002;
@@ -65,9 +57,9 @@ public class ArrayIterator
 
    @Name("__construct")
    public Value __construct(Env env,
-           @This Value qThis,
-           @Optional Value value,
-           @Optional int flags) {
+                            @This Value qThis,
+                            @Optional Value value,
+                            @Optional int flags) {
 
       _env = env;
       _qThis = qThis;
@@ -236,18 +228,18 @@ public class ArrayIterator
    }
 
    private static void printDepth(WriteStream out, int depth)
-           throws java.io.IOException {
+      throws java.io.IOException {
       for (int i = depth; i > 0; i--) {
          out.print(' ');
       }
    }
 
    public void varDumpImpl(Env env,
-           Value obj,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           Value obj,
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       String name = "ArrayIterator";
 
       if (obj != null) {

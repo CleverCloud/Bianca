@@ -34,199 +34,188 @@ package com.clevercloud.util;
  * the JDK 1.2 collection classes.
  */
 public class IntArray {
-  private int []_data;
-  private int _size;
+   private int[] _data;
+   private int _size;
 
-  /**
-   * Create an empty int array.
-   */
-  public IntArray()
-  { 
-    _data = new int[16];
-    _size = 0;
-  }
+   /**
+    * Create an empty int array.
+    */
+   public IntArray() {
+      _data = new int[16];
+      _size = 0;
+   }
 
-  /**
-   * clear the array, i.e. set the size to 0.
-   */
-  public void clear()
-  {
-    _size = 0;
-  }
-  
-  /**
-   * Returns the current size of the array
-   */
-  public int size()
-  {
-    return _size;
-  }
+   /**
+    * clear the array, i.e. set the size to 0.
+    */
+   public void clear() {
+      _size = 0;
+   }
 
-  /**
-   * Returns the data array.
-   */
-  public int []getArray()
-  {
-    return _data;
-  }
-  
-  /**
-   * Adds an integer to the array.
-   */
-  public void add(int i)
-  {
-    if (_data.length <= _size)
+   /**
+    * Returns the current size of the array
+    */
+   public int size() {
+      return _size;
+   }
+
+   /**
+    * Returns the data array.
+    */
+   public int[] getArray() {
+      return _data;
+   }
+
+   /**
+    * Adds an integer to the array.
+    */
+   public void add(int i) {
+      if (_data.length <= _size)
+         expand(_size + 1);
+
+      _data[_size++] = i;
+   }
+
+   /**
+    * Appends the integers in array to the end of this array.
+    */
+   public void add(IntArray array) {
+      if (_data.length <= array._size)
+         expand(_size + array._size);
+
+      for (int i = 0; i < array._size; i++)
+         _data[_size++] = array._data[i];
+   }
+
+   /**
+    * Inserts an integer into the array.
+    */
+   public void add(int i, int value) {
       expand(_size + 1);
 
-    _data[_size++] = i;
-  }
-  
-  /**
-   * Appends the integers in array to the end of this array.
-   */
-  public void add(IntArray array)
-  {
-    if (_data.length <= array._size)
-      expand(_size + array._size);
+      System.arraycopy(_data, i, _data, i + 1, _size - i);
+      _data[i] = value;
+      _size++;
+   }
 
-    for (int i = 0; i < array._size; i++)
-      _data[_size++] = array._data[i];
-  }
-  /**
-   * Inserts an integer into the array.
-   */
-  public void add(int i, int value)
-  {
-    expand(_size + 1);
+   /**
+    * Pops the value off the end of the array.
+    */
+   public int pop() {
+      return _data[--_size];
+   }
 
-    System.arraycopy(_data, i, _data, i + 1, _size - i);
-    _data[i] = value;
-    _size++;
-  }
-  
-  /**
-   * Pops the value off the end of the array.
-   */
-  public int pop()
-  {
-    return _data[--_size];
-  }
-  
-  /**
-   * Sets the length of the array, filling with zero if necessary.
-   */
-  public void setLength(int size)
-  {
-    expand(size);
+   /**
+    * Sets the length of the array, filling with zero if necessary.
+    */
+   public void setLength(int size) {
+      expand(size);
 
-    for (int i = _size; i < size; i++)
-      _data[i] = 0;
+      for (int i = _size; i < size; i++)
+         _data[i] = 0;
 
-    _size = size;
-  }
-  
-  private void expand(int max)
-  {
-    while (_data.length < max) {
-      int []next = new int[_data.length * 2];
+      _size = size;
+   }
 
-      for (int i = 0; i < _data.length; i++)
-        next[i] = _data[i];
+   private void expand(int max) {
+      while (_data.length < max) {
+         int[] next = new int[_data.length * 2];
 
-      _data = next;
-    }
-  }
-  /**
-   * Gets the integer value at the given index.
-   *
-   * @param i index into the array.
-   * @return value at the index
-   */
-  public int get(int i)
-  {
-    return _data[i];
-  }
-  /**
-   * Returns the last integer in the array.
-   */
-  public int last()
-  {
-    return _data[_size - 1];
-  }
-  /**
-   * Sets the value at the given index.
-   */
-  public void set(int i, int value)
-  {
-    if (_size <= i)
-      throw new IndexOutOfBoundsException(i + " >= " + _size);
+         for (int i = 0; i < _data.length; i++)
+            next[i] = _data[i];
 
-    _data[i] = value;
-  }
-  /**
-   * Returns true if the array contains and integer equal to test.
-   */
-  public boolean contains(int test)
-  {
-    int []data = _data;
-    
-    for (int i = _size - 1; i >= 0; i--) {
-      if (data[i] == test)
-        return true;
-    }
+         _data = next;
+      }
+   }
 
-    return false;
-  }
-  /**
-   * True if all the integers in subset are contained in the array.
-   */
-  public boolean isSubset(IntArray subset)
-  {
-    int []subData = subset._data;
-    
-    for (int i = subset._size - 1; i >= 0; i--) {
-      if (! contains(subData[i]))
-        return false;
-    }
+   /**
+    * Gets the integer value at the given index.
+    *
+    * @param i index into the array.
+    * @return value at the index
+    */
+   public int get(int i) {
+      return _data[i];
+   }
 
-    return true;
-  }
-  /**
-   * Adds the members of newArray to the list if they are not already
-   * members of the array.
-   */
-  public void union(IntArray newArray)
-  {
-    for (int i = 0; i < newArray._size; i++) {
-      if (! contains(newArray._data[i]))
-        add(newArray._data[i]);
-    }
-  }
+   /**
+    * Returns the last integer in the array.
+    */
+   public int last() {
+      return _data[_size - 1];
+   }
 
-  /**
-   * Return a new int array with the contents.
-   */
-  public int []toArray()
-  {
-    int []value = new int[_size];
-    
-    System.arraycopy(_data, 0, value, 0, _size);
-    
-    return value;
-  }
+   /**
+    * Sets the value at the given index.
+    */
+   public void set(int i, int value) {
+      if (_size <= i)
+         throw new IndexOutOfBoundsException(i + " >= " + _size);
 
-  public String toString()
-  {
-    CharBuffer cb = CharBuffer.allocate();
+      _data[i] = value;
+   }
 
-    cb.append("[");
-    for (int i = 0; i < _size; i++) {
-      if (i != 0)
-        cb.append(", ");
-      cb.append(_data[i]);
-    }
-    cb.append("]");
+   /**
+    * Returns true if the array contains and integer equal to test.
+    */
+   public boolean contains(int test) {
+      int[] data = _data;
 
-    return cb.close();
-  }
+      for (int i = _size - 1; i >= 0; i--) {
+         if (data[i] == test)
+            return true;
+      }
+
+      return false;
+   }
+
+   /**
+    * True if all the integers in subset are contained in the array.
+    */
+   public boolean isSubset(IntArray subset) {
+      int[] subData = subset._data;
+
+      for (int i = subset._size - 1; i >= 0; i--) {
+         if (!contains(subData[i]))
+            return false;
+      }
+
+      return true;
+   }
+
+   /**
+    * Adds the members of newArray to the list if they are not already
+    * members of the array.
+    */
+   public void union(IntArray newArray) {
+      for (int i = 0; i < newArray._size; i++) {
+         if (!contains(newArray._data[i]))
+            add(newArray._data[i]);
+      }
+   }
+
+   /**
+    * Return a new int array with the contents.
+    */
+   public int[] toArray() {
+      int[] value = new int[_size];
+
+      System.arraycopy(_data, 0, value, 0, _size);
+
+      return value;
+   }
+
+   public String toString() {
+      CharBuffer cb = CharBuffer.allocate();
+
+      cb.append("[");
+      for (int i = 0; i < _size; i++) {
+         if (i != 0)
+            cb.append(", ");
+         cb.append(_data[i]);
+      }
+      cb.append("]");
+
+      return cb.close();
+   }
 }

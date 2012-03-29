@@ -78,7 +78,7 @@ public class StreamContextResource extends ResourceValue {
     * Sets an option
     */
    public void setOption(Env env, StringValue wrapper,
-           StringValue option, Value value) {
+                         StringValue option, Value value) {
       _options.getArray(wrapper).put(option, value);
    }
 
@@ -91,6 +91,7 @@ public class StreamContextResource extends ResourceValue {
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override

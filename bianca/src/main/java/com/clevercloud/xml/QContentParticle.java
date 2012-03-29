@@ -36,72 +36,67 @@ import java.util.ArrayList;
  * An expression of the DTD grammar.
  */
 class QContentParticle {
-  ArrayList<Object> _children = new ArrayList<Object>();
-  int _separator;
-  int _repeat;
+   ArrayList<Object> _children = new ArrayList<Object>();
+   int _separator;
+   int _repeat;
 
-  void addChild(Object child)
-  {
-    _children.add(child);
-  }
+   void addChild(Object child) {
+      _children.add(child);
+   }
 
-  /**
-   * Returns the number of children.
-   */
-  public int getChildSize()
-  {
-    return _children.size();
-  }
-  /**
-   * Returns the child specified by the index.
-   */
-  public Object getChild(int index)
-  {
-    return _children.get(index);
-  }
-  /**
-   * Sets the child specified by the index.
-   */
-  public void setChild(int index, Object child)
-  {
-    _children.set(index, child);
-  }
+   /**
+    * Returns the number of children.
+    */
+   public int getChildSize() {
+      return _children.size();
+   }
 
-  public char getSeparator()
-  {
-    return (char) _separator;
-  }
+   /**
+    * Returns the child specified by the index.
+    */
+   public Object getChild(int index) {
+      return _children.get(index);
+   }
 
-  public char getRepeat()
-  {
-    return (char) _repeat;
-  }
+   /**
+    * Sets the child specified by the index.
+    */
+   public void setChild(int index, Object child) {
+      _children.set(index, child);
+   }
 
-  public void print(XmlPrinter os) throws IOException
-  {
-    os.print("(");
+   public char getSeparator() {
+      return (char) _separator;
+   }
 
-    for (int i = 0; i < _children.size(); i++) {
-      if (i != 0) {
-        if (_separator == ',')
-          os.print(", ");
-        else {
-          os.print(" ");
-          os.print((char) _separator);
-          os.print(" ");
-        }
+   public char getRepeat() {
+      return (char) _repeat;
+   }
+
+   public void print(XmlPrinter os) throws IOException {
+      os.print("(");
+
+      for (int i = 0; i < _children.size(); i++) {
+         if (i != 0) {
+            if (_separator == ',')
+               os.print(", ");
+            else {
+               os.print(" ");
+               os.print((char) _separator);
+               os.print(" ");
+            }
+         }
+
+         Object child = _children.get(i);
+
+         if (child instanceof QContentParticle)
+            ((QContentParticle) child).print(os);
+         else
+            os.print(String.valueOf(child));
       }
 
-      Object child = _children.get(i);
-
-      if (child instanceof QContentParticle)
-        ((QContentParticle) child).print(os);
-      else
-        os.print(String.valueOf(child));
-    }
-
-    os.print(")");
-    if (_repeat != 0)
-      os.print((char) _repeat);
-  }
+      os.print(")");
+      if (_repeat != 0)
+         os.print((char) _repeat);
+   }
 }

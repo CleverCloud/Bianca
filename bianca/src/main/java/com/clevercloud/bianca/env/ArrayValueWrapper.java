@@ -30,8 +30,8 @@
 package com.clevercloud.bianca.env;
 
 import java.util.IdentityHashMap;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Represents a PHP array value.
@@ -288,7 +288,6 @@ public class ArrayValueWrapper extends ArrayValue {
     * Returns the corresponding key if this array contains the given value
     *
     * @param value to search for in the array
-    *
     * @return the key if it is found in the array, NULL otherwise
     */
    @Override
@@ -300,7 +299,6 @@ public class ArrayValueWrapper extends ArrayValue {
     * Returns the corresponding key if this array contains the given value
     *
     * @param value to search for in the array
-    *
     * @return the key if it is found in the array, NULL otherwise
     */
    @Override
@@ -312,7 +310,6 @@ public class ArrayValueWrapper extends ArrayValue {
     * Returns the corresponding value if this array contains the given key
     *
     * @param key to search for in the array
-    *
     * @return the value if it is found in the array, NULL otherwise
     */
    @Override

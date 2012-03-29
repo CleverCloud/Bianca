@@ -44,10 +44,10 @@ public class Authentication {
     * Supports digest and basic only.
     */
    public static String getAuthorization(String user,
-           String pass,
-           String requestMethod,
-           String uri,
-           String header) {
+                                         String pass,
+                                         String requestMethod,
+                                         String uri,
+                                         String header) {
       if (header.startsWith("Digest")) {
          return digest(user, pass, requestMethod, uri, header);
       } else {
@@ -81,10 +81,10 @@ public class Authentication {
     * Returns a digest encoded response string.
     */
    public static String digest(String user,
-           String pass,
-           String requestMethod,
-           String uri,
-           String header) {
+                               String pass,
+                               String requestMethod,
+                               String uri,
+                               String header) {
       StringBuilder sb = new StringBuilder();
 
       sb.append("Digest ");
@@ -152,16 +152,16 @@ public class Authentication {
 
       sb.append("\", response=\"");
       appendResponse(sb,
-              user,
-              realm,
-              pass,
-              requestMethod,
-              uri,
-              nonce,
-              nc,
-              cnonce,
-              qop,
-              algorithm);
+         user,
+         realm,
+         pass,
+         requestMethod,
+         uri,
+         nonce,
+         nc,
+         cnonce,
+         qop,
+         algorithm);
 
       sb.append('"');
       return sb.toString();
@@ -171,16 +171,16 @@ public class Authentication {
     * Appends the authorization string to the StringBuilder.
     */
    private static void appendResponse(StringBuilder sb,
-           String user,
-           String realm,
-           String pass,
-           String requestMethod,
-           String uri,
-           String nonce,
-           String nc,
-           String cnonce,
-           String qop,
-           String algorithm) {
+                                      String user,
+                                      String realm,
+                                      String pass,
+                                      String requestMethod,
+                                      String uri,
+                                      String nonce,
+                                      String nc,
+                                      String cnonce,
+                                      String qop,
+                                      String algorithm) {
       MessageDigest resultDigest = null;
       MessageDigest scratchDigest = null;
 
@@ -234,7 +234,7 @@ public class Authentication {
     * Updates MD5 hash.
     */
    private static void md5(MessageDigest md,
-           String string) {
+                           String string) {
       int length = string.length();
       for (int i = 0; i < length; i++) {
          md.update((byte) string.charAt(i));
@@ -245,7 +245,7 @@ public class Authentication {
     * Updates MD5 hash result.
     */
    private static void update(MessageDigest resultDigest,
-           byte[] digest) {
+                              byte[] digest) {
       for (int i = 0; i < digest.length; i++) {
          int d1 = (digest[i] >> 4) & 0xf;
          int d2 = (digest[i] & 0xf);
@@ -259,7 +259,7 @@ public class Authentication {
     * Appends hex characters to StringBuilder.
     */
    private static void appendHex(StringBuilder sb,
-           byte[] digest) {
+                                 byte[] digest) {
       for (int i = 0; i < digest.length; i++) {
          int d1 = (digest[i] >> 4) & 0xf;
          int d2 = (digest[i] & 0xf);
@@ -339,10 +339,10 @@ class Scanner {
 
       while ((ch = read()) >= 0) {
          if (ch != ' '
-                 && ch != '\t'
-                 && ch != '\r'
-                 && ch != '\n'
-                 && ch != '\f') {
+            && ch != '\t'
+            && ch != '\r'
+            && ch != '\n'
+            && ch != '\f') {
             break;
          }
       }

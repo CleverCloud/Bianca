@@ -29,31 +29,21 @@
  */
 package com.clevercloud.bianca.lib.reflection;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.clevercloud.bianca.UnimplementedException;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.ClassField;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.MethodMap;
-import com.clevercloud.bianca.env.ObjectValue;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.BiancaLanguageException;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.bianca.program.ClassDef;
 import com.clevercloud.util.L10N;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class ReflectionClass
-        implements Reflector {
+   implements Reflector {
 
    private static final L10N L = new L10N(ReflectionClass.class);
    public static int IS_IMPLICIT_ABSTRACT = 16;
@@ -97,8 +87,8 @@ public class ReflectionClass
    }
 
    public static String export(Env env,
-           Value cls,
-           @Optional boolean isReturn) {
+                               Value cls,
+                               @Optional boolean isReturn) {
       return null;
    }
 
@@ -163,11 +153,11 @@ public class ReflectionClass
 
       if (fun == null) {
          throw new BiancaLanguageException(
-                 env.createException("ReflectionException",
-                 L.l(
-                 "method {0}::{1}() does not exist",
-                 _name,
-                 name)));
+            env.createException("ReflectionException",
+               L.l(
+                  "method {0}::{1}() does not exist",
+                  _name,
+                  name)));
       }
 
       return new ReflectionMethod(_name, _cls.getFunction(name));
@@ -256,7 +246,7 @@ public class ReflectionClass
    private void findInterfaces(Env env, ArrayValue array, BiancaClass cls) {
       if (cls.isInterface()) {
          array.put(StringValue.create(cls.getName()),
-                 env.wrapJava(new ReflectionClass(cls)));
+            env.wrapJava(new ReflectionClass(cls)));
       } else {
          ClassDef[] defList = cls.getClassDefList();
 
@@ -286,7 +276,7 @@ public class ReflectionClass
       BiancaClass cls = env.findClass(name);
 
       array.put(StringValue.create(name),
-              env.wrapJava(new ReflectionClass(cls)));
+         env.wrapJava(new ReflectionClass(cls)));
    }
 
    public boolean isInterface() {
@@ -377,8 +367,8 @@ public class ReflectionClass
    }
 
    public Value getStaticPropertyValue(Env env,
-           StringValue name,
-           @Optional Value defaultV) {
+                                       StringValue name,
+                                       @Optional Value defaultV) {
       Value field = _cls.getStaticField(env, name);
 
       if (field == null) {
@@ -386,12 +376,12 @@ public class ReflectionClass
             return defaultV;
          } else {
             throw new BiancaLanguageException(
-                    env.createException(
-                    "ReflectionException",
-                    L.l(
-                    "Class '{0}' does not have a property named '{1}'",
-                    _name,
-                    name)));
+               env.createException(
+                  "ReflectionException",
+                  L.l(
+                     "Class '{0}' does not have a property named '{1}'",
+                     _name,
+                     name)));
          }
       }
 

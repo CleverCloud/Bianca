@@ -32,23 +32,20 @@ package com.clevercloud.vfs;
 import java.util.Map;
 
 public class SpyScheme extends FilesystemPath {
-  public SpyScheme()
-  {
-    super(null, "/", "/");
-  }
+   public SpyScheme() {
+      super(null, "/", "/");
+   }
 
-  public Path fsWalk(String userPath,
-                     Map<String,Object> attributes,
-                     String path)
-  {
-    if (path.startsWith("/file:"))
-      return new SpyPath(Vfs.lookup().lookup(path.substring(1)));
-    else
-      return new SpyPath(Vfs.lookup().lookup(path));
-  }
+   public Path fsWalk(String userPath,
+                      Map<String, Object> attributes,
+                      String path) {
+      if (path.startsWith("/file:"))
+         return new SpyPath(Vfs.lookup().lookup(path.substring(1)));
+      else
+         return new SpyPath(Vfs.lookup().lookup(path));
+   }
 
-  public String getScheme()
-  {
-    return "spy";
-  }
+   public String getScheme() {
+      return "spy";
+   }
 }

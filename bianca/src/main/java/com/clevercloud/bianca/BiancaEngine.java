@@ -30,22 +30,17 @@
  */
 package com.clevercloud.bianca;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.NullValue;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.page.InterpretedPage;
 import com.clevercloud.bianca.page.BiancaPage;
+import com.clevercloud.bianca.page.InterpretedPage;
 import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.bianca.program.BiancaProgram;
-import com.clevercloud.vfs.Path;
-import com.clevercloud.vfs.ReadStream;
-import com.clevercloud.vfs.StdoutStream;
-import com.clevercloud.vfs.StreamImpl;
-import com.clevercloud.vfs.StringPath;
-import com.clevercloud.vfs.WriteStream;
+import com.clevercloud.vfs.*;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class BiancaEngine {
 
@@ -81,7 +76,7 @@ public class BiancaEngine {
     * Executes the script
     */
    public Value executeFile(String filename)
-           throws IOException {
+      throws IOException {
       Path path = _bianca.getPwd().lookup(filename);
 
       return execute(path);
@@ -91,7 +86,7 @@ public class BiancaEngine {
     * Executes the script.
     */
    public Value execute(String script)
-           throws IOException {
+      throws IOException {
       return execute(new StringPath(script));
    }
 
@@ -99,7 +94,7 @@ public class BiancaEngine {
     * Executes the script.
     */
    public Value execute(Path path)
-           throws IOException {
+      throws IOException {
       ReadStream reader = path.openRead();
 
       BiancaProgram program = BiancaParser.parse(_bianca, null, reader);
@@ -166,11 +161,11 @@ public class BiancaEngine {
        * @param buffer the byte array to write.
        * @param offset the offset into the byte array.
        * @param length the number of bytes to write.
-       * @param isEnd true when the write is flushing a close.
+       * @param isEnd  true when the write is flushing a close.
        */
       @Override
       public void write(byte[] buffer, int offset, int length, boolean isEnd)
-              throws IOException {
+         throws IOException {
          _out.write(buffer, offset, length);
       }
    }

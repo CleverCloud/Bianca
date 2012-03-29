@@ -42,9 +42,9 @@ public class ThisMethodExpr extends ObjectMethodExpr {
    private static final L10N L = new L10N(ThisMethodExpr.class);
 
    public ThisMethodExpr(Location location,
-           ThisExpr qThis,
-           String methodName,
-           ArrayList<Expr> args) {
+                         ThisExpr qThis,
+                         String methodName,
+                         ArrayList<Expr> args) {
       super(location, qThis, methodName, args);
    }
 

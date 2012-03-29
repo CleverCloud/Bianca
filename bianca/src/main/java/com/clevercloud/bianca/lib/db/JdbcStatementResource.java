@@ -29,24 +29,13 @@
  */
 package com.clevercloud.bianca.lib.db;
 
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.UnsetValue;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.Var;
-import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -90,8 +79,8 @@ public class JdbcStatementResource {
     * @return true on success ir false on failure
     */
    protected boolean bindParams(Env env,
-           String types,
-           Value[] params) {
+                                String types,
+                                Value[] params) {
       // This will create the _types and _params arrays
       // for this prepared statement.
 
@@ -136,12 +125,12 @@ public class JdbcStatementResource {
     * <p/>
     * Our implementation REQUIRES the execute happen first.
     *
-    * @param env the PHP executing environment
+    * @param env       the PHP executing environment
     * @param outParams the output variables
     * @return true on success or false on failure
     */
    public boolean bindResults(Env env,
-           Value[] outParams) {
+                              Value[] outParams) {
       final int size = outParams.length;
       int numColumns;
 
@@ -165,7 +154,7 @@ public class JdbcStatementResource {
 
       if ((size == 0) || (size != numColumns)) {
          env.warning(
-                 L.l("number of bound variables does not equal number of columns"));
+            L.l("number of bound variables does not equal number of columns"));
          return false;
       }
 
@@ -275,7 +264,7 @@ public class JdbcStatementResource {
     * Known subclasses: see PostgresStatement.execute
     */
    protected boolean executeStatement()
-           throws SQLException {
+      throws SQLException {
       try {
          if (_stmt.execute()) {
             _conn.setAffectedRows(0);
@@ -313,7 +302,7 @@ public class JdbcStatementResource {
 
             for (int i = 0; i < size; i++) {
                _results[i].set(_resultResource.getColumnValue(
-                       env, _rs, _metaData, i + 1));
+                  env, _rs, _metaData, i + 1));
             }
             return BooleanValue.TRUE;
          } else {
@@ -358,7 +347,7 @@ public class JdbcStatementResource {
     * @return the result set meta data
     */
    protected ResultSetMetaData getMetaData()
-           throws SQLException {
+      throws SQLException {
       if (_metaData == null) {
          _metaData = _rs.getMetaData();
       }
@@ -372,7 +361,7 @@ public class JdbcStatementResource {
     * @return the number of rows in the result set
     */
    public int getNumRows()
-           throws SQLException {
+      throws SQLException {
       if (_rs != null) {
          return JdbcResultResource.getNumRows(_rs);
       } else {
@@ -422,7 +411,7 @@ public class JdbcStatementResource {
     * associated to this statement.
     */
    protected Connection getJavaConnection()
-           throws SQLException {
+      throws SQLException {
       return validateConnection().getJavaConnection();
    }
 
@@ -430,8 +419,8 @@ public class JdbcStatementResource {
     * Returns this statement type.
     *
     * @return this statement type:
-    * SELECT, UPDATE, DELETE, INSERT, CREATE, DROP,
-    * ALTER, BEGIN, DECLARE, or UNKNOWN.
+    *         SELECT, UPDATE, DELETE, INSERT, CREATE, DROP,
+    *         ALTER, BEGIN, DECLARE, or UNKNOWN.
     */
    public String getStatementType() {
       // Oracle Statement type
@@ -447,7 +436,7 @@ public class JdbcStatementResource {
       } else {
          _stmtType = _stmtType.toUpperCase();
          String s = _stmtType.replaceAll(
-                 "(SELECT|UPDATE|DELETE|INSERT|CREATE|DROP|ALTER|BEGIN|DECLARE)", "");
+            "(SELECT|UPDATE|DELETE|INSERT|CREATE|DROP|ALTER|BEGIN|DECLARE)", "");
          if (!s.equals("")) {
             _stmtType = "UNKNOWN";
          }
@@ -527,12 +516,12 @@ public class JdbcStatementResource {
 
          if (this instanceof OracleStatement) {
             _stmt = conn.prepareCall(_query,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
+               ResultSet.TYPE_SCROLL_INSENSITIVE,
+               ResultSet.CONCUR_READ_ONLY);
          } else if (_conn.isSeekable()) {
             _stmt = conn.prepareStatement(_query,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
+               ResultSet.TYPE_SCROLL_INSENSITIVE,
+               ResultSet.CONCUR_READ_ONLY);
          } else {
             _stmt = conn.prepareStatement(_query);
          }
@@ -569,12 +558,12 @@ public class JdbcStatementResource {
 
          if (this instanceof OracleStatement) {
             _stmt = conn.prepareCall(query,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
+               ResultSet.TYPE_SCROLL_INSENSITIVE,
+               ResultSet.CONCUR_READ_ONLY);
          } else {
             _stmt = conn.prepareStatement(query,
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
+               ResultSet.TYPE_SCROLL_INSENSITIVE,
+               ResultSet.CONCUR_READ_ONLY);
          }
 
          return true;
@@ -640,7 +629,7 @@ public class JdbcStatementResource {
     * Known subclasses: see PostgresStatement.execute
     */
    protected void setObject(int i, Object param)
-           throws Exception {
+      throws Exception {
       try {
          // See php/4358, php/43b8, php/43d8, and php/43p8.
          java.sql.ParameterMetaData pmd = _stmt.getParameterMetaData();
@@ -659,11 +648,11 @@ public class JdbcStatementResource {
                   Object object = constructor.newInstance();
 
                   Method method = cl.getDeclaredMethod(
-                          "setType", new Class[]{String.class});
+                     "setType", new Class[]{String.class});
                   method.invoke(object, new Object[]{typeName});
 
                   method = cl.getDeclaredMethod(
-                          "setValue", new Class[]{String.class});
+                     "setValue", new Class[]{String.class});
                   method.invoke(object, new Object[]{param});
 
                   _stmt.setObject(i, object, type);
@@ -679,7 +668,7 @@ public class JdbcStatementResource {
 
                   if (s.length() == 0) {
                      throw new IllegalArgumentException(
-                             L.l("argument `{0}' cannot be empty", param));
+                        L.l("argument `{0}' cannot be empty", param));
                   } else {
 
                      String money = s;
@@ -697,12 +686,12 @@ public class JdbcStatementResource {
                         Double.parseDouble(s);
                      } catch (Exception ex) {
                         throw new IllegalArgumentException(L.l(
-                                "cannot convert argument `{0}' to money", param));
+                           "cannot convert argument `{0}' to money", param));
                      }
 
                      Class cl = Class.forName("org.postgresql.util.PGmoney");
                      Constructor constructor = cl.getDeclaredConstructor(
-                             new Class[]{String.class});
+                        new Class[]{String.class});
                      Object object = constructor.newInstance(new Object[]{money});
 
                      _stmt.setObject(i, object, Types.OTHER);

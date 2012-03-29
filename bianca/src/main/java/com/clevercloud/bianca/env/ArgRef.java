@@ -42,7 +42,7 @@ import java.util.Map;
  * Represents a reference to a PHP variable in a function call.
  */
 public class ArgRef extends Value
-        implements Serializable {
+   implements Serializable {
 
    private Var _var;
 
@@ -134,6 +134,7 @@ public class ArgRef extends Value
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override
@@ -510,13 +511,14 @@ public class ArgRef extends Value
    return _ref.charAt(index);
    }
     */
+
    /**
     * Evaluates a method.
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                           StringValue methodName, int hash,
+                           Value[] args) {
       return _var.callMethod(env, methodName, hash, args);
    }
 
@@ -533,8 +535,8 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                           StringValue methodName, int hash,
+                           Value a1) {
       return _var.callMethod(env, methodName, hash, a1);
    }
 
@@ -543,7 +545,7 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           Value a1, Value a2) {
       return _var.callMethod(env, methodName, hash, a1, a2);
    }
 
@@ -552,9 +554,9 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           Value a1, Value a2, Value a3) {
       return _var.callMethod(env, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
@@ -562,9 +564,9 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           Value a1, Value a2, Value a3, Value a4) {
       return _var.callMethod(env, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -572,9 +574,9 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _var.callMethod(env, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
@@ -582,8 +584,8 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                              StringValue methodName, int hash,
+                              Value[] args) {
       return _var.callMethodRef(env, methodName, hash, args);
    }
 
@@ -600,8 +602,8 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                              StringValue methodName, int hash,
+                              Value a1) {
       return _var.callMethodRef(env, methodName, hash, a1);
    }
 
@@ -610,9 +612,9 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2) {
+                              Value a1, Value a2) {
       return _var.callMethodRef(env, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
@@ -620,7 +622,7 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                              Value a1, Value a2, Value a3) {
       return _var.callMethodRef(env, methodName, hash, a1, a2, a3);
    }
 
@@ -629,9 +631,9 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                              Value a1, Value a2, Value a3, Value a4) {
       return _var.callMethodRef(env, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -639,10 +641,10 @@ public class ArgRef extends Value
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _var.callMethodRef(env, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
@@ -655,6 +657,7 @@ public class ArgRef extends Value
    return _var.callClassMethod(env, fun, args);
    }
     */
+
    /**
     * Serializes the value.
     */
@@ -674,6 +677,7 @@ public class ArgRef extends Value
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    @Override
@@ -683,20 +687,20 @@ public class ArgRef extends Value
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("&");
       toValue().varDumpImpl(env, out, depth, valueSet);
    }
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       toValue().printRImpl(env, out, depth, valueSet);
    }
 

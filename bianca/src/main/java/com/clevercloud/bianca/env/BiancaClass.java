@@ -33,19 +33,15 @@ package com.clevercloud.bianca.env;
 import com.clevercloud.bianca.BiancaRuntimeException;
 import com.clevercloud.bianca.expr.ClassConstExpr;
 import com.clevercloud.bianca.expr.Expr;
-import com.clevercloud.bianca.module.ModuleContext;
 import com.clevercloud.bianca.function.AbstractFunction;
+import com.clevercloud.bianca.module.ModuleContext;
 import com.clevercloud.bianca.program.ClassDef;
 import com.clevercloud.bianca.program.InstanceInitializer;
 import com.clevercloud.bianca.program.JavaClassDef;
 import com.clevercloud.util.L10N;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -89,13 +85,13 @@ public final class BiancaClass extends NullValue {
 
    public BiancaClass(ClassDef classDef, BiancaClass parent) {
       this(ModuleContext.getLocalContext(Thread.currentThread().getContextClassLoader()),
-              classDef,
-              parent);
+         classDef,
+         parent);
    }
 
    public BiancaClass(ModuleContext moduleContext,
-           ClassDef classDef,
-           BiancaClass parent) {
+                      ClassDef classDef,
+                      BiancaClass parent) {
       _classDef = classDef.loadClassDef(); // force load of any lazy classes
       _className = classDef.getName();
       _parent = parent;
@@ -139,7 +135,7 @@ public final class BiancaClass extends NullValue {
          classDefList = new ClassDef[parent._classDefList.length + 1];
 
          System.arraycopy(parent._classDefList, 0, classDefList, 1,
-                 parent._classDefList.length);
+            parent._classDefList.length);
 
          classDefList[0] = classDef;
       } else {
@@ -166,7 +162,7 @@ public final class BiancaClass extends NullValue {
 
          if (classDef == null) {
             throw new NullPointerException("classDef:" + _classDef
-                    + " i:" + i + " parent:" + parent);
+               + " i:" + i + " parent:" + parent);
          }
 
          classDef.init();
@@ -187,7 +183,7 @@ public final class BiancaClass extends NullValue {
 
       // php/093n
       if (_constructor != null
-              && !_constructor.getName().equals("__construct")) {
+         && !_constructor.getName().equals("__construct")) {
          addMethodIfNotExist(new StringValue("__construct"), _constructor);
          addMethodIfNotExist(new StringValue(_className), _constructor);
       }
@@ -198,8 +194,8 @@ public final class BiancaClass extends NullValue {
    }
 
    private void addInstances(HashSet<String> instanceofSet,
-           HashSet<String> ifaces,
-           ClassDef classDef) {
+                             HashSet<String> ifaces,
+                             ClassDef classDef) {
       // _instanceofSet.add(classDef.getName());
       classDef.addInterfaces(instanceofSet);
 
@@ -210,12 +206,12 @@ public final class BiancaClass extends NullValue {
 
          // TODO: php/0cn2, but this is wrong:
          cl = Env.getInstance().findClass(iface,
-                 !isJavaClassDef,
-                 true);
+            !isJavaClassDef,
+            true);
 
          if (cl == null) {
             throw new BiancaRuntimeException(L.l("cannot find interface {0}",
-                    iface));
+               iface));
          }
 
          // _instanceofSet.addAll(cl.getInstanceofSet());
@@ -394,7 +390,7 @@ public final class BiancaClass extends NullValue {
    public void setArrayDelegate(ArrayDelegate delegate) {
       if (log.isLoggable(Level.FINEST)) {
          log.log(Level.FINEST, L.l("{0} adding array delegate {1}",
-                 this, delegate));
+            this, delegate));
       }
 
       _arrayDelegate = delegate;
@@ -413,7 +409,7 @@ public final class BiancaClass extends NullValue {
    public void setTraversableDelegate(TraversableDelegate delegate) {
       if (log.isLoggable(Level.FINEST)) {
          log.log(Level.FINEST, L.l("{0} setting traversable delegate {1}",
-                 this, delegate));
+            this, delegate));
       }
 
       _traversableDelegate = delegate;
@@ -432,7 +428,7 @@ public final class BiancaClass extends NullValue {
    public void setCountDelegate(CountDelegate delegate) {
       if (log.isLoggable(Level.FINEST)) {
          log.log(Level.FINEST, L.l("{0} setting count delegate {1}",
-                 this, delegate));
+            this, delegate));
       }
 
       _countDelegate = delegate;
@@ -526,8 +522,8 @@ public final class BiancaClass extends NullValue {
     * Adds a field.
     */
    public void addField(StringValue name,
-           Expr initExpr,
-           FieldVisibility visibility) {
+                        Expr initExpr,
+                        FieldVisibility visibility) {
       ClassField field = new ClassField(name, initExpr, visibility);
 
       _fieldMap.put(name, field);
@@ -585,7 +581,7 @@ public final class BiancaClass extends NullValue {
          _methodMap.put(name.toString(), fun);
       } else if (!existingFun.isAbstract() && fun.isAbstract()) {
          Env.getInstance().error(L.l("cannot make non-abstract function {0}:{1}() abstract",
-                 getName(), name));
+            getName(), name));
       }
    }
 
@@ -621,7 +617,7 @@ public final class BiancaClass extends NullValue {
 
       fieldList.add(new StaticField(name, value));
       _staticFieldNameMap.put(new StringValue(name),
-              new StringValue(className + "::" + name));
+         new StringValue(className + "::" + name));
    }
 
    /**
@@ -675,7 +671,7 @@ public final class BiancaClass extends NullValue {
 
             // php/093g constructor
             if (_constructor != null
-                    && fun.getName().equals(_constructor.getName())) {
+               && fun.getName().equals(_constructor.getName())) {
                isAbstract = _constructor.isAbstract();
             } else {
                isAbstract = fun.isAbstract();
@@ -683,12 +679,12 @@ public final class BiancaClass extends NullValue {
 
             if (isAbstract) {
                throw env.createErrorException(
-                       _classDef.getLocation(),
-                       L.l(
-                       "Abstract function '{0}' must be "
-                       + "implemented in concrete class {1}.",
-                       fun.getName(),
-                       getName()));
+                  _classDef.getLocation(),
+                  L.l(
+                     "Abstract function '{0}' must be "
+                        + "implemented in concrete class {1}.",
+                     fun.getName(),
+                     getName()));
             }
          }
       }
@@ -739,7 +735,7 @@ public final class BiancaClass extends NullValue {
 
       if (staticName == null) {
          env.error(L.l("{0}::${1} is an undeclared static field",
-                 _className, name));
+            _className, name));
 
          return NullValue.NULL;
       }
@@ -752,7 +748,7 @@ public final class BiancaClass extends NullValue {
 
       if (staticName == null) {
          env.error(L.l("{0}::${1} is an undeclared static field",
-                 _className, name));
+            _className, name));
 
          throw new IllegalStateException();
       }
@@ -765,7 +761,7 @@ public final class BiancaClass extends NullValue {
 
       if (staticName == null) {
          env.error(L.l("{0}::{1} is an unknown static field",
-                 _className, name));
+            _className, name));
 
          throw new IllegalStateException();
       }
@@ -818,6 +814,7 @@ public final class BiancaClass extends NullValue {
    return object;
    }
     */
+
    /**
     * Creates a new object without calling the constructor.  This is used
     * for unserializing classes.
@@ -825,12 +822,12 @@ public final class BiancaClass extends NullValue {
    public Value createObject(Env env) {
       if (_isAbstract) {
          throw env.createErrorException(L.l(
-                 "abstract class '{0}' cannot be instantiated.",
-                 _className));
+            "abstract class '{0}' cannot be instantiated.",
+            _className));
       } else if (_isInterface) {
          throw env.createErrorException(L.l(
-                 "interface '{0}' cannot be instantiated.",
-                 _className));
+            "interface '{0}' cannot be instantiated.",
+            _className));
       }
 
       ObjectValue objectValue = null;
@@ -875,12 +872,12 @@ public final class BiancaClass extends NullValue {
       try {
          if (_classDef.isAbstract()) {
             throw env.createErrorException(L.l(
-                    "abstract class '{0}' cannot be instantiated.",
-                    _className));
+               "abstract class '{0}' cannot be instantiated.",
+               _className));
          } else if (_classDef.isInterface()) {
             throw env.createErrorException(L.l(
-                    "interface '{0}' cannot be instantiated.",
-                    _className));
+               "interface '{0}' cannot be instantiated.",
+               _className));
          }
 
          ObjectValue objectValue = null;
@@ -949,7 +946,7 @@ public final class BiancaClass extends NullValue {
     * into the array.
     */
    private void getInterfaces(Env env, ArrayValue array,
-           boolean autoload, boolean isTop) {
+                              boolean autoload, boolean isTop) {
       ClassDef[] defList = _classDefList;
 
       for (int i = 0; i < defList.length; i++) {
@@ -1016,6 +1013,7 @@ public final class BiancaClass extends NullValue {
    //
    // Fields
    //
+
    /**
     * Implements the __get method call.
     * __get() is utilized for reading data from inaccessible properties.
@@ -1094,7 +1092,7 @@ public final class BiancaClass extends NullValue {
 
    /**
     * implements the __unset method call
-    *  __unset() is invoked when unset() is used on inaccessible properties.
+    * __unset() is invoked when unset() is used on inaccessible properties.
     */
    public Value unsetField(Env env, Value qThis, StringValue name) {
       if (issetField(name) && _fieldMap.get(name).isPublic()) {
@@ -1195,9 +1193,9 @@ public final class BiancaClass extends NullValue {
     * calls the function.
     */
    public Value callMethod(Env env,
-           Value qThis,
-           StringValue methodName, int hash,
-           Value[] args) {
+                           Value qThis,
+                           StringValue methodName, int hash,
+                           Value[] args) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1208,17 +1206,17 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethod(Env env, Value qThis, StringValue methodName,
-           Value[] args) {
+                                 Value[] args) {
       return callMethod(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              args);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         args);
    }
 
    /**
     * calls the function.
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash) {
+                           StringValue methodName, int hash) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1230,15 +1228,15 @@ public final class BiancaClass extends NullValue {
 
    public final Value callMethod(Env env, Value qThis, StringValue methodName) {
       return callMethod(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive());
+         methodName, methodName.hashCodeCaseInsensitive());
    }
 
    /**
     * calls the function.
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1) {
+                           StringValue methodName, int hash,
+                           Value a1) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1249,18 +1247,18 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethod(Env env, Value qThis, StringValue methodName,
-           Value a1) {
+                                 Value a1) {
       return callMethod(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1);
    }
 
    /**
     * calls the function.
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1271,18 +1269,18 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethod(Env env, Value qThis, StringValue methodName,
-           Value a1, Value a2) {
+                                 Value a1, Value a2) {
       return callMethod(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1, a2);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1, a2);
    }
 
    /**
     * calls the function.
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1293,18 +1291,18 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethod(Env env, Value qThis, StringValue methodName,
-           Value a1, Value a2, Value a3) {
+                                 Value a1, Value a2, Value a3) {
       return callMethod(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1, a2, a3);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1, a2, a3);
    }
 
    /**
     * calls the function.
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1315,18 +1313,18 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethod(Env env, Value qThis, StringValue methodName,
-           Value a1, Value a2, Value a3, Value a4) {
+                                 Value a1, Value a2, Value a3, Value a4) {
       return callMethod(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1, a2, a3, a4);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1, a2, a3, a4);
    }
 
    /**
     * calls the function.
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1337,19 +1335,19 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethod(Env env, Value qThis, StringValue methodName,
-           Value a1, Value a2, Value a3, Value a4,
-           Value a5) {
+                                 Value a1, Value a2, Value a3, Value a4,
+                                 Value a5) {
       return callMethod(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1, a2, a3, a4, a5);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1, a2, a3, a4, a5);
    }
 
    /**
     * calls the function.
     */
    public Value callMethodRef(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value[] args) {
+                              StringValue methodName, int hash,
+                              Value[] args) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1360,17 +1358,17 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethodRef(Env env, Value qThis, StringValue methodName,
-           Value[] args) {
+                                    Value[] args) {
       return callMethodRef(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              args);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         args);
    }
 
    /**
     * calls the function.
     */
    public Value callMethodRef(Env env, Value qThis,
-           StringValue methodName, int hash) {
+                              StringValue methodName, int hash) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1382,15 +1380,15 @@ public final class BiancaClass extends NullValue {
 
    public final Value callMethodRef(Env env, Value qThis, StringValue methodName) {
       return callMethodRef(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive());
+         methodName, methodName.hashCodeCaseInsensitive());
    }
 
    /**
     * calls the function.
     */
    public Value callMethodRef(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1) {
+                              StringValue methodName, int hash,
+                              Value a1) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1401,18 +1399,18 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethodRef(Env env, Value qThis, StringValue methodName,
-           Value a1) {
+                                    Value a1) {
       return callMethodRef(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1);
    }
 
    /**
     * calls the function.
     */
    public Value callMethodRef(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1423,18 +1421,18 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethodRef(Env env, Value qThis, StringValue methodName,
-           Value a1, Value a2) {
+                                    Value a1, Value a2) {
       return callMethodRef(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1, a2);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1, a2);
    }
 
    /**
     * calls the function.
     */
    public Value callMethodRef(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1445,18 +1443,18 @@ public final class BiancaClass extends NullValue {
    }
 
    public final Value callMethodRef(Env env, Value qThis, StringValue methodName,
-           Value a1, Value a2, Value a3) {
+                                    Value a1, Value a2, Value a3) {
       return callMethodRef(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1, a2, a3);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1, a2, a3);
    }
 
    /**
     * calls the function.
     */
    public Value callMethodRef(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1464,22 +1462,22 @@ public final class BiancaClass extends NullValue {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethodRef(env, this, qThis,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    public final Value callMethodRef(Env env, Value qThis, StringValue methodName,
-           Value a1, Value a2, Value a3, Value a4) {
+                                    Value a1, Value a2, Value a3, Value a4) {
       return callMethodRef(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1, a2, a3, a4);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1, a2, a3, a4);
    }
 
    /**
     * calls the function.
     */
    public Value callMethodRef(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4, Value a5) {
       if (qThis.isNull()) {
          qThis = this;
       }
@@ -1487,15 +1485,15 @@ public final class BiancaClass extends NullValue {
       AbstractFunction fun = _methodMap.get(methodName, hash);
 
       return fun.callMethodRef(env, this, qThis,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    public final Value callMethodRef(Env env, Value qThis, StringValue methodName,
-           Value a1, Value a2, Value a3, Value a4,
-           Value a5) {
+                                    Value a1, Value a2, Value a3, Value a4,
+                                    Value a5) {
       return callMethodRef(env, qThis,
-              methodName, methodName.hashCodeCaseInsensitive(),
-              a1, a2, a3, a4, a5);
+         methodName, methodName.hashCodeCaseInsensitive(),
+         a1, a2, a3, a4, a5);
    }
 
    //
@@ -1518,13 +1516,14 @@ public final class BiancaClass extends NullValue {
    env.setCallingClass(oldClass);
    }
    }*/
+
    /**
     * calls the function.
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                           StringValue methodName, int hash,
+                           Value[] args) {
       return callMethod(env, this, methodName, hash, args);
    }
 
@@ -1533,7 +1532,7 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash) {
+                           StringValue methodName, int hash) {
       return callMethod(env, this, methodName, hash);
    }
 
@@ -1542,10 +1541,10 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                           StringValue methodName, int hash,
+                           Value a1) {
       return callMethod(env, this, methodName, hash,
-              a1);
+         a1);
    }
 
    /**
@@ -1553,10 +1552,10 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2) {
       return callMethod(env, this, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
@@ -1564,10 +1563,10 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3) {
       return callMethod(env, this, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
@@ -1575,10 +1574,10 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4) {
       return callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -1586,11 +1585,11 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4,
-           Value a5) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4,
+                           Value a5) {
       return callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
@@ -1598,8 +1597,8 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                              StringValue methodName, int hash,
+                              Value[] args) {
       return callMethodRef(env, this, methodName, hash, args);
    }
 
@@ -1608,7 +1607,7 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash) {
+                              StringValue methodName, int hash) {
       return callMethodRef(env, this, methodName, hash);
    }
 
@@ -1617,10 +1616,10 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1) {
+                              StringValue methodName, int hash,
+                              Value a1) {
       return callMethodRef(env, this, methodName, hash,
-              a1);
+         a1);
    }
 
    /**
@@ -1628,10 +1627,10 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2) {
       return callMethodRef(env, this, methodName, hash,
-              a1, a2);
+         a1, a2);
    }
 
    /**
@@ -1639,10 +1638,10 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3) {
       return callMethodRef(env, this, methodName, hash,
-              a1, a2, a3);
+         a1, a2, a3);
    }
 
    /**
@@ -1650,10 +1649,10 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4) {
       return callMethodRef(env, this, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -1661,11 +1660,11 @@ public final class BiancaClass extends NullValue {
     */
    @Override
    public Value callMethodRef(Env env,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4,
-           Value a5) {
+                              StringValue methodName, int hash,
+                              Value a1, Value a2, Value a3, Value a4,
+                              Value a5) {
       return callMethodRef(env, this, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    private String toMethod(char[] key, int keyLength) {
@@ -1695,7 +1694,7 @@ public final class BiancaClass extends NullValue {
          return fun;
       } else {
          throw new BiancaRuntimeException(L.l("{0}::{1} is an unknown method",
-                 getName(), name));
+            getName(), name));
       }
    }
 
@@ -1716,7 +1715,7 @@ public final class BiancaClass extends NullValue {
       }
 
       throw new BiancaRuntimeException(L.l("{0}::{1} is an unknown constant",
-              getName(), name));
+         getName(), name));
    }
 
    /**

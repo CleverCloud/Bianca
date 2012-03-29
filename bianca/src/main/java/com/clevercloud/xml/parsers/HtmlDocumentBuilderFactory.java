@@ -31,7 +31,6 @@ package com.clevercloud.xml.parsers;
 
 import com.clevercloud.xml.Html;
 import com.clevercloud.xml.QDOMImplementation;
-
 import org.w3c.dom.DOMImplementation;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -41,42 +40,35 @@ import javax.xml.parsers.DocumentBuilderFactory;
  * JAXP document builder factory for strict XML parsing.
  */
 public class HtmlDocumentBuilderFactory extends DocumentBuilderFactory {
-  /**
-   * Creates a new SAX Parser
-   */
-  public DocumentBuilder newDocumentBuilder()
-  {
-    return new HtmlDocumentBuilder();
-  }
+   /**
+    * Creates a new SAX Parser
+    */
+   public DocumentBuilder newDocumentBuilder() {
+      return new HtmlDocumentBuilder();
+   }
 
-  public Object getAttribute(String key)
-  {
-    return null;
-  }
+   public Object getAttribute(String key) {
+      return null;
+   }
 
-  public void setAttribute(String key, Object value)
-  {
-  }
+   public void setAttribute(String key, Object value) {
+   }
 
-  public boolean getFeature(String key)
-  {
-    return false;
-  }
+   public boolean getFeature(String key) {
+      return false;
+   }
 
-  public void setFeature(String key, boolean value)
-  {
-  }
+   public void setFeature(String key, boolean value) {
+   }
 
-  public DOMImplementation getDOMImplementation()
-  {
-    return new QDOMImplementation();
-  }
+   public DOMImplementation getDOMImplementation() {
+      return new QDOMImplementation();
+   }
 
-  class HtmlDocumentBuilder extends AbstractDocumentBuilder {
-    HtmlDocumentBuilder()
-    {
-      _parser = new Html();
-      _parser.setConfig(HtmlDocumentBuilderFactory.this);
-    }
-  }
+   class HtmlDocumentBuilder extends AbstractDocumentBuilder {
+      HtmlDocumentBuilder() {
+         _parser = new Html();
+         _parser.setConfig(HtmlDocumentBuilderFactory.this);
+      }
+   }
 }

@@ -35,7 +35,6 @@ import com.clevercloud.xpath.StylesheetEnv;
 import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.XPathFun;
 import com.clevercloud.xpath.expr.Var;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -48,207 +47,190 @@ import java.util.logging.Logger;
  * Iterates through matching nodes.
  */
 public abstract class NodeIterator implements ExprEnvironment, Iterator<Node> {
-  protected static final Logger log
-    = Logger.getLogger(NodeIterator.class.getName());
-  
-  protected ExprEnvironment _env;
+   protected static final Logger log
+      = Logger.getLogger(NodeIterator.class.getName());
 
-  protected Node _contextNode;
-  protected int _position;
-  protected int _size;
+   protected ExprEnvironment _env;
 
-  protected NodeIterator(ExprEnvironment env)
-  {
-    /** XXX: children of NodeList implement iterator() for bianca
-     if (env == null)
-     throw new NullPointerException();
-     */
-    
-    _env = env;
-  }
-  
-  /**
-   * True if there's more data.
-   */
-  public abstract boolean hasNext();
-  
-  /**
-   * Returns the next node.
-   */
-  public abstract Node nextNode()
-    throws XPathException;
+   protected Node _contextNode;
+   protected int _position;
+   protected int _size;
 
-  /**
-   * Iterator interface.
-   */
-  public Node next()
-  {
-    Node value = null;
+   protected NodeIterator(ExprEnvironment env) {
+      /** XXX: children of NodeList implement iterator() for bianca
+       if (env == null)
+       throw new NullPointerException();
+       */
 
-    try {
-      value = nextNode();
-    } catch (Exception e) {
-      log.log(Level.FINE, e.toString(), e);
-    }
+      _env = env;
+   }
 
-    return value;
-  }
-  
-  /**
-   * Returns the next selected node.
-   */
-  public SelectedNode nextSelectedNode()
-    throws XPathException
-  {
-    Node node = nextNode();
+   /**
+    * True if there's more data.
+    */
+   public abstract boolean hasNext();
 
-    if (node == null)
-      return null;
-    else if (node instanceof Attr)
-      return new SelectedAttribute(node);
-    else
-      return new SelectedNode(node);
-  }
+   /**
+    * Returns the next node.
+    */
+   public abstract Node nextNode()
+      throws XPathException;
 
-  /**
-   * Sets the current node.
-   */
-  public Node getCurrentNode()
-  {
-    return _env.getCurrentNode();
-  }
+   /**
+    * Iterator interface.
+    */
+   public Node next() {
+      Node value = null;
 
-  /**
-   * Gets the env node.
-   */
-  public Node getContextNode()
-  {
-    if (_contextNode != null)
-      return _contextNode;
-    else
-      return _env.getContextNode();
-  }
-
-  /**
-   * Sets the env node.
-   */
-  public Node setContextNode(Node node)
-  {
-    Node oldNode = _contextNode;
-    _contextNode = node;
-    return oldNode;
-  }
-
-  /**
-   * Returns the position of the context node.
-   */
-  public int getContextPosition()
-  {
-    return _position;
-  }
-
-  /**
-   * Returns the number of nodes in the context list.
-   */
-  public int getContextSize()
-  {
-    if (_size == 0) {
-      _size = _position;
-
-      NodeIterator clone = (NodeIterator) clone();
       try {
-        while (clone != null && clone.nextNode() != null)
-          _size++;
-      } catch (XPathException e) {
+         value = nextNode();
+      } catch (Exception e) {
+         log.log(Level.FINE, e.toString(), e);
       }
-    }
-    
-    return _size;
-  }
 
-  /**
-   * Returns a document for creating nodes.
-   */
-  public Document getOwnerDocument()
-  {
-    return _env.getOwnerDocument();
-  }
+      return value;
+   }
 
-  /**
-   * Returns the given variable
-   */
-  public Var getVar(String name)
-  {
-    return _env.getVar(name);
-  }
+   /**
+    * Returns the next selected node.
+    */
+   public SelectedNode nextSelectedNode()
+      throws XPathException {
+      Node node = nextNode();
 
-  /**
-   * Returns the given variable
-   */
-  public XPathFun getFunction(String name)
-  {
-    return _env.getFunction(name);
-  }
-  /**
-   * Returns the stylesheet environment.
-   */
-  public StylesheetEnv getStylesheetEnv()
-  {
-    return _env.getStylesheetEnv();
-  }
+      if (node == null)
+         return null;
+      else if (node instanceof Attr)
+         return new SelectedAttribute(node);
+      else
+         return new SelectedNode(node);
+   }
 
-  /**
-   * Returns the given system property.
-   */
-  public Object systemProperty(String namespaceURI, String localName)
-  {
-    return _env.getOwnerDocument();
-  }
+   /**
+    * Sets the current node.
+    */
+   public Node getCurrentNode() {
+      return _env.getCurrentNode();
+   }
 
-  /**
-   * Returns the string-value of the ndoe.
-   */
-  public String stringValue(Node node)
-  {
-    return XmlUtil.textValue(node);
-  }
+   /**
+    * Gets the env node.
+    */
+   public Node getContextNode() {
+      if (_contextNode != null)
+         return _contextNode;
+      else
+         return _env.getContextNode();
+   }
 
-  /**
-   * Returns the position index count.
-   */
-  public int getPositionIndex()
-  {
-    return 0;
-  }
-  
-  /**
-   * Set true if should test more positions.
-   */
-  public void setMorePositions(boolean more)
-  {
-  }
+   /**
+    * Sets the env node.
+    */
+   public Node setContextNode(Node node) {
+      Node oldNode = _contextNode;
+      _contextNode = node;
+      return oldNode;
+   }
 
-  /**
-   * clones the iterator
-   */
-  public abstract Object clone();
+   /**
+    * Returns the position of the context node.
+    */
+   public int getContextPosition() {
+      return _position;
+   }
 
-  /**
-   * copies the iterator.
-   */
-  public void copy(NodeIterator src)
-  {
-    _env = src._env;
-    _position = src._position;
-    _size = src._size;
-  }
-  
-  /**
-   * remove is unsupported
-   */
-  public void remove()
-    throws UnsupportedOperationException
-  {
-    throw new UnsupportedOperationException();
-  }
+   /**
+    * Returns the number of nodes in the context list.
+    */
+   public int getContextSize() {
+      if (_size == 0) {
+         _size = _position;
+
+         NodeIterator clone = (NodeIterator) clone();
+         try {
+            while (clone != null && clone.nextNode() != null)
+               _size++;
+         } catch (XPathException e) {
+         }
+      }
+
+      return _size;
+   }
+
+   /**
+    * Returns a document for creating nodes.
+    */
+   public Document getOwnerDocument() {
+      return _env.getOwnerDocument();
+   }
+
+   /**
+    * Returns the given variable
+    */
+   public Var getVar(String name) {
+      return _env.getVar(name);
+   }
+
+   /**
+    * Returns the given variable
+    */
+   public XPathFun getFunction(String name) {
+      return _env.getFunction(name);
+   }
+
+   /**
+    * Returns the stylesheet environment.
+    */
+   public StylesheetEnv getStylesheetEnv() {
+      return _env.getStylesheetEnv();
+   }
+
+   /**
+    * Returns the given system property.
+    */
+   public Object systemProperty(String namespaceURI, String localName) {
+      return _env.getOwnerDocument();
+   }
+
+   /**
+    * Returns the string-value of the ndoe.
+    */
+   public String stringValue(Node node) {
+      return XmlUtil.textValue(node);
+   }
+
+   /**
+    * Returns the position index count.
+    */
+   public int getPositionIndex() {
+      return 0;
+   }
+
+   /**
+    * Set true if should test more positions.
+    */
+   public void setMorePositions(boolean more) {
+   }
+
+   /**
+    * clones the iterator
+    */
+   public abstract Object clone();
+
+   /**
+    * copies the iterator.
+    */
+   public void copy(NodeIterator src) {
+      _env = src._env;
+      _position = src._position;
+      _size = src._size;
+   }
+
+   /**
+    * remove is unsupported
+    */
+   public void remove()
+      throws UnsupportedOperationException {
+      throw new UnsupportedOperationException();
+   }
 }

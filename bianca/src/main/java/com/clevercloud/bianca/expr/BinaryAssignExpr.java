@@ -55,6 +55,7 @@ public class BinaryAssignExpr extends Expr {
 
    /**
     * Creates a assignment
+    *
     * @param location
     */
    @Override
@@ -75,7 +76,6 @@ public class BinaryAssignExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -89,7 +89,6 @@ public class BinaryAssignExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -102,7 +101,6 @@ public class BinaryAssignExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

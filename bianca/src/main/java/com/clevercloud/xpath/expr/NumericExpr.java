@@ -35,346 +35,335 @@ import com.clevercloud.xpath.Expr;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.pattern.AbstractPattern;
-
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class NumericExpr extends Expr {
-  private int _code;
-  private Expr _left;
-  private Expr _right;
-  private double _value;
-  private ArrayList<Expr> _args;
-  private AbstractPattern _axis;
-  private AbstractPattern _pattern;
+   private int _code;
+   private Expr _left;
+   private Expr _right;
+   private double _value;
+   private ArrayList<Expr> _args;
+   private AbstractPattern _axis;
+   private AbstractPattern _pattern;
 
-  public NumericExpr(int code, Expr left, Expr right)
-  {
-    _code = code;
-    _left = left;
-    _right = right;
-  }
+   public NumericExpr(int code, Expr left, Expr right) {
+      _code = code;
+      _left = left;
+      _right = right;
+   }
 
-  public NumericExpr(int code, Expr expr)
-  {
-    _code = code;
-    _left = expr;
-  }
+   public NumericExpr(int code, Expr expr) {
+      _code = code;
+      _left = expr;
+   }
 
-  public NumericExpr(double value)
-  {
-    _code = CONST;
-    _value = value;
-  }
+   public NumericExpr(double value) {
+      _code = CONST;
+      _value = value;
+   }
 
-  public NumericExpr(int code, ArrayList<Expr> args)
-  {
-    _code = code;
-    _args = args;
+   public NumericExpr(int code, ArrayList<Expr> args) {
+      _code = code;
+      _args = args;
 
-    if (args.size() > 0)
-      _left = args.get(0);
-    if (args.size() > 1)
-      _right = args.get(1);
-  }
+      if (args.size() > 0)
+         _left = args.get(0);
+      if (args.size() > 1)
+         _right = args.get(1);
+   }
 
-  public NumericExpr(int code, AbstractPattern axis, AbstractPattern pattern)
-  {
-    _code = code;
-    _axis = axis;
-    _pattern = pattern;
-  }
+   public NumericExpr(int code, AbstractPattern axis, AbstractPattern pattern) {
+      _code = code;
+      _axis = axis;
+      _pattern = pattern;
+   }
 
-  public NumericExpr(int code, AbstractPattern listPattern)
-  {
-    _code = code;
+   public NumericExpr(int code, AbstractPattern listPattern) {
+      _code = code;
 
-    if ((code == POSITION || code == LAST) && listPattern != null) {
-      _axis = listPattern.copyAxis();
-      _pattern = listPattern.copyPosition();
-    }
-    else
-      _pattern = listPattern;
-  }
+      if ((code == POSITION || code == LAST) && listPattern != null) {
+         _axis = listPattern.copyAxis();
+         _pattern = listPattern.copyPosition();
+      } else
+         _pattern = listPattern;
+   }
 
-  public AbstractPattern getListContext()
-  {
-    switch (_code) {
-    case POSITION:
-    case LAST:
-      return _pattern;
-      
-    default:
-      return null;
-    }
-  }
+   public AbstractPattern getListContext() {
+      switch (_code) {
+         case POSITION:
+         case LAST:
+            return _pattern;
 
-  public boolean isNumber()
-  {
-    return true;
-  }
+         default:
+            return null;
+      }
+   }
 
-  /**
-   * Returns true of the expression is constant.
-   */
-  public boolean isConstant()
-  {
-    return _code == CONST;
-  }
+   public boolean isNumber() {
+      return true;
+   }
 
-  /**
-   * Returns the expression's value.
-   */
-  public double getValue()
-  {
-    return _value;
-  }
+   /**
+    * Returns true of the expression is constant.
+    */
+   public boolean isConstant() {
+      return _code == CONST;
+   }
 
-  /**
-   * Evaluates to a variable.
-   *
-   * @param node the node to evaluate and use as a context.
-   * @param env the variable environment.
-   *
-   * @return a variable containing the value.
-   */
-  public Var evalVar(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    double value = evalNumber(node, env);
-
-    return NumberVar.create(value);
-  }
-
-  /**
-   * Evaluates the expression as a number.
-   *
-   * @param node the node to evaluate and use as a context.
-   * @param env the variable environment.
-   *
-   * @return the numeric value
-   */
-  public double evalNumber(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    switch (_code) {
-    case CONST:
+   /**
+    * Returns the expression's value.
+    */
+   public double getValue() {
       return _value;
+   }
 
-    case NEG: 
-      return - _left.evalNumber(node, env);
+   /**
+    * Evaluates to a variable.
+    *
+    * @param node the node to evaluate and use as a context.
+    * @param env  the variable environment.
+    * @return a variable containing the value.
+    */
+   public Var evalVar(Node node, ExprEnvironment env)
+      throws XPathException {
+      double value = evalNumber(node, env);
 
-    case ADD: 
-      return (_left.evalNumber(node, env) + _right.evalNumber(node, env));
+      return NumberVar.create(value);
+   }
 
-    case SUB: 
-      return (_left.evalNumber(node, env) - _right.evalNumber(node, env));
+   /**
+    * Evaluates the expression as a number.
+    *
+    * @param node the node to evaluate and use as a context.
+    * @param env  the variable environment.
+    * @return the numeric value
+    */
+   public double evalNumber(Node node, ExprEnvironment env)
+      throws XPathException {
+      switch (_code) {
+         case CONST:
+            return _value;
 
-    case MUL: 
-      return (_left.evalNumber(node, env) * _right.evalNumber(node, env));
+         case NEG:
+            return -_left.evalNumber(node, env);
 
-    case DIV: 
-      return (_left.evalNumber(node, env) / _right.evalNumber(node, env));
+         case ADD:
+            return (_left.evalNumber(node, env) + _right.evalNumber(node, env));
 
-    case QUO: 
-      return (int) (_left.evalNumber(node, env) /
-                    _right.evalNumber(node, env));
+         case SUB:
+            return (_left.evalNumber(node, env) - _right.evalNumber(node, env));
 
-    case MOD:
-      return (_left.evalNumber(node, env) % _right.evalNumber(node, env));
+         case MUL:
+            return (_left.evalNumber(node, env) * _right.evalNumber(node, env));
 
-    case NUMBER:
-      if (_left != null)
-        return _left.evalNumber(node, env);
+         case DIV:
+            return (_left.evalNumber(node, env) / _right.evalNumber(node, env));
+
+         case QUO:
+            return (int) (_left.evalNumber(node, env) /
+               _right.evalNumber(node, env));
+
+         case MOD:
+            return (_left.evalNumber(node, env) % _right.evalNumber(node, env));
+
+         case NUMBER:
+            if (_left != null)
+               return _left.evalNumber(node, env);
+            else
+               return toDouble(node);
+
+         case FLOOR:
+            return Math.floor(_left.evalNumber(node, env));
+
+         case CEILING:
+            return Math.ceil(_left.evalNumber(node, env));
+
+         case ROUND:
+            return Math.rint(_left.evalNumber(node, env));
+
+         case SUM:
+            return sum(node, env);
+
+         case POSITION:
+            return position(node, env);
+
+         case LAST:
+            return last(node, env);
+
+         case COUNT:
+            return count(node, env);
+
+         case STRING_LENGTH:
+            String str = _left.evalString(node, env);
+            if (str == null)
+               return 0;
+            else
+               return str.length();
+
+         default:
+            throw new RuntimeException("unknown code: " + (char) _code);
+      }
+   }
+
+   /**
+    * Calculates the position of the node.  For select patterns, the
+    * position will be given in the env variable.
+    */
+   private int position(Node node, ExprEnvironment env)
+      throws XPathException {
+      int position = env.getContextPosition();
+
+      if (position > 0)
+         return position;
+
+      if (_axis == null || !(env instanceof Env))
+         throw new RuntimeException("position called with no context");
+      else if (_pattern == null)
+         return _axis.position(node, (Env) env, null);
       else
-        return toDouble(node);
+         return _axis.position(node, (Env) env, _pattern.copyPosition());
+   }
 
-    case FLOOR:
-      return Math.floor(_left.evalNumber(node, env));
+   private int last(Node node, ExprEnvironment env)
+      throws XPathException {
+      int size = env.getContextSize();
 
-    case CEILING:
-      return Math.ceil(_left.evalNumber(node, env));
+      if (size > 0)
+         return size;
 
-    case ROUND:
-      return Math.rint(_left.evalNumber(node, env));
-
-    case SUM:
-      return sum(node, env);
-
-    case POSITION:
-      return position(node, env);
-
-    case LAST:
-      return last(node, env);
-
-    case COUNT:
-      return count(node, env);
-
-    case STRING_LENGTH:
-      String str = _left.evalString(node, env);
-      if (str == null)
-        return 0;
+      if (_axis == null || !(env instanceof Env)) {
+         throw new RuntimeException("last called with no context");
+      } else if (_pattern == null)
+         return _axis.position(node, (Env) env, null);
       else
-        return str.length();
+         return _axis.count(node, (Env) env, _pattern.copyPosition());
+   }
 
-    default:
-      throw new RuntimeException("unknown code: " + (char) _code);
-    }
-  }
+   /**
+    * Counts the nodes in a subpattern.
+    */
+   private int count(Node node, ExprEnvironment env)
+      throws XPathException {
+      int count = 0;
 
-  /**
-   * Calculates the position of the node.  For select patterns, the
-   * position will be given in the env variable.
-   */
-  private int position(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    int position = env.getContextPosition();
+      Iterator iter = _pattern.selectUnique(node, env);
+      while (iter.hasNext()) {
+         iter.next();
+         count++;
+      }
 
-    if (position > 0)
-      return position;
+      return count;
+   }
 
-    if (_axis == null || ! (env instanceof Env))
-      throw new RuntimeException("position called with no context");
-    else if (_pattern == null)
-      return _axis.position(node, (Env) env, null);
-    else
-      return _axis.position(node, (Env) env, _pattern.copyPosition());
-  }
+   /**
+    * Returns the sum of all the node values.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    */
+   private double sum(Node node, ExprEnvironment env)
+      throws XPathException {
+      double sum = 0;
 
-  private int last(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    int size = env.getContextSize();
+      Iterator iter = _pattern.selectUnique(node, env);
+      while (iter.hasNext()) {
+         Node subnode = (Node) iter.next();
+         String textValue = XmlUtil.textValue(subnode);
 
-    if (size > 0)
-      return size;
+         sum += stringToNumber(textValue);
+      }
 
-    if (_axis == null || ! (env instanceof Env)) {
-      throw new RuntimeException("last called with no context");
-    }
-    else if (_pattern == null)
-      return _axis.position(node, (Env) env, null);
-    else
-      return _axis.count(node, (Env) env, _pattern.copyPosition());
-  }
+      return sum;
+   }
 
-  /**
-   * Counts the nodes in a subpattern.
-   */
-  private int count(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    int count = 0;
+   /**
+    * Evaluates the expression as a boolean.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the boolean representation of the number.
+    */
+   public boolean evalBoolean(Node node, ExprEnvironment env)
+      throws XPathException {
+      double value = evalNumber(node, env);
 
-    Iterator iter = _pattern.selectUnique(node, env);
-    while (iter.hasNext()) {
-      iter.next();
-      count++;
-    }
+      return value != 0.0 && !Double.isNaN(value);
+   }
 
-    return count;
-  }
+   /**
+    * Evaluates the expression as a string.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the string representation of the number.
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      double value = evalNumber(node, env);
 
-  /**
-   * Returns the sum of all the node values.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   */
-  private double sum(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    double sum = 0;
+      if ((int) value == value)
+         return String.valueOf((int) value);
+      else
+         return String.valueOf(value);
+   }
 
-    Iterator iter = _pattern.selectUnique(node, env);
-    while (iter.hasNext()) {
-      Node subnode = (Node) iter.next();
-      String textValue = XmlUtil.textValue(subnode);
+   /**
+    * Evaluates the expression as an object.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the Double representation of the number.
+    */
+   public Object evalObject(Node node, ExprEnvironment env)
+      throws XPathException {
+      return new Double(evalNumber(node, env));
+   }
 
-      sum += stringToNumber(textValue);
-    }
+   public String toString() {
+      switch (_code) {
+         case CONST:
+            return String.valueOf(_value);
+         case NEG:
+            return "-" + _left;
+         case ADD:
+            return "(" + _left + " + " + _right + ")";
+         case SUB:
+            return "(" + _left + " - " + _right + ")";
+         case MUL:
+            return "(" + _left + " * " + _right + ")";
+         case DIV:
+            return "(" + _left + " div " + _right + ")";
+         case QUO:
+            return "(" + _left + " quo " + _right + ")";
+         case MOD:
+            return "(" + _left + " mod " + _right + ")";
 
-    return sum;
-  }
+         case NUMBER:
+            return "number(" + _left + ")";
+         case SUM:
+            return "sum(" + _pattern + ")";
+         case FLOOR:
+            return "floor(" + _left + ")";
+         case CEILING:
+            return "ceiling(" + _left + ")";
+         case ROUND:
+            return "round(" + _left + ")";
 
-  /**
-   * Evaluates the expression as a boolean.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the boolean representation of the number.
-   */
-  public boolean evalBoolean(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    double value = evalNumber(node, env);
+         case POSITION:
+            return "position()";
+         case COUNT:
+            return "count(" + _pattern + ")";
+         case LAST:
+            return "last()";
 
-    return value != 0.0 && ! Double.isNaN(value);
-  }
+         case STRING_LENGTH:
+            return "string-length(" + _left + ")";
 
-  /**
-   * Evaluates the expression as a string.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the string representation of the number.
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    double value = evalNumber(node, env);
-
-    if ((int) value == value)
-      return String.valueOf((int) value);
-    else
-      return String.valueOf(value);
-  }
-
-  /**
-   * Evaluates the expression as an object.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the Double representation of the number.
-   */
-  public Object evalObject(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return new Double(evalNumber(node, env));
-  }
-  
-  public String toString()
-  {
-    switch (_code) {
-    case CONST: return String.valueOf(_value);
-    case NEG: return "-" + _left;
-    case ADD: return "(" + _left + " + " + _right + ")";
-    case SUB: return "(" + _left + " - " + _right + ")";
-    case MUL: return "(" + _left + " * " + _right + ")";
-    case DIV: return "(" + _left + " div " + _right + ")";
-    case QUO: return "(" + _left + " quo " + _right + ")";
-    case MOD: return "(" + _left + " mod " + _right + ")";
-
-    case NUMBER: return "number(" + _left + ")";
-    case SUM: return "sum(" + _pattern + ")";
-    case FLOOR: return "floor(" + _left + ")";
-    case CEILING: return "ceiling(" + _left + ")";
-    case ROUND: return "round(" + _left + ")";
-
-    case POSITION: return "position()";
-    case COUNT: return "count(" + _pattern + ")";
-    case LAST: return "last()";
-      
-    case STRING_LENGTH:
-      return "string-length(" + _left + ")";
-
-    default: return super.toString();
-    }
-  }
+         default:
+            return super.toString();
+      }
+   }
 }

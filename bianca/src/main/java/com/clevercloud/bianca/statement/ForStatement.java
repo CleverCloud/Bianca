@@ -48,7 +48,7 @@ public class ForStatement extends Statement {
    protected final String _label;
 
    public ForStatement(Location location, Expr init, Expr test, Expr incr,
-           Statement block, String label) {
+                       Statement block, String label) {
       super(location);
 
       _init = init;

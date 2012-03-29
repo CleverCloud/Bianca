@@ -34,192 +34,162 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
-import static javax.xml.stream.XMLStreamConstants.*;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.*;
-
 import java.util.Iterator;
 
+import static javax.xml.stream.XMLStreamConstants.*;
+
 public class XMLEventWriterImpl implements XMLEventWriter {
-  private XMLStreamWriter _out;
+   private XMLStreamWriter _out;
 
-  public XMLEventWriterImpl(XMLStreamWriter out)
-  {
-    _out = out;
-  }
+   public XMLEventWriterImpl(XMLStreamWriter out) {
+      _out = out;
+   }
 
-  public XMLStreamWriter getXMLStreamWriter()
-  {
-    return _out;
-  }
+   public XMLStreamWriter getXMLStreamWriter() {
+      return _out;
+   }
 
-  public void add(XMLEvent event) throws XMLStreamException
-  {
-    // Order important: Namespace extends Attribute, so it comes first
-    if (event instanceof Namespace) {
-      Namespace namespace = (Namespace) event;
-      
-      if (namespace.isDefaultNamespaceDeclaration())
-        _out.writeDefaultNamespace(namespace.getNamespaceURI());
-      else
-        _out.writeNamespace(namespace.getPrefix(), 
-                            namespace.getNamespaceURI());
+   public void add(XMLEvent event) throws XMLStreamException {
+      // Order important: Namespace extends Attribute, so it comes first
+      if (event instanceof Namespace) {
+         Namespace namespace = (Namespace) event;
 
-    }
-    else if (event instanceof Attribute) {
-      Attribute attribute = (Attribute) event;
-      QName name = attribute.getName();
+         if (namespace.isDefaultNamespaceDeclaration())
+            _out.writeDefaultNamespace(namespace.getNamespaceURI());
+         else
+            _out.writeNamespace(namespace.getPrefix(),
+               namespace.getNamespaceURI());
 
-      if (name.getPrefix() != null && ! "".equals(name.getPrefix())) {
-        _out.writeAttribute(name.getPrefix(), name.getNamespaceURI(),
-                            name.getLocalPart(), attribute.getValue());
-      }
-      else if (name.getNamespaceURI() != null && 
-               ! "".equals(name.getNamespaceURI())) {
-        _out.writeAttribute(name.getNamespaceURI(), name.getLocalPart(), 
-                            attribute.getValue());
-      }
-      else
-        _out.writeAttribute(name.getLocalPart(), attribute.getValue());
-    } 
-    else if (event instanceof Characters) {
-      Characters characters = (Characters) event;
+      } else if (event instanceof Attribute) {
+         Attribute attribute = (Attribute) event;
+         QName name = attribute.getName();
 
-      switch (characters.getEventType()) {
-        case CDATA:
-          _out.writeCData(characters.getData());
-          break;
+         if (name.getPrefix() != null && !"".equals(name.getPrefix())) {
+            _out.writeAttribute(name.getPrefix(), name.getNamespaceURI(),
+               name.getLocalPart(), attribute.getValue());
+         } else if (name.getNamespaceURI() != null &&
+            !"".equals(name.getNamespaceURI())) {
+            _out.writeAttribute(name.getNamespaceURI(), name.getLocalPart(),
+               attribute.getValue());
+         } else
+            _out.writeAttribute(name.getLocalPart(), attribute.getValue());
+      } else if (event instanceof Characters) {
+         Characters characters = (Characters) event;
 
-        case SPACE:
-        case CHARACTERS: 
-        default:
-          _out.writeCharacters(characters.getData());
-          break;
-      }
-    } 
-    else if (event instanceof Comment) {
-      Comment comment = (Comment) event;
+         switch (characters.getEventType()) {
+            case CDATA:
+               _out.writeCData(characters.getData());
+               break;
 
-      _out.writeComment(comment.getText());
-    } 
-    else if (event instanceof DTD) {
-      DTD dtd = (DTD) event;
+            case SPACE:
+            case CHARACTERS:
+            default:
+               _out.writeCharacters(characters.getData());
+               break;
+         }
+      } else if (event instanceof Comment) {
+         Comment comment = (Comment) event;
 
-      _out.writeDTD(dtd.getDocumentTypeDeclaration());
-    } 
-    else if (event instanceof EndDocument) {
-      _out.writeEndDocument();
-    } 
-    else if (event instanceof EndElement) {
-      _out.writeEndElement();
-    } 
-    else if (event instanceof EntityDeclaration) {
-      throw new UnsupportedOperationException();
-    } 
-    else if (event instanceof EntityReference) {
-      throw new UnsupportedOperationException();
-    } 
-    else if (event instanceof NotationDeclaration) {
-      throw new UnsupportedOperationException();
-    } 
-    else if (event instanceof ProcessingInstruction) {
-      ProcessingInstruction pi = (ProcessingInstruction) event;
+         _out.writeComment(comment.getText());
+      } else if (event instanceof DTD) {
+         DTD dtd = (DTD) event;
 
-      if (pi.getData() == null || "".equals(pi.getData()))
-        _out.writeProcessingInstruction(pi.getTarget());
-      else
-        _out.writeProcessingInstruction(pi.getTarget(), pi.getData());
+         _out.writeDTD(dtd.getDocumentTypeDeclaration());
+      } else if (event instanceof EndDocument) {
+         _out.writeEndDocument();
+      } else if (event instanceof EndElement) {
+         _out.writeEndElement();
+      } else if (event instanceof EntityDeclaration) {
+         throw new UnsupportedOperationException();
+      } else if (event instanceof EntityReference) {
+         throw new UnsupportedOperationException();
+      } else if (event instanceof NotationDeclaration) {
+         throw new UnsupportedOperationException();
+      } else if (event instanceof ProcessingInstruction) {
+         ProcessingInstruction pi = (ProcessingInstruction) event;
 
-    }
-    else if (event instanceof StartDocument) {
-      StartDocument startDocument = (StartDocument) event;
+         if (pi.getData() == null || "".equals(pi.getData()))
+            _out.writeProcessingInstruction(pi.getTarget());
+         else
+            _out.writeProcessingInstruction(pi.getTarget(), pi.getData());
 
-      if (startDocument.encodingSet()) {
-        _out.writeStartDocument(startDocument.getCharacterEncodingScheme(),
-                                startDocument.getVersion());
-      }
-      else if (startDocument.getVersion() != null &&
-               ! "".equals(startDocument.getVersion())) {
-        _out.writeStartDocument(startDocument.getVersion());
-      }
-      else
-        _out.writeStartDocument();
-    }
-    else if (event instanceof StartElement) {
-      StartElement startElement = (StartElement) event;
-      QName name = startElement.getName();
+      } else if (event instanceof StartDocument) {
+         StartDocument startDocument = (StartDocument) event;
 
-      // Namespaces
-      // We do namespaces first because the element itself may need one
-      // xml/300w should catch this
-      Iterator namespaces = startElement.getNamespaces();
+         if (startDocument.encodingSet()) {
+            _out.writeStartDocument(startDocument.getCharacterEncodingScheme(),
+               startDocument.getVersion());
+         } else if (startDocument.getVersion() != null &&
+            !"".equals(startDocument.getVersion())) {
+            _out.writeStartDocument(startDocument.getVersion());
+         } else
+            _out.writeStartDocument();
+      } else if (event instanceof StartElement) {
+         StartElement startElement = (StartElement) event;
+         QName name = startElement.getName();
 
-      while (namespaces.hasNext())
-        add((Namespace) namespaces.next());
+         // Namespaces
+         // We do namespaces first because the element itself may need one
+         // xml/300w should catch this
+         Iterator namespaces = startElement.getNamespaces();
 
-      if (name.getPrefix() != null && ! "".equals(name.getPrefix())) {
-        _out.writeStartElement(name.getPrefix(), 
-                               name.getLocalPart(),
-                               name.getNamespaceURI());
-      }
-      else if (name.getNamespaceURI() != null && 
-               ! "".equals(name.getNamespaceURI())) {
-        _out.writeStartElement(name.getNamespaceURI(), name.getLocalPart());
-      }
-      else 
-        _out.writeStartElement(name.getLocalPart());
+         while (namespaces.hasNext())
+            add((Namespace) namespaces.next());
 
-      // Attributes
-      Iterator attributes = startElement.getAttributes();
+         if (name.getPrefix() != null && !"".equals(name.getPrefix())) {
+            _out.writeStartElement(name.getPrefix(),
+               name.getLocalPart(),
+               name.getNamespaceURI());
+         } else if (name.getNamespaceURI() != null &&
+            !"".equals(name.getNamespaceURI())) {
+            _out.writeStartElement(name.getNamespaceURI(), name.getLocalPart());
+         } else
+            _out.writeStartElement(name.getLocalPart());
 
-      while (attributes.hasNext())
-        add((Attribute) attributes.next());
-    }
-    else
-      throw new XMLStreamException();
-  }
+         // Attributes
+         Iterator attributes = startElement.getAttributes();
 
-  public void add(XMLEventReader reader) throws XMLStreamException
-  {
-    while (reader.hasNext())
-      add(reader.nextEvent());
-  }
+         while (attributes.hasNext())
+            add((Attribute) attributes.next());
+      } else
+         throw new XMLStreamException();
+   }
 
-  public void close() throws XMLStreamException
-  {
-    _out.close();
-  }
+   public void add(XMLEventReader reader) throws XMLStreamException {
+      while (reader.hasNext())
+         add(reader.nextEvent());
+   }
 
-  public void flush() throws XMLStreamException
-  {
-    _out.flush();
-  }
+   public void close() throws XMLStreamException {
+      _out.close();
+   }
 
-  public NamespaceContext getNamespaceContext()
-  {
-    return _out.getNamespaceContext();
-  }
+   public void flush() throws XMLStreamException {
+      _out.flush();
+   }
 
-  public String getPrefix(String uri) throws XMLStreamException
-  {
-    return _out.getPrefix(uri);
-  }
+   public NamespaceContext getNamespaceContext() {
+      return _out.getNamespaceContext();
+   }
 
-  public void setDefaultNamespace(String uri) throws XMLStreamException
-  {
-    _out.setDefaultNamespace(uri);
-  }
+   public String getPrefix(String uri) throws XMLStreamException {
+      return _out.getPrefix(uri);
+   }
 
-  public void setNamespaceContext(NamespaceContext context)
-    throws XMLStreamException
-  {
-    _out.setNamespaceContext(context);
-  }
+   public void setDefaultNamespace(String uri) throws XMLStreamException {
+      _out.setDefaultNamespace(uri);
+   }
 
-  public void setPrefix(String prefix, String uri) throws XMLStreamException
-  {
-    _out.setPrefix(prefix, uri);
-  }
+   public void setNamespaceContext(NamespaceContext context)
+      throws XMLStreamException {
+      _out.setNamespaceContext(context);
+   }
+
+   public void setPrefix(String prefix, String uri) throws XMLStreamException {
+      _out.setPrefix(prefix, uri);
+   }
 
 }

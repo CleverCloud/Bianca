@@ -38,41 +38,37 @@ import org.xml.sax.SAXParseException;
  * JARV verifier implementation
  */
 public class VerifierImpl extends Verifier {
-  private SchemaImpl _schema;
-  private ErrorHandler _errorHandler;
-  
-  VerifierImpl(SchemaImpl schema)
-  {
-    _schema = schema;
-  }
+   private SchemaImpl _schema;
+   private ErrorHandler _errorHandler;
 
-  /**
-   * Set the error handler.
-   */
-  public void setErrorHandler(ErrorHandler handler)
-  {
-    _errorHandler = handler;
-  }
+   VerifierImpl(SchemaImpl schema) {
+      _schema = schema;
+   }
 
-  /**
-   * Creates a verifier handler from the verifier.
-   */
-  public VerifierHandler getVerifierHandler()
-  {
-    return new VerifierHandlerImpl(_schema, this);
-  }
+   /**
+    * Set the error handler.
+    */
+   public void setErrorHandler(ErrorHandler handler) {
+      _errorHandler = handler;
+   }
 
-  /**
-   * Sends an error.
-   */
-  public void error(SAXParseException e)
-    throws SAXException
-  {
-    ErrorHandler handler = _errorHandler;
+   /**
+    * Creates a verifier handler from the verifier.
+    */
+   public VerifierHandler getVerifierHandler() {
+      return new VerifierHandlerImpl(_schema, this);
+   }
 
-    if (handler != null)
-      handler.error(e);
-    else
-      throw e;
-  }
+   /**
+    * Sends an error.
+    */
+   public void error(SAXParseException e)
+      throws SAXException {
+      ErrorHandler handler = _errorHandler;
+
+      if (handler != null)
+         handler.error(e);
+      else
+         throw e;
+   }
 }

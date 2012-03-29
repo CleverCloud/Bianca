@@ -30,7 +30,6 @@
  */
 package com.clevercloud.bianca.lib.gettext;
 
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.lib.gettext.expr.PluralExpr;
@@ -59,14 +58,14 @@ class MOFileParser extends GettextParser {
    private int _offsetTranslation;
 
    MOFileParser(Env env, Path path)
-           throws IOException {
+      throws IOException {
       _env = env;
 
       init(path);
    }
 
    private void init(Path path)
-           throws IOException {
+      throws IOException {
       _in = path.openRead();
 
       _isLittleEndian = true;
@@ -98,7 +97,7 @@ class MOFileParser extends GettextParser {
     * Returns the gettext metadata.
     */
    private StringValue getMetadata()
-           throws IOException {
+      throws IOException {
       _in.setPosition(_offsetTranslation);
       int length = readInt();
       _in.setPosition(readInt());
@@ -113,7 +112,7 @@ class MOFileParser extends GettextParser {
     */
    @Override
    HashMap<StringValue, ArrayList<StringValue>> readTranslations()
-           throws IOException {
+      throws IOException {
       int[] originalOffsets = new int[_numberOfStrings];
       int[] translatedOffsets = new int[_numberOfStrings];
       int[] translatedLengths = new int[_numberOfStrings];
@@ -156,7 +155,7 @@ class MOFileParser extends GettextParser {
       }
 
       HashMap<StringValue, ArrayList<StringValue>> map =
-              new HashMap<StringValue, ArrayList<StringValue>>();
+         new HashMap<StringValue, ArrayList<StringValue>>();
 
       // Read translated strings into the HashMap
       for (int i = 0; i < _numberOfStrings; i++) {
@@ -172,7 +171,7 @@ class MOFileParser extends GettextParser {
     * Reads in a string until NULL or EOF encountered.
     */
    private StringValue readOriginalString()
-           throws IOException {
+      throws IOException {
       StringValue sb = new StringValue();
 
       for (int ch = _in.read(); ch > 0; ch = _in.read()) {
@@ -186,7 +185,7 @@ class MOFileParser extends GettextParser {
     * Reads in translated plurals forms that are separated by NULL.
     */
    private ArrayList<StringValue> readPluralForms(int length)
-           throws IOException {
+      throws IOException {
       ArrayList<StringValue> list = new ArrayList<StringValue>();
       StringValue sb = new StringValue();
 
@@ -208,7 +207,7 @@ class MOFileParser extends GettextParser {
    }
 
    private int readInt()
-           throws IOException {
+      throws IOException {
       int len = _in.read(_tmpBuf);
 
       if (len != 4) {
@@ -217,14 +216,14 @@ class MOFileParser extends GettextParser {
 
       if (_isLittleEndian) {
          return (_tmpBuf[0] & 0xff)
-                 | (_tmpBuf[1] & 0xff) << 8
-                 | (_tmpBuf[2] & 0xff) << 16
-                 | _tmpBuf[3] << 24;
+            | (_tmpBuf[1] & 0xff) << 8
+            | (_tmpBuf[2] & 0xff) << 16
+            | _tmpBuf[3] << 24;
       } else {
          return _tmpBuf[0] << 24
-                 | (_tmpBuf[1] & 0xff) << 16
-                 | (_tmpBuf[2] & 0xff) << 8
-                 | (_tmpBuf[3] & 0xff);
+            | (_tmpBuf[1] & 0xff) << 16
+            | (_tmpBuf[2] & 0xff) << 8
+            | (_tmpBuf[3] & 0xff);
       }
    }
 

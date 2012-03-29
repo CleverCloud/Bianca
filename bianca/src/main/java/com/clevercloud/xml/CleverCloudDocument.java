@@ -40,21 +40,23 @@ import java.util.HashMap;
  * CleverCloudDocument extends the DOM, providing namespaces
  */
 public interface CleverCloudDocument extends Document, CleverCloudNode {
-  public final static String DEPENDS = "clevercloud.depends";
-  
-  /**
-   * Creates a namespace-aware element
-   */
-  public Element createElement(String prefix, String local, String url);
-  /**
-   * Creates a namespace-aware attribute
-   */
-  public Attr createAttribute(String prefix, String local, String url);
+   public final static String DEPENDS = "clevercloud.depends";
 
-  public Text createUnescapedTextNode(String text);
+   /**
+    * Creates a namespace-aware element
+    */
+   public Element createElement(String prefix, String local, String url);
 
-  public HashMap getNamespaces();
+   /**
+    * Creates a namespace-aware attribute
+    */
+   public Attr createAttribute(String prefix, String local, String url);
 
-  public Object getProperty(String name);
-  public void setProperty(String name, Object value);
+   public Text createUnescapedTextNode(String text);
+
+   public HashMap getNamespaces();
+
+   public Object getProperty(String name);
+
+   public void setProperty(String name, Object value);
 }

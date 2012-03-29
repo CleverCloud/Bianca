@@ -33,13 +33,13 @@ import com.clevercloud.bianca.BiancaRuntimeException;
 import com.clevercloud.bianca.program.JavaClassDef;
 
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Represents a marshalled Map argument.
  */
 public class JavaMapAdapter
-        extends JavaAdapter {
+   extends JavaAdapter {
 
    private static final Logger log = Logger.getLogger(JavaMapAdapter.class.getName());
    private Map<Object, Object> _map;
@@ -80,7 +80,7 @@ public class JavaMapAdapter
          return _map;
       } else {
          env.warning(L.l("Can't assign {0} to {1}",
-                 _map.getClass().getName(), type.getName()));
+            _map.getClass().getName(), type.getName()));
 
          return null;
       }
@@ -191,8 +191,7 @@ public class JavaMapAdapter
    /**
     * Returns the corresponding valeu if this array contains the given key
     *
-    * @param key  the key to search for in the array
-    *
+    * @param key the key to search for in the array
     * @return the value if it is found in the array, NULL otherwise
     */
    @Override
@@ -264,7 +263,7 @@ public class JavaMapAdapter
    }
 
    public class MapSet
-           extends AbstractSet<Map.Entry<Value, Value>> {
+      extends AbstractSet<Map.Entry<Value, Value>> {
 
       MapSet() {
       }
@@ -281,7 +280,7 @@ public class JavaMapAdapter
    }
 
    public class MapIterator
-           implements Iterator<Map.Entry<Value, Value>> {
+      implements Iterator<Map.Entry<Value, Value>> {
 
       private Iterator<Map.Entry<Object, Object>> _iterator;
 
@@ -311,7 +310,7 @@ public class JavaMapAdapter
    }
 
    public class ValueCollection
-           extends AbstractCollection<Value> {
+      extends AbstractCollection<Value> {
 
       ValueCollection() {
       }
@@ -328,7 +327,7 @@ public class JavaMapAdapter
    }
 
    public class ValueIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private Iterator _iterator;
 
@@ -353,7 +352,7 @@ public class JavaMapAdapter
    }
 
    public class KeyIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private Iterator _iterator;
 

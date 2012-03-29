@@ -46,14 +46,14 @@ abstract public class Callback extends Value implements Callable {
     *
     * @param env
     * @param array from which a1 came from
-    * @param key index of a1 in the array
-    * @param a1 need to make a reference to this variable
+    * @param key   index of a1 in the array
+    * @param a1    need to make a reference to this variable
     */
    @Override
    final public Value callArray(Env env,
-           ArrayValue array,
-           Value key,
-           Value a1) {
+                                ArrayValue array,
+                                Value key,
+                                Value a1) {
       // php/1740
 
       Value result;
@@ -84,15 +84,15 @@ abstract public class Callback extends Value implements Callable {
     *
     * @param env
     * @param array from which a1 came from
-    * @param key index of a1 in the array
-    * @param a1 need to make a reference to this variable
+    * @param key   index of a1 in the array
+    * @param a1    need to make a reference to this variable
     */
    @Override
    final public Value callArray(Env env,
-           ArrayValue array,
-           Value key,
-           Value a1,
-           Value a2) {
+                                ArrayValue array,
+                                Value key,
+                                Value a1,
+                                Value a2) {
       // php/1740
 
       Value result;
@@ -123,16 +123,16 @@ abstract public class Callback extends Value implements Callable {
     *
     * @param env
     * @param array from which a1 came from
-    * @param key index of a1 in the array
-    * @param a1 need to make a reference to this variable
+    * @param key   index of a1 in the array
+    * @param a1    need to make a reference to this variable
     */
    @Override
    final public Value callArray(Env env,
-           ArrayValue array,
-           Value key,
-           Value a1,
-           Value a2,
-           Value a3) {
+                                ArrayValue array,
+                                Value key,
+                                Value a1,
+                                Value a2,
+                                Value a3) {
       // php/1740
 
       Value result;
@@ -165,7 +165,6 @@ abstract public class Callback extends Value implements Callable {
    abstract public Value call(Env env, Value[] args);
 
    /**
-    *
     * @return true if this is an invalid callback reference
     */
    @Override
@@ -173,14 +172,12 @@ abstract public class Callback extends Value implements Callable {
 
    /**
     * Returns the name of the callback.
-    *
     */
    @Override
    abstract public String getCallbackName();
 
    /**
     * Returns true if this callback is implemented internally (i.e. in Java).
-    *
     */
    abstract public boolean isInternal(Env env);
 

@@ -32,7 +32,6 @@ package com.clevercloud.bianca.lib.i18n;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 
 abstract public class Decoder {
 
@@ -44,10 +43,10 @@ abstract public class Decoder {
 
    public static Decoder create(String charset) {
       if (charset.equalsIgnoreCase("utf-8")
-              || charset.equalsIgnoreCase("utf-8")) {
+         || charset.equalsIgnoreCase("utf-8")) {
          return new Utf8Decoder();
       } else if (charset.equalsIgnoreCase("big5")
-              || charset.equalsIgnoreCase("big-5")) {
+         || charset.equalsIgnoreCase("big-5")) {
          return new Big5Decoder(charset);
       } else {
          return new GenericDecoder(charset);

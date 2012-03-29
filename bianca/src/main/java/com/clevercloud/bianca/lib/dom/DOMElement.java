@@ -31,15 +31,14 @@ package com.clevercloud.bianca.lib.dom;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.Env;
-
 import org.w3c.dom.Element;
 
 public class DOMElement extends DOMNode<Element> {
 
    public static DOMElement __construct(Env env,
-           String name,
-           @Optional String textContent,
-           @Optional String namespace) {
+                                        String name,
+                                        @Optional String textContent,
+                                        @Optional String namespace) {
       DOMElement element;
 
       if (namespace != null && namespace.length() > 0) {
@@ -61,7 +60,7 @@ public class DOMElement extends DOMNode<Element> {
 
    @Override
    public String getNodeValue()
-           throws DOMException {
+      throws DOMException {
       // php/1zd1
       return getTextContent();
    }
@@ -71,7 +70,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public String getAttributeNS(String namespaceURI, String localName)
-           throws DOMException {
+      throws DOMException {
       try {
          return _delegate.getAttributeNS(namespaceURI, localName);
       } catch (org.w3c.dom.DOMException ex) {
@@ -84,7 +83,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public DOMAttr getAttributeNodeNS(String namespaceURI, String localName)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.getAttributeNodeNS(namespaceURI, localName));
       } catch (org.w3c.dom.DOMException ex) {
@@ -97,7 +96,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public DOMNodeList getElementsByTagNameNS(
-           String namespaceURI, String localName) throws DOMException {
+      String namespaceURI, String localName) throws DOMException {
       try {
          return wrap(_delegate.getElementsByTagNameNS(namespaceURI, localName));
       } catch (org.w3c.dom.DOMException ex) {
@@ -118,7 +117,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public boolean hasAttributeNS(String namespaceURI, String localName)
-           throws DOMException {
+      throws DOMException {
       try {
          return _delegate.hasAttributeNS(namespaceURI, localName);
       } catch (org.w3c.dom.DOMException ex) {
@@ -127,7 +126,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public void removeAttribute(String name)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.removeAttribute(name);
       } catch (org.w3c.dom.DOMException ex) {
@@ -136,7 +135,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public void removeAttributeNS(String namespaceURI, String localName)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.removeAttributeNS(namespaceURI, localName);
       } catch (org.w3c.dom.DOMException ex) {
@@ -145,7 +144,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public DOMAttr removeAttributeNode(DOMAttr oldAttr)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.removeAttributeNode(oldAttr._delegate));
       } catch (org.w3c.dom.DOMException ex) {
@@ -154,7 +153,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public void setAttribute(String name, String value)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setAttribute(name, value);
       } catch (org.w3c.dom.DOMException ex) {
@@ -163,9 +162,9 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public void setAttributeNS(String namespaceURI,
-           String qualifiedName,
-           String value)
-           throws DOMException {
+                              String qualifiedName,
+                              String value)
+      throws DOMException {
       try {
          _delegate.setAttributeNS(namespaceURI, qualifiedName, value);
       } catch (org.w3c.dom.DOMException ex) {
@@ -174,7 +173,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public DOMAttr setAttributeNode(DOMAttr newAttr)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.setAttributeNode(newAttr._delegate));
       } catch (org.w3c.dom.DOMException ex) {
@@ -183,7 +182,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public DOMAttr setAttributeNodeNS(DOMAttr newAttr)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.setAttributeNodeNS(newAttr._delegate));
       } catch (org.w3c.dom.DOMException ex) {
@@ -192,7 +191,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public void setIdAttribute(String name, boolean isId)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setIdAttribute(name, isId);
       } catch (org.w3c.dom.DOMException ex) {
@@ -201,9 +200,9 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public void setIdAttributeNS(String namespaceURI,
-           String localName,
-           boolean isId)
-           throws DOMException {
+                                String localName,
+                                boolean isId)
+      throws DOMException {
       try {
          _delegate.setIdAttributeNS(namespaceURI, localName, isId);
       } catch (org.w3c.dom.DOMException ex) {
@@ -212,7 +211,7 @@ public class DOMElement extends DOMNode<Element> {
    }
 
    public void setIdAttributeNode(DOMAttr idAttr, boolean isId)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setIdAttributeNode(idAttr._delegate, isId);
       } catch (org.w3c.dom.DOMException ex) {
@@ -222,7 +221,7 @@ public class DOMElement extends DOMNode<Element> {
 
    @Override
    public void setNodeValue(String nodeValue)
-           throws DOMException {
+      throws DOMException {
       // php/1zd1
 
       if (nodeValue == null) {

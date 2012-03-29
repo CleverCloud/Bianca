@@ -35,62 +35,56 @@ import com.clevercloud.relaxng.RelaxException;
  * Relax element pattern
  */
 public class ExcludeNamePattern extends NameClassPattern {
-  private NameClassPattern _pattern;
+   private NameClassPattern _pattern;
 
-  /**
-   * Creates a new choice pattern.
-   */
-  public ExcludeNamePattern()
-  {
-  }
+   /**
+    * Creates a new choice pattern.
+    */
+   public ExcludeNamePattern() {
+   }
 
-  /**
-   * Returns the child.
-   */
-  public NameClassPattern getNameChild()
-  {
-    return _pattern;
-  }
-  
-  /**
-   * Adds an element.
-   */
-  public void addNameChild(NameClassPattern child)
-    throws RelaxException
-  {
-    if (_pattern != null)
-      throw new RelaxException(L.l("<exclude> must have a single child."));
+   /**
+    * Returns the child.
+    */
+   public NameClassPattern getNameChild() {
+      return _pattern;
+   }
 
-    _pattern = child;
-  }
+   /**
+    * Adds an element.
+    */
+   public void addNameChild(NameClassPattern child)
+      throws RelaxException {
+      if (_pattern != null)
+         throw new RelaxException(L.l("<exclude> must have a single child."));
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "exclude";
-  }
+      _pattern = child;
+   }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "exclude";
+   }
 
-    if (! (o instanceof ExcludeNamePattern))
-      return false;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    ExcludeNamePattern exclude = (ExcludeNamePattern) o;
+      if (!(o instanceof ExcludeNamePattern))
+         return false;
 
-    return _pattern.equals(exclude._pattern);
-  }
+      ExcludeNamePattern exclude = (ExcludeNamePattern) o;
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "ExcludeNamePattern" + _pattern;
-  }
+      return _pattern.equals(exclude._pattern);
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "ExcludeNamePattern" + _pattern;
+   }
 }
 

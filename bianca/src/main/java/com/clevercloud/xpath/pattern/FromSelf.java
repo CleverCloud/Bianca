@@ -32,88 +32,77 @@ package com.clevercloud.xpath.pattern;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
  * The self axis matches the current node.
  */
 public class FromSelf extends Axis {
-  public FromSelf(AbstractPattern parent)
-  {
-    super(parent);
-  }
-  /**
-   * The self axis always matches.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return _parent == null || _parent.match(node, env);
-  }
+   public FromSelf(AbstractPattern parent) {
+      super(parent);
+   }
 
-  /**
-   * Only one node in the self axis.
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-  {
-    return 1;
-  }
+   /**
+    * The self axis always matches.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      return _parent == null || _parent.match(node, env);
+   }
 
-  /**
-   * Only one node in the self axis.
-   */
-  public int count(Node node, Env env, AbstractPattern pattern)
-  {
-    return 1;
-  }
+   /**
+    * Only one node in the self axis.
+    */
+   public int position(Node node, Env env, AbstractPattern pattern) {
+      return 1;
+   }
 
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    return node;
-  }
+   /**
+    * Only one node in the self axis.
+    */
+   public int count(Node node, Env env, AbstractPattern pattern) {
+      return 1;
+   }
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param lastNode the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node lastNode)
-  {
-    return null;
-  }
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      return node;
+   }
 
-  /**
-   * Returns true if the two patterns are equal.
-   */
-  public boolean equals(Object b)
-  {
-    if (! (b instanceof FromSelf))
-      return false;
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node     the current node
+    * @param lastNode the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node lastNode) {
+      return null;
+   }
 
-    FromSelf bPattern = (FromSelf) b;
-    
-    return (_parent == bPattern._parent ||
-            (_parent != null && _parent.equals(bPattern._parent)));
-  }
+   /**
+    * Returns true if the two patterns are equal.
+    */
+   public boolean equals(Object b) {
+      if (!(b instanceof FromSelf))
+         return false;
 
-  public String toString()
-  {
-    return getPrefix() + "self::";
-  }
+      FromSelf bPattern = (FromSelf) b;
+
+      return (_parent == bPattern._parent ||
+         (_parent != null && _parent.equals(bPattern._parent)));
+   }
+
+   public String toString() {
+      return getPrefix() + "self::";
+   }
 }

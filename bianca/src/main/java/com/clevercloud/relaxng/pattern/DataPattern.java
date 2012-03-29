@@ -37,59 +37,54 @@ import com.clevercloud.relaxng.program.Item;
  * Relax empty pattern
  */
 public class DataPattern extends Pattern {
-  String _type;
-  /**
-   * Creates a new empty pattern.
-   */
-  public DataPattern(String type)
-  {
-    _type = type;
-  }
+   String _type;
 
-  /**
-   * Creates the program (somewhat bogus)
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    return new DataItem(_type);
-  }
+   /**
+    * Creates a new empty pattern.
+    */
+   public DataPattern(String type) {
+      _type = type;
+   }
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return "data";
-  }
+   /**
+    * Creates the program (somewhat bogus)
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      return new DataItem(_type);
+   }
 
-  /**
-   * Returns true if it contains a data element.
-   */
-  public boolean hasData()
-  {
-    return true;
-  }
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return "data";
+   }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
+   /**
+    * Returns true if it contains a data element.
+    */
+   public boolean hasData() {
       return true;
+   }
 
-    if (! (o instanceof DataPattern))
-      return false;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    DataPattern pattern = (DataPattern) o;
+      if (!(o instanceof DataPattern))
+         return false;
 
-    return _type.equals(pattern._type);
-  }
+      DataPattern pattern = (DataPattern) o;
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "DataPattern[" + _type + "]";
-  }
+      return _type.equals(pattern._type);
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "DataPattern[" + _type + "]";
+   }
 }
 

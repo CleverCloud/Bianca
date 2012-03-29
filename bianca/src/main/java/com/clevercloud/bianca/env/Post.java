@@ -30,16 +30,11 @@
  */
 package com.clevercloud.bianca.env;
 
+import com.clevercloud.bianca.lib.file.FileModule;
 import com.clevercloud.bianca.lib.string.StringModule;
 import com.clevercloud.bianca.lib.string.StringUtility;
-import com.clevercloud.bianca.lib.file.FileModule;
 import com.clevercloud.util.L10N;
-import com.clevercloud.vfs.FilePath;
-import com.clevercloud.vfs.MultipartStream;
-import com.clevercloud.vfs.Path;
-import com.clevercloud.vfs.ReadStream;
-import com.clevercloud.vfs.VfsStream;
-import com.clevercloud.vfs.WriteStream;
+import com.clevercloud.vfs.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -57,11 +52,11 @@ public class Post {
    private static StringValue MAX_FILE_SIZE = new StringValue("MAX_FILE_SIZE");
 
    static void fillPost(Env env,
-           ArrayValue postArray,
-           ArrayValue files,
-           HttpServletRequest request,
-           boolean addSlashesToValues,
-           boolean isAllowUploads) {
+                        ArrayValue postArray,
+                        ArrayValue files,
+                        HttpServletRequest request,
+                        boolean addSlashesToValues,
+                        boolean isAllowUploads) {
       InputStream is = null;
 
       try {
@@ -71,19 +66,19 @@ public class Post {
          is = request.getInputStream();
 
          fillPost(env,
-                 postArray,
-                 files,
-                 is,
-                 contentType,
-                 encoding,
-                 Integer.MAX_VALUE,
-                 addSlashesToValues,
-                 isAllowUploads);
+            postArray,
+            files,
+            is,
+            contentType,
+            encoding,
+            Integer.MAX_VALUE,
+            addSlashesToValues,
+            isAllowUploads);
 
          if (postArray.getSize() == 0) {
             // needs to be last or else this function will consume the inputstream
             putRequestMap(env, postArray, files, request,
-                    addSlashesToValues, isAllowUploads);
+               addSlashesToValues, isAllowUploads);
          }
 
       } catch (IOException e) {
@@ -99,14 +94,14 @@ public class Post {
    }
 
    static void fillPost(Env env,
-           ArrayValue postArray,
-           ArrayValue files,
-           InputStream is,
-           String contentType,
-           String encoding,
-           int contentLength,
-           boolean addSlashesToValues,
-           boolean isAllowUploads) {
+                        ArrayValue postArray,
+                        ArrayValue files,
+                        InputStream is,
+                        String contentType,
+                        String encoding,
+                        int contentLength,
+                        boolean addSlashesToValues,
+                        boolean isAllowUploads) {
       long maxPostSize = env.getIniBytes("post_max_size", 0);
 
       try {
@@ -115,7 +110,7 @@ public class Post {
          }
 
          if (contentType != null
-                 && contentType.startsWith("multipart/form-data")) {
+            && contentType.startsWith("multipart/form-data")) {
 
             String boundary = getBoundary(contentType);
 
@@ -134,14 +129,14 @@ public class Post {
             }
 
             readMultipartStream(env, ms, postArray, files,
-                    addSlashesToValues, isAllowUploads);
+               addSlashesToValues, isAllowUploads);
 
             rs.close();
 
             if (rs.getLength() > maxPostSize) {
                env.warning(L.l("POST length of {0} exceeds max size of {1}",
-                       rs.getLength(),
-                       maxPostSize));
+                  rs.getLength(),
+                  maxPostSize));
 
                postArray.clear();
                files.clear();
@@ -155,15 +150,15 @@ public class Post {
 
             if (bb.length() > maxPostSize) {
                env.warning(L.l("POST length of {0} exceeds max size of {1}",
-                       bb.length(),
-                       maxPostSize));
+                  bb.length(),
+                  maxPostSize));
                return;
             }
 
             env.setInputData(bb);
 
             if (contentType != null
-                    && contentType.startsWith("application/x-www-form-urlencoded")) {
+               && contentType.startsWith("application/x-www-form-urlencoded")) {
                StringUtility.parseStr(env, bb, postArray, false, encoding);
             }
          }
@@ -175,12 +170,12 @@ public class Post {
    }
 
    private static void readMultipartStream(Env env,
-           MultipartStream ms,
-           ArrayValue postArray,
-           ArrayValue files,
-           boolean addSlashesToValues,
-           boolean isAllowUploads)
-           throws IOException {
+                                           MultipartStream ms,
+                                           ArrayValue postArray,
+                                           ArrayValue files,
+                                           boolean addSlashesToValues,
+                                           boolean isAllowUploads)
+      throws IOException {
       ReadStream is;
 
       while ((is = ms.openRead()) != null) {
@@ -282,23 +277,23 @@ public class Post {
 
             if (name != null) {
                addFormFile(env, files, name, filename, tmpName,
-                       mimeType, tmpLength, addSlashesToValues, maxFileSize);
+                  mimeType, tmpLength, addSlashesToValues, maxFileSize);
             } else {
                addFormFile(env, files, filename, tmpName,
-                       mimeType, tmpLength, addSlashesToValues, maxFileSize);
+                  mimeType, tmpLength, addSlashesToValues, maxFileSize);
             }
          }
       }
    }
 
    private static void addFormFile(Env env,
-           ArrayValue files,
-           String fileName,
-           String tmpName,
-           String mimeType,
-           long fileLength,
-           boolean addSlashesToValues,
-           long maxFileSize) {
+                                   ArrayValue files,
+                                   String fileName,
+                                   String tmpName,
+                                   String mimeType,
+                                   long fileLength,
+                                   boolean addSlashesToValues,
+                                   long maxFileSize) {
       ArrayValue entry = new ArrayValueImpl();
       int error;
 
@@ -317,7 +312,7 @@ public class Post {
       }
 
       addFormValue(env, entry, "name", env.createString(fileName),
-              null, addSlashesToValues);
+         null, addSlashesToValues);
 
       long size;
 
@@ -331,32 +326,32 @@ public class Post {
 
       if (mimeType != null) {
          addFormValue(env, entry, "type", env.createString(mimeType),
-                 null, addSlashesToValues);
+            null, addSlashesToValues);
 
          entry.put("type", mimeType);
       }
 
       addFormValue(env, entry, "tmp_name", env.createString(tmpName),
-              null, addSlashesToValues);
+         null, addSlashesToValues);
 
       addFormValue(env, entry, "error", LongValue.create(error),
-              null, addSlashesToValues);
+         null, addSlashesToValues);
 
       addFormValue(env, entry, "size", LongValue.create(size),
-              null, addSlashesToValues);
+         null, addSlashesToValues);
 
       addFormValue(env, files, null, entry, null, addSlashesToValues);
    }
 
    private static void addFormFile(Env env,
-           ArrayValue files,
-           String name,
-           String fileName,
-           String tmpName,
-           String mimeType,
-           long fileLength,
-           boolean addSlashesToValues,
-           long maxFileSize) {
+                                   ArrayValue files,
+                                   String name,
+                                   String fileName,
+                                   String tmpName,
+                                   String mimeType,
+                                   long fileLength,
+                                   boolean addSlashesToValues,
+                                   long maxFileSize) {
       int p = name.indexOf('[');
       String index = "";
       if (p >= 0) {
@@ -393,7 +388,7 @@ public class Post {
       }
 
       addFormValue(env, entry, "name" + index, env.createString(fileName),
-              null, addSlashesToValues);
+         null, addSlashesToValues);
 
       long size;
 
@@ -408,26 +403,26 @@ public class Post {
 
       if (mimeType != null) {
          addFormValue(env, entry, "type" + index, env.createString(mimeType),
-                 null, addSlashesToValues);
+            null, addSlashesToValues);
       }
 
       addFormValue(env, entry, "tmp_name" + index, env.createString(tmpName),
-              null, addSlashesToValues);
+         null, addSlashesToValues);
 
       addFormValue(env, entry, "error" + index, LongValue.create(error),
-              null, addSlashesToValues);
+         null, addSlashesToValues);
 
       addFormValue(env, entry, "size" + index, LongValue.create(size),
-              null, addSlashesToValues);
+         null, addSlashesToValues);
 
       addFormValue(env, files, name, entry, null, addSlashesToValues);
    }
 
    public static void addFormValue(Env env,
-           ArrayValue array,
-           String key,
-           String[] formValueList,
-           boolean addSlashesToValues) {
+                                   ArrayValue array,
+                                   String key,
+                                   String[] formValueList,
+                                   boolean addSlashesToValues) {
       // php/081b
       String formValue = formValueList[formValueList.length - 1];
       Value value;
@@ -439,17 +434,17 @@ public class Post {
       }
 
       addFormValue(env, array, key,
-              value,
-              formValueList,
-              addSlashesToValues);
+         value,
+         formValueList,
+         addSlashesToValues);
    }
 
    public static void addFormValue(Env env,
-           ArrayValue array,
-           String key,
-           Value formValue,
-           String[] formValueList,
-           boolean addSlashesToValues) {
+                                   ArrayValue array,
+                                   String key,
+                                   Value formValue,
+                                   String[] formValueList,
+                                   boolean addSlashesToValues) {
       int p = -1;
       int q = -1;
 
@@ -536,9 +531,9 @@ public class Post {
             }
          } else if ('0' <= index.charAt(0) && index.charAt(0) <= '9') {
             put(array,
-                    LongValue.create(StringValue.toLong(index)),
-                    formValue,
-                    addSlashesToValues);
+               LongValue.create(StringValue.toLong(index)),
+               formValue,
+               addSlashesToValues);
          } else {
             put(array, env.createString(index), formValue, addSlashesToValues);
          }
@@ -553,9 +548,9 @@ public class Post {
    }
 
    private static void put(ArrayValue array,
-           Value key,
-           Value value,
-           boolean addSlashes) {
+                           Value key,
+                           Value value,
+                           boolean addSlashes) {
       if (addSlashes && value.isString()) {
          value = StringModule.addslashes(value.toStringValue());
       }
@@ -585,8 +580,8 @@ public class Post {
          StringBuilder sb = new StringBuilder();
 
          for (i++;
-                 i < length && (ch = contentType.charAt(i)) != '\'';
-                 i++) {
+              i < length && (ch = contentType.charAt(i)) != '\'';
+              i++) {
             sb.append(ch);
          }
 
@@ -603,11 +598,11 @@ public class Post {
          StringBuilder sb = new StringBuilder();
 
          for (/* intentionally left empty */;
-                 i < length
-                 && (ch = contentType.charAt(i)) != ' '
-                 && ch != ';'
-                 && ch != ',';
-                 i++) {
+                                            i < length
+                                               && (ch = contentType.charAt(i)) != ' '
+                                               && ch != ';'
+                                               && ch != ',';
+                                            i++) {
             sb.append(ch);
          }
 
@@ -616,8 +611,8 @@ public class Post {
    }
 
    private static String getAttribute(String attr,
-           String name,
-           boolean addSlashesToValues) {
+                                      String name,
+                                      boolean addSlashesToValues) {
       if (attr == null) {
          return null;
       }
@@ -682,11 +677,11 @@ public class Post {
    }
 
    private static void putRequestMap(Env env,
-           ArrayValue post,
-           ArrayValue files,
-           HttpServletRequest request,
-           boolean addSlashesToValues,
-           boolean isAllowUploads) {
+                                     ArrayValue post,
+                                     ArrayValue files,
+                                     HttpServletRequest request,
+                                     boolean addSlashesToValues,
+                                     boolean isAllowUploads) {
       // this call consumes the inputstream
       Map<String, String[]> map = request.getParameterMap();
 
@@ -721,10 +716,10 @@ public class Post {
                long fileLength = new FilePath(tmpNames[i]).getLength();
 
                addFormFile(env, files, name, fileNames[i], tmpNames[i],
-                       mimeTypes[i],
-                       fileLength,
-                       addSlashesToValues,
-                       maxFileSize);
+                  mimeTypes[i],
+                  fileLength,
+                  addSlashesToValues,
+                  maxFileSize);
             }
          }
       }

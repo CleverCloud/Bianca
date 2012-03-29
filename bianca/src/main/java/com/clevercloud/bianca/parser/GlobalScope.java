@@ -30,10 +30,10 @@
  */
 package com.clevercloud.bianca.parser;
 
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.expr.ExprFactory;
 import com.clevercloud.bianca.program.Function;
 import com.clevercloud.bianca.program.InterpretedClassDef;
-import com.clevercloud.bianca.Location;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -70,8 +70,8 @@ public class GlobalScope extends Scope {
     */
    @Override
    public void addFunction(String name,
-           Function function,
-           boolean isTop) {
+                           Function function,
+                           boolean isTop) {
       if (isTop) {
          _functionMap.put(name.toLowerCase(), function);
       }
@@ -92,11 +92,11 @@ public class GlobalScope extends Scope {
     */
    @Override
    public InterpretedClassDef addClass(Location location,
-           String name,
-           String parentName,
-           ArrayList<String> ifaceList,
-           int index,
-           boolean isTop) {
+                                       String name,
+                                       String parentName,
+                                       ArrayList<String> ifaceList,
+                                       int index,
+                                       boolean isTop) {
       InterpretedClassDef cl = null;
 
       if (isTop) {
@@ -108,8 +108,8 @@ public class GlobalScope extends Scope {
          ifaceList.toArray(ifaceArray);
 
          cl = _exprFactory.createClassDef(location,
-                 name, parentName, ifaceArray,
-                 index);
+            name, parentName, ifaceArray,
+            index);
 
          if (isTop) {
             cl.setTopScope(true);
@@ -122,8 +122,8 @@ public class GlobalScope extends Scope {
 
          // dummy classdef for parsing only
          cl = _exprFactory.createClassDef(location,
-                 name, parentName, new String[0],
-                 index);
+            name, parentName, new String[0],
+            index);
       }
 
       _classList.add(cl);

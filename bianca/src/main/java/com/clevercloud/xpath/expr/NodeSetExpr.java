@@ -35,160 +35,144 @@ import com.clevercloud.xpath.Expr;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.pattern.*;
-
 import org.w3c.dom.Node;
 
 public class NodeSetExpr extends Expr {
-  private AbstractPattern _pattern;
+   private AbstractPattern _pattern;
 
-  NodeSetExpr(AbstractPattern pattern)
-  {
-    _pattern = pattern;
-  }
+   NodeSetExpr(AbstractPattern pattern) {
+      _pattern = pattern;
+   }
 
-  /**
-   * Creates an expr, handling some special cases.
-   */
-  public static Expr create(AbstractPattern pattern)
-  {
-    if (pattern instanceof NodeTypePattern
-        && pattern.getParent() instanceof FromSelf
-        && pattern.toString().equals("."))
-      return new ObjectExpr(SELF, ".");
-    else if (pattern instanceof FromContext
-             && ((FromContext) pattern).getCount() == 0
-             && pattern.getParent() == null)
-      return new ObjectExpr(SELF, ".");
-    else if (pattern instanceof NodePattern
-             && pattern.getParent() instanceof FromAttributes
-             && pattern.getParent().getParent() instanceof FromContext
-             && ((FromContext) pattern.getParent().getParent()).getCount() == 0)
-      return new ObjectExpr(ATTRIBUTE, ((NodePattern) pattern).getNodeName());
-    else
-      return new NodeSetExpr(pattern);
-  }
+   /**
+    * Creates an expr, handling some special cases.
+    */
+   public static Expr create(AbstractPattern pattern) {
+      if (pattern instanceof NodeTypePattern
+         && pattern.getParent() instanceof FromSelf
+         && pattern.toString().equals("."))
+         return new ObjectExpr(SELF, ".");
+      else if (pattern instanceof FromContext
+         && ((FromContext) pattern).getCount() == 0
+         && pattern.getParent() == null)
+         return new ObjectExpr(SELF, ".");
+      else if (pattern instanceof NodePattern
+         && pattern.getParent() instanceof FromAttributes
+         && pattern.getParent().getParent() instanceof FromContext
+         && ((FromContext) pattern.getParent().getParent()).getCount() == 0)
+         return new ObjectExpr(ATTRIBUTE, ((NodePattern) pattern).getNodeName());
+      else
+         return new NodeSetExpr(pattern);
+   }
 
-  /**
-   * Returns the underlying pattern.
-   */
-  public AbstractPattern getPattern()
-  {
-    return _pattern;
-  }
+   /**
+    * Returns the underlying pattern.
+    */
+   public AbstractPattern getPattern() {
+      return _pattern;
+   }
 
-  /**
-   * NodeSetExprs prefer to be node sets.
-   */
-  public boolean isNodeSet()
-  {
-    return true;
-  }
+   /**
+    * NodeSetExprs prefer to be node sets.
+    */
+   public boolean isNodeSet() {
+      return true;
+   }
 
-  /**
-   * Returns the value of the expression as a number.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   */
-  public double evalNumber(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Node value = _pattern.findAny(node, env);
+   /**
+    * Returns the value of the expression as a number.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    */
+   public double evalNumber(Node node, ExprEnvironment env)
+      throws XPathException {
+      Node value = _pattern.findAny(node, env);
 
-    if (value == null)
-      return Double.NaN;
+      if (value == null)
+         return Double.NaN;
 
-    String string = XmlUtil.textValue(value);
+      String string = XmlUtil.textValue(value);
 
-    return stringToNumber(string);
-  }
+      return stringToNumber(string);
+   }
 
-  /**
-   * Returns true if there are any patterns matching the pattern.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   */
-  public boolean evalBoolean(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return _pattern.findAny(node, env) != null;
-  }
+   /**
+    * Returns true if there are any patterns matching the pattern.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    */
+   public boolean evalBoolean(Node node, ExprEnvironment env)
+      throws XPathException {
+      return _pattern.findAny(node, env) != null;
+   }
 
-  /**
-   * Returns the value of the node set expression as a string.
-   * The value is the text value of the first node.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return the combined text value of the node.
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Node value = _pattern.findAny(node, env);
-    
-    if (value == null)
-      return "";
-    else
-      return XmlUtil.textValue(value);
-  }
+   /**
+    * Returns the value of the node set expression as a string.
+    * The value is the text value of the first node.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return the combined text value of the node.
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      Node value = _pattern.findAny(node, env);
 
-  /**
-   * Evaluate a node-set object, returning an ArrayList of the node set.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return an array list of the nodes
-   */
-  public Object evalObject(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    NodeListImpl list = new NodeListImpl();
+      if (value == null)
+         return "";
+      else
+         return XmlUtil.textValue(value);
+   }
 
-    NodeIterator iter = _pattern.select(node, env);
+   /**
+    * Evaluate a node-set object, returning an ArrayList of the node set.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return an array list of the nodes
+    */
+   public Object evalObject(Node node, ExprEnvironment env)
+      throws XPathException {
+      NodeListImpl list = new NodeListImpl();
 
-    Node value = null;
-    while ((value = iter.nextNode()) != null)
-      list.add(value);
+      NodeIterator iter = _pattern.select(node, env);
 
-    return list;
-  }
+      Node value = null;
+      while ((value = iter.nextNode()) != null)
+         list.add(value);
 
-  /**
-   * Evaluate a node-set object, returning an iterator of the node set.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return an iterator of the nodes
-   */
-  public NodeIterator evalNodeSet(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return _pattern.select(node, env);
-  }
-  
-  /**
-   * Convert from an expression to a pattern.
-   */
-  protected AbstractPattern toNodeList()
-  {
-    return _pattern;
-  }
+      return list;
+   }
 
-  public boolean equals(Object b)
-  {
-    if (! (b instanceof NodeSetExpr))
-      return false;
+   /**
+    * Evaluate a node-set object, returning an iterator of the node set.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return an iterator of the nodes
+    */
+   public NodeIterator evalNodeSet(Node node, ExprEnvironment env)
+      throws XPathException {
+      return _pattern.select(node, env);
+   }
 
-    return _pattern.equals(((NodeSetExpr) b)._pattern);
-  }
+   /**
+    * Convert from an expression to a pattern.
+    */
+   protected AbstractPattern toNodeList() {
+      return _pattern;
+   }
 
-  public String toString()
-  {
-    return _pattern.toString();
-  }
+   public boolean equals(Object b) {
+      if (!(b instanceof NodeSetExpr))
+         return false;
+
+      return _pattern.equals(((NodeSetExpr) b)._pattern);
+   }
+
+   public String toString() {
+      return _pattern.toString();
+   }
 }

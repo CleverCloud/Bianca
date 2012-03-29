@@ -30,33 +30,34 @@
 
 package com.clevercloud.util;
 
-import java.util.logging.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * convenience methods for io
  */
 public class IoUtil {
-  private static final Logger log
-    = Logger.getLogger(IoUtil.class.getName());
+   private static final Logger log
+      = Logger.getLogger(IoUtil.class.getName());
 
-  public static void close(InputStream is)
-  {
-    try {
-      if (is != null)
-        is.close();
-    } catch (IOException e) {
-      log.log(Level.FINER, e.toString(), e);
-    }
-  }
+   public static void close(InputStream is) {
+      try {
+         if (is != null)
+            is.close();
+      } catch (IOException e) {
+         log.log(Level.FINER, e.toString(), e);
+      }
+   }
 
-  public static void close(OutputStream os)
-  {
-    try {
-      if (os != null)
-        os.close();
-    } catch (IOException e) {
-      log.log(Level.FINER, e.toString(), e);
-    }
-  }
+   public static void close(OutputStream os) {
+      try {
+         if (os != null)
+            os.close();
+      } catch (IOException e) {
+         log.log(Level.FINER, e.toString(), e);
+      }
+   }
 }

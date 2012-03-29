@@ -34,12 +34,7 @@ import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.annotation.NotNull;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.Reference;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 
@@ -212,18 +207,17 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    * @see boolean Xml.xml_parse
-    *
     * @param parser
     * @param data
     * @param isFinal
     * @return false if parser == null
     * @throws Exception
+    * @see boolean Xml.xml_parse
     */
    public int xml_parse(Env env,
-           @NotNull Xml parser,
-           StringValue data,
-           @Optional("true") boolean isFinal) {
+                        @NotNull Xml parser,
+                        StringValue data,
+                        @Optional("true") boolean isFinal) {
       if (parser == null) {
          return 0;
       } else if (data.length() == 0) {
@@ -241,7 +235,7 @@ public class XmlModule extends AbstractBiancaModule {
     * returns a new Xml Parser
     */
    public Xml xml_parser_create(Env env,
-           @Optional("'utf-8'") String outputEncoding) {
+                                @Optional("'utf-8'") String outputEncoding) {
       if (outputEncoding == null) {
          outputEncoding = "utf-8";
       }
@@ -259,8 +253,8 @@ public class XmlModule extends AbstractBiancaModule {
     * @return namespace aware Xml Parser
     */
    public Xml xml_parser_create_ns(Env env,
-           @Optional("'utf-8'") String outputEncoding,
-           @Optional("':'") String separator) {
+                                   @Optional("'utf-8'") String outputEncoding,
+                                   @Optional("':'") String separator) {
       if (outputEncoding == null) {
          outputEncoding = "utf-8";
       }
@@ -269,17 +263,15 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    *
-    * @see boolean Xml.xml_parser_set_option
-    *
     * @param parser
     * @param option
     * @param value
     * @return false if parser == null
+    * @see boolean Xml.xml_parser_set_option
     */
    public boolean xml_parser_set_option(@NotNull Xml parser,
-           @NotNull int option,
-           @NotNull Value value) {
+                                        @NotNull int option,
+                                        @NotNull Value value) {
       if (parser == null) {
          return false;
       }
@@ -288,15 +280,14 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    * @see boolean Xml.xml_parser_get_option
-    *
     * @param parser
     * @param option
     * @return false if parser == null
+    * @see boolean Xml.xml_parser_get_option
     */
    public Value xml_parser_get_option(Env env,
-           @NotNull Xml parser,
-           @NotNull int option) {
+                                      @NotNull Xml parser,
+                                      @NotNull int option) {
       if (parser == null) {
          return BooleanValue.FALSE;
       }
@@ -305,35 +296,33 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    * @see boolean Xml.xml_set_element_handler
-    *
     * @param parser
     * @param startElementHandler
     * @param endElementHandler
     * @return false if parser == null
+    * @see boolean Xml.xml_set_element_handler
     */
    public boolean xml_set_element_handler(Env env,
-           @NotNull Xml parser,
-           @NotNull Value startElementHandler,
-           @NotNull Value endElementHandler) {
+                                          @NotNull Xml parser,
+                                          @NotNull Value startElementHandler,
+                                          @NotNull Value endElementHandler) {
       if (parser == null) {
          return false;
       }
 
       return parser.xml_set_element_handler(env,
-              startElementHandler, endElementHandler);
+         startElementHandler, endElementHandler);
    }
 
    /**
-    * @see boolean Xml.xml_set_character_data_handler
-    *
     * @param parser
     * @param handler
     * @return false if parser == null
+    * @see boolean Xml.xml_set_character_data_handler
     */
    public boolean xml_set_character_data_handler(Env env,
-           @NotNull Xml parser,
-           @NotNull Value handler) {
+                                                 @NotNull Xml parser,
+                                                 @NotNull Value handler) {
       if (parser == null) {
          return false;
       }
@@ -342,32 +331,30 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    * @see boolean Xml.xml_set_start_namespace_decl_handler
-    *
     * @param parser
     * @param startNamespaceDeclHandler
     * @return false if parser == null
+    * @see boolean Xml.xml_set_start_namespace_decl_handler
     */
    public boolean xml_set_start_namespace_decl_handler(
-           Env env,
-           @NotNull Xml parser,
-           @NotNull Value startNamespaceDeclHandler) {
+      Env env,
+      @NotNull Xml parser,
+      @NotNull Value startNamespaceDeclHandler) {
       if (parser == null) {
          return false;
       }
 
       return parser.xml_set_start_namespace_decl_handler(
-              env, startNamespaceDeclHandler);
+         env, startNamespaceDeclHandler);
    }
 
    /**
-    *
     * @param parser
     * @param obj
     * @return false if parser == null
     */
    public boolean xml_set_object(@NotNull Xml parser,
-           @NotNull Value obj) {
+                                 @NotNull Value obj) {
       if (parser == null) {
          return false;
       }
@@ -376,14 +363,13 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param parser
     * @param handler
     * @return false if parser == null
     */
    public boolean xml_set_processing_instruction_handler(Env env,
-           @NotNull Xml parser,
-           @NotNull Value handler) {
+                                                         @NotNull Xml parser,
+                                                         @NotNull Value handler) {
       if (parser == null) {
          return false;
       }
@@ -392,14 +378,13 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param parser
     * @param handler
     * @return false if parser == null
     */
    public boolean xml_set_default_handler(Env env,
-           @NotNull Xml parser,
-           @NotNull Value handler) {
+                                          @NotNull Xml parser,
+                                          @NotNull Value handler) {
       if (parser == null) {
          return false;
       }
@@ -408,15 +393,14 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    * @see boolean Xml.xml_set_notation_decl_handler
-    *
     * @param parser
     * @param handler
     * @return false is parser == null
+    * @see boolean Xml.xml_set_notation_decl_handler
     */
    public boolean xml_set_notation_decl_handler(Env env,
-           @NotNull Xml parser,
-           @NotNull Value handler) {
+                                                @NotNull Xml parser,
+                                                @NotNull Value handler) {
       if (parser == null) {
          return false;
       }
@@ -425,14 +409,13 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param parser
     * @param handler
     * @return false if parser == null
     */
    public boolean xml_set_end_namespace_decl_handler(Env env,
-           @NotNull Xml parser,
-           @NotNull Value handler) {
+                                                     @NotNull Xml parser,
+                                                     @NotNull Value handler) {
       if (parser == null) {
          return false;
       }
@@ -441,7 +424,6 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param parser
     * @param data
     * @param valueArray
@@ -450,10 +432,10 @@ public class XmlModule extends AbstractBiancaModule {
     * @throws Exception
     */
    public int xml_parse_into_struct(Env env,
-           @NotNull Xml parser,
-           StringValue data,
-           @Reference Value valueArray,
-           @Optional @Reference Value indexArray) {
+                                    @NotNull Xml parser,
+                                    StringValue data,
+                                    @Reference Value valueArray,
+                                    @Optional @Reference Value indexArray) {
       try {
          if (parser == null) {
             return 0;
@@ -480,15 +462,14 @@ public class XmlModule extends AbstractBiancaModule {
    }
 
    /**
-    * @see boolean Xml.xml_set_unparsed_entity_decl_handler
-    *
     * @param parser
     * @param handler
     * @return false if parser == null, otherwise true
+    * @see boolean Xml.xml_set_unparsed_entity_decl_handler
     */
    public boolean xml_set_unparsed_entity_decl_handler(Env env,
-           @NotNull Xml parser,
-           @NotNull Value handler) {
+                                                       @NotNull Xml parser,
+                                                       @NotNull Value handler) {
       if (parser == null) {
          return false;
       }

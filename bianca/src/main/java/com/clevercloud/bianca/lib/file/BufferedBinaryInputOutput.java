@@ -31,7 +31,10 @@
 package com.clevercloud.bianca.lib.file;
 
 import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.BooleanValue;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.vfs.WriteStream;
 
@@ -45,7 +48,7 @@ import java.util.logging.Logger;
  * Represents a Bianca file open for reading
  */
 abstract public class BufferedBinaryInputOutput
-        extends AbstractBinaryInputOutput {
+   extends AbstractBinaryInputOutput {
 
    private static final Logger log = Logger.getLogger(BufferedBinaryInputOutput.class.getName());
    private ReadStream _is;
@@ -66,7 +69,7 @@ abstract public class BufferedBinaryInputOutput
    // read methods
    //
    public void setEncoding(String encoding)
-           throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
       if (_is != null) {
          _is.setEncoding(encoding);
       }
@@ -77,7 +80,7 @@ abstract public class BufferedBinaryInputOutput
     */
    @Override
    public void unread()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          _is.unread();
          _isEOF = false;
@@ -89,7 +92,7 @@ abstract public class BufferedBinaryInputOutput
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       try {
          if (_is != null) {
             int c = _is.read();
@@ -116,7 +119,7 @@ abstract public class BufferedBinaryInputOutput
     * Reads a buffer from a file, returning -1 on EOF.
     */
    public int read(char[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       try {
          if (_is != null) {
             int c = _is.read(buffer, offset, length);
@@ -142,7 +145,7 @@ abstract public class BufferedBinaryInputOutput
    }
 
    public void writeToStream(OutputStream os, int length)
-           throws IOException {
+      throws IOException {
       try {
          if (_is != null) {
             _is.writeToStream(os, length);
@@ -160,7 +163,7 @@ abstract public class BufferedBinaryInputOutput
     */
    @Override
    public StringValue readLine(long length)
-           throws IOException {
+      throws IOException {
       try {
          StringValue line = _lineReader.readLine(_env, this, length);
 

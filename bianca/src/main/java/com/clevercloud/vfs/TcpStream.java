@@ -44,211 +44,199 @@ import java.util.logging.Logger;
  * request to the underlying socket streams.
  */
 class TcpStream extends StreamImpl {
-  private static final Logger log
-    = Logger.getLogger(TcpStream.class.getName());
+   private static final Logger log
+      = Logger.getLogger(TcpStream.class.getName());
 
-  private Socket _s;
-  private InputStream _is;
-  private OutputStream _os;
+   private Socket _s;
+   private InputStream _is;
+   private OutputStream _os;
 
-  private TcpStream(TcpPath path,
-                    long connectTimeout,
-                    long socketTimeout,
-                    boolean isNoDelay)
-    throws IOException
-  {
-    setPath(path);
+   private TcpStream(TcpPath path,
+                     long connectTimeout,
+                     long socketTimeout,
+                     boolean isNoDelay)
+      throws IOException {
+      setPath(path);
 
-    //_s = new Socket(path.getHost(), path.getPort());
-    _s = new Socket();
+      //_s = new Socket(path.getHost(), path.getPort());
+      _s = new Socket();
 
-    if (connectTimeout > 0)
-      _s.connect(path.getSocketAddress(), (int) connectTimeout);
-    else
-      _s.connect(path.getSocketAddress());
+      if (connectTimeout > 0)
+         _s.connect(path.getSocketAddress(), (int) connectTimeout);
+      else
+         _s.connect(path.getSocketAddress());
 
-    if (! _s.isConnected())
-      throw new IOException("connection timeout");
+      if (!_s.isConnected())
+         throw new IOException("connection timeout");
 
-    if (socketTimeout < 0)
-      socketTimeout = 120000;
+      if (socketTimeout < 0)
+         socketTimeout = 120000;
 
-    _s.setSoTimeout((int) socketTimeout);
-    
-    if (isNoDelay)
-      _s.setTcpNoDelay(true);
+      _s.setSoTimeout((int) socketTimeout);
 
-    try {
-      if (path instanceof TcpsPath) {
-        SSLContext context = SSLContext.getInstance("TLS");
+      if (isNoDelay)
+         _s.setTcpNoDelay(true);
 
-        javax.net.ssl.TrustManager tm =
-          new javax.net.ssl.X509TrustManager() {
-            public java.security.cert.X509Certificate[]
-              getAcceptedIssuers() {
-              return null;
-            }
-            public void checkClientTrusted(
-                                           java.security.cert.X509Certificate[] cert, String foo) {
-            }
-            public void checkServerTrusted(
-                                           java.security.cert.X509Certificate[] cert, String foo) {
-            }
-          };
-
-
-        context.init(null, new javax.net.ssl.TrustManager[] { tm }, null);
-        SSLSocketFactory factory = context.getSocketFactory();
-
-        _s = factory.createSocket(_s, path.getHost(), path.getPort(), true);
-      }
-    } catch (IOException e) {
-      throw e;
-    } catch (RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new IOExceptionWrapper(e);
-    }
-
-    _is = _s.getInputStream();
-    _os = _s.getOutputStream();
-  }
-
-  public void setAttribute(String name, Object value)
-  {
-    if (name.equals("timeout")) {
       try {
-        if (value instanceof Number)
-          _s.setSoTimeout(((Number) value).intValue());
-        else
-          _s.setSoTimeout(Integer.parseInt(String.valueOf(value)));
-      } catch (SocketException e) {
-        log.log(Level.FINER, e.toString(), e);
+         if (path instanceof TcpsPath) {
+            SSLContext context = SSLContext.getInstance("TLS");
+
+            javax.net.ssl.TrustManager tm =
+               new javax.net.ssl.X509TrustManager() {
+                  public java.security.cert.X509Certificate[]
+                  getAcceptedIssuers() {
+                     return null;
+                  }
+
+                  public void checkClientTrusted(
+                     java.security.cert.X509Certificate[] cert, String foo) {
+                  }
+
+                  public void checkServerTrusted(
+                     java.security.cert.X509Certificate[] cert, String foo) {
+                  }
+               };
+
+
+            context.init(null, new javax.net.ssl.TrustManager[]{tm}, null);
+            SSLSocketFactory factory = context.getSocketFactory();
+
+            _s = factory.createSocket(_s, path.getHost(), path.getPort(), true);
+         }
+      } catch (IOException e) {
+         throw e;
+      } catch (RuntimeException e) {
+         throw e;
+      } catch (Exception e) {
+         throw new IOExceptionWrapper(e);
       }
-    }
-    else if (name.equals("no-delay")) {
+
+      _is = _s.getInputStream();
+      _os = _s.getOutputStream();
+   }
+
+   public void setAttribute(String name, Object value) {
+      if (name.equals("timeout")) {
+         try {
+            if (value instanceof Number)
+               _s.setSoTimeout(((Number) value).intValue());
+            else
+               _s.setSoTimeout(Integer.parseInt(String.valueOf(value)));
+         } catch (SocketException e) {
+            log.log(Level.FINER, e.toString(), e);
+         }
+      } else if (name.equals("no-delay")) {
+         try {
+            if (Boolean.TRUE.equals(value)) {
+               _s.setTcpNoDelay(true);
+            }
+         } catch (SocketException e) {
+            log.log(Level.FINER, e.toString(), e);
+         }
+      }
+   }
+
+   static TcpStream openRead(TcpPath path,
+                             long connectTimeout,
+                             long socketTimeout,
+                             boolean isNoDelay)
+      throws IOException {
+      return new TcpStream(path, connectTimeout, socketTimeout, isNoDelay);
+   }
+
+   static TcpStream openReadWrite(TcpPath path,
+                                  long connectTimeout,
+                                  long socketTimeout,
+                                  boolean isNoDelay)
+      throws IOException {
+      return new TcpStream(path, connectTimeout, socketTimeout, isNoDelay);
+   }
+
+   public boolean canWrite() {
+      return _os != null;
+   }
+
+   /**
+    * Writes a buffer to the underlying stream.
+    *
+    * @param buffer the byte array to write.
+    * @param offset the offset into the byte array.
+    * @param length the number of bytes to write.
+    * @param isEnd  true when the write is flushing a close.
+    */
+   public void write(byte[] buf, int offset, int length, boolean isEnd)
+      throws IOException {
+      if (_os != null)
+         _os.write(buf, offset, length);
+   }
+
+   public boolean canRead() {
+      return _is != null;
+   }
+
+   public int getAvailable() throws IOException {
+      if (_is != null)
+         return _is.available();
+      else
+         return -1;
+   }
+
+   public int read(byte[] buf, int offset, int length) throws IOException {
+      InputStream is = _is;
+
+      if (is != null) {
+         int len = is.read(buf, offset, length);
+
+         if (len < 0)
+            close();
+
+         return len;
+      } else
+         return -1;
+   }
+
+   public void closeWrite() throws IOException {
+      OutputStream os = _os;
+      _os = null;
+
       try {
-        if (Boolean.TRUE.equals(value)) {
-          _s.setTcpNoDelay(true);
-        }
-      } catch (SocketException e) {
-        log.log(Level.FINER, e.toString(), e);
+         if (os != null)
+            _s.shutdownOutput();
+      } finally {
+         if (_is == null) {
+            Socket s = _s;
+            _s = null;
+
+            if (s != null)
+               s.close();
+         }
       }
-    }
-  }
+   }
 
-  static TcpStream openRead(TcpPath path,
-                            long connectTimeout,
-                            long socketTimeout,
-                            boolean isNoDelay)
-    throws IOException
-  {
-    return new TcpStream(path, connectTimeout, socketTimeout, isNoDelay);
-  }
+   public void close() throws IOException {
+      InputStream is = _is;
+      _is = null;
 
-  static TcpStream openReadWrite(TcpPath path,
-                                 long connectTimeout,
-                                 long socketTimeout,
-                                 boolean isNoDelay)
-    throws IOException
-  {
-    return new TcpStream(path, connectTimeout, socketTimeout, isNoDelay);
-  }
+      OutputStream os = _os;
+      _os = null;
 
-  public boolean canWrite()
-  {
-    return _os != null;
-  }
+      Socket s = _s;
+      _s = null;
 
-  /**
-   * Writes a buffer to the underlying stream.
-   *
-   * @param buffer the byte array to write.
-   * @param offset the offset into the byte array.
-   * @param length the number of bytes to write.
-   * @param isEnd true when the write is flushing a close.
-   */
-  public void write(byte []buf, int offset, int length, boolean isEnd)
-    throws IOException
-  {
-    if (_os != null)
-      _os.write(buf, offset, length);
-  }
+      try {
+         if (os != null)
+            os.close();
 
-  public boolean canRead()
-  {
-    return _is != null;
-  }
-
-  public int getAvailable() throws IOException
-  {
-    if (_is != null)
-      return _is.available();
-    else
-      return -1;
-  }
-
-  public int read(byte []buf, int offset, int length) throws IOException
-  {
-    InputStream is = _is;
-    
-    if (is != null) {
-      int len = is.read(buf, offset, length);
-      
-      if (len < 0)
-        close();
-      
-      return len;
-    }
-    else
-      return -1;
-  }
-
-  public void closeWrite() throws IOException
-  {
-    OutputStream os = _os;
-    _os = null;
-
-    try {
-      if (os != null)
-        _s.shutdownOutput();
-    } finally {
-      if (_is == null) {
-        Socket s = _s;
-        _s = null;
-
-        if (s != null)
-          s.close();
+         if (is != null)
+            is.close();
+      } finally {
+         if (s != null)
+            s.close();
       }
-    }
-  }
+   }
 
-  public void close() throws IOException
-  {
-    InputStream is = _is;
-    _is = null;
-
-    OutputStream os = _os;
-    _os = null;
-
-    Socket s = _s;
-    _s = null;
-
-    try {
-      if (os != null)
-        os.close();
-
-      if (is != null)
-        is.close();
-    } finally {
-      if (s != null)
-        s.close();
-    }
-  }
-
-  @Override
-  public String toString()
-  {
-    return getClass().getSimpleName() + "[" + _s + "]";
-  }
+   @Override
+   public String toString() {
+      return getClass().getSimpleName() + "[" + _s + "]";
+   }
 }

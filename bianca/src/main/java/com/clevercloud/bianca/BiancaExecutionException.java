@@ -29,7 +29,7 @@
 package com.clevercloud.bianca;
 
 public class BiancaExecutionException
-        extends Exception {
+   extends Exception {
 
    public BiancaExecutionException() {
    }

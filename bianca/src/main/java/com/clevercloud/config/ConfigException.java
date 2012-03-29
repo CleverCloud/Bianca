@@ -30,157 +30,142 @@
 
 package com.clevercloud.config;
 
-import com.clevercloud.util.*;
-import com.clevercloud.vfs.*;
+import com.clevercloud.util.CompileException;
+import com.clevercloud.util.DisplayableException;
+import com.clevercloud.util.Html;
+import com.clevercloud.util.LineCompileException;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.logging.*;
+import java.io.PrintWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 /**
  * Thrown by the various Builders
  */
 public class ConfigException
-  extends ConfigRuntimeException
-  implements CompileException, DisplayableException
-{
-  private static final Logger log
-    = Logger.getLogger(ConfigException.class.getName());
+   extends ConfigRuntimeException
+   implements CompileException, DisplayableException {
+   private static final Logger log
+      = Logger.getLogger(ConfigException.class.getName());
 
-  /**
-   * Create a null exception
-   */
-  public ConfigException()
-  {
-  }
+   /**
+    * Create a null exception
+    */
+   public ConfigException() {
+   }
 
-  /**
-   * Creates an exception with a message
-   */
-  public ConfigException(String msg)
-  {
-    super(msg);
-  }
+   /**
+    * Creates an exception with a message
+    */
+   public ConfigException(String msg) {
+      super(msg);
+   }
 
-  /**
-   * Creates an exception with a message and throwable
-   */
-  public ConfigException(String msg, Throwable e)
-  {
-    super(msg, e);
-  }
+   /**
+    * Creates an exception with a message and throwable
+    */
+   public ConfigException(String msg, Throwable e) {
+      super(msg, e);
+   }
 
-  /**
-   * Creates an exception with a throwable
-   */
-  protected ConfigException(Throwable e)
-  {
-    super(getMessage(e), e);
-  }
+   /**
+    * Creates an exception with a throwable
+    */
+   protected ConfigException(Throwable e) {
+      super(getMessage(e), e);
+   }
 
-  protected static String getMessage(Throwable e)
-  {
-    if (e instanceof DisplayableException || e instanceof CompileException)
-      return e.getMessage();
-    else
-      return e.toString();
-  }
+   protected static String getMessage(Throwable e) {
+      if (e instanceof DisplayableException || e instanceof CompileException)
+         return e.getMessage();
+      else
+         return e.toString();
+   }
 
-  public static RuntimeException create(String location, Throwable e)
-  {
-    if (e instanceof InstantiationException && e.getCause() != null)
-      e = e.getCause();
+   public static RuntimeException create(String location, Throwable e) {
+      if (e instanceof InstantiationException && e.getCause() != null)
+         e = e.getCause();
 
-    if (e instanceof InvocationTargetException && e.getCause() != null)
-      e = e.getCause();
+      if (e instanceof InvocationTargetException && e.getCause() != null)
+         e = e.getCause();
 
-    if (e instanceof LineConfigException)
-      throw (LineConfigException) e;
-    else if (e instanceof DisplayableException) {
-      return new ConfigException(location + e.getMessage(), e);
-    }
-    else
-      return new ConfigException(location + e, e);
-  }
+      if (e instanceof LineConfigException)
+         throw (LineConfigException) e;
+      else if (e instanceof DisplayableException) {
+         return new ConfigException(location + e.getMessage(), e);
+      } else
+         return new ConfigException(location + e, e);
+   }
 
-  public static RuntimeException createLine(String line, Throwable e)
-  {
-    while (e.getCause() != null
-           && (e instanceof InstantiationException
-               || e instanceof InvocationTargetException
-               || e.getClass().equals(ConfigRuntimeException.class))) {
-      e = e.getCause();
-    }
+   public static RuntimeException createLine(String line, Throwable e) {
+      while (e.getCause() != null
+         && (e instanceof InstantiationException
+         || e instanceof InvocationTargetException
+         || e.getClass().equals(ConfigRuntimeException.class))) {
+         e = e.getCause();
+      }
 
-    if (e instanceof LineConfigException)
-      throw (LineConfigException) e;
-    else if (e instanceof DisplayableException) {
-      return new LineConfigException(line + e.getMessage(), e);
-    }
-    else
-      return new LineConfigException(line + e, e);
-  }
+      if (e instanceof LineConfigException)
+         throw (LineConfigException) e;
+      else if (e instanceof DisplayableException) {
+         return new LineConfigException(line + e.getMessage(), e);
+      } else
+         return new LineConfigException(line + e, e);
+   }
 
-  public static RuntimeException create(Field field, Throwable e)
-  {
-    return create(loc(field), e);
-  }
+   public static RuntimeException create(Field field, Throwable e) {
+      return create(loc(field), e);
+   }
 
-  public static RuntimeException create(Method method, Throwable e)
-  {
-    return create(loc(method), e);
-  }
+   public static RuntimeException create(Method method, Throwable e) {
+      return create(loc(method), e);
+   }
 
-  public static RuntimeException create(Method method, String msg, Throwable e)
-  {
-    return new ConfigException(loc(method) + msg, e);
-  }
+   public static RuntimeException create(Method method, String msg, Throwable e) {
+      return new ConfigException(loc(method) + msg, e);
+   }
 
-  public static RuntimeException create(Method method, String msg)
-  {
-    return new ConfigException(loc(method) + msg);
-  }
+   public static RuntimeException create(Method method, String msg) {
+      return new ConfigException(loc(method) + msg);
+   }
 
-  public static ConfigException createConfig(Throwable e)
-  {
-    if (e instanceof ConfigException)
-      return (ConfigException) e;
-    else
-      return new ConfigException(e);
-  }
+   public static ConfigException createConfig(Throwable e) {
+      if (e instanceof ConfigException)
+         return (ConfigException) e;
+      else
+         return new ConfigException(e);
+   }
 
-  public static RuntimeException create(Throwable e)
-  {
-    while (e.getCause() != null
-           && (e instanceof InstantiationException
-               || e instanceof InvocationTargetException
-               || e.getClass().equals(ConfigRuntimeException.class))) {
-      e = e.getCause();
-    }
+   public static RuntimeException create(Throwable e) {
+      while (e.getCause() != null
+         && (e instanceof InstantiationException
+         || e instanceof InvocationTargetException
+         || e.getClass().equals(ConfigRuntimeException.class))) {
+         e = e.getCause();
+      }
 
-    if (e instanceof RuntimeException)
-      return (RuntimeException) e;
-    else if (e instanceof LineCompileException)
-      return new LineConfigException(e.getMessage(), e);
-    else if (e instanceof DisplayableException
-             || e instanceof CompileException)
-      return new ConfigException(e.getMessage(), e);
-    else
-      return new ConfigRuntimeException(e);
-  }
+      if (e instanceof RuntimeException)
+         return (RuntimeException) e;
+      else if (e instanceof LineCompileException)
+         return new LineConfigException(e.getMessage(), e);
+      else if (e instanceof DisplayableException
+         || e instanceof CompileException)
+         return new ConfigException(e.getMessage(), e);
+      else
+         return new ConfigRuntimeException(e);
+   }
 
-  public void print(PrintWriter out)
-  {
-    out.println(Html.escapeHtml(getMessage()));
-  }
+   public void print(PrintWriter out) {
+      out.println(Html.escapeHtml(getMessage()));
+   }
 
-  public static String loc(Field field)
-  {
-    return field.getDeclaringClass().getName() + "." + field.getName() + ": ";
-  }
+   public static String loc(Field field) {
+      return field.getDeclaringClass().getName() + "." + field.getName() + ": ";
+   }
 
-  public static String loc(Method method)
-  {
-    return method.getDeclaringClass().getName() + "." + method.getName() + "(): ";
-  }
+   public static String loc(Method method) {
+      return method.getDeclaringClass().getName() + "." + method.getName() + "(): ";
+   }
 }

@@ -37,82 +37,92 @@ import java.io.IOException;
 
 public class Escapifier {
 
-  public static String escape(String s)
-  {
-    if (s == null)
-      return "";
-    
-    CharBuffer cb = null;
-    int len = s.length();
+   public static String escape(String s) {
+      if (s == null)
+         return "";
 
-    for (int i = 0; i < len; i++) {
-      char c = s.charAt(i);
+      CharBuffer cb = null;
+      int len = s.length();
 
-      if (c >= 32 && c <= 127 && c != '&' && c!='<' && c!='>' && c!='\"'
-          || Character.isWhitespace(c)) {
-        if (cb != null) cb.append(c);
-        continue;
+      for (int i = 0; i < len; i++) {
+         char c = s.charAt(i);
+
+         if (c >= 32 && c <= 127 && c != '&' && c != '<' && c != '>' && c != '\"'
+            || Character.isWhitespace(c)) {
+            if (cb != null) cb.append(c);
+            continue;
+         }
+
+         if (cb == null) {
+            cb = new CharBuffer();
+            cb.append(s.substring(0, i));
+         }
+         switch (c) {
+            case '&':
+               cb.append("&amp;");
+               break;
+            case '<':
+               cb.append("&lt;");
+               break;
+            case '>':
+               cb.append("&gt;");
+               break;
+            // case '\'': cb.append("&apos;"); break; // TCK compliance
+            case '\"':
+               cb.append("&quot;");
+               break;
+            default:
+               cb.append("&#" + ((int) (c & 0xffff)) + ";");
+               break;
+         }
       }
-      
-      if (cb == null) {
-        cb = new CharBuffer();
-        cb.append(s.substring(0, i));
+
+      if (cb == null)
+         return s;
+
+      return cb.toString();
+   }
+
+   public static void escape(String s, WriteStream ws)
+      throws IOException {
+      ws.print(escape(s));
+   }
+
+   public static void escape(char[] buffer, int offset, int len,
+                             WriteStream out)
+      throws IOException {
+      for (int i = 0; i < len; i++) {
+         char ch = buffer[offset + i];
+
+         switch (ch) {
+            case '&':
+               out.print("&amp;");
+               break;
+            case '<':
+               out.print("&lt;");
+               break;
+            case '>':
+               out.print("&gt;");
+               break;
+            // case '\'': out.print("&apos;"); break; // TCK compliance
+            case '\"':
+               out.print("&quot;");
+               break;
+
+            case ' ':
+            case '\t':
+            case '\r':
+            case '\n':
+               out.print(ch);
+               break;
+
+            default:
+               if (32 <= ch && ch <= 127)
+                  out.print(ch);
+               else
+                  out.print("&#" + ((int) ch) + ";");
+               break;
+         }
       }
-      switch(c) {
-      case '&': cb.append("&amp;"); break;
-      case '<': cb.append("&lt;"); break;
-      case '>': cb.append("&gt;"); break;
-      // case '\'': cb.append("&apos;"); break; // TCK compliance
-      case '\"': cb.append("&quot;"); break;
-      default: cb.append("&#"+((int)(c & 0xffff))+";"); break;
-      }
-    }
-
-    if (cb == null)
-      return s;
-
-    return cb.toString();
-  }
-
-  public static void escape(String s, WriteStream ws)
-    throws IOException
-  {
-    ws.print(escape(s));
-  }
-
-  public static void escape(char []buffer, int offset, int len,
-                            WriteStream out)
-    throws IOException
-  {
-    for (int i = 0; i < len; i++) {
-      char ch = buffer[offset + i];
-      
-      switch (ch) {
-      case '&':
-        out.print("&amp;");
-        break;
-      case '<':
-        out.print("&lt;");
-        break;
-      case '>':
-        out.print("&gt;");
-        break;
-      // case '\'': out.print("&apos;"); break; // TCK compliance
-      case '\"':
-        out.print("&quot;");
-        break;
-
-      case ' ': case '\t': case '\r': case '\n':
-        out.print(ch);
-        break;
-
-      default:
-        if (32 <= ch && ch <= 127)
-          out.print(ch);
-        else
-          out.print("&#" + ((int) ch) + ";");
-        break;
-      }
-    }
-  }
+   }
 }

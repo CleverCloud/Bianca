@@ -36,47 +36,43 @@ import java.io.IOException;
  * Stream encapsulating System.err.
  */
 public class StderrStream extends StreamImpl {
-  private static StderrStream _stderr;
+   private static StderrStream _stderr;
 
-  private StderrStream()
-  {
-  }
+   private StderrStream() {
+   }
 
-  /**
-   * Returns the StderrStream singleton
-   */
-  public static StderrStream create()
-  {
-    if (_stderr == null) {
-      _stderr = new StderrStream();
-      ConstPath path = new ConstPath(null, _stderr);
-      path.setScheme("stderr");
-      _stderr.setPath(path);
-    }
+   /**
+    * Returns the StderrStream singleton
+    */
+   public static StderrStream create() {
+      if (_stderr == null) {
+         _stderr = new StderrStream();
+         ConstPath path = new ConstPath(null, _stderr);
+         path.setScheme("stderr");
+         _stderr.setPath(path);
+      }
 
-    return _stderr;
-  }
+      return _stderr;
+   }
 
-  /**
-   * The standard error stream returns true since it's writable.
-   */
-  public boolean canWrite()
-  {
-    return true;
-  }
+   /**
+    * The standard error stream returns true since it's writable.
+    */
+   public boolean canWrite() {
+      return true;
+   }
 
-  /**
-   * Writes the data to the System.out.
-   *
-   * @param buf the buffer to write.
-   * @param offset starting offset in the buffer.
-   * @param length number of bytes to write.
-   * @param isEnd true when the stream is closing.
-   */
-  public void write(byte []buf, int offset, int length, boolean isEnd)
-    throws IOException
-  {
-    System.err.write(buf, offset, length);
-    System.err.flush();
-  }
+   /**
+    * Writes the data to the System.out.
+    *
+    * @param buf    the buffer to write.
+    * @param offset starting offset in the buffer.
+    * @param length number of bytes to write.
+    * @param isEnd  true when the stream is closing.
+    */
+   public void write(byte[] buf, int offset, int length, boolean isEnd)
+      throws IOException {
+      System.err.write(buf, offset, length);
+      System.err.flush();
+   }
 }

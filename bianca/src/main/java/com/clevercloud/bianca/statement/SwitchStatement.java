@@ -50,11 +50,11 @@ public class SwitchStatement extends Statement {
    protected final String _label;
 
    public SwitchStatement(Location location,
-           Expr value,
-           ArrayList<Expr[]> caseList,
-           ArrayList<BlockStatement> blockList,
-           Statement defaultBlock,
-           String label) {
+                          Expr value,
+                          ArrayList<Expr[]> caseList,
+                          ArrayList<BlockStatement> blockList,
+                          Statement defaultBlock,
+                          String label) {
       super(location);
 
       _value = value;

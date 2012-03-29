@@ -30,7 +30,6 @@
 package com.clevercloud.xml;
 
 import com.clevercloud.vfs.WriteStream;
-
 import org.w3c.dom.Node;
 
 import java.io.IOException;
@@ -38,70 +37,74 @@ import java.io.IOException;
 /**
  * CleverCloudNode extends the DOM, providing namespace support and input file
  * support.
- *
+ * <p/>
  * <p>Application can print the filename and line number where the
  * error occurred.
  */
 public interface CleverCloudNode extends Node {
-  // DOM2 compatibility for old DOM
-  public String getNamespaceURI();
-  public String getPrefix();
-  public String getLocalName();
+   // DOM2 compatibility for old DOM
+   public String getNamespaceURI();
 
-  /**
-   * Returns the node's canonical name.
-   *
-   * <p>e.g. for foo:bar:baz, the prefix name might be '{/clevercloud/1.0}baz'
-   */
-  public String getCanonicalName();
+   public String getPrefix();
 
-  /**
-   * Returns the text value of the node
-   */
-  public String getTextValue();
+   public String getLocalName();
 
-  /**
-   * Returns the source filename of this node.
-   */
-  public String getFilename();
+   /**
+    * Returns the node's canonical name.
+    * <p/>
+    * <p>e.g. for foo:bar:baz, the prefix name might be '{/clevercloud/1.0}baz'
+    */
+   public String getCanonicalName();
 
-  /**
-   * Returns the source uri of this node.
-   */
-  public String getBaseURI();
+   /**
+    * Returns the text value of the node
+    */
+   public String getTextValue();
 
-  /**
-   * Returns the source line of this node.
-   */
-  public int getLine();
+   /**
+    * Returns the source filename of this node.
+    */
+   public String getFilename();
 
-  /**
-   * Returns the source column of this node.
-p   */
-  public int getColumn();
-  /**
-   * Sets the location
-   */
-  public void setLocation(String systemId, String filename,
-                          int line, int column);
+   /**
+    * Returns the source uri of this node.
+    */
+   public String getBaseURI();
 
-  /**
-   * Prints the node to a stream
-   */
-  public void print(WriteStream os) throws IOException;
+   /**
+    * Returns the source line of this node.
+    */
+   public int getLine();
 
-  /**
-   * Pretty-prints the node to a stream
-   */
-  public void printPretty(WriteStream os) throws IOException;
+   /**
+    * Returns the source column of this node.
+    * p
+    */
+   public int getColumn();
 
-  /**
-   * Prints the node as html to a stream
-   */
-  public void printHtml(WriteStream os) throws IOException;
+   /**
+    * Sets the location
+    */
+   public void setLocation(String systemId, String filename,
+                           int line, int column);
 
-  /**
-   * For testing...
-   */
-  public boolean checkValid() throws Exception;
+   /**
+    * Prints the node to a stream
+    */
+   public void print(WriteStream os) throws IOException;
+
+   /**
+    * Pretty-prints the node to a stream
+    */
+   public void printPretty(WriteStream os) throws IOException;
+
+   /**
+    * Prints the node as html to a stream
+    */
+   public void printHtml(WriteStream os) throws IOException;
+
+   /**
+    * For testing...
+    */
+   public boolean checkValid() throws Exception;
 }

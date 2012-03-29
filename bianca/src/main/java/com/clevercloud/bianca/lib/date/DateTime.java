@@ -83,8 +83,8 @@ public class DateTime {
    }
 
    public static DateTime __construct(Env env,
-           @Optional("now") String time,
-           @Optional DateTimeZone timeZone) {
+                                      @Optional("now") String time,
+                                      @Optional DateTimeZone timeZone) {
       if (timeZone == null) {
          return new DateTime(env, time);
       } else {
@@ -126,20 +126,20 @@ public class DateTime {
    }
 
    public void setTime(int hour,
-           int minute,
-           @Optional int second) {
+                       int minute,
+                       @Optional int second) {
       _qDate.setTime(hour, minute, second, 0);
    }
 
    public void setDate(int year,
-           int month,
-           int day) {
+                       int month,
+                       int day) {
       _qDate.setDate(year, month - 1, day);
    }
 
    public void setISODate(int year,
-           int week, //yes, week, not month
-           @Optional int day) {
+                          int week, //yes, week, not month
+                          @Optional int day) {
       throw new UnimplementedException("DateTime::setISODate()");
    }
 

@@ -33,26 +33,12 @@ package com.clevercloud.bianca.lib.db;
 import com.clevercloud.bianca.BiancaException;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.ConnectionEntry;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DataTruncation;
-import java.sql.DatabaseMetaData;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,12 +65,12 @@ public class Mysqli extends JdbcConnectionResource {
     * mysqli_multi_query populates _resultValues
     * NB: any updates (ie: INSERT, UPDATE, DELETE) will
     * have the update counts ignored.
-    *
+    * <p/>
     * Has been stored tells moreResults whether the
     * _nextResultValue has been stored already.
     * If so, more results will return true only if
     * there is another result.
-    *
+    * <p/>
     * _hasBeenStored is set to true by default.
     * if _hasBeenUsed == false, then
     * _resultValues.get(_nextResultValue)
@@ -103,12 +89,12 @@ public class Mysqli extends JdbcConnectionResource {
     * It can be invoked by PHP or and by Java code.
     */
    public Mysqli(Env env,
-           @Optional("localhost") StringValue host,
-           @Optional StringValue user,
-           @Optional StringValue password,
-           @Optional String db,
-           @Optional("3306") int port,
-           @Optional StringValue socket) {
+                 @Optional("localhost") StringValue host,
+                 @Optional StringValue user,
+                 @Optional StringValue password,
+                 @Optional String db,
+                 @Optional("3306") int port,
+                 @Optional StringValue socket) {
       super(env);
 
       String hostStr;
@@ -120,8 +106,8 @@ public class Mysqli extends JdbcConnectionResource {
       }
 
       connectInternal(env, hostStr, user.toString(), password.toString(),
-              db, port, socket.toString(),
-              0, null, null, true);
+         db, port, socket.toString(),
+         0, null, null, true);
    }
 
    /**
@@ -131,16 +117,16 @@ public class Mysqli extends JdbcConnectionResource {
     * arguments not available in the mysqli constructor.
     */
    Mysqli(Env env,
-           String host,
-           String user,
-           String password,
-           String db,
-           int port,
-           String socket,
-           int flags,
-           String driver,
-           String url,
-           boolean isNewLink) {
+          String host,
+          String user,
+          String password,
+          String db,
+          int port,
+          String socket,
+          int flags,
+          String driver,
+          String url,
+          boolean isNewLink) {
       super(env);
 
       if (host == null || host.length() == 0) {
@@ -148,7 +134,7 @@ public class Mysqli extends JdbcConnectionResource {
       }
 
       connectInternal(env, host, user, password, db, port, socket,
-              flags, driver, url, isNewLink);
+         flags, driver, url, isNewLink);
    }
 
    protected Mysqli(Env env) {
@@ -164,16 +150,16 @@ public class Mysqli extends JdbcConnectionResource {
     */
    @Override
    protected ConnectionEntry connectImpl(Env env,
-           String host,
-           String userName,
-           String password,
-           String dbname,
-           int port,
-           String socket,
-           int flags,
-           String driver,
-           String url,
-           boolean isNewLink) {
+                                         String host,
+                                         String userName,
+                                         String password,
+                                         String dbname,
+                                         int port,
+                                         String socket,
+                                         int flags,
+                                         String driver,
+                                         String url,
+                                         boolean isNewLink) {
       if (isConnected()) {
          env.warning(L.l("Connection is already opened to '{0}'", this));
          return null;
@@ -198,9 +184,9 @@ public class Mysqli extends JdbcConnectionResource {
 
          if (url == null || url.equals("")) {
             url = getUrl(host, port, dbname, ENCODING,
-                    (flags & MysqliModule.MYSQL_CLIENT_INTERACTIVE) != 0,
-                    (flags & MysqliModule.MYSQL_CLIENT_COMPRESS) != 0,
-                    (flags & MysqliModule.MYSQL_CLIENT_SSL) != 0);
+               (flags & MysqliModule.MYSQL_CLIENT_INTERACTIVE) != 0,
+               (flags & MysqliModule.MYSQL_CLIENT_COMPRESS) != 0,
+               (flags & MysqliModule.MYSQL_CLIENT_SSL) != 0);
          }
 
          ConnectionEntry jConn = env.getConnection(driver, url, userName, password, !isNewLink);
@@ -223,34 +209,34 @@ public class Mysqli extends JdbcConnectionResource {
          return jConn;
       } catch (SQLException e) {
          env.warning(
-                 L.l("A link to the server could not be established.\n  "
-                 + "url={0}\n  driver={1}\n  {2}", url, driver, e.toString()), e);
+            L.l("A link to the server could not be established.\n  "
+               + "url={0}\n  driver={1}\n  {2}", url, driver, e.toString()), e);
 
          env.setSpecialValue(
-                 "mysqli.connectErrno", LongValue.create(e.getErrorCode()));
+            "mysqli.connectErrno", LongValue.create(e.getErrorCode()));
          env.setSpecialValue(
-                 "mysqli.connectError", env.createString(e.getMessage()));
+            "mysqli.connectError", env.createString(e.getMessage()));
 
          return null;
       } catch (Exception e) {
          env.warning(
-                 L.l(
-                 "A link to the server could not be established.\n  url={0}\n  "
-                 + "driver={1}\n  {2}", url, driver, e.toString()), e);
+            L.l(
+               "A link to the server could not be established.\n  url={0}\n  "
+                  + "driver={1}\n  {2}", url, driver, e.toString()), e);
          env.setSpecialValue(
-                 "mysqli.connectError", env.createString(e.toString()));
+            "mysqli.connectError", env.createString(e.toString()));
 
          return null;
       }
    }
 
    protected static String getUrl(String host,
-           int port,
-           String dbname,
-           String encoding,
-           boolean useInteractive,
-           boolean useCompression,
-           boolean useSsl) {
+                                  int port,
+                                  String dbname,
+                                  String encoding,
+                                  boolean useInteractive,
+                                  boolean useCompression,
+                                  boolean useSsl) {
       StringBuilder urlBuilder = new StringBuilder();
 
       urlBuilder.append("jdbc:mysql://");
@@ -338,13 +324,13 @@ public class Mysqli extends JdbcConnectionResource {
    /**
     * Changes the user and database
     *
-    * @param user the new user
+    * @param user     the new user
     * @param password the new password
-    * @param db the new database
+    * @param db       the new database
     */
    public boolean change_user(String user,
-           String password,
-           String db) {
+                              String password,
+                              String db) {
       try {
          if (isConnected()) {
             Connection conn = getJavaConnection();
@@ -380,12 +366,12 @@ public class Mysqli extends JdbcConnectionResource {
       close(getEnv());
 
       return connectInternal(getEnv(), _host, user, password,
-              db, _port, _socket, _flags, _driver, _url, false);
+         db, _port, _socket, _flags, _driver, _url, false);
    }
 
    /**
     * Returns the client encoding.
-    *
+    * <p/>
     * XXX: stubbed out. has to be revised once we
     * figure out what to do with character encoding
     */
@@ -468,7 +454,7 @@ public class Mysqli extends JdbcConnectionResource {
                Driver driver = DriverManager.getDriver("jdbc:mysql://localhost/");
 
                version = driver.getMajorVersion() + "."
-                       + driver.getMinorVersion() + ".00";
+                  + driver.getMinorVersion() + ".00";
             } catch (SQLException e) {
                version = "0.00.00";
             }
@@ -673,7 +659,6 @@ public class Mysqli extends JdbcConnectionResource {
     * returns ID generated for an AUTO_INCREMENT column by the previous
     * INSERT query on success, 0 if the previous query does not generate
     * an AUTO_INCREMENT value, or FALSE if no MySQL connection was established
-    *
     */
    public Value insert_id(Env env) {
       try {
@@ -745,16 +730,15 @@ public class Mysqli extends JdbcConnectionResource {
    /**
     * Executes a query.
     *
-    * @param env the PHP executing environment
-    * @param sql the escaped query string (can contain
-    * escape sequences like `\n' and `\Z')
+    * @param env        the PHP executing environment
+    * @param sql        the escaped query string (can contain
+    *                   escape sequences like `\n' and `\Z')
     * @param resultMode ignored
-    *
     * @return a {@link JdbcResultResource}, or null for failure
     */
    public Value query(Env env,
-           StringValue sqlV,
-           @Optional("MYSQLI_STORE_RESULT") int resultMode) {
+                      StringValue sqlV,
+                      @Optional("MYSQLI_STORE_RESULT") int resultMode) {
       String sql = sqlV.toString();
 
       return realQuery(env, sql);
@@ -865,12 +849,12 @@ public class Mysqli extends JdbcConnectionResource {
     * can then be retrieved or stored using the mysqli_store_result()
     * or mysqli_use_result() functions.
     *
-    * @param env the PHP executing environment
+    * @param env   the PHP executing environment
     * @param query the escaped query string (can contain
-    * escape sequences like `\n' and `\Z')
+    *              escape sequences like `\n' and `\Z')
     */
    public boolean real_query(Env env,
-           StringValue query) {
+                             StringValue query) {
       // Assume that the query argument contains just one query. Reuse the
       // result management logic in multiQuery(), so that a future call to
       // mysqli_store_result() will work as expected.
@@ -898,24 +882,24 @@ public class Mysqli extends JdbcConnectionResource {
     * Connects to the underlying database.
     */
    public boolean real_connect(Env env,
-           @Optional("localhost") StringValue host,
-           @Optional StringValue userName,
-           @Optional StringValue password,
-           @Optional StringValue dbname,
-           @Optional("3306") int port,
-           @Optional StringValue socket,
-           @Optional int flags) {
+                               @Optional("localhost") StringValue host,
+                               @Optional StringValue userName,
+                               @Optional StringValue password,
+                               @Optional StringValue dbname,
+                               @Optional("3306") int port,
+                               @Optional StringValue socket,
+                               @Optional int flags) {
       return connectInternal(env,
-              host.toString(),
-              userName.toString(),
-              password.toString(),
-              dbname.toString(),
-              port,
-              socket.toString(),
-              flags,
-              null,
-              null,
-              false);
+         host.toString(),
+         userName.toString(),
+         password.toString(),
+         dbname.toString(),
+         port,
+         socket.toString(),
+         flags,
+         null,
+         null,
+         false);
    }
 
    /**
@@ -974,8 +958,8 @@ public class Mysqli extends JdbcConnectionResource {
 
       // Recreates connection
       boolean retr = connectInternal(env, getHost(), getUserName(), getPassword(),
-              catalog, getPort(), _socket,
-              0, null, null, true);
+         catalog, getPort(), _socket,
+         0, null, null, true);
 
       if (catalog != null && retr) {
          select_db(catalog);
@@ -1065,33 +1049,33 @@ public class Mysqli extends JdbcConnectionResource {
    /**
     * returns a string with the status of the connection
     *
-   public Value stat()
-   {
-   clearErrors();
+    public Value stat()
+    {
+    clearErrors();
 
-   StringBuilder str = new StringBuilder();
+    StringBuilder str = new StringBuilder();
 
-   try {
-   Statement stmt = _conn.createStatement();
-   stmt.execute("SHOW STATUS");
+    try {
+    Statement stmt = _conn.createStatement();
+    stmt.execute("SHOW STATUS");
 
-   ResultSet rs = stmt.getResultSet();
+    ResultSet rs = stmt.getResultSet();
 
-   while (rs.next()) {
-   if (str.length() > 0)
-   str.append(' ');
-   str.append(rs.getString(1));
-   str.append(": ");
-   str.append(rs.getString(2));
-   }
+    while (rs.next()) {
+    if (str.length() > 0)
+    str.append(' ');
+    str.append(rs.getString(1));
+    str.append(": ");
+    str.append(rs.getString(2));
+    }
 
-   return new StringValueImpl(str.toString());
-   } catch (SQLException e) {
-   saveErrors(e);
-   log.log(Level.WARNING, e.toString(), e);
-   return BooleanValue.FALSE;
-   }
-   }
+    return new StringValueImpl(str.toString());
+    } catch (SQLException e) {
+    saveErrors(e);
+    log.log(Level.WARNING, e.toString(), e);
+    return BooleanValue.FALSE;
+    }
+    }
     */
    /**
     * returns a statement for use with
@@ -1104,7 +1088,7 @@ public class Mysqli extends JdbcConnectionResource {
    /**
     * Transfers the result set from the last query on the
     * database connection represented by conn.
-    *
+    * <p/>
     * Used in conjunction with mysqli_multi_query
     */
    @ReturnNullAsFalse
@@ -1211,7 +1195,7 @@ public class Mysqli extends JdbcConnectionResource {
    /**
     * Transfers the result set from the last query on the
     * database connection represented by conn.
-    *
+    * <p/>
     * Used in conjunction with mysqli_multi_query
     */
    @ReturnNullAsFalse
@@ -1241,8 +1225,8 @@ public class Mysqli extends JdbcConnectionResource {
     */
    @Override
    protected JdbcResultResource createResult(Env env,
-           Statement stmt,
-           ResultSet rs) {
+                                             Statement stmt,
+                                             ResultSet rs) {
       return new MysqliResult(env, stmt, rs, this);
    }
 
@@ -1272,12 +1256,12 @@ public class Mysqli extends JdbcConnectionResource {
     * various mysqli functions to query the database
     * for metadata about the resultset which is
     * not in ResultSetMetaData.
-    *
+    * <p/>
     * This function DOES NOT clear existing resultsets.
     */
    protected MysqliResult metaQuery(Env env,
-           String sql,
-           String catalog) {
+                                    String sql,
+                                    String catalog) {
       clearErrors();
 
       Value currentCatalog = getCatalog();
@@ -1314,7 +1298,7 @@ public class Mysqli extends JdbcConnectionResource {
    /**
     * indicates if one or more result sets are
     * available from a multi query
-    *
+    * <p/>
     * _hasBeenStored tells moreResults whether the
     * _nextResultValue has been stored already.
     * If so, more results will return true only if
@@ -1329,12 +1313,12 @@ public class Mysqli extends JdbcConnectionResource {
     * JdbcConnectionResource now stores the
     * result sets so that mysqli_store_result
     * and mysqli_use_result can return result values.
-    *
+    * <p/>
     * XXX: this may not function correctly in the
     * context of a transaction.  Unclear wether
     * mysqli_multi_query was designed with transactions
     * in mind.
-    *
+    * <p/>
     * XXX: multiQuery sets fieldCount to true or false
     * depending on the last query entered.  Not sure what
     * actual PHP intention is.
@@ -1490,7 +1474,7 @@ public class Mysqli extends JdbcConnectionResource {
          MysqlMetaDataMethod metaDataMethod = _lastMetaDataMethod;
 
          if (metaDataMethod == null
-                 || metaDataMethod.getMetaDataClass() != metaDataClass) {
+            || metaDataMethod.getMetaDataClass() != metaDataClass) {
             metaDataMethod = new MysqlMetaDataMethod(metaDataClass);
             _lastMetaDataMethod = metaDataMethod;
          }
@@ -1502,7 +1486,7 @@ public class Mysqli extends JdbcConnectionResource {
    }
 
    private static String checkDriverVersionImpl(Env env, Connection conn)
-           throws SQLException {
+      throws SQLException {
       DatabaseMetaData databaseMetaData = null;
 
       try {
@@ -1565,12 +1549,12 @@ public class Mysqli extends JdbcConnectionResource {
             checkedDriverVersion = major + "." + minor + "." + release;
 
             if (major >= 5
-                    || major == 3 && (minor > 1 || minor == 1 && release >= 14)) {
+               || major == 3 && (minor > 1 || minor == 1 && release >= 14)) {
             } else {
                String message = L.l(
-                       "Your MySQL Connector/J JDBC {0} driver may "
-                       + "have issues with character encoding.  The "
-                       + "recommended JDBC version is 3.1.14/5+.", version);
+                  "Your MySQL Connector/J JDBC {0} driver may "
+                     + "have issues with character encoding.  The "
+                     + "recommended JDBC version is 3.1.14/5+.", version);
 
                log.log(Level.WARNING, message);
                env.warning(message);
@@ -1604,7 +1588,7 @@ public class Mysqli extends JdbcConnectionResource {
 
          for (int i = 0; i < methods.length; i++) {
             if (methods[i].getName().equals("toString")
-                    && methods[i].getParameterTypes().length == 0) {
+               && methods[i].getParameterTypes().length == 0) {
                return "Mysqli[" + _conn.getConnection() + "]";
             }
          }
@@ -1620,7 +1604,9 @@ public class Mysqli extends JdbcConnectionResource {
       NONE,
       UPDATE,
       DESCRIBE
-   };
+   }
+
+   ;
 
    static class MysqlMetaDataMethod {
 
@@ -1632,7 +1618,7 @@ public class Mysqli extends JdbcConnectionResource {
 
          try {
             _getColumnCharacterSetMethod = _resultSetMetaDataClass.getMethod("getColumnCharacterSet",
-                    new Class[]{int.class});
+               new Class[]{int.class});
          } catch (Exception e) {
             log.log(Level.FINER, e.toString(), e);
          }

@@ -41,79 +41,65 @@ import java.io.Writer;
 
 public abstract class XMLEventImpl implements XMLEvent {
 
-  public Characters asCharacters()
-  {
-    return (Characters) this;
-  }
+   public Characters asCharacters() {
+      return (Characters) this;
+   }
 
-  public EndElement asEndElement()
-  {
-    return (EndElement) this;
-  }
+   public EndElement asEndElement() {
+      return (EndElement) this;
+   }
 
-  public StartElement asStartElement()
-  {
-    return (StartElement) this;
-  }
+   public StartElement asStartElement() {
+      return (StartElement) this;
+   }
 
-  public abstract int getEventType();
+   public abstract int getEventType();
 
-  public Location getLocation()
-  {
-    throw new UnsupportedOperationException();
-  }
+   public Location getLocation() {
+      throw new UnsupportedOperationException();
+   }
 
-  public QName getSchemaType()
-  {
-    return null;
-  }
+   public QName getSchemaType() {
+      return null;
+   }
 
-  public boolean isAttribute()
-  {
-    return getEventType() == ATTRIBUTE;
-  }
+   public boolean isAttribute() {
+      return getEventType() == ATTRIBUTE;
+   }
 
-  public boolean isCharacters()
-  {
-    return getEventType() == CHARACTERS;
-  }
+   public boolean isCharacters() {
+      return getEventType() == CHARACTERS;
+   }
 
-  public boolean isEndDocument()
-  {
-    return getEventType() == END_DOCUMENT;
-  }
+   public boolean isEndDocument() {
+      return getEventType() == END_DOCUMENT;
+   }
 
-  public boolean isEndElement()
-  {
-    return getEventType() == END_ELEMENT;
-  }
+   public boolean isEndElement() {
+      return getEventType() == END_ELEMENT;
+   }
 
-  public boolean isEntityReference()
-  {
-    return getEventType() == ENTITY_REFERENCE;
-  }
+   public boolean isEntityReference() {
+      return getEventType() == ENTITY_REFERENCE;
+   }
 
-  public boolean isNamespace()
-  {
-    return getEventType() == NAMESPACE;
-  }
+   public boolean isNamespace() {
+      return getEventType() == NAMESPACE;
+   }
 
-  public boolean isProcessingInstruction()
-  {
-    return getEventType() == PROCESSING_INSTRUCTION;
-  }
+   public boolean isProcessingInstruction() {
+      return getEventType() == PROCESSING_INSTRUCTION;
+   }
 
-  public boolean isStartDocument()
-  {
-    return getEventType() == START_DOCUMENT;
-  }
+   public boolean isStartDocument() {
+      return getEventType() == START_DOCUMENT;
+   }
 
-  public boolean isStartElement()
-  {
-    return getEventType() == START_ELEMENT;
-  }
+   public boolean isStartElement() {
+      return getEventType() == START_ELEMENT;
+   }
 
-  public abstract void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException;
+   public abstract void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException;
 }
 

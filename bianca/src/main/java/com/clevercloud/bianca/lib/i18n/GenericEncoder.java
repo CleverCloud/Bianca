@@ -30,19 +30,18 @@
  */
 package com.clevercloud.bianca.lib.i18n;
 
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.vfs.TempBuffer;
+
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.vfs.TempBuffer;
-
 public class GenericEncoder
-        extends Encoder {
+   extends Encoder {
 
    private Charset _charset;
    protected CharsetEncoder _encoder;
@@ -104,7 +103,7 @@ public class GenericEncoder
    }
 
    protected boolean fill(StringValue sb, CharBuffer in,
-           ByteBuffer out, CoderResult coder) {
+                          ByteBuffer out, CoderResult coder) {
       int len = out.position();
 
       if (len > 0) {

@@ -30,22 +30,19 @@
  */
 package com.clevercloud.bianca.env;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
+import com.clevercloud.util.RandomUtil;
+
+import java.io.*;
 import java.io.Serializable;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.clevercloud.util.RandomUtil;
-
 /**
  * Represents a PHP array value.
  */
 public class ArrayValueImpl extends ArrayValue
-        implements Serializable {
+   implements Serializable {
 
    private static final Logger log = Logger.getLogger(ArrayValueImpl.class.getName());
    private static final int DEFAULT_SIZE = 16;
@@ -138,8 +135,8 @@ public class ArrayValueImpl extends ArrayValue
    }
 
    public ArrayValueImpl(Env env,
-           IdentityHashMap<Value, Value> map,
-           ArrayValue copy) {
+                         IdentityHashMap<Value, Value> map,
+                         ArrayValue copy) {
       this();
 
       map.put(copy, this);
@@ -154,7 +151,7 @@ public class ArrayValueImpl extends ArrayValue
 
    /**
     * Copy for unserialization.
-    *
+    * <p/>
     * XXX: need to update for references
     */
    protected ArrayValueImpl(Env env, ArrayValue copy, CopyRoot root) {
@@ -287,6 +284,7 @@ public class ArrayValueImpl extends ArrayValue
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override
@@ -474,7 +472,7 @@ public class ArrayValueImpl extends ArrayValue
 
       Entry[] entries = _entries;
       if ((entries == null && _size >= MIN_HASH)
-              || (entries != null && entries.length <= 2 * _size)) {
+         || (entries != null && entries.length <= 2 * _size)) {
          expand();
       }
 
@@ -543,13 +541,13 @@ public class ArrayValueImpl extends ArrayValue
             return result;
          } else {
             for (Entry replaceEntry = replace.getHead();
-                    replaceEntry != null;
-                    replaceEntry = replaceEntry.getNext()) {
+                 replaceEntry != null;
+                 replaceEntry = replaceEntry.getNext()) {
                _size++;
 
                Entry[] entries = _entries;
                if ((entries == null && _size >= MIN_HASH)
-                       || (entries != null && entries.length <= 2 * _size)) {
+                  || (entries != null && entries.length <= 2 * _size)) {
                   expand();
                }
 
@@ -579,8 +577,8 @@ public class ArrayValueImpl extends ArrayValue
 
       if (replace != null) {
          for (Entry replaceEntry = replace.getHead();
-                 replaceEntry != null;
-                 replaceEntry = replaceEntry.getNext()) {
+              replaceEntry != null;
+              replaceEntry = replaceEntry.getNext()) {
             put(replaceEntry.getValue());
          }
       }
@@ -818,7 +816,6 @@ public class ArrayValueImpl extends ArrayValue
     * Returns the corresponding key if this array contains the given value
     *
     * @param value to search for in the array
-    *
     * @return the key if it is found in the array, NULL otherwise
     */
    @Override
@@ -836,7 +833,6 @@ public class ArrayValueImpl extends ArrayValue
     * Returns the corresponding key if this array contains the given value
     *
     * @param value to search for in the array
-    *
     * @return the key if it is found in the array, NULL otherwise
     */
    @Override
@@ -854,7 +850,6 @@ public class ArrayValueImpl extends ArrayValue
     * Returns the corresponding value if this array contains the given key
     *
     * @param key to search for in the array
-    *
     * @return the value if it is found in the array, NULL otherwise
     */
    @Override
@@ -1282,7 +1277,7 @@ public class ArrayValueImpl extends ArrayValue
    // Java serialization code
    //
    private void writeObject(ObjectOutputStream out)
-           throws IOException {
+      throws IOException {
       out.writeInt(_size);
 
       for (Map.Entry<Value, Value> entry : entrySet()) {
@@ -1292,7 +1287,7 @@ public class ArrayValueImpl extends ArrayValue
    }
 
    private void readObject(ObjectInputStream in)
-           throws ClassNotFoundException, IOException {
+      throws ClassNotFoundException, IOException {
       int size = in.readInt();
 
       int capacity = DEFAULT_SIZE;
@@ -1312,6 +1307,7 @@ public class ArrayValueImpl extends ArrayValue
    //
    // Java generator code
    //
+
    /**
     * Generates code to recreate the expression.
     *
@@ -1319,7 +1315,7 @@ public class ArrayValueImpl extends ArrayValue
     */
    @Override
    public void generate(PrintWriter out)
-           throws IOException {
+      throws IOException {
       out.print("new ConstArrayValue(");
 
       if (getSize() < ArrayValueComponent.MAX_SIZE) {

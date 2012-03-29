@@ -37,21 +37,20 @@ import com.clevercloud.util.L10N;
  * Relax pattern
  */
 abstract public class NameClassPattern extends Pattern {
-  protected static final L10N L = new L10N(NameClassPattern.class);
-  
-  /**
-   * Sets the parent.
-   */
-  public void setParent(Pattern parent)
-    throws RelaxException
-  {
-    if (! (parent instanceof NameClassPattern) &&
-        ! (parent instanceof ElementPattern) &&
-        ! (parent instanceof AttributePattern)) {
-      throw new RelaxException(L.l("{0} is not allowed as a child of {1}",
-                                   getTagName(), parent.getTagName()));
-    }
+   protected static final L10N L = new L10N(NameClassPattern.class);
 
-    super.setParent(parent);
-  }
+   /**
+    * Sets the parent.
+    */
+   public void setParent(Pattern parent)
+      throws RelaxException {
+      if (!(parent instanceof NameClassPattern) &&
+         !(parent instanceof ElementPattern) &&
+         !(parent instanceof AttributePattern)) {
+         throw new RelaxException(L.l("{0} is not allowed as a child of {1}",
+            getTagName(), parent.getTagName()));
+      }
+
+      super.setParent(parent);
+   }
 }

@@ -47,13 +47,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLWarning;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -61,6 +55,7 @@ import java.util.logging.Logger;
 
 // Do not add new compile dependencies (use reflection instead)
 // import org.postgresql.largeobject.*;
+
 /**
  * Bianca postgres routines.
  */
@@ -128,7 +123,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns number of affected records (tuples)
     */
    public static int pg_affected_rows(Env env,
-           @NotNull PostgresResult result) {
+                                      @NotNull PostgresResult result) {
       try {
          if (result == null) {
             return -1;
@@ -145,7 +140,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_affected_rows() alias.
     */
    public static int pg_cmdtuples(Env env,
-           @NotNull PostgresResult result) {
+                                  @NotNull PostgresResult result) {
       if (result == null) {
          return -1;
       }
@@ -157,7 +152,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Cancel an asynchronous query
     */
    public static boolean pg_cancel_query(Env env,
-           @NotNull Postgres conn) {
+                                         @NotNull Postgres conn) {
       try {
          if (conn == null) {
             return false;
@@ -178,7 +173,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String pg_client_encoding(Env env,
-           @Optional Postgres conn) {
+                                           @Optional Postgres conn) {
       try {
          if (conn == null) {
             conn = getConnection(env);
@@ -196,7 +191,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Closes a PostgreSQL connection
     */
    public static boolean pg_close(Env env,
-           @Optional Postgres conn) {
+                                  @Optional Postgres conn) {
       try {
          if (conn == null) {
             return false;
@@ -221,8 +216,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static Postgres pg_connect(Env env,
-           String connectionString,
-           @Optional int connectionType) {
+                                     String connectionString,
+                                     @Optional int connectionType) {
       try {
          String host = "localhost";
          int port = 5432;
@@ -272,7 +267,7 @@ public class PostgresModule extends AbstractBiancaModule {
          String url = "jdbc:postgresql://" + host + ":" + port + "/" + dbName;
 
          Postgres postgres = new Postgres(
-                 env, host, userName, password, dbName, port, driver, url);
+            env, host, userName, password, dbName, port, driver, url);
 
          if (!postgres.isConnected()) {
             return null;
@@ -310,7 +305,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
          // get name
          for (;
-                 i < len && !Character.isWhitespace(ch = s.charAt(i))
+              i < len && !Character.isWhitespace(ch = s.charAt(i))
                  && ch != '='; i++) {
             buffer.append(ch);
          }
@@ -401,7 +396,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Get connection is busy or not
     */
    public static boolean pg_connection_busy(Env env,
-           @NotNull Postgres conn) {
+                                            @NotNull Postgres conn) {
       // Always return false, for now (pg_send_xxxx are not asynchronous)
       // so there should be no reason for a connection to become busy in
       // between different pg_xxx calls.
@@ -413,7 +408,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Reset connection (reconnect)
     */
    public static boolean pg_connection_reset(Env env,
-           @NotNull Postgres conn) {
+                                             @NotNull Postgres conn) {
       try {
          if (conn == null) {
             return false;
@@ -426,13 +421,13 @@ public class PostgresModule extends AbstractBiancaModule {
          conn.close(env);
 
          conn = new Postgres(env,
-                 conn.getHost(),
-                 conn.getUserName(),
-                 conn.getPassword(),
-                 dbname,
-                 conn.getPort(),
-                 conn.getDriver(),
-                 conn.getUrl());
+            conn.getHost(),
+            conn.getUserName(),
+            conn.getPassword(),
+            dbname,
+            conn.getPort(),
+            conn.getDriver(),
+            conn.getUrl());
 
          env.setSpecialValue("clevercloud.postgres", conn);
 
@@ -448,7 +443,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Get connection status
     */
    public static int pg_connection_status(Env env,
-           @NotNull Postgres conn) {
+                                          @NotNull Postgres conn) {
       try {
          if (conn == null) {
             return PGSQL_CONNECTION_BAD;
@@ -469,10 +464,10 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_convert(Env env,
-           @NotNull Postgres conn,
-           String tableName,
-           ArrayValue assocArray,
-           @Optional("0") int options) {
+                                       @NotNull Postgres conn,
+                                       String tableName,
+                                       ArrayValue assocArray,
+                                       @Optional("0") int options) {
       try {
          if (conn == null) {
             return null;
@@ -593,11 +588,11 @@ public class PostgresModule extends AbstractBiancaModule {
     * Insert records into a table from an array
     */
    public static boolean pg_copy_from(Env env,
-           @NotNull Postgres conn,
-           String tableName,
-           ArrayValue rows,
-           @Optional("") String delimiter,
-           @Optional("") String nullAs) {
+                                      @NotNull Postgres conn,
+                                      String tableName,
+                                      ArrayValue rows,
+                                      @Optional("") String delimiter,
+                                      @Optional("") String nullAs) {
       // XXX delimiter not used?
 
       try {
@@ -616,7 +611,7 @@ public class PostgresModule extends AbstractBiancaModule {
          } else {
             // TODO: even the native php version does not seem to do it very well.
             throw new UnimplementedException(
-                    "pg_copy_from with non-default delimiter");
+               "pg_copy_from with non-default delimiter");
          }
 
          if (nullAs.equals("")) {
@@ -624,7 +619,7 @@ public class PostgresModule extends AbstractBiancaModule {
          } else {
             // TODO: even the native php version does not seem to do it very well.
             throw new UnimplementedException(
-                    "pg_copy_from with non-default nullAs");
+               "pg_copy_from with non-default nullAs");
          }
 
          ArrayValueImpl array = (ArrayValueImpl) rows;
@@ -693,10 +688,10 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_copy_to(Env env,
-           @NotNull Postgres conn,
-           String tableName,
-           @Optional("") String delimiter,
-           @Optional("") String nullAs) {
+                                       @NotNull Postgres conn,
+                                       String tableName,
+                                       @Optional("") String delimiter,
+                                       @Optional("") String nullAs) {
       try {
          if (conn == null) {
             return null;
@@ -773,7 +768,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String pg_dbname(Env env,
-           @Optional Postgres conn) {
+                                  @Optional Postgres conn) {
       try {
          if (conn == null) {
             conn = getConnection(env);
@@ -791,10 +786,10 @@ public class PostgresModule extends AbstractBiancaModule {
     * Deletes records
     */
    public static boolean pg_delete(Env env,
-           @NotNull Postgres conn,
-           String tableName,
-           ArrayValue assocArray,
-           @Optional("-1") int options) {
+                                   @NotNull Postgres conn,
+                                   String tableName,
+                                   ArrayValue assocArray,
+                                   @Optional("-1") int options) {
       // From php.net: this function is EXPERIMENTAL.
       // This function is EXPERIMENTAL. The behaviour of this function,
       // the name of this function, and anything else
@@ -849,7 +844,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Sync with PostgreSQL backend
     */
    public static boolean pg_end_copy(Env env,
-           @Optional Postgres conn) {
+                                     @Optional Postgres conn) {
       env.stub("pg_end_copy");
 
       return false;
@@ -860,7 +855,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_escape_bytea(Env env,
-           StringValue data) {
+                                             StringValue data) {
       if (data.length() == 0) {
          return data;
       }
@@ -869,7 +864,7 @@ public class PostgresModule extends AbstractBiancaModule {
          Class cl = Class.forName("org.postgresql.util.PGbytea");
 
          Method method = cl.getDeclaredMethod(
-                 "toPGString", new Class[]{byte[].class});
+            "toPGString", new Class[]{byte[].class});
 
          String s = (String) method.invoke(cl, new Object[]{data.toString().getBytes()});
 
@@ -886,8 +881,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_escape_bytea(Env env,
-           @NotNull Postgres conn,
-           StringValue data) {
+                                             @NotNull Postgres conn,
+                                             StringValue data) {
       return pg_escape_bytea(env, data);
    }
 
@@ -896,7 +891,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_escape_string(Env env,
-           StringValue data) {
+                                              StringValue data) {
       try {
          Postgres conn = getConnection(env);
 
@@ -917,8 +912,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_escape_string(Env env,
-           @NotNull Postgres conn,
-           StringValue data) {
+                                              @NotNull Postgres conn,
+                                              StringValue data) {
       try {
          return conn.realEscapeString(data);
 
@@ -934,9 +929,9 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static PostgresResult pg_execute(Env env,
-           @NotNull Postgres conn,
-           String stmtName,
-           ArrayValue params) {
+                                           @NotNull Postgres conn,
+                                           String stmtName,
+                                           ArrayValue params) {
       try {
          if (conn == null) {
             return null;
@@ -958,8 +953,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_fetch_all_columns(Env env,
-           @NotNull PostgresResult result,
-           @Optional("0") int column) {
+                                                 @NotNull PostgresResult result,
+                                                 @Optional("0") int column) {
       try {
          if (result == null) {
             return null;
@@ -970,11 +965,11 @@ public class PostgresModule extends AbstractBiancaModule {
          int curr = 0;
 
          for (ArrayValue row = result.fetchRow(env);
-                 row != null;
-                 row = result.fetchRow(env)) {
+              row != null;
+              row = result.fetchRow(env)) {
 
             newArray.put(LongValue.create(curr++),
-                    row.get(LongValue.create(column)));
+               row.get(LongValue.create(column)));
 
          }
 
@@ -994,7 +989,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_fetch_all(Env env,
-           @NotNull PostgresResult result) {
+                                         @NotNull PostgresResult result) {
       try {
          if (result == null) {
             return null;
@@ -1005,8 +1000,8 @@ public class PostgresModule extends AbstractBiancaModule {
          int curr = 0;
 
          for (ArrayValue row = result.fetchAssoc(env);
-                 row != null;
-                 row = result.fetchAssoc(env)) {
+              row != null;
+              row = result.fetchAssoc(env)) {
 
             newArray.put(LongValue.create(curr++), row);
 
@@ -1028,10 +1023,10 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_fetch_array(
-           Env env,
-           @NotNull PostgresResult result,
-           @Optional("-1") Value row,
-           @Optional("PGSQL_BOTH") int resultType) {
+      Env env,
+      @NotNull PostgresResult result,
+      @Optional("-1") Value row,
+      @Optional("PGSQL_BOTH") int resultType) {
       try {
          if (result == null) {
             return null;
@@ -1073,7 +1068,7 @@ public class PostgresModule extends AbstractBiancaModule {
          if (row.isLongConvertible() && row.toInt() >= 0) {
             if (!result.seek(env, row.toInt())) {
                env.warning(L.l("Unable to jump to row {0} on PostgreSQL result",
-                       row.toInt()));
+                  row.toInt()));
                return null;
             }
          }
@@ -1091,8 +1086,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_fetch_assoc(Env env,
-           @NotNull PostgresResult result,
-           @Optional("-1") Value row) {
+                                           @NotNull PostgresResult result,
+                                           @Optional("-1") Value row) {
       try {
          if (result == null) {
             return null;
@@ -1114,9 +1109,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * Fetch a row as an object
     */
    public static Value pg_fetch_object(Env env,
-           @NotNull PostgresResult result,
-           @Optional("-1") Value row,
-           @Optional int resultType) {
+                                       @NotNull PostgresResult result,
+                                       @Optional("-1") Value row,
+                                       @Optional int resultType) {
       try {
          if (result == null) {
             return null;
@@ -1124,7 +1119,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
          //@todo use optional resultType
          if ((row != null) && (!row.equals(NullValue.NULL))
-                 && (row.toInt() >= 0)) {
+            && (row.toInt() >= 0)) {
             result.seek(env, row.toInt());
          }
 
@@ -1147,9 +1142,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns values from a result resource
     */
    public static Value pg_fetch_result(Env env,
-           @NotNull PostgresResult result,
-           Value row,
-           @Optional("-1") Value fieldNameOrNumber) {
+                                       @NotNull PostgresResult result,
+                                       Value row,
+                                       @Optional("-1") Value fieldNameOrNumber) {
       try {
          if (result == null) {
             return null;
@@ -1163,7 +1158,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
          // Handle the case: optional row with mandatory fieldNameOrNumber.
          if (fieldNameOrNumber.isLongConvertible()
-                 && (fieldNameOrNumber.toInt() < 0)) {
+            && (fieldNameOrNumber.toInt() < 0)) {
             fieldNameOrNumber = row;
             rowNumber = -1;
          } else {
@@ -1190,9 +1185,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns values from a result resource
     */
    public static Value pg_result(Env env,
-           @NotNull PostgresResult result,
-           Value row,
-           @Optional("-1") Value fieldNameOrNumber) {
+                                 @NotNull PostgresResult result,
+                                 Value row,
+                                 @Optional("-1") Value fieldNameOrNumber) {
       return pg_fetch_result(env, result, row, fieldNameOrNumber);
    }
 
@@ -1201,8 +1196,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_fetch_row(Env env,
-           @NotNull PostgresResult result,
-           @Optional("-1") Value row) {
+                                         @NotNull PostgresResult result,
+                                         @Optional("-1") Value row) {
       try {
          if (result == null) {
             return null;
@@ -1225,10 +1220,10 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_field_is_null(
-           Env env,
-           @NotNull PostgresResult result,
-           Value row,
-           @Optional("-1") Value fieldNameOrNumber) {
+      Env env,
+      @NotNull PostgresResult result,
+      Value row,
+      @Optional("-1") Value fieldNameOrNumber) {
       try {
          if (result == null) {
             return null;
@@ -1242,7 +1237,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
          // Handle the case: optional row with mandatory fieldNameOrNumber.
          if (fieldNameOrNumber.isLongConvertible()
-                 && (fieldNameOrNumber.toInt() == -1)) {
+            && (fieldNameOrNumber.toInt() == -1)) {
             fieldNameOrNumber = row;
             rowNumber = -1;
          } else {
@@ -1252,7 +1247,7 @@ public class PostgresModule extends AbstractBiancaModule {
          if (rowNumber >= 0) {
             if (!result.seek(env, rowNumber)) {
                env.warning(L.l("Unable to jump to row {0} on PostgreSQL result",
-                       rowNumber));
+                  rowNumber));
                return null;
             }
          }
@@ -1260,9 +1255,9 @@ public class PostgresModule extends AbstractBiancaModule {
          int fieldNumber = result.getColumnNumber(fieldNameOrNumber, 0);
 
          Value field = pg_fetch_result(env,
-                 result,
-                 LongValue.MINUS_ONE,
-                 LongValue.create(fieldNumber));
+            result,
+            LongValue.MINUS_ONE,
+            LongValue.create(fieldNumber));
 
          if (field == null || field.isNull()) {
             return LongValue.ONE;
@@ -1281,10 +1276,10 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_fieldisnull(
-           Env env,
-           @NotNull PostgresResult result,
-           Value row,
-           @Optional("-1") Value fieldNameOrNumber) {
+      Env env,
+      @NotNull PostgresResult result,
+      Value row,
+      @Optional("-1") Value fieldNameOrNumber) {
       return pg_field_is_null(env, result, row, fieldNameOrNumber);
    }
 
@@ -1292,8 +1287,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns the name of a field
     */
    public static Value pg_field_name(Env env,
-           @NotNull PostgresResult result,
-           int fieldNumber) {
+                                     @NotNull PostgresResult result,
+                                     int fieldNumber) {
       try {
          if (result == null) {
             return BooleanValue.FALSE;
@@ -1311,8 +1306,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_field_name() alias.
     */
    public static Value pg_fieldname(Env env,
-           @NotNull PostgresResult result,
-           int fieldNumber) {
+                                    @NotNull PostgresResult result,
+                                    int fieldNumber) {
       return pg_field_name(env, result, fieldNumber);
    }
 
@@ -1322,8 +1317,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * @return the field number (0-based) or -1 on error
     */
    public static int pg_field_num(Env env,
-           @NotNull PostgresResult result,
-           String fieldName) {
+                                  @NotNull PostgresResult result,
+                                  String fieldName) {
       try {
          if (result == null) {
             return -1;
@@ -1340,8 +1335,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_field_num() alias.
     */
    public static int pg_fieldnum(Env env,
-           @NotNull PostgresResult result,
-           String fieldName) {
+                                 @NotNull PostgresResult result,
+                                 String fieldName) {
       return pg_field_num(env, result, fieldName);
    }
 
@@ -1349,9 +1344,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns the printed length
     */
    public static int pg_field_prtlen(Env env,
-           @NotNull PostgresResult result,
-           Value rowNumber,
-           @Optional("-1") Value fieldNameOrNumber) {
+                                     @NotNull PostgresResult result,
+                                     Value rowNumber,
+                                     @Optional("-1") Value fieldNameOrNumber) {
       try {
          if (result == null) {
             return -1;
@@ -1373,9 +1368,9 @@ public class PostgresModule extends AbstractBiancaModule {
          }
 
          Value value = pg_fetch_result(env,
-                 result,
-                 LongValue.create(row),
-                 LongValue.create(fieldNumber));
+            result,
+            LongValue.create(row),
+            LongValue.create(fieldNumber));
 
          // Step the cursor back to the original position
          // See php/430p
@@ -1400,9 +1395,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_field_ptrlen() alias.
     */
    public static int pg_fieldprtlen(Env env,
-           @NotNull PostgresResult result,
-           Value rowNumber,
-           @Optional("-1") Value fieldNameOrNumber) {
+                                    @NotNull PostgresResult result,
+                                    Value rowNumber,
+                                    @Optional("-1") Value fieldNameOrNumber) {
       return pg_field_prtlen(env, result, rowNumber, fieldNameOrNumber);
    }
 
@@ -1411,8 +1406,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_field_size(Env env,
-           @NotNull PostgresResult result,
-           int fieldNumber) {
+                                         @NotNull PostgresResult result,
+                                         int fieldNumber) {
       try {
          if (result == null) {
             return LongValue.create(-1);
@@ -1463,12 +1458,12 @@ public class PostgresModule extends AbstractBiancaModule {
             case Types.TIME:
             case Types.TIMESTAMP:
                size = 8;
-            // fall to specific cases
+               // fall to specific cases
 
             default: {
                String typeName = metaData.getColumnTypeName(fieldNumber);
                if (typeName.equals("timetz")
-                       || typeName.equals("interval")) {
+                  || typeName.equals("interval")) {
                   size = 12;
                } else if (typeName.equals("macaddr")) {
                   size = 6;
@@ -1477,7 +1472,7 @@ public class PostgresModule extends AbstractBiancaModule {
                } else if (typeName.equals("circle")) {
                   size = 24;
                } else if (typeName.equals("box")
-                       || typeName.equals("lseg")) {
+                  || typeName.equals("lseg")) {
                   size = 32;
                }
             }
@@ -1496,8 +1491,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_fieldsize(Env env,
-           @NotNull PostgresResult result,
-           int fieldNumber) {
+                                        @NotNull PostgresResult result,
+                                        int fieldNumber) {
       return pg_field_size(env, result, fieldNumber);
    }
 
@@ -1505,14 +1500,14 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns the name or oid of the tables field
     *
     * @return By default the tables name that field belongs to
-    * is returned but if oid_only is set to TRUE,
-    * then the oid will instead be returned.
+    *         is returned but if oid_only is set to TRUE,
+    *         then the oid will instead be returned.
     */
    @ReturnNullAsFalse
    public static String pg_field_table(Env env,
-           @NotNull PostgresResult result,
-           int fieldNumber,
-           @Optional("false") boolean oidOnly) {
+                                       @NotNull PostgresResult result,
+                                       int fieldNumber,
+                                       @Optional("false") boolean oidOnly) {
       // The Postgres JDBC driver doesn't have a concept of exposing
       // to the client what table maps to a particular select item
       // in a result set, therefore the driver cannot report anything
@@ -1529,8 +1524,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_field_type_oid(Env env,
-           @NotNull PostgresResult result,
-           int fieldNumber) {
+                                             @NotNull PostgresResult result,
+                                             int fieldNumber) {
       try {
          if (result == null) {
             return null;
@@ -1541,14 +1536,14 @@ public class PostgresModule extends AbstractBiancaModule {
          String columnTypeName = metaData.getColumnTypeName(fieldNumber + 1);
 
          String metaQuery =
-                 ("SELECT oid FROM pg_type WHERE typname='" + columnTypeName + "'");
+            ("SELECT oid FROM pg_type WHERE typname='" + columnTypeName + "'");
 
          result = pg_query(env, (Postgres) result.getConnection(), metaQuery);
 
          Value value = pg_fetch_result(env,
-                 result,
-                 LongValue.MINUS_ONE,
-                 LongValue.ZERO);
+            result,
+            LongValue.MINUS_ONE,
+            LongValue.ZERO);
 
          if (value.isLongConvertible()) {
             return LongValue.create(value.toLong());
@@ -1566,8 +1561,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_field_type(Env env,
-           @NotNull PostgresResult result,
-           int fieldNumber) {
+                                           @NotNull PostgresResult result,
+                                           int fieldNumber) {
       try {
          if (result == null) {
             return null;
@@ -1592,8 +1587,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_fieldtype(Env env,
-           @NotNull PostgresResult result,
-           int fieldNumber) {
+                                          @NotNull PostgresResult result,
+                                          int fieldNumber) {
       return pg_field_type(env, result, fieldNumber);
    }
 
@@ -1601,7 +1596,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Free result memory
     */
    public static boolean pg_free_result(Env env,
-           PostgresResult result) {
+                                        PostgresResult result) {
       try {
          if (result == null) {
             return true;
@@ -1621,7 +1616,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_free_result() alias.
     */
    public static boolean pg_freeresult(Env env,
-           PostgresResult result) {
+                                       PostgresResult result) {
       if (result == null) {
          return true;
       }
@@ -1634,8 +1629,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_get_notify(Env env,
-           @NotNull Postgres conn,
-           @Optional("-1") int resultType) {
+                                          @NotNull Postgres conn,
+                                          @Optional("-1") int resultType) {
       try {
          if (conn == null) {
             return null;
@@ -1675,12 +1670,12 @@ public class PostgresModule extends AbstractBiancaModule {
          for (int i = 0; i < n; i++) {
             // getName()
             k = (StringValue) StringValue.create(
-                    methodGetName.invoke(notifications[i],
-                    new Object[]{}));
+               methodGetName.invoke(notifications[i],
+                  new Object[]{}));
             // getPID()
             v = (LongValue) LongValue.create(
-                    (Integer) methodGetPID.invoke(notifications[i],
-                    new Object[]{}));
+               (Integer) methodGetPID.invoke(notifications[i],
+                  new Object[]{}));
 
             arrayValue.put(k, v);
          }
@@ -1697,7 +1692,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Gets the backend's process ID
     */
    public static int pg_get_pid(Env env,
-           @NotNull Postgres conn) {
+                                @NotNull Postgres conn) {
       try {
          if (conn == null) {
             return -1;
@@ -1726,7 +1721,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static PostgresResult pg_get_result(Env env,
-           @Optional Postgres conn) {
+                                              @Optional Postgres conn) {
       // Three different scenarios for pg_get_result:
       //
       // 1. pg_send_prepare/pg_send_execute - php/431m
@@ -1793,7 +1788,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
             if (stmt.getMoreResults()) {
                result = (PostgresResult) conn.createResult(env, stmt,
-                       stmt.getResultSet());
+                  stmt.getResultSet());
             } else {
                // 3. Individual pg_send_query (clean up; no futher results)
                conn.setResultResource(null);
@@ -1815,7 +1810,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String pg_host(Env env,
-           @Optional Postgres conn) {
+                                @Optional Postgres conn) {
       try {
          if (conn == null) {
             conn = getConnection(env);
@@ -1833,10 +1828,10 @@ public class PostgresModule extends AbstractBiancaModule {
     * Insert array into table
     */
    public static boolean pg_insert(Env env,
-           @NotNull Postgres conn,
-           String tableName,
-           ArrayValue assocArray,
-           @Optional("-1") int options) {
+                                   @NotNull Postgres conn,
+                                   String tableName,
+                                   ArrayValue assocArray,
+                                   @Optional("-1") int options) {
       try {
          if (conn == null) {
             return false;
@@ -1888,7 +1883,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_last_error(Env env,
-           @Optional Postgres conn) {
+                                           @Optional Postgres conn) {
       try {
 
          if (conn == null) {
@@ -1908,7 +1903,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_errormessage(Env env,
-           @Optional Postgres conn) {
+                                             @Optional Postgres conn) {
       return pg_last_error(env, conn);
    }
 
@@ -1917,7 +1912,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String pg_last_notice(Env env,
-           @NotNull Postgres conn) {
+                                       @NotNull Postgres conn) {
       try {
          if (conn == null) {
             return null;
@@ -1939,16 +1934,16 @@ public class PostgresModule extends AbstractBiancaModule {
 
    /**
     * Returns the last row's OID
-    *
+    * <p/>
     * Note that:
     * - OID is a unique id. It will not work if the table was
-    *   created with "No oid".
+    * created with "No oid".
     * - MySql's "mysql_insert_id" receives the conection handler as argument but
     * PostgreSQL's "pg_last_oid" uses the result handler.
     */
    @ReturnNullAsFalse
    public static String pg_last_oid(Env env,
-           PostgresResult result) {
+                                    PostgresResult result) {
       try {
 
          Statement stmt = result.getJavaStatement();
@@ -1958,7 +1953,7 @@ public class PostgresModule extends AbstractBiancaModule {
          Method method = cl.getDeclaredMethod("getLastOID", (Class) null);
 
          int oid = Integer.parseInt(
-                 method.invoke(stmt, new Object[]{}).toString());
+            method.invoke(stmt, new Object[]{}).toString());
 
          if (oid > 0) {
             return "" + oid;
@@ -1973,7 +1968,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
    @ReturnNullAsFalse
    public static String pg_getlastoid(Env env,
-           PostgresResult result) {
+                                      PostgresResult result) {
       return pg_last_oid(env, result);
    }
 
@@ -1981,7 +1976,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Close a large object
     */
    public static boolean pg_lo_close(Env env,
-           Object largeObject) {
+                                     Object largeObject) {
       try {
 
          Class cl = Class.forName("org.postgresql.largeobject.LargeObject");
@@ -2003,7 +1998,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_lo_close() alias.
     */
    public static boolean pg_loclose(Env env,
-           Object largeObject) {
+                                    Object largeObject) {
       return pg_lo_close(env, largeObject);
    }
 
@@ -2012,7 +2007,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_lo_create(Env env,
-           @Optional Postgres conn) {
+                                        @Optional Postgres conn) {
       try {
 
          int oid = -1;
@@ -2061,7 +2056,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_locreate(Env env,
-           @Optional Postgres conn) {
+                                       @Optional Postgres conn) {
       return pg_lo_create(env, conn);
    }
 
@@ -2069,9 +2064,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * Export a large object to a file
     */
    public static boolean pg_lo_export(Env env,
-           @NotNull Postgres conn,
-           int oid,
-           Path path) {
+                                      @NotNull Postgres conn,
+                                      int oid,
+                                      Path path) {
       try {
          if (conn == null) {
             return false;
@@ -2133,9 +2128,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_lo_export() alias.
     */
    public static boolean pg_loexport(Env env,
-           @NotNull Postgres conn,
-           int oid,
-           Path path) {
+                                     @NotNull Postgres conn,
+                                     int oid,
+                                     Path path) {
       return pg_lo_export(env, conn, oid, path);
    }
 
@@ -2144,8 +2139,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_lo_import(Env env,
-           @NotNull Postgres conn,
-           Path path) {
+                                        @NotNull Postgres conn,
+                                        Path path) {
       try {
          if (conn == null) {
             return null;
@@ -2186,8 +2181,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_loimport(Env env,
-           @NotNull Postgres conn,
-           Path path) {
+                                       @NotNull Postgres conn,
+                                       Path path) {
       return pg_lo_import(env, conn, path);
    }
 
@@ -2196,9 +2191,9 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static Object pg_lo_open(Env env,
-           @NotNull Postgres conn,
-           int oid,
-           String mode) {
+                                   @NotNull Postgres conn,
+                                   int oid,
+                                   String mode) {
       try {
          if (conn == null) {
             return null;
@@ -2222,7 +2217,7 @@ public class PostgresModule extends AbstractBiancaModule {
          cl = Class.forName("org.postgresql.largeobject.LargeObjectManager");
 
          method = cl.getDeclaredMethod("open",
-                 new Class[]{Integer.TYPE, Integer.TYPE});
+            new Class[]{Integer.TYPE, Integer.TYPE});
 
          boolean write = mode.indexOf("w") >= 0;
          boolean read = mode.indexOf("r") >= 0;
@@ -2257,9 +2252,9 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static Object pg_loopen(Env env,
-           @NotNull Postgres conn,
-           int oid,
-           String mode) {
+                                  @NotNull Postgres conn,
+                                  int oid,
+                                  String mode) {
       return pg_lo_open(env, conn, oid, mode);
    }
 
@@ -2268,7 +2263,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_lo_read_all(Env env,
-           Object largeObject) {
+                                          Object largeObject) {
       try {
          StringValue contents = pg_lo_read(env, largeObject, -1);
 
@@ -2288,7 +2283,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_loreadall(Env env,
-           Object largeObject) {
+                                        Object largeObject) {
       return pg_lo_read_all(env, largeObject);
    }
 
@@ -2297,8 +2292,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_lo_read(Env env,
-           Object largeObject,
-           @Optional("-1") int len) {
+                                        Object largeObject,
+                                        @Optional("-1") int len) {
       try {
 
          if (len < 0) {
@@ -2331,8 +2326,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_loread(Env env,
-           Object largeObject,
-           @Optional("-1") int len) {
+                                       Object largeObject,
+                                       @Optional("-1") int len) {
       return pg_lo_read(env, largeObject, len);
    }
 
@@ -2340,9 +2335,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * Seeks position within a large object
     */
    public static boolean pg_lo_seek(Env env,
-           Object largeObject,
-           int offset,
-           @Optional int whence) {
+                                    Object largeObject,
+                                    int offset,
+                                    @Optional int whence) {
       try {
 
          Class cl = Class.forName("org.postgresql.largeobject.LargeObject");
@@ -2363,7 +2358,7 @@ public class PostgresModule extends AbstractBiancaModule {
          }
 
          Method method = cl.getDeclaredMethod(
-                 "seek", new Class[]{Integer.TYPE, Integer.TYPE});
+            "seek", new Class[]{Integer.TYPE, Integer.TYPE});
 
          method.invoke(largeObject, new Object[]{offset, whence});
 
@@ -2379,7 +2374,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns current seek position a of large object
     */
    public static int pg_lo_tell(Env env,
-           Object largeObject) {
+                                Object largeObject) {
       try {
 
          Class cl = Class.forName("org.postgresql.largeobject.LargeObject");
@@ -2400,8 +2395,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Delete a large object
     */
    public static boolean pg_lo_unlink(Env env,
-           @NotNull Postgres conn,
-           int oid) {
+                                      @NotNull Postgres conn,
+                                      int oid) {
       try {
          if (conn == null) {
             return false;
@@ -2438,8 +2433,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_lo_unlink() alias.
     */
    public static boolean pg_lounlink(Env env,
-           @NotNull Postgres conn,
-           int oid) {
+                                     @NotNull Postgres conn,
+                                     int oid) {
       return pg_lo_unlink(env, conn, oid);
    }
 
@@ -2448,9 +2443,9 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_lo_write(Env env,
-           @NotNull Object largeObject,
-           String data,
-           @Optional int len) {
+                                       @NotNull Object largeObject,
+                                       String data,
+                                       @Optional int len) {
       try {
          if (largeObject == null) {
             return null;
@@ -2465,9 +2460,9 @@ public class PostgresModule extends AbstractBiancaModule {
          Class cl = Class.forName("org.postgresql.largeobject.LargeObject");
 
          Method method = cl.getDeclaredMethod("write",
-                 new Class[]{byte[].class,
-                    Integer.TYPE,
-                    Integer.TYPE});
+            new Class[]{byte[].class,
+               Integer.TYPE,
+               Integer.TYPE});
 
          method.invoke(largeObject, new Object[]{data.getBytes(), 0, len});
 
@@ -2484,9 +2479,9 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue pg_lowrite(Env env,
-           @NotNull Object largeObject,
-           String data,
-           @Optional int len) {
+                                      @NotNull Object largeObject,
+                                      String data,
+                                      @Optional int len) {
       return pg_lo_write(env, largeObject, data, len);
    }
 
@@ -2495,8 +2490,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_meta_data(Env env,
-           @NotNull Postgres conn,
-           String tableName) {
+                                         @NotNull Postgres conn,
+                                         String tableName) {
       env.stub("pg_meta_data");
 
       return null;
@@ -2506,7 +2501,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns the number of fields in a result
     */
    public static int pg_num_fields(Env env,
-           @NotNull PostgresResult result) {
+                                   @NotNull PostgresResult result) {
       try {
          return result.getFieldCount();
 
@@ -2520,7 +2515,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_num_fields() alias.
     */
    public static int pg_numfields(Env env,
-           @NotNull PostgresResult result) {
+                                  @NotNull PostgresResult result) {
       return pg_num_fields(env, result);
    }
 
@@ -2528,7 +2523,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns the number of rows in a result
     */
    public static LongValue pg_num_rows(Env env,
-           @NotNull PostgresResult result) {
+                                       @NotNull PostgresResult result) {
       int numRows = -1;
 
       try {
@@ -2542,7 +2537,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
          if (numRows < 0) {
             env.warning(L.l(
-                    "supplied argument is not a valid PostgreSQL result resource"));
+               "supplied argument is not a valid PostgreSQL result resource"));
          }
 
       } catch (Exception ex) {
@@ -2556,7 +2551,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * pg_num_rows() alias.
     */
    public static LongValue pg_numrows(Env env,
-           @NotNull PostgresResult result) {
+                                      @NotNull PostgresResult result) {
       return pg_num_rows(env, result);
    }
 
@@ -2564,7 +2559,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Get the options associated with the connection
     */
    public static String pg_options(Env env,
-           @Optional Postgres conn) {
+                                   @Optional Postgres conn) {
       throw new UnimplementedException("pg_options");
    }
 
@@ -2572,8 +2567,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Looks up a current parameter setting of the server
     */
    public static Value pg_parameter_status(Env env,
-           @NotNull Postgres conn,
-           @NotNull StringValue paramName) {
+                                           @NotNull Postgres conn,
+                                           @NotNull StringValue paramName) {
       try {
          if (conn == null || paramName == null) {
             return BooleanValue.FALSE;
@@ -2582,7 +2577,7 @@ public class PostgresModule extends AbstractBiancaModule {
          PostgresResult result = pg_query(env, conn, "SHOW " + paramName);
 
          Value value = pg_fetch_result(
-                 env, result, LongValue.ZERO, LongValue.ZERO);
+            env, result, LongValue.ZERO, LongValue.ZERO);
 
          if (value == null || value.isNull()) {
             return BooleanValue.FALSE;
@@ -2606,7 +2601,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Looks up a current parameter setting of the server
     */
    public static Value pg_parameter_status(Env env,
-           @NotNull StringValue paramName) {
+                                           @NotNull StringValue paramName) {
       Postgres conn = getConnection(env);
 
       return pg_parameter_status(env, conn, paramName);
@@ -2617,8 +2612,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static Postgres pg_pconnect(Env env,
-           String connectionString,
-           @Optional int connectType) {
+                                      String connectionString,
+                                      @Optional int connectType) {
       return pg_connect(env, connectionString, connectType);
    }
 
@@ -2626,7 +2621,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Ping database connection
     */
    public static boolean pg_ping(Env env,
-           @Optional Postgres conn) {
+                                 @Optional Postgres conn) {
       try {
 
          if (conn == null) {
@@ -2646,7 +2641,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static StringValue pg_port(Env env,
-           @Optional Postgres conn) {
+                                     @Optional Postgres conn) {
       try {
 
          if (conn == null) {
@@ -2669,9 +2664,9 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static PostgresStatement pg_prepare(Env env,
-           @NotNull Postgres conn,
-           String stmtName,
-           String query) {
+                                              @NotNull Postgres conn,
+                                              String stmtName,
+                                              String query) {
       try {
          if (conn == null) {
             return null;
@@ -2691,8 +2686,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Send a NULL-terminated string to PostgreSQL backend
     */
    public static boolean pg_put_line(Env env,
-           @NotNull Postgres conn,
-           String data) {
+                                     @NotNull Postgres conn,
+                                     String data) {
       try {
          if (conn == null) {
             return false;
@@ -2701,10 +2696,10 @@ public class PostgresModule extends AbstractBiancaModule {
          Class cl = Class.forName("org.postgresql.core.PGStream");
 
          Constructor constructor = cl.getDeclaredConstructor(new Class[]{
-                    String.class, Integer.TYPE});
+            String.class, Integer.TYPE});
 
          Object object = constructor.newInstance(
-                 new Object[]{conn.getHost(), conn.getPort()});
+            new Object[]{conn.getHost(), conn.getPort()});
 
          byte[] dataArray = data.getBytes();
 
@@ -2727,9 +2722,9 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static PostgresResult pg_query_params(Env env,
-           @NotNull Postgres conn,
-           String query,
-           ArrayValue params) {
+                                                @NotNull Postgres conn,
+                                                String query,
+                                                ArrayValue params) {
       try {
          if (conn == null) {
             return null;
@@ -2764,8 +2759,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static PostgresResult pg_query(Env env,
-           @NotNull Postgres conn,
-           @NotNull String query) {
+                                         @NotNull Postgres conn,
+                                         @NotNull String query) {
       if (conn == null || query == null) {
          return null;
       }
@@ -2778,8 +2773,8 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static PostgresResult pg_exec(Env env,
-           @NotNull Postgres conn,
-           String query) {
+                                        @NotNull Postgres conn,
+                                        String query) {
       if (conn == null) {
          return null;
       }
@@ -2791,9 +2786,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * Execute a query
     */
    private static PostgresResult pg_query_impl(Env env,
-           Postgres conn,
-           String query,
-           boolean reportError) {
+                                               Postgres conn,
+                                               String query,
+                                               boolean reportError) {
       try {
          // TODO: the PHP api allows conn to be optional but we
          // totally disallow this case.
@@ -2827,8 +2822,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns an individual field of an error report
     */
    public static Value pg_result_error_field(Env env,
-           @NotNull PostgresResult result,
-           int fieldCode) {
+                                             @NotNull PostgresResult result,
+                                             int fieldCode) {
       try {
          if (result == null) {
             return BooleanValue.FALSE;
@@ -2931,7 +2926,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String pg_result_error(Env env,
-           @Optional PostgresResult result) {
+                                        @Optional PostgresResult result) {
       try {
          if (result != null) {
             return result.getConnection().getErrorMessage();
@@ -2948,8 +2943,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Set internal row offset in result resource
     */
    public static boolean pg_result_seek(Env env,
-           @NotNull PostgresResult result,
-           int offset) {
+                                        @NotNull PostgresResult result,
+                                        int offset) {
       try {
          if (result == null) {
             return false;
@@ -2967,8 +2962,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Get status of query result
     */
    public static int pg_result_status(Env env,
-           @NotNull PostgresResult result,
-           @Optional("PGSQL_STATUS_LONG") int type) {
+                                      @NotNull PostgresResult result,
+                                      @Optional("PGSQL_STATUS_LONG") int type) {
       try {
          if (result == null) {
             return -1;
@@ -2976,7 +2971,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
          if (type == PGSQL_STATUS_STRING) {
             throw new UnimplementedException(
-                    "pg_result_status with PGSQL_STATUS_STRING");
+               "pg_result_status with PGSQL_STATUS_STRING");
          }
 
          if (result != null) {
@@ -3005,10 +3000,10 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_select(Env env,
-           @NotNull Postgres conn,
-           String tableName,
-           ArrayValue assocArray,
-           @Optional("-1") int options) {
+                                      @NotNull Postgres conn,
+                                      String tableName,
+                                      ArrayValue assocArray,
+                                      @Optional("-1") int options) {
       try {
          if (conn == null) {
             return null;
@@ -3049,9 +3044,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * without waiting for the result(s)
     */
    public static boolean pg_send_execute(Env env,
-           @NotNull Postgres conn,
-           String stmtName,
-           ArrayValue params) {
+                                         @NotNull Postgres conn,
+                                         String stmtName,
+                                         ArrayValue params) {
       try {
 
          // Note: for now, this is essentially the same as pg_execute.
@@ -3076,9 +3071,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * without waiting for completion
     */
    public static boolean pg_send_prepare(Env env,
-           @NotNull Postgres conn,
-           String stmtName,
-           String query) {
+                                         @NotNull Postgres conn,
+                                         String stmtName,
+                                         String query) {
       try {
 
          // Note: for now, this is the same as pg_prepare.
@@ -3103,9 +3098,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * without waiting for the result(s)
     */
    public static boolean pg_send_query_params(Env env,
-           @NotNull Postgres conn,
-           String query,
-           ArrayValue params) {
+                                              @NotNull Postgres conn,
+                                              String query,
+                                              ArrayValue params) {
       try {
 
          PostgresStatement pstmt = conn.prepare(env, env.createString(query));
@@ -3138,8 +3133,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Sends asynchronous query
     */
    public static boolean pg_send_query(Env env,
-           @NotNull Postgres conn,
-           String query) {
+                                       @NotNull Postgres conn,
+                                       String query) {
       if (conn == null) {
          return false;
       }
@@ -3166,8 +3161,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * Set the client encoding
     */
    public static int pg_set_client_encoding(Env env,
-           @NotNull Postgres conn,
-           String encoding) {
+                                            @NotNull Postgres conn,
+                                            String encoding) {
       //@todo conn should be optional
       if (conn == null) {
          conn = getConnection(env);
@@ -3185,8 +3180,8 @@ public class PostgresModule extends AbstractBiancaModule {
     * by pg_last_error() and pg_result_error()
     */
    public static int pg_set_error_verbosity(Env env,
-           @NotNull Postgres conn,
-           int intVerbosity) {
+                                            @NotNull Postgres conn,
+                                            int intVerbosity) {
       try {
 
          //@todo conn should be optional
@@ -3230,9 +3225,9 @@ public class PostgresModule extends AbstractBiancaModule {
     * Enable tracing a PostgreSQL connection
     */
    public static boolean pg_trace(Env env,
-           Path path,
-           @Optional String mode,
-           @Optional Postgres conn) {
+                                  Path path,
+                                  @Optional String mode,
+                                  @Optional Postgres conn) {
       env.stub("pg_trace");
 
       return false;
@@ -3242,7 +3237,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Returns the current in-transaction status of the server
     */
    public static int pg_transaction_status(Env env,
-           @Optional Postgres conn) {
+                                           @Optional Postgres conn) {
       return PGSQL_TRANSACTION_IDLE;
    }
 
@@ -3250,7 +3245,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Return the TTY name associated with the connection
     */
    public static String pg_tty(Env env,
-           @Optional Postgres conn) {
+                               @Optional Postgres conn) {
       // Note:  pg_tty() is obsolete, since the server no longer pays attention to
       // the TTY setting, but the function remains for backwards compatibility.
 
@@ -3264,7 +3259,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String pg_unescape_bytea(Env env,
-           String data) {
+                                          String data) {
       try {
 
          byte[] dataBytes = data.getBytes();
@@ -3272,7 +3267,7 @@ public class PostgresModule extends AbstractBiancaModule {
          Class cl = Class.forName("org.postgresql.util.PGbytea");
 
          Method method = cl.getDeclaredMethod(
-                 "toBytes", new Class[]{byte[].class});
+            "toBytes", new Class[]{byte[].class});
 
          return new String((byte[]) method.invoke(cl, new Object[]{dataBytes}));
 
@@ -3286,7 +3281,7 @@ public class PostgresModule extends AbstractBiancaModule {
     * Disable tracing of a PostgreSQL connection
     */
    public static boolean pg_untrace(Env env,
-           @Optional Postgres conn) {
+                                    @Optional Postgres conn) {
       // Always returns TRUE
 
       env.stub("pg_untrace");
@@ -3298,11 +3293,11 @@ public class PostgresModule extends AbstractBiancaModule {
     * Update table
     */
    public static boolean pg_update(Env env,
-           @NotNull Postgres conn,
-           String tableName,
-           ArrayValue data,
-           ArrayValue condition,
-           @Optional int options) {
+                                   @NotNull Postgres conn,
+                                   String tableName,
+                                   ArrayValue data,
+                                   ArrayValue condition,
+                                   @Optional int options) {
       // From php.net: This function is EXPERIMENTAL.
 
       // The behaviour of this function, the name of this function, and
@@ -3374,7 +3369,7 @@ public class PostgresModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue pg_version(Env env,
-           @Optional Postgres conn) {
+                                       @Optional Postgres conn) {
       try {
 
          //@todo return an array
@@ -3386,9 +3381,9 @@ public class PostgresModule extends AbstractBiancaModule {
          ArrayValue result = new ArrayValueImpl();
 
          result.append(env.createString("client"),
-                 env.createString(conn.getClientInfo()));
+            env.createString(conn.getClientInfo()));
          result.append(env.createString("server_version"),
-                 env.createString(conn.getServerInfo()));
+            env.createString(conn.getServerInfo()));
 
          return result;
       } catch (Exception ex) {
@@ -3415,9 +3410,9 @@ public class PostgresModule extends AbstractBiancaModule {
    }
 
    private static PostgresResult executeInternal(Env env,
-           @NotNull Postgres conn,
-           PostgresStatement pstmt,
-           ArrayValue params) {
+                                                 @NotNull Postgres conn,
+                                                 PostgresStatement pstmt,
+                                                 ArrayValue params) {
       try {
 
          StringBuilder stringBuilder = new StringBuilder();
@@ -3439,7 +3434,7 @@ public class PostgresModule extends AbstractBiancaModule {
 
          if (pstmt.getStatementType().equals("SELECT")) {
             PostgresResult result = new PostgresResult(
-                    env, null, pstmt.getResultSet(), null);
+               env, null, pstmt.getResultSet(), null);
             conn.setResultResource(result);
             return result;
          } else {
@@ -3455,8 +3450,8 @@ public class PostgresModule extends AbstractBiancaModule {
    }
 
    private static int writeLobInternal(Object largeObject,
-           InputStream is,
-           int len) {
+                                       InputStream is,
+                                       int len) {
       try {
 
          Class cl = Class.forName("org.postgresql.largeobject.LargeObject");
@@ -3464,7 +3459,7 @@ public class PostgresModule extends AbstractBiancaModule {
          Method method = cl.getDeclaredMethod("getOutputStream", (Class) null);
 
          OutputStream os = (OutputStream) method.invoke(
-                 largeObject, new Object[]{});
+            largeObject, new Object[]{});
 
          int written = 0;
 

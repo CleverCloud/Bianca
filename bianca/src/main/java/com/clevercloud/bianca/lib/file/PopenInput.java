@@ -41,14 +41,14 @@ import java.util.logging.Logger;
  * Represents an input stream for a popen'ed process.
  */
 public class PopenInput extends ReadStreamInput
-        implements EnvCleanup {
+   implements EnvCleanup {
 
    private static final Logger log = Logger.getLogger(FileInput.class.getName());
    private Env _env;
    private Process _process;
 
    public PopenInput(Env env, Process process)
-           throws IOException {
+      throws IOException {
       super(env);
 
       _env = env;
@@ -67,7 +67,7 @@ public class PopenInput extends ReadStreamInput
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       return new PopenInput(_env, _process);
    }
 

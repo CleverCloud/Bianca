@@ -44,9 +44,9 @@ public class IfStatement extends Statement {
    private final Statement _falseBlock;
 
    public IfStatement(Location location,
-           Expr test,
-           Statement trueBlock,
-           Statement falseBlock) {
+                      Expr test,
+                      Statement trueBlock,
+                      Statement falseBlock) {
       super(location);
 
       _test = test;

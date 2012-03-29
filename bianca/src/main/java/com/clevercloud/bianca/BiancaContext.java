@@ -30,7 +30,6 @@
  */
 package com.clevercloud.bianca;
 
-import com.clevercloud.config.ConfigException;
 import com.clevercloud.bianca.annotation.ClassImplementation;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.ExprFactory;
@@ -40,14 +39,21 @@ import com.clevercloud.bianca.lib.file.FileModule;
 import com.clevercloud.bianca.lib.regexp.RegexpModule;
 import com.clevercloud.bianca.lib.session.BiancaSessionManager;
 import com.clevercloud.bianca.module.*;
+import com.clevercloud.bianca.page.BiancaPage;
 import com.clevercloud.bianca.page.InterpretedPage;
 import com.clevercloud.bianca.page.PageManager;
-import com.clevercloud.bianca.page.BiancaPage;
 import com.clevercloud.bianca.parser.BiancaParser;
-import com.clevercloud.bianca.program.*;
+import com.clevercloud.bianca.program.BiancaProgram;
+import com.clevercloud.bianca.program.ClassDef;
+import com.clevercloud.bianca.program.JavaClassDef;
+import com.clevercloud.bianca.program.UndefinedFunction;
+import com.clevercloud.config.ConfigException;
+import com.clevercloud.server.util.CleverCloudSystem;
 import com.clevercloud.util.*;
-import com.clevercloud.server.util.*;
-import com.clevercloud.vfs.*;
+import com.clevercloud.vfs.FilePath;
+import com.clevercloud.vfs.Path;
+import com.clevercloud.vfs.ReadStream;
+import com.clevercloud.vfs.WriteStream;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -56,9 +62,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.locks.LockSupport;
-import java.util.logging.Level;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
@@ -151,7 +155,7 @@ public class BiancaContext {
 
       for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
          _serverEnvMap.put(createString(entry.getKey()),
-                 createString(entry.getValue()));
+            createString(entry.getValue()));
       }
    }
 
@@ -283,7 +287,7 @@ public class BiancaContext {
    }
 
    protected ModuleContext createModuleContext(ModuleContext parent,
-           ClassLoader loader) {
+                                               ClassLoader loader) {
       return new ModuleContext(parent, loader);
    }
 
@@ -607,11 +611,12 @@ public class BiancaContext {
    }
    }
     */
+
    /**
     * Adds a java class
     */
    public void addJavaClass(String name, Class type)
-           throws ConfigException {
+      throws ConfigException {
       try {
          if (type.isAnnotationPresent(ClassImplementation.class)) {
             _moduleContext.introspectJavaImplClass(name, type, null);
@@ -633,8 +638,8 @@ public class BiancaContext {
          type = Class.forName(className, false, _loader);
       } catch (ClassNotFoundException e) {
          throw new BiancaRuntimeException(L.l("`{0}' not valid: {1}",
-                 className,
-                 e.toString()), e);
+            className,
+            e.toString()), e);
       }
 
       addJavaClass(phpName, type);
@@ -644,9 +649,9 @@ public class BiancaContext {
     * Adds a impl class
     */
    public void addImplClass(String name, Class type)
-           throws ConfigException {
+      throws ConfigException {
       throw new UnsupportedOperationException(
-              "XXX: need to merge with ModuleContext: " + name);
+         "XXX: need to merge with ModuleContext: " + name);
       /*
       try {
       introspectJavaImplClass(name, type, null);
@@ -858,52 +863,48 @@ public class BiancaContext {
    public void setCompileClassLoader(ClassLoader loader) {
    }
 
-  private static char encodeHex(int i)
-  {
-    i &= 0xf;
+   private static char encodeHex(int i) {
+      i &= 0xf;
 
-    if (i < 10)
-      return (char) (i + '0');
-    else
-      return (char) (i - 10 + 'a');
-  }
-
-  /**
-   * Mangles the path into a valid Java class name.
-   */
-  public static String mangleName(String name)
-  {
-    CharBuffer cb = new CharBuffer();
-    cb.append("_");
-
-    for (int i = 0; i < name.length(); i++) {
-      char ch = name.charAt(i);
-
-      if (ch == '/' || ch == CleverCloudSystem.getPathSeparatorChar()) {
-        if (i == 0) {
-        }
-        else if (cb.charAt(cb.length() - 1) != '.' &&
-                 (i + 1 < name.length() && name.charAt(i + 1) != '/'))
-          cb.append("._");
-      }
-      else if (ch == '.')
-        cb.append("__");
-      else if (ch == '_')
-        cb.append("_0");
-      else if (Character.isJavaIdentifierPart(ch))
-        cb.append(Character.toLowerCase(ch));
-      else if (ch <= 256)
-        cb.append("_2" + encodeHex(ch >> 4) + encodeHex(ch));
+      if (i < 10)
+         return (char) (i + '0');
       else
-        cb.append("_4" + encodeHex(ch >> 12) + encodeHex(ch >> 8) +
-                  encodeHex(ch >> 4) + encodeHex(ch));
-    }
+         return (char) (i - 10 + 'a');
+   }
 
-    if (cb.length() == 0)
-      cb.append("_z");
+   /**
+    * Mangles the path into a valid Java class name.
+    */
+   public static String mangleName(String name) {
+      CharBuffer cb = new CharBuffer();
+      cb.append("_");
 
-    return cb.toString();
-  }
+      for (int i = 0; i < name.length(); i++) {
+         char ch = name.charAt(i);
+
+         if (ch == '/' || ch == CleverCloudSystem.getPathSeparatorChar()) {
+            if (i == 0) {
+            } else if (cb.charAt(cb.length() - 1) != '.' &&
+               (i + 1 < name.length() && name.charAt(i + 1) != '/'))
+               cb.append("._");
+         } else if (ch == '.')
+            cb.append("__");
+         else if (ch == '_')
+            cb.append("_0");
+         else if (Character.isJavaIdentifierPart(ch))
+            cb.append(Character.toLowerCase(ch));
+         else if (ch <= 256)
+            cb.append("_2" + encodeHex(ch >> 4) + encodeHex(ch));
+         else
+            cb.append("_4" + encodeHex(ch >> 12) + encodeHex(ch >> 8) +
+               encodeHex(ch >> 4) + encodeHex(ch));
+      }
+
+      if (cb.length() == 0)
+         cb.append("_z");
+
+      return cb.toString();
+   }
 
    /**
     * Returns the relative path.
@@ -931,9 +932,9 @@ public class BiancaContext {
     * Returns an include path.
     */
    public Path getIncludeCache(StringValue include,
-           String includePath,
-           Path pwd,
-           Path scriptPwd) {
+                               String includePath,
+                               Path pwd,
+                               Path scriptPwd) {
       IncludeKey key = new IncludeKey(include, includePath, pwd, scriptPwd);
 
       Path path = _includeCache.get(key);
@@ -945,10 +946,10 @@ public class BiancaContext {
     * Adds an include path.
     */
    public void putIncludeCache(StringValue include,
-           String includePath,
-           Path pwd,
-           Path scriptPwd,
-           Path path) {
+                               String includePath,
+                               Path pwd,
+                               Path scriptPwd,
+                               Path path) {
       IncludeKey key = new IncludeKey(include, includePath, pwd, scriptPwd);
 
       _includeCache.put(key, path);
@@ -1001,6 +1002,7 @@ public class BiancaContext {
    _defCache.put(key, new SoftReference<DefinitionState>(defState.copy()));
    }
     */
+
    /**
     * Clears the definition cache.
     */
@@ -1023,7 +1025,7 @@ public class BiancaContext {
     * @throws IOException
     */
    public BiancaPage parse(Path path)
-           throws IOException {
+      throws IOException {
       return _pageManager.parse(path);
    }
 
@@ -1035,7 +1037,7 @@ public class BiancaContext {
     * @throws IOException
     */
    public BiancaPage parse(Path path, String fileName, int line)
-           throws IOException {
+      throws IOException {
       return _pageManager.parse(path, fileName, line);
    }
 
@@ -1047,7 +1049,7 @@ public class BiancaContext {
     * @throws IOException
     */
    public BiancaPage parse(ReadStream is)
-           throws IOException {
+      throws IOException {
       return new InterpretedPage(BiancaParser.parse(this, is));
    }
 
@@ -1059,7 +1061,7 @@ public class BiancaContext {
     * @throws IOException
     */
    public BiancaProgram parseCode(String code)
-           throws IOException {
+      throws IOException {
       BiancaProgram program = _evalCache.get(code);
 
       if (program == null) {
@@ -1078,7 +1080,7 @@ public class BiancaContext {
     * @throws IOException
     */
    public BiancaProgram parseEvalExpr(String code)
-           throws IOException {
+      throws IOException {
       // TODO: possible conflict with parse eval because of the
       // return value changes
       BiancaProgram program = _evalCache.get(code);
@@ -1100,7 +1102,7 @@ public class BiancaContext {
     * @throws IOException
     */
    public AbstractFunction parseFunction(String name, String args, String code)
-           throws IOException {
+      throws IOException {
       return BiancaParser.parseFunction(this, name, args, code);
    }
 
@@ -1151,6 +1153,7 @@ public class BiancaContext {
    //
    // name to id mappings
    //
+
    /**
     * Returns the id for a function name.
     */
@@ -1193,7 +1196,7 @@ public class BiancaContext {
       if (_functionMap.length <= id) {
          AbstractFunction[] functionMap = new AbstractFunction[id + 256];
          System.arraycopy(_functionMap, 0,
-                 functionMap, 0, _functionMap.length);
+            functionMap, 0, _functionMap.length);
          _functionMap = functionMap;
       }
 
@@ -1280,20 +1283,20 @@ public class BiancaContext {
          if (_classDefMap.length <= id) {
             String[] classNames = new String[id + 256];
             System.arraycopy(_classNames, 0,
-                    classNames, 0,
-                    _classNames.length);
+               classNames, 0,
+               _classNames.length);
             _classNames = classNames;
 
             ClassDef[] classDefMap = new ClassDef[_classNames.length];
             System.arraycopy(_classDefMap, 0,
-                    classDefMap, 0,
-                    _classDefMap.length);
+               classDefMap, 0,
+               _classDefMap.length);
             _classDefMap = classDefMap;
 
             BiancaClass[] classCacheMap = new BiancaClass[_classNames.length];
             System.arraycopy(_classCacheMap, 0,
-                    classCacheMap, 0,
-                    _classCacheMap.length);
+               classCacheMap, 0,
+               _classCacheMap.length);
             _classCacheMap = classCacheMap;
          }
 
@@ -1392,20 +1395,20 @@ public class BiancaContext {
          if (_classDefMap.length <= id) {
             Value[] constantMap = new Value[id + 256];
             System.arraycopy(_constantMap, 0,
-                    constantMap, 0,
-                    _constantMap.length);
+               constantMap, 0,
+               _constantMap.length);
             _constantMap = constantMap;
 
             Value[] constantNameList = new Value[id + 256];
             System.arraycopy(_constantNameList, 0,
-                    constantNameList, 0,
-                    _constantNameList.length);
+               constantNameList, 0,
+               _constantNameList.length);
             _constantNameList = constantNameList;
 
             int[] constantLowerMap = new int[_constantMap.length];
             System.arraycopy(_constantLowerMap, 0,
-                    constantLowerMap, 0,
-                    _constantLowerMap.length);
+               constantLowerMap, 0,
+               _constantLowerMap.length);
             _constantLowerMap = constantLowerMap;
          }
 
@@ -1515,7 +1518,7 @@ public class BiancaContext {
 
       if (module == null) {
          throw new IllegalStateException(L.l("'{0}' is an unknown bianca module",
-                 name));
+            name));
       }
 
       return module;
@@ -1533,7 +1536,7 @@ public class BiancaContext {
     */
    public boolean isExtensionLoaded(String name) {
       return _extensionSet.contains(name)
-              || _extensionSetLowerCase.contains(name.toLowerCase());
+         || _extensionSetLowerCase.contains(name.toLowerCase());
    }
 
    /**
@@ -1586,15 +1589,15 @@ public class BiancaContext {
       _iniDefinitions.addAll(_ini);
 
       _includeCache = new TimedCache<IncludeKey, Path>(getIncludeCacheMax(),
-              getIncludeCacheTimeout());
+         getIncludeCacheTimeout());
 
       initLocal();
    }
 
    public void addModule(BiancaModule module) {
       ModuleInfo info = new ModuleInfo(_moduleContext,
-              module.getClass().getName(),
-              module);
+         module.getClass().getName(),
+         module);
 
       addModuleInfo(info);
    }
@@ -1728,6 +1731,7 @@ public class BiancaContext {
    }
    }
     */
+
    /**
     * Returns a named constant.
     */
@@ -1790,12 +1794,12 @@ public class BiancaContext {
       if (obj == null) {
          return NullValue.NULL;
       } else if (Byte.class.equals(obj.getClass())
-              || Short.class.equals(obj.getClass())
-              || Integer.class.equals(obj.getClass())
-              || Long.class.equals(obj.getClass())) {
+         || Short.class.equals(obj.getClass())
+         || Integer.class.equals(obj.getClass())
+         || Long.class.equals(obj.getClass())) {
          return LongValue.create(((Number) obj).longValue());
       } else if (Float.class.equals(obj.getClass())
-              || Double.class.equals(obj.getClass())) {
+         || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
          return new StringValue((String) obj);
@@ -1829,9 +1833,9 @@ public class BiancaContext {
    }
 
    public Env createEnv(BiancaPage page,
-           WriteStream out,
-           HttpServletRequest request,
-           HttpServletResponse response) {
+                        WriteStream out,
+                        HttpServletRequest request,
+                        HttpServletResponse response) {
       return new Env(this, page, out, request, response);
    }
 
@@ -1866,9 +1870,9 @@ public class BiancaContext {
       private final Path _scriptPwd;
 
       IncludeKey(StringValue include,
-              String includePath,
-              Path pwd,
-              Path scriptPwd) {
+                 String includePath,
+                 Path pwd,
+                 Path scriptPwd) {
          _include = include;
          _includePath = includePath;
          _pwd = pwd;
@@ -1896,9 +1900,9 @@ public class BiancaContext {
          IncludeKey key = (IncludeKey) o;
 
          return (_include.equals(key._include)
-                 && _includePath.equals(key._includePath)
-                 && _pwd.equals(key._pwd)
-                 && _scriptPwd.equals(key._scriptPwd));
+            && _includePath.equals(key._includePath)
+            && _pwd.equals(key._pwd)
+            && _scriptPwd.equals(key._scriptPwd));
       }
    }
 
@@ -1931,15 +1935,16 @@ public class BiancaContext {
       "include_path", includePath, IniDefinition.PHP_INI_ALL);
        */
    }
+
    public static final IniDefinition INI_INCLUDE_PATH = _ini.add("include_path", ".", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_REGISTER_LONG_ARRAYS = _ini.add("register_long_arrays", true, IniDefinition.PHP_INI_PERDIR);
    public static final IniDefinition INI_ALWAYS_POPULATE_RAW_POST_DATA = _ini.add(
-           "always_populate_raw_post_data", false, IniDefinition.PHP_INI_PERDIR);
+      "always_populate_raw_post_data", false, IniDefinition.PHP_INI_PERDIR);
    // unicode ini
    public static final IniDefinition INI_UNICODE_FALLBACK_ENCODING = _ini.add("unicode.fallback_encoding", "utf-8", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_MODE = _ini.add("unicode.from_error_mode", "2", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_FROM_ERROR_SUBST_CHAR = _ini.add(
-           "unicode.from_error_subst_char", "3f", IniDefinition.PHP_INI_ALL);
+      "unicode.from_error_subst_char", "3f", IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_HTTP_INPUT_ENCODING = _ini.add("unicode.http_input_encoding", null, IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_OUTPUT_ENCODING = _ini.add("unicode.output_encoding", null, IniDefinition.PHP_INI_ALL);
    public static final IniDefinition INI_UNICODE_RUNTIME_ENCODING = _ini.add("unicode.runtime_encoding", null, IniDefinition.PHP_INI_ALL);

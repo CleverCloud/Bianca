@@ -30,42 +30,41 @@
 
 package com.clevercloud.vfs;
 
+import com.clevercloud.util.ByteAppendable;
+
 import java.io.IOException;
 import java.io.OutputStream;
-
-import com.clevercloud.util.ByteAppendable;
 
 /**
  * An OutputStream with an accessible buffer.
  */
-abstract public class OutputStreamWithBuffer extends OutputStream 
-  implements ByteAppendable {
+abstract public class OutputStreamWithBuffer extends OutputStream
+   implements ByteAppendable {
 
-  /**
-   * Returns the stream's buffer.
-   */
-  abstract public byte []getBuffer()
-    throws IOException;
-  
-  /**
-   * Returns the stream's buffer offset.
-   */
-  abstract public int getBufferOffset()
-    throws IOException;
-  
-  /**
-   * Sets the stream's buffer length.
-   */
-  abstract public void setBufferOffset(int offset)
-    throws IOException;
-  
-  /**
-   * Returns the next buffer.
-   *
-   * @param length the length of the completed buffer
-   *
-   * @return the next buffer
-   */
-  abstract public byte []nextBuffer(int offset)
-    throws IOException;
+   /**
+    * Returns the stream's buffer.
+    */
+   abstract public byte[] getBuffer()
+      throws IOException;
+
+   /**
+    * Returns the stream's buffer offset.
+    */
+   abstract public int getBufferOffset()
+      throws IOException;
+
+   /**
+    * Sets the stream's buffer length.
+    */
+   abstract public void setBufferOffset(int offset)
+      throws IOException;
+
+   /**
+    * Returns the next buffer.
+    *
+    * @param length the length of the completed buffer
+    * @return the next buffer
+    */
+   abstract public byte[] nextBuffer(int offset)
+      throws IOException;
 }

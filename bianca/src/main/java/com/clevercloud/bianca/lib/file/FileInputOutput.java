@@ -33,13 +33,8 @@ package com.clevercloud.bianca.lib.file;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.EnvCleanup;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.vfs.Encoding;
-import com.clevercloud.vfs.Path;
-import com.clevercloud.vfs.RandomAccessStream;
-import com.clevercloud.vfs.TempBuffer;
-import com.clevercloud.vfs.LockableStream;
+import com.clevercloud.vfs.*;
 
 import java.io.*;
 import java.util.logging.Level;
@@ -49,7 +44,7 @@ import java.util.logging.Logger;
  * Represents a PHP open file
  */
 public class FileInputOutput extends AbstractBinaryOutput
-        implements BinaryInput, BinaryOutput, LockableStream, EnvCleanup {
+   implements BinaryInput, BinaryOutput, LockableStream, EnvCleanup {
 
    private static final Logger log = Logger.getLogger(FileInputOutput.class.getName());
    private Env _env;
@@ -63,18 +58,18 @@ public class FileInputOutput extends AbstractBinaryOutput
    private boolean _temporary;
 
    public FileInputOutput(Env env, Path path)
-           throws IOException {
+      throws IOException {
       this(env, path, false, false, false);
    }
 
    public FileInputOutput(Env env, Path path, boolean append, boolean truncate)
-           throws IOException {
+      throws IOException {
       this(env, path, append, truncate, false);
    }
 
    public FileInputOutput(Env env, Path path,
-           boolean append, boolean truncate, boolean temporary)
-           throws IOException {
+                          boolean append, boolean truncate, boolean temporary)
+      throws IOException {
       _env = env;
 
       env.addCleanup(this);
@@ -138,7 +133,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     * @param encoding name of the read encoding
     */
    public void setEncoding(String encoding)
-           throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
       String mimeName = Encoding.getMimeName(encoding);
 
       if (mimeName != null && mimeName.equals(_readEncodingName)) {
@@ -150,7 +145,7 @@ public class FileInputOutput extends AbstractBinaryOutput
    }
 
    private int readChar()
-           throws IOException {
+      throws IOException {
       if (_readEncoding != null) {
          int ch = _readEncoding.read();
          return ch;
@@ -164,7 +159,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public void unread()
-           throws IOException {
+      throws IOException {
       _doUnread = true;
    }
 
@@ -173,7 +168,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       if (_doUnread) {
          _doUnread = false;
 
@@ -190,7 +185,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public int read(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       _doUnread = false;
 
       return _stream.read(buffer, offset, length);
@@ -200,7 +195,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     * Reads a buffer from a file, returning -1 on EOF.
     */
    public int read(char[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       _doUnread = false;
 
       return _stream.read(buffer, offset, length);
@@ -211,7 +206,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public StringValue appendTo(StringValue builder)
-           throws IOException {
+      throws IOException {
       if (_stream != null) {
          return builder.append(_stream);
       } else {
@@ -224,7 +219,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public StringValue read(int length)
-           throws IOException {
+      throws IOException {
       StringValue bb = new StringValue();
       TempBuffer temp = TempBuffer.allocate();
 
@@ -259,7 +254,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public boolean readOptionalLinefeed()
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       if (ch == '\n') {
@@ -275,7 +270,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public StringValue readLine(long length)
-           throws IOException {
+      throws IOException {
       return _lineReader.readLine(_env, this, length);
    }
 
@@ -296,7 +291,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public void print(char v)
-           throws IOException {
+      throws IOException {
       _stream.write((byte) v);
    }
 
@@ -305,7 +300,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public void print(String v)
-           throws IOException {
+      throws IOException {
       for (int i = 0; i < v.length(); i++) {
          write(v.charAt(i));
       }
@@ -316,7 +311,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       _stream.write(buffer, offset, length);
    }
 
@@ -325,7 +320,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public void write(int ch)
-           throws IOException {
+      throws IOException {
       _stream.write(ch);
    }
 
@@ -334,7 +329,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public void flush()
-           throws IOException {
+      throws IOException {
    }
 
    /**
@@ -441,7 +436,7 @@ public class FileInputOutput extends AbstractBinaryOutput
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       return new FileInputOutput(_env, _path);
    }
 
@@ -468,6 +463,7 @@ public class FileInputOutput extends AbstractBinaryOutput
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override

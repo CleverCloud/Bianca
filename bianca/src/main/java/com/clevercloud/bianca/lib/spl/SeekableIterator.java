@@ -29,11 +29,11 @@
  */
 package com.clevercloud.bianca.lib.spl;
 
-import com.clevercloud.bianca.env.IteratorClass;
 import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.IteratorClass;
 
 public interface SeekableIterator
-        extends IteratorClass {
+   extends IteratorClass {
 
    /**
     * Seeks to the given offset.

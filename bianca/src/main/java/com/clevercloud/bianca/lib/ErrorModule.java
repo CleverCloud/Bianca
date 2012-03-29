@@ -32,16 +32,11 @@ package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.expr.Expr;
-import com.clevercloud.bianca.expr.CallExpr;
-import com.clevercloud.bianca.expr.FunIncludeExpr;
-import com.clevercloud.bianca.expr.FunIncludeOnceExpr;
-import com.clevercloud.bianca.expr.ObjectMethodExpr;
-import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.bianca.module.IniDefinitions;
-import com.clevercloud.bianca.module.IniDefinition;
+import com.clevercloud.bianca.expr.*;
 import com.clevercloud.bianca.lib.file.FileModule;
-
+import com.clevercloud.bianca.module.AbstractBiancaModule;
+import com.clevercloud.bianca.module.IniDefinition;
+import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.util.L10N;
 
 import java.util.logging.Logger;
@@ -119,7 +114,7 @@ public class ErrorModule extends AbstractBiancaModule {
          if (name.equals("executeTop")) {
             return result;
          } else if (className.startsWith("_bianca._")
-                 && name.equals("call")) {
+            && name.equals("call")) {
             String path = unmangleFile(className);
             String fileName = env.getBianca().getPwd().lookup("./" + path).getNativePath();
 
@@ -134,13 +129,13 @@ public class ErrorModule extends AbstractBiancaModule {
 
             call.put(FILE, env.createString(fileName));
             call.put(LINE, LongValue.create(
-                    env.getSourceLine(className, elt.getLineNumber())));
+               env.getSourceLine(className, elt.getLineNumber())));
 
             call.put(FUNCTION, env.createString(fun));
 
             call.put(ARGS, new ArrayValueImpl());
          } else if (className.startsWith("_bianca._")
-                 && name.equals("callMethod")) {
+            && name.equals("callMethod")) {
             String path = unmangleFile(className);
             String fileName = env.getBianca().getPwd().lookup("./" + path).getNativePath();
 
@@ -149,7 +144,7 @@ public class ErrorModule extends AbstractBiancaModule {
 
             call.put(FILE, env.createString(fileName));
             call.put(LINE, LongValue.create(
-                    env.getSourceLine(className, elt.getLineNumber())));
+               env.getSourceLine(className, elt.getLineNumber())));
 
             call.put(FUNCTION, env.createString(unmangleFunction(className)));
             call.put(CLASS, env.createString(unmangleClass(className)));
@@ -157,7 +152,7 @@ public class ErrorModule extends AbstractBiancaModule {
 
             call.put(ARGS, new ArrayValueImpl());
          } else if (className.startsWith("_bianca._")
-                 && name.equals("execute")) {
+            && name.equals("execute")) {
             String methodName = stack[i - 1].getMethodName();
 
             String path = unmangleFile(className);
@@ -168,7 +163,7 @@ public class ErrorModule extends AbstractBiancaModule {
 
             call.put(FILE, env.createString(fileName));
             call.put(LINE, LongValue.create(
-                    env.getSourceLine(className, elt.getLineNumber())));
+               env.getSourceLine(className, elt.getLineNumber())));
 
             if (methodName.equals("includeOnce")) {
                call.put(FUNCTION, env.createString("include_once"));
@@ -191,33 +186,33 @@ public class ErrorModule extends AbstractBiancaModule {
                }
             }
          } else if (className.equals("com.clevercloud.bianca.expr.FunctionExpr")
-                 && name.equals("evalImpl")) {
+            && name.equals("evalImpl")) {
             if (stack[i - 1].getMethodName().equals("evalArguments")) {
             } else {
                addInterpreted(env, result, depth++);
             }
          } else if (className.equals("com.clevercloud.bianca.expr.MethodCallExpr")
-                 && name.equals("eval")) {
+            && name.equals("eval")) {
             if (stack[i - 1].getMethodName().equals("evalArguments")) {
             } else {
                addInterpreted(env, result, depth++);
             }
          } else if (className.equals("com.clevercloud.bianca.expr.NewExpr")
-                 && name.equals("eval")) {
+            && name.equals("eval")) {
             if (stack[i - 1].getMethodName().equals("evalArguments")) {
             } else {
                addInterpreted(env, result, depth++);
             }
          } else if (className.equals("com.clevercloud.bianca.expr.IncludeExpr")
-                 && name.equals("eval")) {
+            && name.equals("eval")) {
             addInterpreted(env, result, depth++);
          } else if (className.equals("com.clevercloud.bianca.expr.IncludeOnceExpr")
-                 && name.equals("eval")) {
+            && name.equals("eval")) {
             addInterpreted(env, result, depth++);
          } else if (className.equals("com.clevercloud.bianca.expr.CallExpr")) {
             addInterpreted(env, result, depth++);
          } else if (className.equals("com.clevercloud.bianca.env.Env")
-                 && name.equals("close")) {
+            && name.equals("close")) {
             return result;
          } else if (className.startsWith("com.clevercloud.bianca")) {
          } else if (name.equals("invoke") || name.equals("invoke0")) {
@@ -250,10 +245,10 @@ public class ErrorModule extends AbstractBiancaModule {
       String prevMethodName = stack[i - 1].getMethodName();
 
       if (className.startsWith("_bianca._")
-              && methodName.startsWith("call")) {
+         && methodName.startsWith("call")) {
          return unmangleFunction(className);
       } else if (prevClassName.startsWith("_bianca._")
-              && prevMethodName.startsWith("call")) {
+         && prevMethodName.startsWith("call")) {
          return unmangleFunction(prevClassName);
       } else {
          return null;
@@ -276,13 +271,13 @@ public class ErrorModule extends AbstractBiancaModule {
 
          if (callExpr.getFileName() != null) {
             call.put(FILE,
-                    env.createString(callExpr.getFileName()));
+               env.createString(callExpr.getFileName()));
             call.put(LINE,
-                    LongValue.create(callExpr.getLine()));
+               LongValue.create(callExpr.getLine()));
          }
 
          call.put(FUNCTION,
-                 env.createString(callExpr.getName()));
+            env.createString(callExpr.getName()));
 
          // Create "args" argument value array
 
@@ -301,16 +296,16 @@ public class ErrorModule extends AbstractBiancaModule {
 
          if (callExpr.getFileName() != null) {
             call.put(FILE,
-                    env.createString(callExpr.getFileName()));
+               env.createString(callExpr.getFileName()));
             call.put(LINE,
-                    LongValue.create(callExpr.getLine()));
+               LongValue.create(callExpr.getLine()));
          }
 
          call.put(FUNCTION,
-                 env.createString(callExpr.getName()));
+            env.createString(callExpr.getName()));
 
          call.put(CLASS,
-                 env.createString(env.peekCallThis(i).getClassName()));
+            env.createString(env.peekCallThis(i).getClassName()));
 
          call.put(TYPE, env.createString("->"));
 
@@ -443,6 +438,7 @@ public class ErrorModule extends AbstractBiancaModule {
    return NullValue.NULL;
    }
     */
+
    /**
     * Exits
     */
@@ -454,15 +450,15 @@ public class ErrorModule extends AbstractBiancaModule {
     * Send a message to the log.
     */
    public static boolean error_log(Env env,
-           StringValue message,
-           @Optional("0") int type,
-           @Optional StringValue destination,
-           @Optional StringValue extraHeaders) {
+                                   StringValue message,
+                                   @Optional("0") int type,
+                                   @Optional StringValue destination,
+                                   @Optional StringValue extraHeaders) {
       if (type == 3) {
          // message is appended to the file destination, no newline added
 
          Value numBytes = FileModule.file_put_contents(env,
-                 destination, message, FileModule.FILE_APPEND, null);
+            destination, message, FileModule.FILE_APPEND, null);
 
          if (numBytes == BooleanValue.FALSE) {
             return false;
@@ -493,7 +489,7 @@ public class ErrorModule extends AbstractBiancaModule {
     * Changes the error reporting value.
     */
    public static long error_reporting(Env env,
-           @Optional Value levelV) {
+                                      @Optional Value levelV) {
       long oldMask = env.getIni("error_reporting").toLong();
 
       if (!levelV.isDefault()) {
@@ -517,13 +513,13 @@ public class ErrorModule extends AbstractBiancaModule {
    /**
     * Sets an error handler
     *
-    * @param env the bianca environment
-    * @param fun the error handler
+    * @param env  the bianca environment
+    * @param fun  the error handler
     * @param code errorMask error level
     */
    public static boolean set_error_handler(Env env,
-           Callable fun,
-           @Optional("E_ALL") int errorMask) {
+                                           Callable fun,
+                                           @Optional("E_ALL") int errorMask) {
       env.setErrorHandler(errorMask, fun);
 
       return true;
@@ -536,7 +532,7 @@ public class ErrorModule extends AbstractBiancaModule {
     * @param fun the exception handler
     */
    public static Value set_exception_handler(Env env,
-           Callable fun) {
+                                             Callable fun) {
       return env.setExceptionHandler(fun);
    }
 
@@ -554,13 +550,13 @@ public class ErrorModule extends AbstractBiancaModule {
    /**
     * Triggers an error.
     *
-    * @param env the bianca environment
-    * @param msg the error message
+    * @param env  the bianca environment
+    * @param msg  the error message
     * @param code the error level
     */
    public static Value trigger_error(Env env,
-           String msg,
-           @Optional("E_USER_NOTICE") int code) {
+                                     String msg,
+                                     @Optional("E_USER_NOTICE") int code) {
       switch (code) {
          case Env.E_USER_NOTICE:
             env.error(Env.B_USER_NOTICE, "", msg);
@@ -576,7 +572,7 @@ public class ErrorModule extends AbstractBiancaModule {
 
          default:
             env.warning(L.l("'0x{0}' is an invalid error type",
-                    Integer.toHexString(code)));
+               Integer.toHexString(code)));
 
             return BooleanValue.FALSE;
       }
@@ -585,15 +581,16 @@ public class ErrorModule extends AbstractBiancaModule {
    /**
     * Triggers an error.
     *
-    * @param env the bianca environment
-    * @param msg the error message
+    * @param env  the bianca environment
+    * @param msg  the error message
     * @param code the error level
     */
    public Value user_error(Env env,
-           String msg,
-           @Optional("E_USER_NOTICE") int code) {
+                           String msg,
+                           @Optional("E_USER_NOTICE") int code) {
       return trigger_error(env, msg, code);
    }
+
    static final IniDefinition INI_ERROR_REPORTING = _iniDefinitions.add("error_reporting", Env.E_ALL, PHP_INI_ALL);
    static final IniDefinition INI_DISPLAY_ERRORS = _iniDefinitions.add("display_errors", "1", PHP_INI_ALL);
    static final IniDefinition INI_DISPLAY_STARTUP_ERRORS = _iniDefinitions.add("display_startup_errors", false, PHP_INI_ALL);

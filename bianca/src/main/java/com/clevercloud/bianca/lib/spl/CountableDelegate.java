@@ -30,12 +30,7 @@
  */
 package com.clevercloud.bianca.lib.spl;
 
-import com.clevercloud.bianca.env.CountDelegate;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.ObjectValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.*;
 
 /**
  * A delegate that intercepts the global count() function and calls count()

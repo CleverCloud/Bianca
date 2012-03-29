@@ -35,27 +35,23 @@ import java.util.Map;
  * Implements a tcp stream, essentially just a socket pair.
  */
 public class TcpsPath extends TcpPath {
-  public TcpsPath(TcpPath root, String userPath,
-                  Map<String,Object> newAttributes,
-                  String host, int port)
-  {
-    super(root, userPath, newAttributes, host, port);
-  }
+   public TcpsPath(TcpPath root, String userPath,
+                   Map<String, Object> newAttributes,
+                   String host, int port) {
+      super(root, userPath, newAttributes, host, port);
+   }
 
-  protected TcpPath create(TcpPath root,
-                           String userPath, Map<String,Object> newAttributes,
-                           String host, int port)
-  {
-    return new TcpsPath(root, userPath, newAttributes, host, port);
-  }
+   protected TcpPath create(TcpPath root,
+                            String userPath, Map<String, Object> newAttributes,
+                            String host, int port) {
+      return new TcpsPath(root, userPath, newAttributes, host, port);
+   }
 
-  public String getScheme()
-  {
-    return "tcps";
-  }
+   public String getScheme() {
+      return "tcps";
+   }
 
-  public String toString()
-  {
-    return getURL();
-  }
+   public String toString() {
+      return getURL();
+   }
 }

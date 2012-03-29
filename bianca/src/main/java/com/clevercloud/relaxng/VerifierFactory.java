@@ -38,9 +38,9 @@ import java.io.IOException;
  * JARV Verifier factory.
  */
 public interface VerifierFactory {
-  /**
-   * Compile a schema.
-   */
-  public Schema compileSchema(InputSource is)
-    throws SAXException, IOException;
+   /**
+    * Compile a schema.
+    */
+   public Schema compileSchema(InputSource is)
+      throws SAXException, IOException;
 }

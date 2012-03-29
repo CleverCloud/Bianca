@@ -40,308 +40,273 @@ import java.util.Iterator;
  * the VFS.
  */
 public class StreamImpl {
-  protected static NullPath _nullPath;
-  
-  private static final byte _newline[] = new byte[] {(byte) '\n'};
-  
-  protected Path _path;
+   protected static NullPath _nullPath;
 
-  /**
-   * Returns the stream's natural newline character.
-   */
-  public byte []getNewline()
-  {
-    return _newline;
-  }
+   private static final byte _newline[] = new byte[]{(byte) '\n'};
 
-  /**
-   * Returns true if the stream implements skip.
-   */
-  public boolean hasSkip()
-  {
-    return false;
-  }
+   protected Path _path;
 
-  /**
-   * Skips a number of bytes, returning the bytes skipped.
-   *
-   * @param n the number of types to skip.
-   *
-   * @return the actual bytes skipped.
-   */
-  public long skip(long n)
-    throws IOException
-  {
-    return 0;
-  }
+   /**
+    * Returns the stream's natural newline character.
+    */
+   public byte[] getNewline() {
+      return _newline;
+   }
 
-  /**
-   * Returns true if this is a read stream.
-   */
-  public boolean canRead()
-  {
-    return false;
-  }
-
-  /**
-   * Returns the read buffer.
-   */
-  public byte []getReadBuffer()
-  {
-    return null;
-  }
-
-  /**
-   * Reads the next chunk from the stream.
-   *
-   * @param buffer byte array receiving the data.
-   * @param offset starting offset into the array.
-   * @param length number of bytes to read.
-   *
-   * @return the number of bytes read or -1 on end of file.
-   */
-  public int read(byte []buffer, int offset, int length) throws IOException
-  {
-    throw new UnsupportedOperationException(String.valueOf(this));
-  }
-
-  /**
-   * Reads the next chunk from the stream in non-blocking mode.
-   *
-   * @param buffer byte array receiving the data.
-   * @param offset starting offset into the array.
-   * @param length number of bytes to read.
-   *
-   * @return the number of bytes read or -1 on end of file.
-   */
-  public int readNonBlock(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    return 0;
-  }
-
-  /**
-   * Reads the next chunk from the stream in non-blocking mode.
-   *
-   * @param buffer byte array receiving the data.
-   * @param offset starting offset into the array.
-   * @param length number of bytes to read.
-   *
-   * @return the number of bytes read or -1 on end of file.
-   */
-  public int readTimeout(byte []buffer, int offset, int length,
-                         long timeout)
-    throws IOException
-  {
-    return 0;
-  }
-
-  /**
-   * Returns the number of bytes available without blocking.  Depending on
-   * the stream, this may return less than the actual bytes, but will always
-   * return a number > 0 if there is any data available.
-   */
-  public int getAvailable() throws IOException
-  {
-    throw new UnsupportedOperationException(String.valueOf(this));
-  }
-
-  /**
-   * Returns the current read position of the underlying file.
-   */
-  public long getReadPosition()
-  {
-    return -1;
-  }
-
-  /**
-   * Returns true if this is a writable stream.
-   */
-  public boolean canWrite()
-  {
-    return false;
-  }
-
-  /**
-   * Returns true if the buffer should be flushed on every newline.  This is
-   * typically only true for error streams like stderr:.
-   */
-  public boolean getFlushOnNewline()
-  {
-    return false;
-  }
-
-  /**
-   * Sets the write encoding.
-   */
-  public void setWriteEncoding(String encoding)
-  {
-  }
-
-  /**
-   * Writes a buffer to the underlying stream.
-   *
-   * @param buffer the byte array to write.
-   * @param offset the offset into the byte array.
-   * @param length the number of bytes to write.
-   * @param isEnd true when the write is flushing a close.
-   */
-  public void write(byte []buffer, int offset, int length, boolean isEnd)
-    throws IOException
-  {
-    throw new UnsupportedOperationException(String.valueOf(this));
-  }
-
-  /**
-   * Writes a pair of buffer to the underlying stream.
-   *
-   * @param buf1 the byte array to write.
-   * @param off1 the offset into the byte array.
-   * @param len1 the number of bytes to write.
-   * @param buf2 the byte array to write.
-   * @param off2 the offset into the byte array.
-   * @param len2 the number of bytes to write.
-   * @param isEnd true when the write is flushing a close.
-   */
-  public boolean write(byte []buf1, int off1, int len1,
-                       byte []buf2, int off2, int len2,
-                       boolean isEnd)
-    throws IOException
-  {
-    if (len1 == 0) {
-      write(buf2, off2, len2, isEnd);
-
-      return true;
-    }
-    else
+   /**
+    * Returns true if the stream implements skip.
+    */
+   public boolean hasSkip() {
       return false;
-  }
+   }
 
-  /**
-   * Clears any buffered values in the write.
-   */
-  public void clearWrite()
-  {
-  }
+   /**
+    * Skips a number of bytes, returning the bytes skipped.
+    *
+    * @param n the number of types to skip.
+    * @return the actual bytes skipped.
+    */
+   public long skip(long n)
+      throws IOException {
+      return 0;
+   }
 
-  /**
-   * Seeks based on the start.
-   */
-  public void seekStart(long offset)
-    throws IOException
-  {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
+   /**
+    * Returns true if this is a read stream.
+    */
+   public boolean canRead() {
+      return false;
+   }
 
-  /**
-   * Seeks based on the end.
-   */
-  public void seekEnd(long offset)
-    throws IOException
-  {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
+   /**
+    * Returns the read buffer.
+    */
+   public byte[] getReadBuffer() {
+      return null;
+   }
 
-  /**
-   * Flushes buffered writes.
-   */
-  public void flushBuffer() throws IOException
-  {
-  }
+   /**
+    * Reads the next chunk from the stream.
+    *
+    * @param buffer byte array receiving the data.
+    * @param offset starting offset into the array.
+    * @param length number of bytes to read.
+    * @return the number of bytes read or -1 on end of file.
+    */
+   public int read(byte[] buffer, int offset, int length) throws IOException {
+      throw new UnsupportedOperationException(String.valueOf(this));
+   }
 
-  /**
-   * Flushes the write output.
-   */
-  public void flush() throws IOException
-  {
-  }
+   /**
+    * Reads the next chunk from the stream in non-blocking mode.
+    *
+    * @param buffer byte array receiving the data.
+    * @param offset starting offset into the array.
+    * @param length number of bytes to read.
+    * @return the number of bytes read or -1 on end of file.
+    */
+   public int readNonBlock(byte[] buffer, int offset, int length)
+      throws IOException {
+      return 0;
+   }
 
-  /**
-   * Flushes the write output, forcing to disk.
-   */
-  public void flushToDisk() throws IOException
-  {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
+   /**
+    * Reads the next chunk from the stream in non-blocking mode.
+    *
+    * @param buffer byte array receiving the data.
+    * @param offset starting offset into the array.
+    * @param length number of bytes to read.
+    * @return the number of bytes read or -1 on end of file.
+    */
+   public int readTimeout(byte[] buffer, int offset, int length,
+                          long timeout)
+      throws IOException {
+      return 0;
+   }
 
-  /**
-   * Returns the Path associated with the stream.
-   */
-  public Path getPath()
-  {
-    if (_path != null)
-      return _path;
+   /**
+    * Returns the number of bytes available without blocking.  Depending on
+    * the stream, this may return less than the actual bytes, but will always
+    * return a number > 0 if there is any data available.
+    */
+   public int getAvailable() throws IOException {
+      throw new UnsupportedOperationException(String.valueOf(this));
+   }
 
-    if (_nullPath == null)
-      _nullPath = new NullPath("stream");
+   /**
+    * Returns the current read position of the underlying file.
+    */
+   public long getReadPosition() {
+      return -1;
+   }
 
-    return _nullPath;
-  }
+   /**
+    * Returns true if this is a writable stream.
+    */
+   public boolean canWrite() {
+      return false;
+   }
 
-  /**
-   * Sets the Path associated with the stream.
-   */
-  public void setPath(Path path)
-  {
-    _path = path;
-  }
+   /**
+    * Returns true if the buffer should be flushed on every newline.  This is
+    * typically only true for error streams like stderr:.
+    */
+   public boolean getFlushOnNewline() {
+      return false;
+   }
 
-  /**
-   * Returns a stream attribute.
-   *
-   * @param name the attribute name.
-   *
-   * @return the attribute value.
-   */
-  public Object getAttribute(String name)
-    throws IOException
-  {
-    return null;
-  }
+   /**
+    * Sets the write encoding.
+    */
+   public void setWriteEncoding(String encoding) {
+   }
 
-  /**
-   * Sets a stream attribute.
-   *
-   * @param name the attribute name.
-   * @param value the attribute value.
-   */
-  public void setAttribute(String name, Object value)
-    throws IOException
-  {
-  }
+   /**
+    * Writes a buffer to the underlying stream.
+    *
+    * @param buffer the byte array to write.
+    * @param offset the offset into the byte array.
+    * @param length the number of bytes to write.
+    * @param isEnd  true when the write is flushing a close.
+    */
+   public void write(byte[] buffer, int offset, int length, boolean isEnd)
+      throws IOException {
+      throw new UnsupportedOperationException(String.valueOf(this));
+   }
 
-  /**
-   * Removes a stream attribute.
-   *
-   * @param name the attribute name.
-   */
-  public void removeAttribute(String name)
-    throws IOException
-  {
-  }
+   /**
+    * Writes a pair of buffer to the underlying stream.
+    *
+    * @param buf1  the byte array to write.
+    * @param off1  the offset into the byte array.
+    * @param len1  the number of bytes to write.
+    * @param buf2  the byte array to write.
+    * @param off2  the offset into the byte array.
+    * @param len2  the number of bytes to write.
+    * @param isEnd true when the write is flushing a close.
+    */
+   public boolean write(byte[] buf1, int off1, int len1,
+                        byte[] buf2, int off2, int len2,
+                        boolean isEnd)
+      throws IOException {
+      if (len1 == 0) {
+         write(buf2, off2, len2, isEnd);
 
-  /**
-   * Returns an iterator of the attribute names.
-   */
-  @SuppressWarnings("unchecked")
-  public Iterator<String> getAttributeNames()
-    throws IOException
-  {
-    return NullIterator.create();
-  }
+         return true;
+      } else
+         return false;
+   }
 
-  /**
-   * Closes the write half of the stream.
-   */
-  public void closeWrite() throws IOException
-  {
-    close();
-  }
+   /**
+    * Clears any buffered values in the write.
+    */
+   public void clearWrite() {
+   }
 
-  /**
-   * Closes the stream.
-   */
-  public void close() throws IOException
-  {
-  }
+   /**
+    * Seeks based on the start.
+    */
+   public void seekStart(long offset)
+      throws IOException {
+      throw new UnsupportedOperationException(getClass().getName());
+   }
+
+   /**
+    * Seeks based on the end.
+    */
+   public void seekEnd(long offset)
+      throws IOException {
+      throw new UnsupportedOperationException(getClass().getName());
+   }
+
+   /**
+    * Flushes buffered writes.
+    */
+   public void flushBuffer() throws IOException {
+   }
+
+   /**
+    * Flushes the write output.
+    */
+   public void flush() throws IOException {
+   }
+
+   /**
+    * Flushes the write output, forcing to disk.
+    */
+   public void flushToDisk() throws IOException {
+      throw new UnsupportedOperationException(getClass().getName());
+   }
+
+   /**
+    * Returns the Path associated with the stream.
+    */
+   public Path getPath() {
+      if (_path != null)
+         return _path;
+
+      if (_nullPath == null)
+         _nullPath = new NullPath("stream");
+
+      return _nullPath;
+   }
+
+   /**
+    * Sets the Path associated with the stream.
+    */
+   public void setPath(Path path) {
+      _path = path;
+   }
+
+   /**
+    * Returns a stream attribute.
+    *
+    * @param name the attribute name.
+    * @return the attribute value.
+    */
+   public Object getAttribute(String name)
+      throws IOException {
+      return null;
+   }
+
+   /**
+    * Sets a stream attribute.
+    *
+    * @param name  the attribute name.
+    * @param value the attribute value.
+    */
+   public void setAttribute(String name, Object value)
+      throws IOException {
+   }
+
+   /**
+    * Removes a stream attribute.
+    *
+    * @param name the attribute name.
+    */
+   public void removeAttribute(String name)
+      throws IOException {
+   }
+
+   /**
+    * Returns an iterator of the attribute names.
+    */
+   @SuppressWarnings("unchecked")
+   public Iterator<String> getAttributeNames()
+      throws IOException {
+      return NullIterator.create();
+   }
+
+   /**
+    * Closes the write half of the stream.
+    */
+   public void closeWrite() throws IOException {
+      close();
+   }
+
+   /**
+    * Closes the stream.
+    */
+   public void close() throws IOException {
+   }
 }

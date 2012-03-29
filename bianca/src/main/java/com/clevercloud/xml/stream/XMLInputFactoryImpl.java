@@ -29,6 +29,7 @@
 */
 
 package com.clevercloud.xml.stream;
+
 import javax.xml.stream.*;
 import javax.xml.stream.util.XMLEventAllocator;
 import javax.xml.transform.Source;
@@ -44,244 +45,212 @@ import java.net.URL;
 
 public class XMLInputFactoryImpl extends XMLInputFactory {
 
-  private XMLEventAllocator _allocator = new XMLEventAllocatorImpl();
-  private XMLReporter _reporter;
-  private XMLResolver _resolver;
+   private XMLEventAllocator _allocator = new XMLEventAllocatorImpl();
+   private XMLReporter _reporter;
+   private XMLResolver _resolver;
 
-  public XMLInputFactoryImpl()
-  {
-  }
+   public XMLInputFactoryImpl() {
+   }
 
-  //
-  // Filtered
-  //
-  
-  public XMLEventReader 
-    createFilteredReader(XMLEventReader reader, EventFilter filter)
-    throws XMLStreamException
-  {
-    return new FilteredEventReader(reader, filter);
-  }
+   //
+   // Filtered
+   //
 
-  public XMLStreamReader 
-    createFilteredReader(XMLStreamReader reader, StreamFilter filter)
-    throws XMLStreamException
-  {
-    return new FilteredStreamReader(reader, filter);
-  }
+   public XMLEventReader
+   createFilteredReader(XMLEventReader reader, EventFilter filter)
+      throws XMLStreamException {
+      return new FilteredEventReader(reader, filter);
+   }
 
-  //
-  // Event reader
-  //
-  
-  public XMLEventReader 
-    createXMLEventReader(InputStream stream)
-    throws XMLStreamException
-  {
-    return new XMLEventReaderImpl(getEventAllocator(),
-                                  createXMLStreamReader(stream));
-  }
+   public XMLStreamReader
+   createFilteredReader(XMLStreamReader reader, StreamFilter filter)
+      throws XMLStreamException {
+      return new FilteredStreamReader(reader, filter);
+   }
 
-  public XMLEventReader 
-    createXMLEventReader(InputStream stream, String encoding)
-    throws XMLStreamException
-  {
-    return new XMLEventReaderImpl(getEventAllocator(),
-                                  createXMLStreamReader(stream, encoding));
-  }
+   //
+   // Event reader
+   //
 
-  public XMLEventReader 
-    createXMLEventReader(Reader reader)
-    throws XMLStreamException
-  {
-    return new XMLEventReaderImpl(getEventAllocator(),
-                                  createXMLStreamReader(reader));
-  }
+   public XMLEventReader
+   createXMLEventReader(InputStream stream)
+      throws XMLStreamException {
+      return new XMLEventReaderImpl(getEventAllocator(),
+         createXMLStreamReader(stream));
+   }
 
-  /**
-   *  "Support of this method is optional."
-   */ 
-  public XMLEventReader createXMLEventReader(Source source)
-    throws XMLStreamException
-  {
-    if (source instanceof SAXSource)
-      return new SAXSourceXMLEventReaderImpl((SAXSource) source);
+   public XMLEventReader
+   createXMLEventReader(InputStream stream, String encoding)
+      throws XMLStreamException {
+      return new XMLEventReaderImpl(getEventAllocator(),
+         createXMLStreamReader(stream, encoding));
+   }
 
-    return new XMLEventReaderImpl(getEventAllocator(),
-                                  createXMLStreamReader(source));
-  }
+   public XMLEventReader
+   createXMLEventReader(Reader reader)
+      throws XMLStreamException {
+      return new XMLEventReaderImpl(getEventAllocator(),
+         createXMLStreamReader(reader));
+   }
 
-  public XMLEventReader 
-    createXMLEventReader(String systemId, InputStream stream)
-    throws XMLStreamException
-  {
-    return new XMLEventReaderImpl(getEventAllocator(),
-                                  createXMLStreamReader(systemId, stream));
-  }
+   /**
+    * "Support of this method is optional."
+    */
+   public XMLEventReader createXMLEventReader(Source source)
+      throws XMLStreamException {
+      if (source instanceof SAXSource)
+         return new SAXSourceXMLEventReaderImpl((SAXSource) source);
 
-  public XMLEventReader createXMLEventReader(String systemId, Reader reader)
-    throws XMLStreamException
-  {
-    return new XMLEventReaderImpl(getEventAllocator(),
-                                  createXMLStreamReader(systemId, reader));
-  }
+      return new XMLEventReaderImpl(getEventAllocator(),
+         createXMLStreamReader(source));
+   }
 
-  public XMLEventReader createXMLEventReader(XMLStreamReader reader)
-    throws XMLStreamException
-  {
-    return new XMLEventReaderImpl(getEventAllocator(), reader);
-  }
+   public XMLEventReader
+   createXMLEventReader(String systemId, InputStream stream)
+      throws XMLStreamException {
+      return new XMLEventReaderImpl(getEventAllocator(),
+         createXMLStreamReader(systemId, stream));
+   }
 
-  //
-  // Stream reader
-  //
-  
-  public XMLStreamReader createXMLStreamReader(InputStream stream)
-    throws XMLStreamException
-  {
-    return new XMLStreamReaderImpl(stream);
-  }
+   public XMLEventReader createXMLEventReader(String systemId, Reader reader)
+      throws XMLStreamException {
+      return new XMLEventReaderImpl(getEventAllocator(),
+         createXMLStreamReader(systemId, reader));
+   }
 
-  public XMLStreamReader 
-    createXMLStreamReader(InputStream stream, String encoding)
-    throws XMLStreamException
-  {
-    if (encoding == null)
-      encoding = "utf-8";
-    
-    try {
-      InputStreamReader isr = new InputStreamReader(stream, encoding);
-      return new XMLStreamReaderImpl(isr);
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public XMLEventReader createXMLEventReader(XMLStreamReader reader)
+      throws XMLStreamException {
+      return new XMLEventReaderImpl(getEventAllocator(), reader);
+   }
 
-  public XMLStreamReader createXMLStreamReader(Reader reader)
-    throws XMLStreamException
-  {
-    return new XMLStreamReaderImpl(reader);
-  }
+   //
+   // Stream reader
+   //
 
-  /**
-   *  "Support of this method is optional."
-   */ 
-  public XMLStreamReader createXMLStreamReader(Source source)
-    throws XMLStreamException
-  {
-    if (source instanceof StreamSource) {
-      StreamSource streamSource = (StreamSource) source;
+   public XMLStreamReader createXMLStreamReader(InputStream stream)
+      throws XMLStreamException {
+      return new XMLStreamReaderImpl(stream);
+   }
 
-      InputStream is = streamSource.getInputStream();
+   public XMLStreamReader
+   createXMLStreamReader(InputStream stream, String encoding)
+      throws XMLStreamException {
+      if (encoding == null)
+         encoding = "utf-8";
 
-      if (is != null) 
-        return new XMLStreamReaderImpl(is);
-
-      Reader r = streamSource.getReader();
-
-      if (r != null)
-        return new XMLStreamReaderImpl(r);
-
-      if (streamSource.getSystemId() != null) {
-        try {
-          URL url = new URL(streamSource.getSystemId());
-
-          return new XMLStreamReaderImpl(url.openStream());
-        }
-        catch (MalformedURLException e) {
-          throw new XMLStreamException(e);
-        }
-        catch (IOException e) {
-          throw new XMLStreamException(e);
-        }
+      try {
+         InputStreamReader isr = new InputStreamReader(stream, encoding);
+         return new XMLStreamReaderImpl(isr);
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
       }
-      else 
-        throw new XMLStreamException("StreamSource contains no stream information");
-    }
-    else if (source instanceof DOMSource)
-      return new DOMSourceXMLStreamReaderImpl((DOMSource) source);
-    else if (source instanceof SAXSource)
+   }
+
+   public XMLStreamReader createXMLStreamReader(Reader reader)
+      throws XMLStreamException {
+      return new XMLStreamReaderImpl(reader);
+   }
+
+   /**
+    * "Support of this method is optional."
+    */
+   public XMLStreamReader createXMLStreamReader(Source source)
+      throws XMLStreamException {
+      if (source instanceof StreamSource) {
+         StreamSource streamSource = (StreamSource) source;
+
+         InputStream is = streamSource.getInputStream();
+
+         if (is != null)
+            return new XMLStreamReaderImpl(is);
+
+         Reader r = streamSource.getReader();
+
+         if (r != null)
+            return new XMLStreamReaderImpl(r);
+
+         if (streamSource.getSystemId() != null) {
+            try {
+               URL url = new URL(streamSource.getSystemId());
+
+               return new XMLStreamReaderImpl(url.openStream());
+            } catch (MalformedURLException e) {
+               throw new XMLStreamException(e);
+            } catch (IOException e) {
+               throw new XMLStreamException(e);
+            }
+         } else
+            throw new XMLStreamException("StreamSource contains no stream information");
+      } else if (source instanceof DOMSource)
+         return new DOMSourceXMLStreamReaderImpl((DOMSource) source);
+      else if (source instanceof SAXSource)
+         throw new JAXPNotSupportedInStAXException();
+
       throw new JAXPNotSupportedInStAXException();
+   }
 
-    throw new JAXPNotSupportedInStAXException();
-  }
+   public XMLStreamReader
+   createXMLStreamReader(String systemId, InputStream stream)
+      throws XMLStreamException {
+      return new XMLStreamReaderImpl(stream, systemId);
+   }
 
-  public XMLStreamReader 
-    createXMLStreamReader(String systemId, InputStream stream)
-    throws XMLStreamException
-  {
-    return new XMLStreamReaderImpl(stream, systemId);
-  }
+   public XMLStreamReader createXMLStreamReader(String systemId, Reader reader)
+      throws XMLStreamException {
+      return new XMLStreamReaderImpl(reader, systemId);
+   }
 
-  public XMLStreamReader createXMLStreamReader(String systemId, Reader reader)
-    throws XMLStreamException
-  {
-    return new XMLStreamReaderImpl(reader, systemId);
-  }
+   public XMLEventAllocator getEventAllocator() {
+      return _allocator;
+   }
 
-  public XMLEventAllocator getEventAllocator()
-  {
-    return _allocator;
-  }
+   public Object getProperty(String name)
+      throws IllegalArgumentException {
+      throw new IllegalArgumentException("property \"" + name + "\" not supported");
+   }
 
-  public Object getProperty(String name)
-    throws IllegalArgumentException
-  {
-    throw new IllegalArgumentException("property \""+name+"\" not supported");
-  }
+   public XMLReporter getXMLReporter() {
+      return _reporter;
+   }
 
-  public XMLReporter getXMLReporter()
-  {
-    return _reporter;
-  }
+   public XMLResolver getXMLResolver() {
+      return _resolver;
+   }
 
-  public XMLResolver getXMLResolver()
-  {
-    return _resolver;
-  }
+   public boolean isPropertySupported(String name) {
+      return false;
+   }
 
-  public boolean isPropertySupported(String name)
-  {
-    return false;
-  }
+   public void setEventAllocator(XMLEventAllocator allocator) {
+      _allocator = allocator;
+   }
 
-  public void setEventAllocator(XMLEventAllocator allocator)
-  {
-    _allocator = allocator;
-  }
+   public void setProperty(String name, Object value)
+      throws IllegalArgumentException {
+      if ("javax.xml.stream.allocator".equals(name)) {
+         setEventAllocator((XMLEventAllocator) value);
+         return;
+      } else if ("javax.xml.stream.isNamespaceAware".equals(name)) {
+         // XXX?
+         return;
+      } else if ("javax.xml.stream.supportDTD".equals(name)) {
+         boolean supportDTD = (Boolean) value;
 
-  public void setProperty(String name, Object value)
-    throws IllegalArgumentException
-  {
-    if ("javax.xml.stream.allocator".equals(name)) {
-      setEventAllocator((XMLEventAllocator)value);
-      return;
-    }
-    else if ("javax.xml.stream.isNamespaceAware".equals(name)) {
-      // XXX?
-      return;
-    }
-    else if ("javax.xml.stream.supportDTD".equals(name)) {
-      boolean supportDTD = (Boolean) value;
+         if (supportDTD)
+            throw new UnsupportedOperationException("javax.xml.stream.supportDTD=true not implemented");
 
-      if (supportDTD)
-        throw new UnsupportedOperationException("javax.xml.stream.supportDTD=true not implemented");
+         return;
+      }
 
-      return;
-    }
+      throw new IllegalArgumentException("property \"" + name + "\" not supported");
+   }
 
-    throw new IllegalArgumentException("property \""+name+"\" not supported");
-  }
+   public void setXMLReporter(XMLReporter reporter) {
+      _reporter = reporter;
+   }
 
-  public void setXMLReporter(XMLReporter reporter)
-  {
-    _reporter = reporter;
-  }
-
-  public void setXMLResolver(XMLResolver resolver)
-  {
-    _resolver = resolver;
-  }
+   public void setXMLResolver(XMLResolver resolver) {
+      _resolver = resolver;
+   }
 }
 

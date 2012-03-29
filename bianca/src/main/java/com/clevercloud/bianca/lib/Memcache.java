@@ -51,12 +51,12 @@ public class Memcache {
     * Adds a server.
     */
    public boolean addServer(Env env,
-           String host,
-           @Optional int port,
-           @Optional boolean persistent,
-           @Optional int weight,
-           @Optional int timeout,
-           @Optional int retryInterval) {
+                            String host,
+                            @Optional int port,
+                            @Optional boolean persistent,
+                            @Optional int weight,
+                            @Optional int timeout,
+                            @Optional int retryInterval) {
       if (_cache == null) {
          connect(env, host, port, timeout);
       }
@@ -68,9 +68,9 @@ public class Memcache {
     * Connect to a server.
     */
    public boolean connect(Env env,
-           String host,
-           @Optional int port,
-           @Optional("1") int timeout) {
+                          String host,
+                          @Optional int port,
+                          @Optional("1") int timeout) {
       // Always true since this is a local copy
 
       String name = "memcache::" + host + ":" + port;
@@ -109,8 +109,8 @@ public class Memcache {
     * Removes a value.
     */
    public boolean delete(Env env,
-           String key,
-           @Optional int timeout) {
+                         String key,
+                         @Optional int timeout) {
       _cache.remove(key);
 
       return true;
@@ -136,9 +136,9 @@ public class Memcache {
     * Connect to a server.
     */
    public boolean pconnect(Env env,
-           String host,
-           @Optional int port,
-           @Optional("1") int timeout) {
+                           String host,
+                           @Optional int port,
+                           @Optional("1") int timeout) {
       return connect(env, host, port, timeout);
    }
 
@@ -146,10 +146,10 @@ public class Memcache {
     * Sets a value.
     */
    public boolean set(Env env,
-           String key,
-           Value value,
-           @Optional int flag,
-           @Optional int expire) {
+                      String key,
+                      Value value,
+                      @Optional int flag,
+                      @Optional int expire) {
       _cache.set(key, value.copy(env));
 
       return true;
@@ -159,7 +159,7 @@ public class Memcache {
     * Sets the compression threshold
     */
    public boolean setCompressThreshold(int threshold,
-           @Optional double minSavings) {
+                                       @Optional double minSavings) {
       return true;
    }
 

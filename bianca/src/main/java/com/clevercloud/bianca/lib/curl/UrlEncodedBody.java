@@ -29,13 +29,13 @@
  */
 package com.clevercloud.bianca.lib.curl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
+import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.annotation.Optional;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class UrlEncodedBody extends PostBody {
 
@@ -66,7 +66,7 @@ public class UrlEncodedBody extends PostBody {
 
    @Override
    public void writeTo(Env env, OutputStream os)
-           throws IOException {
+      throws IOException {
       for (int i = 0; i < _length; i++) {
          os.write(_body.charAt(i));
       }

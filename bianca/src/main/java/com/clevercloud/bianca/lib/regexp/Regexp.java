@@ -30,13 +30,13 @@
  */
 package com.clevercloud.bianca.lib.regexp;
 
-import java.util.*;
-import java.util.logging.*;
-
 import com.clevercloud.bianca.BiancaException;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.util.*;
+import com.clevercloud.util.CharBuffer;
+import com.clevercloud.util.L10N;
+
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class Regexp {
 
@@ -65,7 +65,7 @@ public class Regexp {
    boolean _isEval;
 
    public Regexp(StringValue rawRegexp)
-           throws IllegalRegexpException {
+      throws IllegalRegexpException {
       _rawRegexp = rawRegexp;
       _pattern = rawRegexp;
 
@@ -82,8 +82,8 @@ public class Regexp {
 
       if (rawRegexp.length() < 2) {
          throw new IllegalStateException(L.l(
-                 "Can't find delimiters in regexp '{0}'.",
-                 rawRegexp));
+            "Can't find delimiters in regexp '{0}'.",
+            rawRegexp));
       }
 
       int head = 0;
@@ -91,9 +91,9 @@ public class Regexp {
       char delim = '/';
 
       for (;
-              head < rawRegexp.length()
+           head < rawRegexp.length()
               && Character.isWhitespace((delim = rawRegexp.charAt(head)));
-              head++) {
+           head++) {
       }
 
       if (delim == '{') {
@@ -106,19 +106,19 @@ public class Regexp {
          delim = '>';
       } else if (delim == '\\' || Character.isLetterOrDigit(delim)) {
          throw new BiancaException(L.l(
-                 "Delimiter {0} in regexp '{1}' must "
-                 + "not be backslash or alphanumeric.",
-                 String.valueOf(delim),
-                 rawRegexp));
+            "Delimiter {0} in regexp '{1}' must "
+               + "not be backslash or alphanumeric.",
+            String.valueOf(delim),
+            rawRegexp));
       }
 
       int tail = rawRegexp.lastIndexOf(delim);
 
       if (tail <= 0) {
          throw new BiancaException(L.l(
-                 "Can't find second {0} in regexp '{1}'.",
-                 String.valueOf(delim),
-                 rawRegexp));
+            "Can't find second {0} in regexp '{1}'.",
+            String.valueOf(delim),
+            rawRegexp));
       }
 
       StringValue sflags = rawRegexp.substring(tail + 1);
@@ -171,7 +171,7 @@ public class Regexp {
 
             default:
                throw new BiancaException(L.l("'{0}' is an unknown regexp flag in {1}",
-                       (char) sflags.charAt(i), rawRegexp));
+                  (char) sflags.charAt(i), rawRegexp));
          }
       }
 
@@ -260,7 +260,7 @@ public class Regexp {
             char ch2 = source.charAt(++i);
 
             target.append((char) (((ch & 0x1f) << 6)
-                    + (ch2 & 0x3f)));
+               + (ch2 & 0x3f)));
          } else if ((ch & 0xf0) == 0xe0) {
             if (len <= i + 2) {
                log.fine(L.l("Regexp: bad UTF-8 sequence, saw EOF"));
@@ -271,8 +271,8 @@ public class Regexp {
             char ch3 = source.charAt(++i);
 
             target.append((char) (((ch & 0x0f) << 12)
-                    + ((ch2 & 0x3f) << 6)
-                    + (ch3 & 0x3f)));
+               + ((ch2 & 0x3f) << 6)
+               + (ch3 & 0x3f)));
          } else {
             if (i + 3 >= len) {
                log.fine(L.l("Regexp: bad UTF-8 sequence, saw EOF"));
@@ -284,9 +284,9 @@ public class Regexp {
             char ch4 = source.charAt(++i);
 
             int codePoint = ((ch & 0x07) << 18)
-                    + ((ch2 & 0x3F) << 12)
-                    + ((ch3 & 0x3F) << 6)
-                    + (ch4 & 0x3F);
+               + ((ch2 & 0x3F) << 12)
+               + ((ch3 & 0x3F) << 6)
+               + (ch4 & 0x3F);
 
             int high = ((codePoint - 0x10000) >> 10) + 0xD800;
             int low = (codePoint & 0x3FF) + 0xDC00;

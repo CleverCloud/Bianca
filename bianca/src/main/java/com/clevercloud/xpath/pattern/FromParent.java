@@ -31,89 +31,78 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 public class FromParent extends Axis {
-  public FromParent(AbstractPattern parent)
-  {
-    super(parent);
+   public FromParent(AbstractPattern parent) {
+      super(parent);
 
-    if (parent == null)
-      throw new RuntimeException();
-  }
+      if (parent == null)
+         throw new RuntimeException();
+   }
 
-  /**
-   * Matches if a child matches the parent pattern.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true if the pattern matches
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
+   /**
+    * Matches if a child matches the parent pattern.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true if the pattern matches
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         return false;
+
+      if (node.getNodeType() != node.ELEMENT_NODE &&
+         node.getNodeType() != node.DOCUMENT_NODE)
+         return false;
+
+      for (node = node.getFirstChild();
+           node != null;
+           node = node.getNextSibling()) {
+         if (_parent.match(node, env))
+            return true;
+      }
+
       return false;
+   }
 
-    if (node.getNodeType() != node.ELEMENT_NODE &&
-        node.getNodeType() != node.DOCUMENT_NODE)
-      return false;
+   /**
+    * The parent is strictly ascending if there's only one possible selection.
+    */
+   public boolean isStrictlyAscending() {
+      return isSingleSelect();
+   }
 
-    for (node = node.getFirstChild();
-         node != null;
-         node = node.getNextSibling()) {
-      if (_parent.match(node, env))
-        return true;
-    }
-    
-    return false;
-  }
+   /**
+    * Returns true if the pattern selects a single node
+    */
+   boolean isSingleSelect() {
+      return _parent == null ? true : _parent.isSingleSelect();
+   }
 
-  /**
-   * The parent is strictly ascending if there's only one possible selection.
-   */
-  public boolean isStrictlyAscending()
-  {
-    return isSingleSelect();
-  }
-  
-  /**
-   * Returns true if the pattern selects a single node
-   */
-  boolean isSingleSelect()
-  {
-    return _parent == null ? true : _parent.isSingleSelect();
-  }
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      return node.getParentNode();
+   }
 
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    return node.getParentNode();
-  }
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node     the current node
+    * @param lastNode the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node lastNode) {
+      return null;
+   }
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param lastNode the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node lastNode)
-  {
-    return null;
-  }
-
-  public String toString()
-  {
-    return getPrefix() + "parent::";
-  }
+   public String toString() {
+      return getPrefix() + "parent::";
+   }
 }

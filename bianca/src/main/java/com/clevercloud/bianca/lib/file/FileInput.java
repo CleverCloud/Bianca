@@ -32,18 +32,18 @@ package com.clevercloud.bianca.lib.file;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.EnvCleanup;
 import com.clevercloud.bianca.env.Value;
+import com.clevercloud.vfs.LockableStream;
 import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.ReadStream;
-import com.clevercloud.vfs.LockableStream;
 
 import java.io.IOException;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Represents a Bianca file open for reading
  */
 public class FileInput extends ReadStreamInput
-        implements LockableStream, EnvCleanup {
+   implements LockableStream, EnvCleanup {
 
    private static final Logger log = Logger.getLogger(FileInput.class.getName());
    protected Env _env;
@@ -51,7 +51,7 @@ public class FileInput extends ReadStreamInput
    protected ReadStream _is;
 
    public FileInput(Env env, Path path)
-           throws IOException {
+      throws IOException {
       super(env);
 
       _env = env;
@@ -77,7 +77,7 @@ public class FileInput extends ReadStreamInput
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       return new FileInput(_env, _path);
    }
 

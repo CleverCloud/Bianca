@@ -31,15 +31,14 @@ package com.clevercloud.bianca.lib.dom;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.Env;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 public class DOMAttr
-        extends DOMNode<Attr> {
+   extends DOMNode<Attr> {
 
    public static DOMAttr __construct(
-           Env env, String name, @Optional String value) {
+      Env env, String name, @Optional String value) {
       DOMAttr attr = getImpl(env).createAttr(name);
 
       if (value != null && value.length() > 0) {
@@ -78,7 +77,7 @@ public class DOMAttr
    }
 
    public void setValue(String value)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setValue(value);
       } catch (org.w3c.dom.DOMException ex) {

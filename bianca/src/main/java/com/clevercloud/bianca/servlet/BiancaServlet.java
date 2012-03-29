@@ -30,10 +30,10 @@
  */
 package com.clevercloud.bianca.servlet;
 
-import com.clevercloud.config.ConfigException;
 import com.clevercloud.bianca.BiancaContext;
 import com.clevercloud.bianca.BiancaRuntimeException;
 import com.clevercloud.bianca.module.BiancaModule;
+import com.clevercloud.config.ConfigException;
 import com.clevercloud.util.L10N;
 
 import javax.naming.Context;
@@ -44,22 +44,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Servlet to call PHP through javax.script.
  */
 public class BiancaServlet
-        extends HttpServlet {
+   extends HttpServlet {
 
    private static final L10N L = new L10N(BiancaServlet.class);
    private static final Logger log = Logger.getLogger(BiancaServlet.class.getName());
@@ -99,7 +98,7 @@ public class BiancaServlet
       if (isResin) {
          try {
             Class cl = Class.forName(
-                    "com.clevercloud.bianca.servlet.ProResinBiancaServlet");
+               "com.clevercloud.bianca.servlet.ProResinBiancaServlet");
 
             Constructor cons = cl.getConstructor(File.class);
 
@@ -109,7 +108,7 @@ public class BiancaServlet
          } catch (ConfigException e) {
             log.log(Level.FINEST, e.toString(), e);
             log.info("Bianca compiled mode requires Resin "
-                    + "personal or professional licenses");
+               + "personal or professional licenses");
             log.info(e.getMessage());
 
          } catch (Exception e) {
@@ -119,7 +118,7 @@ public class BiancaServlet
          if (impl == null) {
             try {
                Class cl = Class.forName(
-                       "com.clevercloud.bianca.servlet.ResinBiancaServlet");
+                  "com.clevercloud.bianca.servlet.ResinBiancaServlet");
                impl = (BiancaServletImpl) cl.newInstance();
             } catch (Exception e) {
                log.log(Level.FINEST, e.toString(), e);
@@ -130,7 +129,7 @@ public class BiancaServlet
       if (impl == null) {
          try {
             Class cl = Class.forName(
-                    "com.clevercloud.bianca.servlet.ProBiancaServlet");
+               "com.clevercloud.bianca.servlet.ProBiancaServlet");
 
             Constructor cons = cl.getConstructor(java.io.File.class);
 
@@ -140,7 +139,7 @@ public class BiancaServlet
          } catch (ConfigException e) {
             log.log(Level.FINEST, e.toString(), e);
             log.info("Bianca compiled mode requires "
-                    + "valid Bianca professional licenses");
+               + "valid Bianca professional licenses");
             log.info(e.getMessage());
 
          } catch (Exception e) {
@@ -163,7 +162,7 @@ public class BiancaServlet
 
       if (version.startsWith("1.3.") || version.startsWith("1.4.")) {
          throw new BiancaRuntimeException(L.l(
-                 "Bianca requires JDK 1.5 or higher."));
+            "Bianca requires JDK 1.5 or higher."));
       }
    }
 
@@ -171,7 +170,7 @@ public class BiancaServlet
     * Set true if bianca should be compiled into Java.
     */
    public void setCompile(String isCompile)
-           throws ConfigException {
+      throws ConfigException {
       if ("true".equals(isCompile) || "".equals(isCompile)) {
          _isCompile = true;
          _isLazyCompile = false;
@@ -182,9 +181,9 @@ public class BiancaServlet
          _isLazyCompile = true;
       } else {
          throw new ConfigException(L.l(
-                 "'{0}' is an unknown compile value. "
-                 + "Values are 'true', 'false', or 'lazy'.",
-                 isCompile));
+            "'{0}' is an unknown compile value. "
+               + "Values are 'true', 'false', or 'lazy'.",
+            isCompile));
       }
    }
 
@@ -192,16 +191,16 @@ public class BiancaServlet
     * Set true interpreted pages should be used for pages that fail to compile.
     */
    public void setCompileFailover(String isCompileFailover)
-           throws ConfigException {
+      throws ConfigException {
       if ("true".equals(isCompileFailover) || "".equals(isCompileFailover)) {
          _isCompileFailover = true;
       } else if ("false".equals(isCompileFailover)) {
          _isCompileFailover = false;
       } else {
          throw new ConfigException(L.l(
-                 "'{0}' is an unknown compile-failover value. "
-                 + " Values are 'true' or 'false'.",
-                 isCompileFailover));
+            "'{0}' is an unknown compile-failover value. "
+               + " Values are 'true' or 'false'.",
+            isCompileFailover));
       }
    }
 
@@ -209,7 +208,7 @@ public class BiancaServlet
     * Sets the frequency of profiling, expressed as a probability.
     */
    public void setProfileProbability(double probability)
-           throws ConfigException {
+      throws ConfigException {
       _profileProbability = probability;
    }
 
@@ -224,7 +223,7 @@ public class BiancaServlet
     * Set the default data source.
     */
    public void setDatabase(DataSource database)
-           throws ConfigException {
+      throws ConfigException {
       if (database == null) {
          throw new ConfigException(L.l("invalid database"));
       }
@@ -278,7 +277,7 @@ public class BiancaServlet
     * Adds a bianca module.
     */
    public void addModule(BiancaModule module)
-           throws ConfigException {
+      throws ConfigException {
       //getBianca().addModule(module);
 
       _moduleList.add(module);
@@ -288,7 +287,7 @@ public class BiancaServlet
     * Adds a bianca class.
     */
    public void addClass(PhpClassConfig classConfig)
-           throws ConfigException {
+      throws ConfigException {
       //getBianca().addJavaClass(classConfig.getName(), classConfig.getType());
 
       _classList.add(classConfig);
@@ -298,7 +297,7 @@ public class BiancaServlet
     * Adds a bianca class.
     */
    public void addImplClass(PhpClassConfig classConfig)
-           throws ConfigException {
+      throws ConfigException {
       //getBianca().addImplClass(classConfig.getName(), classConfig.getType());
 
       _classImplList.add(classConfig);
@@ -308,7 +307,7 @@ public class BiancaServlet
     * Adds a bianca.ini configuration
     */
    public PhpIni createPhpIni()
-           throws ConfigException {
+      throws ConfigException {
       PhpIni ini = new PhpIni();
 
       _phpIniList.add(ini);
@@ -320,7 +319,7 @@ public class BiancaServlet
     * Adds a $_SERVER configuration
     */
    public ServerEnv createServerEnv()
-           throws ConfigException {
+      throws ConfigException {
       ServerEnv ini = new ServerEnv();
 
       _serverEnvList.add(ini);
@@ -347,7 +346,7 @@ public class BiancaServlet
     * Sets the script encoding.
     */
    public void setScriptEncoding(String encoding)
-           throws ConfigException {
+      throws ConfigException {
       _scriptEncoding = encoding;
    }
 
@@ -388,7 +387,7 @@ public class BiancaServlet
     */
    @Override
    public void init(ServletConfig config)
-           throws ServletException {
+      throws ServletException {
       super.init(config);
 
       Enumeration<String> paramNames = config.getInitParameterNames();
@@ -409,7 +408,7 @@ public class BiancaServlet
     * @throws ServletException if the init-param is not recognized
     */
    protected void setInitParam(String paramName, String paramValue)
-           throws ServletException {
+      throws ServletException {
       if ("compile".equals(paramName)) {
          setCompile(paramValue);
       } else if ("database".equals(paramName)) {
@@ -430,7 +429,7 @@ public class BiancaServlet
 
             if (ds == null) {
                throw new ServletException(L.l(
-                       "database '{0}' is not valid", paramValue));
+                  "database '{0}' is not valid", paramValue));
             }
 
             setDatabase(ds);
@@ -454,7 +453,7 @@ public class BiancaServlet
       } else if ("loose-parse".equals(paramName)) {
          setLooseParse("true".equals(paramValue));
       } else if ("page-cache-entries".equals(paramName)
-              || "page-cache-size".equals(paramName)) {
+         || "page-cache-size".equals(paramName)) {
          setPageCacheSize(Integer.parseInt(paramValue));
       } else if ("regexp-cache-size".equals(paramName)) {
          setRegexpCacheSize(Integer.parseInt(paramValue));
@@ -466,12 +465,12 @@ public class BiancaServlet
          setLicenseDirectory(paramValue);
       } else {
          throw new ServletException(
-                 L.l("'{0}' is not a recognized init-param", paramName));
+            L.l("'{0}' is not a recognized init-param", paramName));
       }
    }
 
    private void initImpl(ServletConfig config)
-           throws ServletException {
+      throws ServletException {
       Class configClass = config.getClass();
 
       _impl = getBiancaServlet(configClass.getName().startsWith("com.clevercloud"));
@@ -543,8 +542,8 @@ public class BiancaServlet
     */
    @Override
    public void service(HttpServletRequest request,
-           HttpServletResponse response)
-           throws ServletException, IOException {
+                       HttpServletResponse response)
+      throws ServletException, IOException {
       _impl.service(request, response);
    }
 

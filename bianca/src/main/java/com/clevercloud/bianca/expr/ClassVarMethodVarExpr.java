@@ -30,12 +30,12 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.parser.BiancaParser;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.function.AbstractFunction;
+import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -54,9 +54,9 @@ public class ClassVarMethodVarExpr extends Expr {
    protected boolean _isMethod;
 
    public ClassVarMethodVarExpr(Location location,
-           Expr className,
-           Expr methodName,
-           ArrayList<Expr> args) {
+                                Expr className,
+                                Expr methodName,
+                                ArrayList<Expr> args) {
       super(location);
 
       _className = className;
@@ -69,8 +69,10 @@ public class ClassVarMethodVarExpr extends Expr {
    //
    // expr creation
    //
+
    /**
     * Returns the reference of the value.
+    *
     * @param location
     */
    @Override
@@ -80,6 +82,7 @@ public class ClassVarMethodVarExpr extends Expr {
 
    /**
     * Returns the copy of the value.
+    *
     * @param location
     */
    @Override
@@ -90,11 +93,11 @@ public class ClassVarMethodVarExpr extends Expr {
    //
    // evaluation
    //
+
    /**
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -112,8 +115,8 @@ public class ClassVarMethodVarExpr extends Expr {
       Value[] args = evalArgs(env, _args);
 
       return cl.callMethod(env, env.getThis(),
-              methodName, hash,
-              args);
+         methodName, hash,
+         args);
    }
 
    @Override

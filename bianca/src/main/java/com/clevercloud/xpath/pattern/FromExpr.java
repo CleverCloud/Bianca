@@ -33,7 +33,6 @@ import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.Expr;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 import java.util.Iterator;
@@ -41,96 +40,88 @@ import java.util.Iterator;
 /**
  * matches if the expression returns a node set and the test-node is
  * contained in that node set.
- *
+ * <p/>
  * <p>The code interprets Iterators, ArrayLists, and Nodes as node sets.
  */
 public class FromExpr extends AbstractPattern {
-  private Expr _expr;
+   private Expr _expr;
 
-  public FromExpr(AbstractPattern parent, Expr expr)
-  {
-    super(parent);
-    
-    _expr = expr;
-  }
+   public FromExpr(AbstractPattern parent, Expr expr) {
+      super(parent);
 
-  /**
-   * matches if the expression returns a node set and the test-node is
-   * contained in that node set.
-   *
-   * @param node the node to test
-   * @param env the variable environment.
-   *
-   * @return true if the node matches the pattern.
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    NodeIterator iter = _expr.evalNodeSet(node, env);
+      _expr = expr;
+   }
 
-    while (iter.hasNext()) {
-      Node subnode = iter.nextNode();
-      
-      if (subnode == node)
-        return true;
-    }
+   /**
+    * matches if the expression returns a node set and the test-node is
+    * contained in that node set.
+    *
+    * @param node the node to test
+    * @param env  the variable environment.
+    * @return true if the node matches the pattern.
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      NodeIterator iter = _expr.evalNodeSet(node, env);
 
-    return false;
-  }
+      while (iter.hasNext()) {
+         Node subnode = iter.nextNode();
 
-  /**
-   * Creates a new node iterator.
-   *
-   * @param node the starting node
-   * @param env the variable environment
-   * @param match the axis match pattern
-   *
-   * @return the node iterator
-   */
-  public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
-                                         AbstractPattern match)
-    throws XPathException
-  {
-    return _expr.evalNodeSet(node, env);
-  }
+         if (subnode == node)
+            return true;
+      }
 
-  /**
-   * The position is the position in the expression node-set.
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    Iterator iter = _expr.evalNodeSet(node, env);
+      return false;
+   }
 
-    int i = 1;
-    while (iter.hasNext()) {
-      if (iter.next() == node)
-        return i;
-      i++;
-    }
+   /**
+    * Creates a new node iterator.
+    *
+    * @param node  the starting node
+    * @param env   the variable environment
+    * @param match the axis match pattern
+    * @return the node iterator
+    */
+   public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
+                                          AbstractPattern match)
+      throws XPathException {
+      return _expr.evalNodeSet(node, env);
+   }
 
-    return 0;
-  }
+   /**
+    * The position is the position in the expression node-set.
+    */
+   public int position(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      Iterator iter = _expr.evalNodeSet(node, env);
 
-  /**
-   * The count is the size of the expression node-set.
-   */
-  public int count(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    Iterator iter = _expr.evalNodeSet(node, env);
-    int count = 0;
+      int i = 1;
+      while (iter.hasNext()) {
+         if (iter.next() == node)
+            return i;
+         i++;
+      }
 
-    while (iter.hasNext()) {
-      iter.next();
-      count++;
-    }
+      return 0;
+   }
 
-    return count;
-  }
+   /**
+    * The count is the size of the expression node-set.
+    */
+   public int count(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      Iterator iter = _expr.evalNodeSet(node, env);
+      int count = 0;
 
-  public String toString()
-  {
-    return getPrefix() + "(" + _expr + ")";
-  }
+      while (iter.hasNext()) {
+         iter.next();
+         count++;
+      }
+
+      return count;
+   }
+
+   public String toString() {
+      return getPrefix() + "(" + _expr + ")";
+   }
 }

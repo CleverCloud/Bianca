@@ -35,101 +35,89 @@ import java.util.concurrent.atomic.AtomicLong;
  * variable depends on the context ClassLoader.
  */
 public class EnvironmentLocal<E> {
-  // true on initialization if getting the system classloader is allowed,
-  // i.e. not forbiggen by the security manager
+   // true on initialization if getting the system classloader is allowed,
+   // i.e. not forbiggen by the security manager
 
-  private static Boolean _isSystemClassLoader;
+   private static Boolean _isSystemClassLoader;
 
-  private static AtomicLong _varCount = new AtomicLong();
+   private static AtomicLong _varCount = new AtomicLong();
 
-  private String _varName;
-  private E _globalValue;
+   private String _varName;
+   private E _globalValue;
 
-  /**
-   * Creates a new environment local variable with an anonymous identifier.
-   */
-  public EnvironmentLocal()
-  {
-    _varName = "resin:var-" + _varCount.incrementAndGet();
-  }
+   /**
+    * Creates a new environment local variable with an anonymous identifier.
+    */
+   public EnvironmentLocal() {
+      _varName = "resin:var-" + _varCount.incrementAndGet();
+   }
 
-  public EnvironmentLocal(String varName)
-  {
-    _varName = varName;
-  }
+   public EnvironmentLocal(String varName) {
+      _varName = varName;
+   }
 
-  public String getVariable()
-  {
-    return _varName;
-  }
+   public String getVariable() {
+      return _varName;
+   }
 
-  /**
-   * Returns the variable for the context classloader.
-   */
-  @SuppressWarnings("unchecked")
-  public E get()
-  {
-    return _globalValue;
-  }
+   /**
+    * Returns the variable for the context classloader.
+    */
+   @SuppressWarnings("unchecked")
+   public E get() {
+      return _globalValue;
+   }
 
-  /**
-   * Sets the variable for the context classloader.
-   * 
-   * @param value
-   *          the new value
-   * 
-   * @return the old value
-   */
-  @SuppressWarnings("unchecked")
-  public final E set(E value)
-  {
-    return setGlobal(value);
-  }
+   /**
+    * Sets the variable for the context classloader.
+    *
+    * @param value the new value
+    * @return the old value
+    */
+   @SuppressWarnings("unchecked")
+   public final E set(E value) {
+      return setGlobal(value);
+   }
 
-  /**
-   * Removes this variable
-   * 
-   * @return the old value
-   */
-  @SuppressWarnings("unchecked")
-  public final E remove()
-  {
-    return setGlobal(null);
-  }
+   /**
+    * Removes this variable
+    *
+    * @return the old value
+    */
+   @SuppressWarnings("unchecked")
+   public final E remove() {
+      return setGlobal(null);
+   }
 
-  /**
-   * Sets the global value.
-   * 
-   * @param value
-   *          the new value
-   * 
-   * @return the old value
-   */
-  public E setGlobal(E value)
-  {
-    E oldValue = _globalValue;
+   /**
+    * Sets the global value.
+    *
+    * @param value the new value
+    * @return the old value
+    */
+   public E setGlobal(E value) {
+      E oldValue = _globalValue;
 
-    _globalValue = value;
+      _globalValue = value;
 
-    return oldValue;
-  }
+      return oldValue;
+   }
 
-  public static ClassLoader getSystemClassLoader()
-  {
-    if (_isSystemClassLoader == null) {
-      _isSystemClassLoader = false;
+   public static ClassLoader getSystemClassLoader() {
+      if (_isSystemClassLoader == null) {
+         _isSystemClassLoader = false;
 
-      try {
-        ClassLoader.getSystemClassLoader();
+         try {
+            ClassLoader.getSystemClassLoader();
 
-        _isSystemClassLoader = true;
-      } catch (Throwable e) {
+            _isSystemClassLoader = true;
+         } catch (Throwable e) {
+         }
       }
-    }
 
-    if (_isSystemClassLoader)
-      return ClassLoader.getSystemClassLoader();
-    else
-      return null;
-  }
+      if (_isSystemClassLoader)
+         return ClassLoader.getSystemClassLoader();
+      else
+         return null;
+   }
 }

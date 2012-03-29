@@ -29,11 +29,11 @@
  */
 package com.clevercloud.bianca.page;
 
-import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.BiancaContext;
+import com.clevercloud.bianca.Location;
+import com.clevercloud.bianca.env.BiancaLanguageException;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.BiancaLanguageException;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.bianca.program.ClassDef;
@@ -173,15 +173,15 @@ abstract public class BiancaPage {
 
       if (message.equals("")) {
          env.error(location,
-                 L.l(
-                 "Uncaught exception of type '{0}'",
-                 type));
+            L.l(
+               "Uncaught exception of type '{0}'",
+               type));
       } else {
          env.error(location,
-                 L.l(
-                 "Uncaught exception of type '{0}' with message '{1}'",
-                 type,
-                 message));
+            L.l(
+               "Uncaught exception of type '{0}' with message '{1}'",
+               type,
+               message));
       }
    }
 

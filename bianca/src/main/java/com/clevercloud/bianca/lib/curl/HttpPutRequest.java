@@ -40,7 +40,7 @@ import java.net.ProtocolException;
  * Represents a PUT Http request.
  */
 public class HttpPutRequest
-        extends HttpRequest {
+   extends HttpRequest {
 
    public HttpPutRequest(CurlResource curlResource) {
       super(curlResource);
@@ -51,7 +51,7 @@ public class HttpPutRequest
     */
    @Override
    protected boolean init(Env env)
-           throws ProtocolException {
+      throws ProtocolException {
       if (!super.init(env)) {
          return false;
       }
@@ -66,7 +66,7 @@ public class HttpPutRequest
     */
    @Override
    protected void transfer(Env env)
-           throws IOException {
+      throws IOException {
       super.transfer(env);
 
       HttpConnection conn = getHttpConnection();

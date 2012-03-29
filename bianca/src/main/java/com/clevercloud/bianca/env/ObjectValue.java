@@ -34,11 +34,7 @@ import com.clevercloud.bianca.lib.ArrayModule;
 import com.clevercloud.vfs.WriteStream;
 
 import java.io.IOException;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Represents a Bianca object value.
@@ -199,7 +195,7 @@ abstract public class ObjectValue extends Value {
 
          // return getField(Env.getInstance(), key.toStringValue());
          return Env.getInstance().error(L.l("Can't use object '{0}' as array",
-                 getName()));
+            getName()));
       }
    }
 
@@ -218,7 +214,7 @@ abstract public class ObjectValue extends Value {
          // php/0d94
 
          return Env.getInstance().error(L.l("Can't use object '{0}' as array",
-                 getName()));
+            getName()));
          // return super.put(key, value);
       }
    }
@@ -238,7 +234,7 @@ abstract public class ObjectValue extends Value {
          // php/0d97
 
          return Env.getInstance().error(L.l("Can't use object '{0}' as array",
-                 getName()));
+            getName()));
          // return super.put(key, value);
       }
    }
@@ -286,6 +282,7 @@ abstract public class ObjectValue extends Value {
    //
    // Foreach/Traversable functions
    //
+
    /**
     * Returns an iterator for the key => value pairs.
     */
@@ -331,6 +328,7 @@ abstract public class ObjectValue extends Value {
    //
    // count delegate methods
    //
+
    /**
     * Returns the count value with the given key.
     */
@@ -351,8 +349,10 @@ abstract public class ObjectValue extends Value {
    //
    // Convenience field methods
    //
+
    /**
     * Adds a new value.
+    *
     * @Deprecated
     */
    public Value putField(String key, String value) {
@@ -370,6 +370,7 @@ abstract public class ObjectValue extends Value {
 
    /**
     * Adds a new value.
+    *
     * @Deprecated
     */
    public Value putField(String key, long value) {
@@ -398,13 +399,14 @@ abstract public class ObjectValue extends Value {
     */
    @Override
    public void initField(StringValue key,
-           Value value,
-           FieldVisibility visibility) {
+                         Value value,
+                         FieldVisibility visibility) {
       putThisField(Env.getInstance(), key, value);
    }
 
    /**
     * Adds a new value.
+    *
     * @Deprecated
     */
    public Value putField(String key, double value) {
@@ -497,10 +499,10 @@ abstract public class ObjectValue extends Value {
    }
 
    public void varDumpObject(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       int size = getSize();
 
       if (isIncompleteObject()) {

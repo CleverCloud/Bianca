@@ -29,10 +29,10 @@
  */
 package com.clevercloud.bianca.expr;
 
-import com.clevercloud.bianca.*;
+import com.clevercloud.bianca.Location;
+import com.clevercloud.bianca.env.BiancaClass;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.BiancaClass;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.util.L10N;
@@ -118,8 +118,10 @@ public class CallExpr extends Expr {
    return parser.getExprFactory().createCallRef(this);
    }
     */
+
    /**
     * Returns the copy of the value.
+    *
     * @param location
     */
    @Override
@@ -131,7 +133,6 @@ public class CallExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -143,7 +144,6 @@ public class CallExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -155,7 +155,6 @@ public class CallExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -167,7 +166,6 @@ public class CallExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    private Value evalImpl(Env env, boolean isRef, boolean isCopy) {
@@ -181,7 +179,7 @@ public class CallExpr extends Expr {
 
             if (_funId <= 0) {
                env.error(getLocationLine(),
-                       L.l("'{0}' is an unknown function.", _name));
+                  L.l("'{0}' is an unknown function.", _name));
 
                return NullValue.NULL;
             }

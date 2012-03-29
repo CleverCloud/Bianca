@@ -31,102 +31,89 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xml.XmlUtil;
 import com.clevercloud.xpath.ExprEnvironment;
-
 import org.w3c.dom.Node;
 
 /**
  * matches any node.  The 'any' axis is the root of a match pattern.
  */
 public class FromAny extends Axis {
-  public FromAny()
-  {
-    super(null);
-  }
+   public FromAny() {
+      super(null);
+   }
 
-  /**
-   * All nodes match
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true
-   */
-  public boolean match(Node node, ExprEnvironment env)
-  {
-    return true;
-  }
-  
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    Node owner = node.getOwnerDocument();
-    if (owner == null)
-      return node;
-    else
-      return owner;
-  }
+   /**
+    * All nodes match
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true
+    */
+   public boolean match(Node node, ExprEnvironment env) {
+      return true;
+   }
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param lastNode the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node lastNode)
-  {
-    return XmlUtil.getNext(node);
-  }
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      Node owner = node.getOwnerDocument();
+      if (owner == null)
+         return node;
+      else
+         return owner;
+   }
 
-  /**
-   * The root is strictly ascending.
-   */
-  public boolean isStrictlyAscending()
-  {
-    return false;
-  }
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node     the current node
+    * @param lastNode the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node lastNode) {
+      return XmlUtil.getNext(node);
+   }
 
-  /*
+   /**
+    * The root is strictly ascending.
+    */
+   public boolean isStrictlyAscending() {
+      return false;
+   }
+
+   /*
    * Should be impossible to call position() with the any pattern.
    *
    * @param node the current node
    * @param env the variable environment
    * @param pattern the position pattern
    */
-  public int position(Node node, ExprEnvironment env, AbstractPattern pattern)
-  {
-    throw new RuntimeException();
-  }
+   public int position(Node node, ExprEnvironment env, AbstractPattern pattern) {
+      throw new RuntimeException();
+   }
 
-  /*
+   /*
    * Should be impossible to call last() with the any pattern.
    *
    * @param node the current node
    * @param env the variable environment
    * @param pattern the position pattern
    */
-  public int count(Node node, ExprEnvironment env, AbstractPattern pattern)
-  {
-    throw new RuntimeException();
-  }
+   public int count(Node node, ExprEnvironment env, AbstractPattern pattern) {
+      throw new RuntimeException();
+   }
 
-  /**
-   * Returns true if the two patterns are equal.
-   */
-  public boolean equals(Object b)
-  {
-    return b instanceof FromAny;
-  }
+   /**
+    * Returns true if the two patterns are equal.
+    */
+   public boolean equals(Object b) {
+      return b instanceof FromAny;
+   }
 
-  public String toString()
-  {
-    return "node()";
-  }
+   public String toString() {
+      return "node()";
+   }
 }

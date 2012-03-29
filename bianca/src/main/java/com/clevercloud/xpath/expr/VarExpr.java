@@ -35,136 +35,119 @@ import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.pattern.NodeIterator;
 import com.clevercloud.xpath.pattern.SingleNodeIterator;
-
 import org.w3c.dom.Node;
 
 public class VarExpr extends Expr {
-  private String name;
+   private String name;
 
-  public VarExpr(String name)
-  {
-    this.name = name.intern();
-  }
+   public VarExpr(String name) {
+      this.name = name.intern();
+   }
 
-  /**
-   * Returns the value of the variable as a boolean.
-   *
-   * @param node the current node
-   * @param env the XPath envivonment
-   *
-   * @return the boolean value
-   */
-  public boolean evalBoolean(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Var var = (Var) env.getVar(name);
+   /**
+    * Returns the value of the variable as a boolean.
+    *
+    * @param node the current node
+    * @param env  the XPath envivonment
+    * @return the boolean value
+    */
+   public boolean evalBoolean(Node node, ExprEnvironment env)
+      throws XPathException {
+      Var var = (Var) env.getVar(name);
 
-    return var == null ? false : var.getBoolean();
-  }
+      return var == null ? false : var.getBoolean();
+   }
 
-  /**
-   * Returns the value of the variable as a double.
-   *
-   * @param node the current node
-   * @param env the XPath envivonment
-   *
-   * @return the double value
-   */
-  public double evalNumber(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Var var = env.getVar(name);
+   /**
+    * Returns the value of the variable as a double.
+    *
+    * @param node the current node
+    * @param env  the XPath envivonment
+    * @return the double value
+    */
+   public double evalNumber(Node node, ExprEnvironment env)
+      throws XPathException {
+      Var var = env.getVar(name);
 
-    return var == null ? Double.NaN : var.getDouble();
-  }
+      return var == null ? Double.NaN : var.getDouble();
+   }
 
-  /**
-   * Returns the value of the variable as a string
-   *
-   * @param cb the buffer to append the value
-   * @param node the current node
-   * @param env the XPath envivonment
-   *
-   * @return the string value
-   */
-  public void evalString(CharBuffer cb, Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Var var = env.getVar(name);
+   /**
+    * Returns the value of the variable as a string
+    *
+    * @param cb   the buffer to append the value
+    * @param node the current node
+    * @param env  the XPath envivonment
+    * @return the string value
+    */
+   public void evalString(CharBuffer cb, Node node, ExprEnvironment env)
+      throws XPathException {
+      Var var = env.getVar(name);
 
-    if (var != null)
-      var.getString(cb);
-  }
+      if (var != null)
+         var.getString(cb);
+   }
 
-  /**
-   * Returns the value of the variable as a string
-   *
-   * @param env the XPath envivonment
-   * @param node the current node
-   *
-   * @return the string value
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Var var = env.getVar(name);
+   /**
+    * Returns the value of the variable as a string
+    *
+    * @param env  the XPath envivonment
+    * @param node the current node
+    * @return the string value
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      Var var = env.getVar(name);
 
-    return var == null ? "" : var.getString();
-  }
+      return var == null ? "" : var.getString();
+   }
 
-  /**
-   * Returns the value of the variable as an object
-   *
-   * @param env the XPath envivonment
-   * @param node the current node
-   *
-   * @return the value
-   */
-  public Object evalObject(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Var var = env.getVar(name);
+   /**
+    * Returns the value of the variable as an object
+    *
+    * @param env  the XPath envivonment
+    * @param node the current node
+    * @return the value
+    */
+   public Object evalObject(Node node, ExprEnvironment env)
+      throws XPathException {
+      Var var = env.getVar(name);
 
-    return var == null ? null : var.getObject();
-  }
+      return var == null ? null : var.getObject();
+   }
 
-  /**
-   * Returns the value of the variable as an variable
-   *
-   * @param node the current node
-   * @param env the XPath envivonment
-   *
-   * @return the value
-   */
-  public Var evalVar(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Var var = env.getVar(name);
+   /**
+    * Returns the value of the variable as an variable
+    *
+    * @param node the current node
+    * @param env  the XPath envivonment
+    * @return the value
+    */
+   public Var evalVar(Node node, ExprEnvironment env)
+      throws XPathException {
+      Var var = env.getVar(name);
 
-    return var;
-  }
+      return var;
+   }
 
-  /**
-   * Returns the value of the variable as a node set.
-   *
-   * @param node the current node
-   * @param env the variable envivonment
-   *
-   * @return the value
-   */
-  public NodeIterator evalNodeSet(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Var var = env.getVar(name);
+   /**
+    * Returns the value of the variable as a node set.
+    *
+    * @param node the current node
+    * @param env  the variable envivonment
+    * @return the value
+    */
+   public NodeIterator evalNodeSet(Node node, ExprEnvironment env)
+      throws XPathException {
+      Var var = env.getVar(name);
 
-    if (var == null)
-      return new SingleNodeIterator(env, null);
-    else
-      return var.getNodeSet(env);
-  }
+      if (var == null)
+         return new SingleNodeIterator(env, null);
+      else
+         return var.getNodeSet(env);
+   }
 
-  public String toString()
-  {
-    return "$" + name;
-  }
+   public String toString() {
+      return "$" + name;
+   }
 }

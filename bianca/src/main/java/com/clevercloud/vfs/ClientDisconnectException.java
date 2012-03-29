@@ -38,31 +38,27 @@ import java.io.IOException;
  */
 @SuppressWarnings("serial")
 public class ClientDisconnectException extends IOException {
-  public ClientDisconnectException()
-  {
-  }
-  
-  public ClientDisconnectException(String msg)
-  {
-    super(msg);
-  }
-  
-  public ClientDisconnectException(Exception exn)
-  {
-    super(exn);
-  }
+   public ClientDisconnectException() {
+   }
 
-  /**
-   * Only create a disconnect exception if it's an IOException
-   * Possible later check for broken pipe.
-   */
-  public static IOException create(IOException exn)
-  {
-    if (exn.getClass().equals(IOException.class) ||
-        exn.getClass().equals(java.net.SocketException.class) ||
-        exn.getClass().getName().equals("javax.net.ssl.SSLException"))
-      return new ClientDisconnectException(exn);
-    else
-      return exn;
-  }
+   public ClientDisconnectException(String msg) {
+      super(msg);
+   }
+
+   public ClientDisconnectException(Exception exn) {
+      super(exn);
+   }
+
+   /**
+    * Only create a disconnect exception if it's an IOException
+    * Possible later check for broken pipe.
+    */
+   public static IOException create(IOException exn) {
+      if (exn.getClass().equals(IOException.class) ||
+         exn.getClass().equals(java.net.SocketException.class) ||
+         exn.getClass().getName().equals("javax.net.ssl.SSLException"))
+         return new ClientDisconnectException(exn);
+      else
+         return exn;
+   }
 }

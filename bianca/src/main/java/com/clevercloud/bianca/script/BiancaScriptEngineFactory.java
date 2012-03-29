@@ -35,9 +35,9 @@ import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.SimpleBindings;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.reflect.*;
 
 /**
  * Script engine factory
@@ -121,7 +121,7 @@ public class BiancaScriptEngineFactory implements ScriptEngineFactory {
 
    /**
     * Returns engine-specific properties.
-    *
+    * <p/>
     * Predefined keys include:
     * <ul>
     * <li>THREADING

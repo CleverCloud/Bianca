@@ -71,9 +71,9 @@ public class FunctionArrayDelegate implements ArrayDelegate {
    public Value get(ObjectValue qThis, Value key) {
       if (_arrayGet != null) {
          return _arrayGet.callMethod(Env.getInstance(),
-                 _arrayGet.getBiancaClass(),
-                 qThis,
-                 new Value[]{key});
+            _arrayGet.getBiancaClass(),
+            qThis,
+            new Value[]{key});
       } else {
          return UnsetValue.UNSET;
       }
@@ -86,8 +86,8 @@ public class FunctionArrayDelegate implements ArrayDelegate {
    public Value put(ObjectValue qThis, Value key, Value value) {
       if (_arrayPut != null) {
          return _arrayPut.callMethod(Env.getInstance(),
-                 _arrayPut.getBiancaClass(),
-                 qThis, key, value);
+            _arrayPut.getBiancaClass(),
+            qThis, key, value);
       } else {
          return UnsetValue.UNSET;
       }
@@ -100,8 +100,8 @@ public class FunctionArrayDelegate implements ArrayDelegate {
    public Value put(ObjectValue qThis, Value value) {
       if (_arrayPut != null) {
          return _arrayPut.callMethod(Env.getInstance(),
-                 _arrayPut.getBiancaClass(),
-                 qThis, value);
+            _arrayPut.getBiancaClass(),
+            qThis, value);
       } else {
          return UnsetValue.UNSET;
       }
@@ -130,8 +130,8 @@ public class FunctionArrayDelegate implements ArrayDelegate {
    public long count(ObjectValue qThis) {
       if (_arrayCount != null) {
          return _arrayCount.callMethod(Env.getInstance(),
-                 _arrayGet.getBiancaClass(),
-                 qThis).toLong();
+            _arrayGet.getBiancaClass(),
+            qThis).toLong();
       } else {
          return 1;
       }

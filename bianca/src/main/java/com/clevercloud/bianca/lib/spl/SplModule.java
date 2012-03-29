@@ -29,11 +29,11 @@
  */
 package com.clevercloud.bianca.lib.spl;
 
-import java.util.ArrayList;
-
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
+
+import java.util.ArrayList;
 
 /*
  * XXX: Not finished.
@@ -48,8 +48,8 @@ public class SplModule extends AbstractBiancaModule {
    }
 
    public static Value class_implements(Env env,
-           Value obj,
-           @Optional boolean autoload) {
+                                        Value obj,
+                                        @Optional boolean autoload) {
       BiancaClass cls;
 
       if (obj.isObject()) {
@@ -66,8 +66,8 @@ public class SplModule extends AbstractBiancaModule {
    }
 
    public static Value class_parents(Env env,
-           Value obj,
-           @Optional boolean autoload) {
+                                     Value obj,
+                                     @Optional boolean autoload) {
       BiancaClass cls;
 
       if (obj.isObject()) {
@@ -94,7 +94,7 @@ public class SplModule extends AbstractBiancaModule {
    }
 
    public static boolean spl_autoload_register(Env env,
-           @Optional Callable fun) {
+                                               @Optional Callable fun) {
       if (fun == null) {
          fun = new CallbackFunction(env, "spl_autoload");
       }
@@ -105,7 +105,7 @@ public class SplModule extends AbstractBiancaModule {
    }
 
    public static boolean spl_autoload_unregister(Env env,
-           Callable fun) {
+                                                 Callable fun) {
       env.removeAutoloadFunction(fun);
 
       return true;
@@ -131,7 +131,7 @@ public class SplModule extends AbstractBiancaModule {
    }
 
    public static String spl_autoload_extensions(Env env,
-           @Optional String extensions) {
+                                                @Optional String extensions) {
       String oldExtensions = getAutoloadExtensions(env);
 
       if (extensions != null) {
@@ -152,8 +152,8 @@ public class SplModule extends AbstractBiancaModule {
    }
 
    public static void spl_autoload(Env env,
-           String className,
-           @Optional String extensions) {
+                                   String className,
+                                   @Optional String extensions) {
       if (env.findClass(className, false, true) != null) {
          return;
       }

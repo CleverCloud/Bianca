@@ -33,7 +33,6 @@ import com.clevercloud.config.ConfigException;
 import com.clevercloud.vfs.MergePath;
 import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.ReadStream;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -45,85 +44,82 @@ import java.util.HashMap;
  * JARV Verifier factory.
  */
 public class CompactVerifierFactoryImpl implements VerifierFactory {
-  private static HashMap<Path,SoftReference<Schema>> _schemaMap =
-    new HashMap<Path,SoftReference<Schema>>();
+   private static HashMap<Path, SoftReference<Schema>> _schemaMap =
+      new HashMap<Path, SoftReference<Schema>>();
 
-  /**
-   * Reads the schema from the classpath.
-   */
-  public static Schema compileFromResource(String schemaName)
-    throws SAXException, IOException
-  {
-    CompactVerifierFactoryImpl factory = new CompactVerifierFactoryImpl();
+   /**
+    * Reads the schema from the classpath.
+    */
+   public static Schema compileFromResource(String schemaName)
+      throws SAXException, IOException {
+      CompactVerifierFactoryImpl factory = new CompactVerifierFactoryImpl();
 
-    MergePath mp = new MergePath();
-    mp.addClassPath();
+      MergePath mp = new MergePath();
+      mp.addClassPath();
 
-    return factory.compileSchema(mp.lookup(schemaName));
-  }
-  
-  /**
-   * Compile a schema.
-   */
-  public static Schema compileFromPath(Path path)
-    throws SAXException, IOException
-  {
-    return new CompactVerifierFactoryImpl().compileSchema(path);
-  }
-  
-  /**
-   * Compile a schema.
-   */
-  public Schema compileSchema(Path path)
-    throws SAXException, IOException
-  {
-    String nativePath = path.getNativePath();
-    
-    SoftReference<Schema> schemaRef = _schemaMap.get(path);
-    Schema schema = null;
+      return factory.compileSchema(mp.lookup(schemaName));
+   }
 
-    if (schemaRef != null && (schema = schemaRef.get()) != null) {
-      // XXX: probably eventually add an isModified
-      return schema;
-    }
-    
-    ReadStream is = path.openRead();
+   /**
+    * Compile a schema.
+    */
+   public static Schema compileFromPath(Path path)
+      throws SAXException, IOException {
+      return new CompactVerifierFactoryImpl().compileSchema(path);
+   }
 
-    try {
-      InputSource source = new InputSource(is);
+   /**
+    * Compile a schema.
+    */
+   public Schema compileSchema(Path path)
+      throws SAXException, IOException {
+      String nativePath = path.getNativePath();
 
-      source.setSystemId(path.getUserPath());
+      SoftReference<Schema> schemaRef = _schemaMap.get(path);
+      Schema schema = null;
 
-      schema = compileSchema(source);
+      if (schemaRef != null && (schema = schemaRef.get()) != null) {
+         // XXX: probably eventually add an isModified
+         return schema;
+      }
 
-      if (schema != null)
-        _schemaMap.put(path, new SoftReference<Schema>(schema));
-    } finally {
-      is.close();
-    }
+      ReadStream is = path.openRead();
 
-    return schema;
-  }
-  /**
-   * Compile a schema.
-   */
-  public Schema compileSchema(InputSource is)
-    throws SAXException, IOException
-  {
-    try {
-      CompactParser parser = new CompactParser();
+      try {
+         InputSource source = new InputSource(is);
 
-      parser.parse(is);
-      
-      SchemaImpl schema = new SchemaImpl(parser.getGrammar());
+         source.setSystemId(path.getUserPath());
 
-      schema.setFilename(is.getSystemId());
+         schema = compileSchema(source);
+
+         if (schema != null)
+            _schemaMap.put(path, new SoftReference<Schema>(schema));
+      } finally {
+         is.close();
+      }
 
       return schema;
-    } catch (SAXException e) {
-      throw e;
-    } catch (Exception e) {
-      throw ConfigException.create(e);
-    }
-  }
+   }
+
+   /**
+    * Compile a schema.
+    */
+   public Schema compileSchema(InputSource is)
+      throws SAXException, IOException {
+      try {
+         CompactParser parser = new CompactParser();
+
+         parser.parse(is);
+
+         SchemaImpl schema = new SchemaImpl(parser.getGrammar());
+
+         schema.setFilename(is.getSystemId());
+
+         return schema;
+      } catch (SAXException e) {
+         throw e;
+      } catch (Exception e) {
+         throw ConfigException.create(e);
+      }
+   }
 }

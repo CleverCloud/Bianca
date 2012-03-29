@@ -41,10 +41,10 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 public class ArrayObject
-        implements ArrayAccess,
-        Countable,
-        IteratorAggregate,
-        Traversable {
+   implements ArrayAccess,
+   Countable,
+   IteratorAggregate,
+   Traversable {
 
    private static L10N L = new L10N(ArrayObject.class);
    public static final int STD_PROP_LIST = 0x00000001;
@@ -56,9 +56,9 @@ public class ArrayObject
 
    @Name("__construct")
    public ArrayObject(Env env,
-           @Optional Value value,
-           @Optional int flags,
-           @Optional("ArrayIterator") String iteratorClassName) {
+                      @Optional Value value,
+                      @Optional int flags,
+                      @Optional("ArrayIterator") String iteratorClassName) {
       if (value.isNull()) {
          value = new ArrayValueImpl();
       }
@@ -71,7 +71,7 @@ public class ArrayObject
 
       if (iteratorClass == null || !iteratorClass.isA("Iterator")) {
          throw new IllegalArgumentException(
-                 L.l("A class that implements Iterator must be specified"));
+            L.l("A class that implements Iterator must be specified"));
       }
 
       _iteratorClass = iteratorClass;
@@ -188,17 +188,17 @@ public class ArrayObject
    }
 
    static private void printDepth(WriteStream out, int depth)
-           throws java.io.IOException {
+      throws java.io.IOException {
       for (int i = depth; i > 0; i--) {
          out.print(' ');
       }
    }
 
    public void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                          WriteStream out,
+                          int depth,
+                          IdentityHashMap<Value, String> valueSet)
+      throws IOException {
 
       if ((_flags & STD_PROP_LIST) != 0) {
          // TODO:
@@ -243,11 +243,11 @@ public class ArrayObject
    }
 
    public void varDumpImpl(Env env,
-           Value object,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           Value object,
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       String name = object.getClassName();
 
       if ((_flags & STD_PROP_LIST) != 0) {

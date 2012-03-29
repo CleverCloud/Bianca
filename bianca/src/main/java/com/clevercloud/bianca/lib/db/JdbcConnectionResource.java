@@ -30,16 +30,10 @@
  */
 package com.clevercloud.bianca.lib.db;
 
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.ConnectionEntry;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.EnvCleanup;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
+import com.clevercloud.util.JdbcUtil;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.LruCache;
-import com.clevercloud.util.JdbcUtil;
 
 import java.sql.*;
 import java.util.logging.Level;
@@ -49,7 +43,7 @@ import java.util.logging.Logger;
  * Represents a JDBC Connection value.
  */
 public abstract class JdbcConnectionResource
-        implements EnvCleanup {
+   implements EnvCleanup {
 
    private static final L10N L = new L10N(JdbcConnectionResource.class);
    private static final Logger log = Logger.getLogger(JdbcConnectionResource.class.getName());
@@ -139,24 +133,24 @@ public abstract class JdbcConnectionResource
     * corresponding information: host, port and
     * database name.
     *
-    * @param host server host
-    * @param port server port
+    * @param host   server host
+    * @param port   server port
     * @param dbname database name
     */
    final protected boolean connectInternal(Env env,
-           String host,
-           String userName,
-           String password,
-           String dbname,
-           int port,
-           String socket,
-           int flags,
-           String driver,
-           String url,
-           boolean isNewLink) {
+                                           String host,
+                                           String userName,
+                                           String password,
+                                           String dbname,
+                                           int port,
+                                           String socket,
+                                           int flags,
+                                           String driver,
+                                           String url,
+                                           boolean isNewLink) {
       if (_conn != null) {
          throw new IllegalStateException(
-                 getClass().getSimpleName() + " attempt to open multiple connections");
+            getClass().getSimpleName() + " attempt to open multiple connections");
       }
 
       _host = host;
@@ -175,8 +169,8 @@ public abstract class JdbcConnectionResource
       _catalog = dbname;
 
       _conn = connectImpl(env, host, userName, password,
-              dbname, port, socket, flags, driver, url,
-              isNewLink);
+         dbname, port, socket, flags, driver, url,
+         isNewLink);
 
       if (_conn != null) {
          try {
@@ -195,16 +189,16 @@ public abstract class JdbcConnectionResource
     * Connects to the underlying database.
     */
    protected abstract ConnectionEntry connectImpl(Env env,
-           String host,
-           String userName,
-           String password,
-           String dbname,
-           int port,
-           String socket,
-           int flags,
-           String driver,
-           String url,
-           boolean isNewLink);
+                                                  String host,
+                                                  String userName,
+                                                  String password,
+                                                  String dbname,
+                                                  int port,
+                                                  String socket,
+                                                  int flags,
+                                                  String driver,
+                                                  String url,
+                                                  boolean isNewLink);
 
    /**
     * Escape the given string for SQL statements.
@@ -287,7 +281,7 @@ public abstract class JdbcConnectionResource
       clearErrors();
 
       try {
-        ResultSet rs = _conn.getConnection().getMetaData().getCatalogs();
+         ResultSet rs = _conn.getConnection().getMetaData().getCatalogs();
 
          if (rs != null) {
             return createResult(_env, _savedStmt, rs);
@@ -336,11 +330,12 @@ public abstract class JdbcConnectionResource
 
    /**
     * Returns the client version
+    *
     * @deprecated
     */
    public String getClientInfo() {
       try {
-         return  _conn.getConnection().getMetaData().getDatabaseProductVersion();
+         return _conn.getConnection().getMetaData().getDatabaseProductVersion();
       } catch (SQLException e) {
          log.log(Level.FINE, e.toString(), e);
          return null;
@@ -378,7 +373,7 @@ public abstract class JdbcConnectionResource
     * associated to this statement.
     */
    protected Connection getJavaConnection()
-           throws SQLException {
+      throws SQLException {
       // TODO: jdbc for jdk 1.6 updates
       return _env.getBianca().getConnection(_conn.getConnection());
    }
@@ -406,13 +401,12 @@ public abstract class JdbcConnectionResource
    }
 
    /**
-    *
     * returns the URL string for the given connection
     * IE: jdbc:mysql://localhost:3306/test
     * XXX: PHP returns Localhost via UNIX socket
     */
    public String getHostInfo()
-           throws SQLException {
+      throws SQLException {
       return _conn.getConnection().getMetaData().getURL();
    }
 
@@ -420,7 +414,7 @@ public abstract class JdbcConnectionResource
     * returns the server version
     */
    public String getServerInfo()
-           throws SQLException {
+      throws SQLException {
       return getMetaData().getDatabaseProductVersion();
    }
 
@@ -428,10 +422,10 @@ public abstract class JdbcConnectionResource
     * Returns the table metadata.
     */
    public JdbcTableMetaData getTableMetaData(Env env,
-           String catalog,
-           String schema,
-           String table)
-           throws SQLException {
+                                             String catalog,
+                                             String schema,
+                                             String table)
+      throws SQLException {
       try {
          if (table == null || table.equals("")) {
             return null;
@@ -447,10 +441,10 @@ public abstract class JdbcConnectionResource
          }
 
          tableMd = new JdbcTableMetaData(env,
-                 catalog,
-                 schema,
-                 table,
-                 getMetaData());
+            catalog,
+            schema,
+            table,
+            getMetaData());
 
          _tableMetadataMap.put(key, tableMd);
 
@@ -463,7 +457,7 @@ public abstract class JdbcConnectionResource
    }
 
    private DatabaseMetaData getMetaData()
-           throws SQLException {
+      throws SQLException {
       return _conn.getConnection().getMetaData();
    }
 
@@ -475,8 +469,8 @@ public abstract class JdbcConnectionResource
       }
 
       return (Integer.parseInt(result[0]) * 10000
-              + Integer.parseInt(result[1]) * 100
-              + Integer.parseInt(result[2]));
+         + Integer.parseInt(result[1]) * 100
+         + Integer.parseInt(result[2]));
    }
 
    public void closeStatement(Statement stmt) {
@@ -553,8 +547,8 @@ public abstract class JdbcConnectionResource
    public JdbcConnectionResource validateConnection() {
       if (_conn == null) {
          throw _env.createErrorException(
-                 L.l("Connection is not properly initialized {0}\nDriver {1}",
-                 _url, _driver));
+            L.l("Connection is not properly initialized {0}\nDriver {1}",
+               _url, _driver));
       }
 
       return this;
@@ -590,7 +584,7 @@ public abstract class JdbcConnectionResource
             boolean isSeekable = isSeekable();
             if (isSeekable) {
                stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                       ResultSet.CONCUR_READ_ONLY);
+                  ResultSet.CONCUR_READ_ONLY);
             } else {
                stmt = conn.createStatement();
             }
@@ -735,25 +729,25 @@ public abstract class JdbcConnectionResource
          }
 
          // reason for comment out?  no real perf gain?
-        /*
-         case 'b': case 'B': {
-         if (tok.matchesToken("BEGIN")) {
-         // Test for mediawiki performance
-         setAutoCommit(false);
-         return true;
-         }
-         break;
-         }
+         /*
+        case 'b': case 'B': {
+        if (tok.matchesToken("BEGIN")) {
+        // Test for mediawiki performance
+        setAutoCommit(false);
+        return true;
+        }
+        break;
+        }
 
-         case 'r': case 'R': {
-         if (tok.matchesToken("ROLLBACK")) {
-         rollback();
-         setAutoCommit(true);
-         return true;
-         }
-         break;
-         }
-          */
+        case 'r': case 'R': {
+        if (tok.matchesToken("ROLLBACK")) {
+        rollback();
+        setAutoCommit(true);
+        return true;
+        }
+        break;
+        }
+         */
       }
 
       return false;
@@ -809,8 +803,8 @@ public abstract class JdbcConnectionResource
     * Creates a database-specific result.
     */
    protected JdbcResultResource createResult(Env env,
-           Statement stmt,
-           ResultSet rs) {
+                                             Statement stmt,
+                                             ResultSet rs) {
       return new JdbcResultResource(env, stmt, rs, this);
    }
 
@@ -850,7 +844,7 @@ public abstract class JdbcConnectionResource
 
    /**
     * rolls the current transaction back
-    *
+    * <p/>
     * NOTE: bianca doesn't seem to support the idea
     * of savepoints
     */
@@ -872,7 +866,7 @@ public abstract class JdbcConnectionResource
     * Sets the catalog
     */
    public void setCatalog(String name)
-           throws SQLException {
+      throws SQLException {
       if (_catalog != null && _catalog.equals(name)) {
          return;
       }
@@ -896,7 +890,7 @@ public abstract class JdbcConnectionResource
          }
 
          connectInternal(_env, _host, _userName, _password, name,
-                 _port, _socket, _flags, _driver, _url, false);
+            _port, _socket, _flags, _driver, _url, false);
       } else {
          _conn.setCatalog(name);
       }
@@ -1153,8 +1147,8 @@ public abstract class JdbcConnectionResource
          // Extract database name if back quoted : "DROP DATABASE `DBNAME`"
 
          if (tok.length() >= 2
-                 && tok.charAt(0) == '`'
-                 && tok.charAt(tok.length() - 1) == '`') {
+            && tok.charAt(0) == '`'
+            && tok.charAt(tok.length() - 1) == '`') {
             tok = tok.substring(1, tok.length() - 1);
          }
 

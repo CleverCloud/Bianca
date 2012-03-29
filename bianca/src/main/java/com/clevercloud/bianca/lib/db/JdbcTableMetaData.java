@@ -35,7 +35,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a JDBC column metadata
@@ -51,11 +52,11 @@ public class JdbcTableMetaData {
    private final HashMap<String, JdbcColumnMetaData> _columnMap = new HashMap<String, JdbcColumnMetaData>();
 
    public JdbcTableMetaData(Env env,
-           String catalog,
-           String schema,
-           String name,
-           DatabaseMetaData md)
-           throws SQLException {
+                            String catalog,
+                            String schema,
+                            String name,
+                            DatabaseMetaData md)
+      throws SQLException {
       _catalog = catalog;
       _schema = schema;
       _name = name;

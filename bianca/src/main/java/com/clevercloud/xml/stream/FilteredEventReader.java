@@ -30,127 +30,112 @@
 
 package com.clevercloud.xml.stream;
 
-import java.util.NoSuchElementException;
-
 import javax.xml.stream.EventFilter;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
+import java.util.NoSuchElementException;
 
 class FilteredEventReader implements XMLEventReader {
-  private XMLEventReader _reader;
-  private EventFilter _filter;
+   private XMLEventReader _reader;
+   private EventFilter _filter;
 
-  private XMLEvent _current;
-  private XMLEvent _next;
+   private XMLEvent _current;
+   private XMLEvent _next;
 
-  public FilteredEventReader(XMLEventReader reader, EventFilter filter)
-  {
-    _reader = reader;
-    _filter = filter;
-  }
+   public FilteredEventReader(XMLEventReader reader, EventFilter filter) {
+      _reader = reader;
+      _filter = filter;
+   }
 
-  public void close() throws XMLStreamException
-  {
-    _reader.close();
-  }
+   public void close() throws XMLStreamException {
+      _reader.close();
+   }
 
-  public String getElementText() throws XMLStreamException
-  {
-    return _reader.getElementText();
-  }
+   public String getElementText() throws XMLStreamException {
+      return _reader.getElementText();
+   }
 
-  public Object getProperty(String name) throws IllegalArgumentException
-  {
-    return _reader.getProperty(name);
-  }
+   public Object getProperty(String name) throws IllegalArgumentException {
+      return _reader.getProperty(name);
+   }
 
-  public boolean hasNext()
-  {
-    try {
-      peek();
+   public boolean hasNext() {
+      try {
+         peek();
 
-      return _next != null;
-    } 
-    catch (XMLStreamException e) {
-      return false;
-    }
-  }
-
-  public XMLEvent nextEvent() throws XMLStreamException
-  {
-    if (_next != null) {
-      _current = _next;
-      _next = null;
-    }
-    else {
-      while (_reader.hasNext()) {
-        _current = _reader.nextEvent(); 
-
-        if (_filter.accept(_current))
-          break;
-
-        _current = null;
+         return _next != null;
+      } catch (XMLStreamException e) {
+         return false;
       }
-    }
+   }
 
-    if (_current == null)
-      throw new NoSuchElementException();
+   public XMLEvent nextEvent() throws XMLStreamException {
+      if (_next != null) {
+         _current = _next;
+         _next = null;
+      } else {
+         while (_reader.hasNext()) {
+            _current = _reader.nextEvent();
 
-    return _current;
-  }
+            if (_filter.accept(_current))
+               break;
 
-  public XMLEvent nextTag() throws XMLStreamException
-  {
-    if (_next != null) {
-      _current = _next;
-      _next = null;
-    }
-    else {
-      while (_reader.hasNext()) {
-        _current = _reader.nextTag(); 
-
-        if (_filter.accept(_current))
-          break;
-
-        _current = null;
+            _current = null;
+         }
       }
-    }
 
-    if (_current == null)
-      throw new NoSuchElementException();
+      if (_current == null)
+         throw new NoSuchElementException();
 
-    return _current;
-  }
+      return _current;
+   }
 
-  public XMLEvent peek() throws XMLStreamException
-  {
-    if (_next == null) {
-      while (_reader.hasNext()) {
-        _next = _reader.nextEvent(); 
+   public XMLEvent nextTag() throws XMLStreamException {
+      if (_next != null) {
+         _current = _next;
+         _next = null;
+      } else {
+         while (_reader.hasNext()) {
+            _current = _reader.nextTag();
 
-        if (_filter.accept(_next))
-          break;
+            if (_filter.accept(_current))
+               break;
 
-        _next = null;
+            _current = null;
+         }
       }
-    }
 
-    return _next;
-  }
+      if (_current == null)
+         throw new NoSuchElementException();
 
-  public void remove()
-  {
-    throw new UnsupportedOperationException();
-  }
+      return _current;
+   }
 
-  public XMLEvent next()
-  {
-    try {
-      return nextEvent();
-    }
-    catch (XMLStreamException e) {
-      return null;
-    }
-  }
+   public XMLEvent peek() throws XMLStreamException {
+      if (_next == null) {
+         while (_reader.hasNext()) {
+            _next = _reader.nextEvent();
+
+            if (_filter.accept(_next))
+               break;
+
+            _next = null;
+         }
+      }
+
+      return _next;
+   }
+
+   public void remove() {
+      throw new UnsupportedOperationException();
+   }
+
+   public XMLEvent next() {
+      try {
+         return nextEvent();
+      } catch (XMLStreamException e) {
+         return null;
+      }
+   }
 }

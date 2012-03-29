@@ -44,9 +44,9 @@ public class Arg {
    private final String _expectedClass;
 
    public Arg(String name,
-           Expr defaultExpr,
-           boolean isReference,
-           String expectedClass) {
+              Expr defaultExpr,
+              boolean isReference,
+              String expectedClass) {
       _name = MethodIntern.intern(name);
       _default = defaultExpr;
       _isReference = isReference;

@@ -29,40 +29,40 @@
  */
 package com.clevercloud.bianca.lib.curl;
 
-import java.io.IOException;
-import java.net.*;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import java.io.IOException;
+import java.net.Proxy;
+import java.net.URL;
 
 /**
  * Represents a HttpURLConnection wrapper.
  */
 public class HttpsConnection
-        extends HttpConnection {
+   extends HttpConnection {
 
    protected HttpsConnection(URL url,
-           String username,
-           String password)
-           throws IOException {
+                             String username,
+                             String password)
+      throws IOException {
       super(url, username, password);
    }
 
    public HttpsConnection(URL url,
-           String username,
-           String password,
-           URL proxyURL,
-           String proxyUsername,
-           String proxyPassword,
-           String proxyType)
-           throws IOException {
+                          String username,
+                          String password,
+                          URL proxyURL,
+                          String proxyUsername,
+                          String proxyPassword,
+                          String proxyType)
+      throws IOException {
       super(url, username, password,
-              proxyURL, proxyUsername, proxyPassword, proxyType);
+         proxyURL, proxyUsername, proxyPassword, proxyType);
    }
 
    @Override
    protected void init(CurlResource curl)
-           throws IOException {
+      throws IOException {
       Proxy proxy = getProxy();
 
       HttpsURLConnection conn;
@@ -74,8 +74,8 @@ public class HttpsConnection
       }
 
       HostnameVerifier hostnameVerifier = CurlHostnameVerifier.create(curl.getIsVerifySSLPeer(),
-              curl.getIsVerifySSLCommonName(),
-              curl.getIsVerifySSLHostname());
+         curl.getIsVerifySSLCommonName(),
+         curl.getIsVerifySSLHostname());
 
       conn.setHostnameVerifier(hostnameVerifier);
 

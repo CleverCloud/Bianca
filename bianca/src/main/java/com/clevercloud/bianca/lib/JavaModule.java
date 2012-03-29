@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 public class JavaModule extends AbstractBiancaModule {
 
    private static final Logger log =
-           Logger.getLogger(JavaModule.class.getName());
+      Logger.getLogger(JavaModule.class.getName());
    private static final L10N L = new L10N(JavaModule.class);
 
    /**
@@ -53,8 +53,8 @@ public class JavaModule extends AbstractBiancaModule {
     * If constructor is not available, then return static class definition.
     */
    public static Object java(Env env,
-           String className,
-           Value[] args) {
+                             String className,
+                             Value[] args) {
       try {
          JavaClassDef def = env.getJavaClassDefinition(className);
 
@@ -83,7 +83,7 @@ public class JavaModule extends AbstractBiancaModule {
     * Returns the static class definition of a Java class.
     */
    public static Object java_class(Env env,
-           String className) {
+                                   String className) {
       try {
          JavaClassDef def = env.getJavaClassDefinition(className);
 

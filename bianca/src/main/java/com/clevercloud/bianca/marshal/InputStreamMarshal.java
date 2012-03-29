@@ -29,12 +29,12 @@
  */
 package com.clevercloud.bianca.marshal;
 
-import java.io.InputStream;
-
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.JavaValue;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.expr.Expr;
+
+import java.io.InputStream;
 
 public class InputStreamMarshal extends Marshal {
 
@@ -63,8 +63,8 @@ public class InputStreamMarshal extends Marshal {
    @Override
    protected int getMarshalingCostImpl(Value argValue) {
       if (argValue instanceof JavaValue
-              && InputStream.class.isAssignableFrom(
-              argValue.toJavaObject().getClass())) {
+         && InputStream.class.isAssignableFrom(
+         argValue.toJavaObject().getClass())) {
          return Marshal.ZERO;
       } else {
          return Marshal.FOUR;

@@ -35,11 +35,11 @@ import com.clevercloud.bianca.annotation.NotNull;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
 import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.lib.OutputModule;
 import com.clevercloud.bianca.lib.file.BinaryInput;
 import com.clevercloud.bianca.lib.file.BinaryOutput;
 import com.clevercloud.bianca.lib.file.BinaryStream;
 import com.clevercloud.bianca.lib.file.FileModule;
-import com.clevercloud.bianca.lib.OutputModule;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 import com.clevercloud.vfs.StreamImplOutputStream;
@@ -73,7 +73,6 @@ public class ZlibModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param env
     * @param fileName
     * @param mode
@@ -82,9 +81,9 @@ public class ZlibModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static BinaryStream gzopen(Env env,
-           StringValue fileName,
-           String mode,
-           @Optional("false") boolean useIncludePath) {
+                                     StringValue fileName,
+                                     String mode,
+                                     @Optional("false") boolean useIncludePath) {
       String filemode = getFileMode(mode);
       int compressionLevel = getCompressionLevel(mode);
       int compressionStrategy = getCompressionStrategy(mode);
@@ -103,16 +102,16 @@ public class ZlibModule extends AbstractBiancaModule {
             return new ZlibInputStream(env, is);
          } else if (ch == 'w') {
             return new ZlibOutputStream(((BinaryOutput) val).getOutputStream(),
-                    compressionLevel,
-                    compressionStrategy);
+               compressionLevel,
+               compressionStrategy);
          } else if (ch == 'a') {
             return new ZlibOutputStream(((BinaryOutput) val).getOutputStream(),
-                    compressionLevel,
-                    compressionStrategy);
+               compressionLevel,
+               compressionStrategy);
          } else if (ch == 'x') {
             return new ZlibOutputStream(((BinaryOutput) val).getOutputStream(),
-                    compressionLevel,
-                    compressionStrategy);
+               compressionLevel,
+               compressionStrategy);
          }
       } catch (IOException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -123,7 +122,6 @@ public class ZlibModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param env
     * @param fileName
     * @param useIncludePath
@@ -131,8 +129,8 @@ public class ZlibModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue gzfile(Env env,
-           StringValue fileName,
-           @Optional boolean useIncludePath) {
+                                   StringValue fileName,
+                                   @Optional boolean useIncludePath) {
       BinaryInput is = (BinaryInput) gzopen(env, fileName, "r", useIncludePath);
 
       if (is == null) {
@@ -144,7 +142,7 @@ public class ZlibModule extends AbstractBiancaModule {
 
          StringValue line;
          while ((line = is.readLine(Integer.MAX_VALUE)) != null
-                 && line.length() > 0) {
+            && line.length() > 0) {
             result.put(line);
          }
 
@@ -162,7 +160,7 @@ public class ZlibModule extends AbstractBiancaModule {
 
    /**
     * outputs uncompressed bytes directly to browser, writes a warning message
-    *   if an error has occured
+    * if an error has occured
     * Note: PHP5 is supposed to print an error message but it doesn't do it
     *
     * @param env
@@ -171,8 +169,8 @@ public class ZlibModule extends AbstractBiancaModule {
     * @return number of bytes read from file, or FALSE if an error occurred
     */
    public static Value readgzfile(Env env,
-           StringValue fileName,
-           @Optional boolean useIncludePath) {
+                                  StringValue fileName,
+                                  @Optional boolean useIncludePath) {
       BinaryInput is = (BinaryInput) gzopen(env, fileName, "r", useIncludePath);
 
       if (is == null) {
@@ -192,8 +190,8 @@ public class ZlibModule extends AbstractBiancaModule {
     * Writes a string to the gzip stream.
     */
    public static int gzwrite(@NotNull BinaryOutput os,
-           InputStream is,
-           @Optional("0x7fffffff") int length) {
+                             InputStream is,
+                             @Optional("0x7fffffff") int length) {
       if (os == null) {
          return 0;
       }
@@ -206,7 +204,6 @@ public class ZlibModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param env
     * @param zp
     * @param s
@@ -214,9 +211,9 @@ public class ZlibModule extends AbstractBiancaModule {
     * @return alias of gzwrite
     */
    public int gzputs(Env env,
-           @NotNull BinaryOutput os,
-           InputStream is,
-           @Optional("0x7ffffff") int length) {
+                     @NotNull BinaryOutput os,
+                     InputStream is,
+                     @Optional("0x7ffffff") int length) {
       if (os == null) {
          return 0;
       }
@@ -296,8 +293,8 @@ public class ZlibModule extends AbstractBiancaModule {
     * Reads a line from the input stream.
     */
    public static Value gzgets(Env env,
-           @NotNull BinaryInput is,
-           int length) {
+                              @NotNull BinaryInput is,
+                              int length) {
       return FileModule.fgets(env, is, length);
    }
 
@@ -305,9 +302,9 @@ public class ZlibModule extends AbstractBiancaModule {
     * Reads a line from the zip stream, stripping tags.
     */
    public static Value gzgetss(Env env,
-           @NotNull BinaryInput is,
-           int length,
-           @Optional Value allowedTags) {
+                               @NotNull BinaryInput is,
+                               int length,
+                               @Optional Value allowedTags) {
       return FileModule.fgetss(env, is, length, allowedTags);
    }
 
@@ -324,13 +321,14 @@ public class ZlibModule extends AbstractBiancaModule {
 
    /**
     * Set stream position to the offset
+    *
     * @param offset absolute position to set stream to
     * @param whence if set, changes the interpretation of offset like fseek
     * @return 0 upon success, else -1 for error
     */
    public int gzseek(@NotNull BinaryStream binaryStream,
-           long offset,
-           @Optional("FileModule.SEEK_SET") int whence) {
+                     long offset,
+                     @Optional("FileModule.SEEK_SET") int whence) {
       if (binaryStream == null) {
          return -1;
       }
@@ -344,6 +342,7 @@ public class ZlibModule extends AbstractBiancaModule {
 
    /**
     * Gets the current position in the stream
+    *
     * @return the position in the stream, or FALSE for error
     */
    public Value gztell(@NotNull BinaryStream binaryStream) {
@@ -384,7 +383,7 @@ public class ZlibModule extends AbstractBiancaModule {
 
    /**
     * Returns the encoding type both allowed by the server
-    *   and supported by the user's browser.
+    * and supported by the user's browser.
     */
    public Value zlib_get_coding_type(Env env) {
       String ini = env.getIniString("zlib.output_compression");
@@ -427,8 +426,8 @@ public class ZlibModule extends AbstractBiancaModule {
     * @return compressed string
     */
    public Value gzcompress(Env env,
-           InputStream data,
-           @Optional("6") int level) {
+                           InputStream data,
+                           @Optional("6") int level) {
       byte[] buffer = new byte[8192];
 
       Deflater deflater = null;
@@ -494,14 +493,13 @@ public class ZlibModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param data
     * @param length (maximum length of string returned)
     * @return uncompressed string
     */
    public Value gzuncompress(Env env,
-           InputStream is,
-           @Optional("0") long length) {
+                             InputStream is,
+                             @Optional("0") long length) {
       TempBuffer tempBuf = TempBuffer.allocate();
       byte[] buffer = tempBuf.getBuffer();
 
@@ -536,12 +534,11 @@ public class ZlibModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * @param level
     * @return compressed using DEFLATE algorithm
     */
    public Value gzdeflate(Env env, InputStream data,
-           @Optional("6") int level) {
+                          @Optional("6") int level) {
       TempBuffer tempBuf = TempBuffer.allocate();
       byte[] buffer = tempBuf.getBuffer();
       Deflater deflater = null;
@@ -585,14 +582,13 @@ public class ZlibModule extends AbstractBiancaModule {
    }
 
    /**
-    * @param data compressed using Deflate algorithm
+    * @param data   compressed using Deflate algorithm
     * @param length of data to decompress
-    *
     * @return uncompressed string
     */
    public Value gzinflate(Env env,
-           InputStream data,
-           @Optional("0") int length) {
+                          InputStream data,
+                          @Optional("0") int length) {
       if (length <= 0) {
          length = Integer.MAX_VALUE;
       }
@@ -639,19 +635,18 @@ public class ZlibModule extends AbstractBiancaModule {
    }
 
    /**
-    *
     * Compresses data using the Deflate algorithm, output is
     * compatible with gzwrite's output
     *
-    * @param data compressed with the Deflate algorithm
-    * @param level Deflate compresion level [0-9]
+    * @param data         compressed with the Deflate algorithm
+    * @param level        Deflate compresion level [0-9]
     * @param encodingMode CRC32 trailer is not written if encoding mode
-    *    is FORCE_DEFLATE, default is to write CRC32
+    *                     is FORCE_DEFLATE, default is to write CRC32
     * @return StringValue with gzip header and trailer
     */
    public Value gzencode(Env env, InputStream is,
-           @Optional("6") int level,
-           @Optional("1") int encodingMode) {
+                         @Optional("6") int level,
+                         @Optional("1") int encodingMode) {
       TempBuffer tempBuf = TempBuffer.allocate();
       byte[] buffer = tempBuf.getBuffer();
 
@@ -662,8 +657,8 @@ public class ZlibModule extends AbstractBiancaModule {
 
       try {
          gzOut = new ZlibOutputStream(out, level,
-                 Deflater.DEFAULT_STRATEGY,
-                 encodingMode);
+            Deflater.DEFAULT_STRATEGY,
+            encodingMode);
 
          int len;
          while ((len = is.read(buffer, 0, buffer.length)) > 0) {
@@ -693,10 +688,9 @@ public class ZlibModule extends AbstractBiancaModule {
    /**
     * Helper function to retrieve the filemode closest to the end
     * Note: PHP5 unexpectedly fails when 'x' is the mode.
-    *
+    * <p/>
     * XXX todo: toss a warning if '+' is found
-    *    (gzip cannot be open for both reading and writing at the same time)
-    *
+    * (gzip cannot be open for both reading and writing at the same time)
     */
    private static String getFileMode(String input) {
       String modifier = "";
@@ -727,7 +721,7 @@ public class ZlibModule extends AbstractBiancaModule {
 
    /**
     * Helper function to retrieve the compression level
-    *     - finds the compression level nearest to the end and returns that
+    * - finds the compression level nearest to the end and returns that
     */
    private static int getCompressionLevel(String input) {
       for (int i = input.length() - 1; i >= 0; i--) {
@@ -743,7 +737,7 @@ public class ZlibModule extends AbstractBiancaModule {
 
    /**
     * Helper function to retrieve the compression strategy.
-    *     - finds the compression strategy nearest to the end and returns that
+    * - finds the compression strategy nearest to the end and returns that
     */
    private static int getCompressionStrategy(String input) {
       for (int i = input.length() - 1; i >= 0; i--) {

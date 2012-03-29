@@ -30,14 +30,17 @@
  */
 package com.clevercloud.bianca.lib.xml;
 
-import com.clevercloud.bianca.annotation.*;
+import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
-import com.clevercloud.vfs.*;
+import com.clevercloud.vfs.Path;
+import com.clevercloud.vfs.WriteStream;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * XMLWriter
@@ -297,9 +300,9 @@ public class XMLWriter {
     * Starts an attribute with a namespace
     */
    public boolean startAttributeNS(Env env,
-           StringValue prefix,
-           StringValue name,
-           StringValue uri) {
+                                   StringValue prefix,
+                                   StringValue name,
+                                   StringValue uri) {
       if (_state != WriterState.ELEMENT_HEADER) {
          return false;
       }
@@ -344,9 +347,9 @@ public class XMLWriter {
     * Starts the document
     */
    public boolean startDocument(Env env,
-           @Optional StringValue version,
-           @Optional StringValue encoding,
-           @Optional StringValue standalone) {
+                                @Optional StringValue version,
+                                @Optional StringValue encoding,
+                                @Optional StringValue standalone) {
       _s.append("<?xml");
 
       if (version == null || version.length() == 0) {
@@ -393,8 +396,8 @@ public class XMLWriter {
     * Starts a DTD
     */
    public boolean startDTD(StringValue name,
-           @Optional StringValue publicId,
-           @Optional StringValue systemId) {
+                           @Optional StringValue publicId,
+                           @Optional StringValue systemId) {
       return true;
    }
 
@@ -420,9 +423,9 @@ public class XMLWriter {
     * Starts a namespaced element
     */
    public boolean startElementNS(Env env,
-           StringValue prefix,
-           StringValue name,
-           StringValue uri) {
+                                 StringValue prefix,
+                                 StringValue name,
+                                 StringValue uri) {
       startContent();
 
       _s.append("<").append(env, prefix).append(":").append(env, name);
@@ -496,7 +499,7 @@ public class XMLWriter {
     * Writes a complete attribute
     */
    public boolean writeAttribute(Env env, StringValue name,
-           StringValue value) {
+                                 StringValue value) {
       startAttribute(env, name);
       text(env, value);
       endAttribute();
@@ -508,10 +511,10 @@ public class XMLWriter {
     * Writes a complete attribute
     */
    public boolean writeAttributeNS(Env env,
-           StringValue prefix,
-           StringValue name,
-           StringValue uri,
-           StringValue value) {
+                                   StringValue prefix,
+                                   StringValue name,
+                                   StringValue uri,
+                                   StringValue value) {
       startAttributeNS(env, prefix, name, uri);
       text(env, value);
       endAttribute();
@@ -545,8 +548,8 @@ public class XMLWriter {
     * Writes a DTD attribute list
     */
    public boolean writeDTDAttlist(Env env,
-           StringValue name,
-           StringValue content) {
+                                  StringValue name,
+                                  StringValue content) {
       startDTDAttlist(name);
       text(env, content);
       endDTDAttlist();
@@ -558,8 +561,8 @@ public class XMLWriter {
     * Writes a DTD element
     */
    public boolean writeDTDElement(Env env,
-           StringValue name,
-           StringValue content) {
+                                  StringValue name,
+                                  StringValue content) {
       startDTDElement(name);
       text(env, content);
       endDTDElement();
@@ -571,8 +574,8 @@ public class XMLWriter {
     * Writes a DTD entity
     */
    public boolean writeDTDEntity(Env env,
-           StringValue name,
-           StringValue content) {
+                                 StringValue name,
+                                 StringValue content) {
       startDTDEntity(name);
       text(env, content);
       endDTDEntity();
@@ -584,10 +587,10 @@ public class XMLWriter {
     * Writes a DTD
     */
    public boolean writeDTD(Env env,
-           StringValue name,
-           @Optional StringValue publicId,
-           @Optional StringValue systemId,
-           @Optional StringValue subset) {
+                           StringValue name,
+                           @Optional StringValue publicId,
+                           @Optional StringValue systemId,
+                           @Optional StringValue subset) {
       startDTD(name, publicId, systemId);
       text(env, subset);
       endDTDEntity();
@@ -599,8 +602,8 @@ public class XMLWriter {
     * Writes a complete element
     */
    public boolean writeElement(Env env,
-           StringValue name,
-           @Optional StringValue content) {
+                               StringValue name,
+                               @Optional StringValue content) {
       startElement(env, name);
 
       if (content != null && content.length() > 0) {
@@ -616,10 +619,10 @@ public class XMLWriter {
     * Writes a complete element
     */
    public boolean writeElementNS(Env env,
-           StringValue prefix,
-           StringValue name,
-           StringValue uri,
-           @Optional StringValue content) {
+                                 StringValue prefix,
+                                 StringValue name,
+                                 StringValue uri,
+                                 @Optional StringValue content) {
       startElementNS(env, prefix, name, uri);
 
       if (content != null && content.length() > 0) {

@@ -33,12 +33,7 @@ import com.clevercloud.bianca.BiancaException;
 import com.clevercloud.bianca.program.JavaClassDef;
 import com.clevercloud.vfs.WriteStream;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.io.Serializable;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -49,7 +44,7 @@ import java.util.logging.Logger;
  * Represents a Bianca java value.
  */
 public class JavaValue extends ObjectValue
-        implements Serializable {
+   implements Serializable {
 
    private static final Logger log = Logger.getLogger(JavaValue.class.getName());
    private JavaClassDef _classDef;
@@ -157,10 +152,10 @@ public class JavaValue extends ObjectValue
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       if (_classDef.printRImpl(env, _object, out, depth, valueSet)) {
          return;
       }
@@ -192,10 +187,10 @@ public class JavaValue extends ObjectValue
 
    @Override
    protected void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                              WriteStream out,
+                              int depth,
+                              IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       Value oldThis = env.setThis(this);
 
       try {
@@ -210,6 +205,7 @@ public class JavaValue extends ObjectValue
    //
    // field routines
    //
+
    /**
     * Returns the field value.
     */
@@ -266,8 +262,8 @@ public class JavaValue extends ObjectValue
       Object rObject = rValue.toJavaObject();
 
       return _classDef.cmpObject(_object,
-              rObject,
-              ((JavaValue) rValue)._classDef);
+         rObject,
+         ((JavaValue) rValue)._classDef);
    }
 
    /**
@@ -304,13 +300,14 @@ public class JavaValue extends ObjectValue
    return _classDef.findFunction(methodName);
    }
     */
+
    /**
     * Evaluates a method.
     */
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                           StringValue methodName, int hash,
+                           Value[] args) {
       return _classDef.callMethod(env, this, methodName, hash, args);
    }
 
@@ -327,7 +324,7 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1) {
+                           Value a1) {
       return _classDef.callMethod(env, this, methodName, hash, a1);
    }
 
@@ -336,7 +333,7 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           Value a1, Value a2) {
       return _classDef.callMethod(env, this, methodName, hash, a1, a2);
    }
 
@@ -345,7 +342,7 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           Value a1, Value a2, Value a3) {
       return _classDef.callMethod(env, this, methodName, hash, a1, a2, a3);
    }
 
@@ -354,9 +351,9 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           Value a1, Value a2, Value a3, Value a4) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -364,9 +361,9 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethod(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
@@ -374,7 +371,7 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value[] args) {
+                              Value[] args) {
       return _classDef.callMethod(env, this, methodName, hash, args);
    }
 
@@ -393,7 +390,7 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1) {
+                              Value a1) {
       return _classDef.callMethod(env, this, methodName, hash, a1);
    }
 
@@ -402,7 +399,7 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2) {
+                              Value a1, Value a2) {
       return _classDef.callMethod(env, this, methodName, hash, a1, a2);
    }
 
@@ -411,7 +408,7 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                              Value a1, Value a2, Value a3) {
       return _classDef.callMethod(env, this, methodName, hash, a1, a2, a3);
    }
 
@@ -420,9 +417,9 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                              Value a1, Value a2, Value a3, Value a4) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4);
+         a1, a2, a3, a4);
    }
 
    /**
@@ -430,9 +427,9 @@ public class JavaValue extends ObjectValue
     */
    @Override
    public Value callMethodRef(Env env, StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                              Value a1, Value a2, Value a3, Value a4, Value a5) {
       return _classDef.callMethod(env, this, methodName, hash,
-              a1, a2, a3, a4, a5);
+         a1, a2, a3, a4, a5);
    }
 
    /**
@@ -507,7 +504,7 @@ public class JavaValue extends ObjectValue
          return object;
       } else {
          env.warning(L.l("Can't assign {0} to {1}",
-                 objectClass.getName(), type.getName()));
+            objectClass.getName(), type.getName()));
 
          return null;
       }
@@ -524,7 +521,7 @@ public class JavaValue extends ObjectValue
          return _object;
       } else {
          env.warning(L.l("Can't assign {0} to {1}",
-                 objClass.getName(), type.getName()));
+            objClass.getName(), type.getName()));
 
          return null;
       }
@@ -539,7 +536,7 @@ public class JavaValue extends ObjectValue
          return (Map) _object;
       } else {
          env.warning(L.l("Can't assign {0} to {1}",
-                 _object.getClass().getName(), type.getName()));
+            _object.getClass().getName(), type.getName()));
 
          return null;
       }
@@ -568,7 +565,7 @@ public class JavaValue extends ObjectValue
    }
 
    private static void printRDepth(WriteStream out, int depth)
-           throws IOException {
+      throws IOException {
       for (int i = 0; i < 8 * depth; i++) {
          out.print(' ');
       }
@@ -578,14 +575,14 @@ public class JavaValue extends ObjectValue
    // Java Serialization
    //
    private void writeObject(ObjectOutputStream out)
-           throws IOException {
+      throws IOException {
       out.writeObject(_classDef.getType().getCanonicalName());
 
       out.writeObject(_object);
    }
 
    private void readObject(ObjectInputStream in)
-           throws ClassNotFoundException, IOException {
+      throws ClassNotFoundException, IOException {
       _env = Env.getInstance();
 
       _classDef = _env.getJavaClassDefinition((String) in.readObject());

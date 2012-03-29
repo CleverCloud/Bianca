@@ -31,21 +31,21 @@
 package com.clevercloud.bianca.lib.date;
 
 import com.clevercloud.bianca.UnimplementedException;
-import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.NotNull;
+import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.CharBuffer;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.QDate;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 
-import org.joda.time.format.*;
-
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Locale;
 
 /**
  * Date functions.
@@ -77,7 +77,7 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the days in a given month.
     */
    public static int cal_days_in_month(Env env,
-           int cal, int month, int year) {
+                                       int cal, int month, int year) {
       QDate date = env.getDate();
       date.setGMTTime(env.getCurrentTime());
 
@@ -106,8 +106,8 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the formatted date.
     */
    public String date(Env env,
-           String format,
-           @Optional("time()") long time) {
+                      String format,
+                      @Optional("time()") long time) {
       return date(env, format, time, false);
    }
 
@@ -115,16 +115,16 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the formatted date as an int.
     */
    public Value idate(Env env,
-           String format,
-           @Optional("time()") long time) {
+                      String format,
+                      @Optional("time()") long time) {
       if (format.length() != 1) {
          log.log(Level.FINE,
-                 L.l(
-                 "idate format '{0}' needs to be of length one and only one",
-                 format));
+            L.l(
+               "idate format '{0}' needs to be of length one and only one",
+               format));
          env.warning(L.l(
-                 "idate format '{0}' needs to be of length one and only one",
-                 format));
+            "idate format '{0}' needs to be of length one and only one",
+            format));
 
          return BooleanValue.FALSE;
       }
@@ -162,7 +162,7 @@ public class DateModule extends AbstractBiancaModule {
                   sign = -1;
                } else {
                   log.log(Level.FINEST, L.l(
-                          "error parsing idate string '{0}'", dateString));
+                     "error parsing idate string '{0}'", dateString));
                   break;
                }
             }
@@ -181,7 +181,7 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the timestamp of easter.
     */
    public static long easter_date(Env env,
-           @Optional("-1") int year) {
+                                  @Optional("-1") int year) {
       long now = env.getCurrentTime();
 
       QDate date = env.getDate();
@@ -201,8 +201,8 @@ public class DateModule extends AbstractBiancaModule {
       int i = c - c / 4 - (c - k) / 3 + 19 * n + 15;
       i = i - 30 * (i / 30);
       i = i - (i / 28) * (1 - ((i / 28)
-              * (29 / (i + 1))
-              * ((21 - n) / 11)));
+         * (29 / (i + 1))
+         * ((21 - n) / 11)));
 
       int j = y + y / 4 + i + 2 - c + c / 4;
       j = j - 7 * (j / 7);
@@ -221,8 +221,8 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the timestamp of easter.
     */
    public static long easter_days(Env env,
-           @Optional("-1") int year,
-           @Optional int method) {
+                                  @Optional("-1") int year,
+                                  @Optional int method) {
       return easter_date(env, year);
    }
 
@@ -287,8 +287,8 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the formatted date.
     */
    public String gmdate(Env env,
-           String format,
-           @Optional("time()") long time) {
+                        String format,
+                        @Optional("time()") long time) {
       return date(env, format, time, true);
    }
 
@@ -296,12 +296,12 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the formatted date.
     */
    public long gmmktime(Env env,
-           @Optional() Value hourV,
-           @Optional() Value minuteV,
-           @Optional() Value secondV,
-           @Optional() Value monthV,
-           @Optional() Value dayV,
-           @Optional() Value yearV) {
+                        @Optional() Value hourV,
+                        @Optional() Value minuteV,
+                        @Optional() Value secondV,
+                        @Optional() Value monthV,
+                        @Optional() Value dayV,
+                        @Optional() Value yearV) {
       QDate date = env.getGmtDate();
       long now = env.getCurrentTime();
 
@@ -320,8 +320,8 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the formatted date.
     */
    public String gmstrftime(Env env,
-           String format,
-           @Optional("-1") long phpTime) {
+                            String format,
+                            @Optional("-1") long phpTime) {
       long time;
 
       if (phpTime == -1) {
@@ -365,8 +365,8 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the formatted date.
     */
    protected static String dateImpl(String format,
-           long time,
-           QDate calendar) {
+                                    long time,
+                                    QDate calendar) {
       long now = 1000 * time;
 
       calendar.setGMTTime(now);
@@ -745,8 +745,8 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the time as an indexed or associative array
     */
    public ArrayValue localtime(Env env,
-           @NotNull @Optional("-1") long time,
-           @Optional("false") boolean isAssociative) {
+                               @NotNull @Optional("-1") long time,
+                               @Optional("false") boolean isAssociative) {
       if (time < 0) {
          time = env.getCurrentTime();
       } else {
@@ -824,13 +824,13 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the formatted date.
     */
    public long mktime(Env env,
-           @Optional() Value hourV,
-           @Optional() Value minuteV,
-           @Optional() Value secondV,
-           @Optional() Value monthV,
-           @Optional() Value dayV,
-           @Optional() Value yearV,
-           @Optional("-1") int isDST) {
+                      @Optional() Value hourV,
+                      @Optional() Value minuteV,
+                      @Optional() Value secondV,
+                      @Optional() Value monthV,
+                      @Optional() Value dayV,
+                      @Optional() Value yearV,
+                      @Optional("-1") int isDST) {
       if (isDST != -1) {
          env.deprecatedArgument("isDST");
       }
@@ -846,12 +846,12 @@ public class DateModule extends AbstractBiancaModule {
    }
 
    private static void setMktime(QDate date,
-           Value hourV,
-           Value minuteV,
-           Value secondV,
-           Value monthV,
-           Value dayV,
-           Value yearV) {
+                                 Value hourV,
+                                 Value minuteV,
+                                 Value secondV,
+                                 Value monthV,
+                                 Value dayV,
+                                 Value yearV) {
       if (!hourV.isDefault()) {
          int hour = hourV.toInt();
 
@@ -901,8 +901,8 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the formatted date.
     */
    public String strftime(Env env,
-           String format,
-           @Optional("-1") long phpTime) {
+                          String format,
+                          @Optional("-1") long phpTime) {
       long time;
 
       if (phpTime == -1) {
@@ -918,8 +918,8 @@ public class DateModule extends AbstractBiancaModule {
     * Returns the parsed date.
     */
    public Value strptime(Env env,
-           String date,
-           String format) {
+                         String date,
+                         String format) {
       ArrayValueImpl array = new ArrayValueImpl();
       DateTimeFormatterBuilder fb = new DateTimeFormatterBuilder();
 
@@ -1122,8 +1122,8 @@ public class DateModule extends AbstractBiancaModule {
     * Parses the time
     */
    public Value strtotime(Env env,
-           String timeString,
-           @Optional("-1") long now) {
+                          String timeString,
+                          @Optional("-1") long now) {
       try {
          if (now >= 0) {
             now = 1000L * now;
@@ -1195,15 +1195,15 @@ public class DateModule extends AbstractBiancaModule {
    }
 
    public static DateTime date_create(Env env,
-           @Optional("now") String time,
-           @Optional DateTimeZone dateTimeZone) {
+                                      @Optional("now") String time,
+                                      @Optional DateTimeZone dateTimeZone) {
       return DateTime.__construct(env, time, dateTimeZone);
    }
 
    public static void date_date_set(DateTime dateTime,
-           int year,
-           int month,
-           int day) {
+                                    int year,
+                                    int month,
+                                    int day) {
       dateTime.setDate(year, month, day);
    }
 
@@ -1224,9 +1224,9 @@ public class DateModule extends AbstractBiancaModule {
    }
 
    public static void date_isodate_set(DateTime dateTime,
-           int year,
-           int week,
-           int day) {
+                                       int year,
+                                       int week,
+                                       int day) {
       dateTime.setISODate(year, week, day);
    }
 
@@ -1262,41 +1262,41 @@ public class DateModule extends AbstractBiancaModule {
    }
 
    public static ArrayValue date_sun_info(long time,
-           double latitude,
-           double longitude) {
+                                          double latitude,
+                                          double longitude) {
       throw new UnimplementedException("date_sun_info");
    }
 
    public static Value date_sunrise(int timestamp,
-           @Optional int format,
-           @Optional double latitude,
-           @Optional double longitude,
-           @Optional double zenith,
-           @Optional double gmtOffset) {
+                                    @Optional int format,
+                                    @Optional double latitude,
+                                    @Optional double longitude,
+                                    @Optional double zenith,
+                                    @Optional double gmtOffset) {
       //gmtOffset is specified in hours
       throw new UnimplementedException("date_sunrise");
    }
 
    public static Value date_sunset(int timestamp,
-           @Optional int format,
-           @Optional double latitude,
-           @Optional double longitude,
-           @Optional double zenith,
-           @Optional double gmtOffset) {
+                                   @Optional int format,
+                                   @Optional double latitude,
+                                   @Optional double longitude,
+                                   @Optional double zenith,
+                                   @Optional double gmtOffset) {
       //gmtOffset is specified in hours
       throw new UnimplementedException("date_sunset");
    }
 
    public static void date_time_set(DateTime dateTime,
-           int hour,
-           int minute,
-           @Optional int second) {
+                                    int hour,
+                                    int minute,
+                                    @Optional int second) {
       dateTime.setTime(hour, minute, second);
    }
 
    @ReturnNullAsFalse
    public static DateTimeZone date_timezone_get(Env env,
-           @NotNull DateTime dateTime) {
+                                                @NotNull DateTime dateTime) {
       if (dateTime == null) {
          env.warning("DateTime parameter must not be null");
 
@@ -1307,8 +1307,8 @@ public class DateModule extends AbstractBiancaModule {
    }
 
    public static void date_timezone_set(Env env,
-           @NotNull DateTime dateTime,
-           @NotNull DateTimeZone dateTimeZone) {
+                                        @NotNull DateTime dateTime,
+                                        @NotNull DateTimeZone dateTimeZone) {
       if (dateTime == null || dateTimeZone == null) {
          env.warning("parameters must not be null");
 
@@ -1327,8 +1327,8 @@ public class DateModule extends AbstractBiancaModule {
    }
 
    public static Value timezone_name_from_abbr(StringValue abbr,
-           @Optional("-1") int gmtOffset,
-           @Optional boolean isDST) {
+                                               @Optional("-1") int gmtOffset,
+                                               @Optional boolean isDST) {
       if (gmtOffset == -1) {
          return DateTimeZone.findTimeZone(abbr);
       } else {
@@ -1341,7 +1341,7 @@ public class DateModule extends AbstractBiancaModule {
    }
 
    public static long timezone_offset_get(DateTimeZone dateTimeZone,
-           DateTime dateTime) {
+                                          DateTime dateTime) {
       if (dateTimeZone == null) {
          return 0;
       } else {
@@ -1816,7 +1816,7 @@ public class DateModule extends AbstractBiancaModule {
                _date.setGMTTime(_date.getGMTTime() + _date.getZoneOffset());
             } else {
                _date.setGMTTime(
-                       _date.getGMTTime() - value * 60000L + _date.getZoneOffset());
+                  _date.getGMTTime() - value * 60000L + _date.getZoneOffset());
             }
             return;
          } else if (_digits == 2) {
@@ -1837,7 +1837,7 @@ public class DateModule extends AbstractBiancaModule {
             value = sign * (100 * value + _value);
 
             _date.setGMTTime(
-                    _date.getGMTTime() - value * 60000L + _date.getZoneOffset());
+               _date.getGMTTime() - value * 60000L + _date.getZoneOffset());
             return;
          } else {
             _value = sign * _value;
@@ -1894,8 +1894,8 @@ public class DateModule extends AbstractBiancaModule {
          }
 
          _date.setDayOfMonth(_date.getDayOfMonth()
-                 + (8 + weekday - _date.getDayOfWeek()) % 7
-                 + 7 * value);
+            + (8 + weekday - _date.getDayOfWeek()) % 7
+            + 7 * value);
       }
 
       private void parseBareInt(int value, int digits) {
@@ -1986,8 +1986,8 @@ public class DateModule extends AbstractBiancaModule {
                _sb.setLength(0);
 
                for (;
-                       'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '.';
-                       ch = read()) {
+                    'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '.';
+                    ch = read()) {
                   _sb.append(Character.toLowerCase((char) ch));
                }
 
@@ -2008,7 +2008,7 @@ public class DateModule extends AbstractBiancaModule {
          }
 
          if ("now".equals(s)
-                 || "today".equals(s)) {
+            || "today".equals(s)) {
             _value = 0;
             _unit = UNIT_NOW;
             return PERIOD;
@@ -2160,7 +2160,7 @@ public class DateModule extends AbstractBiancaModule {
             _weekday = 3;
             return WEEKDAY;
          } else if ("thursday".equals(s) || "thu".equals(s)
-                 || "thur".equals(s) || "thurs".equals(s)) {
+            || "thur".equals(s) || "thurs".equals(s)) {
             _weekday = 4;
             return WEEKDAY;
          } else if ("friday".equals(s) || "fri".equals(s)) {

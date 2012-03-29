@@ -29,24 +29,23 @@
  */
 package com.clevercloud.bianca.lib.curl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
 import com.clevercloud.bianca.BiancaContext;
+import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.RandomUtil;
 import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.vfs.TempBuffer;
+
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MultipartBody extends PostBody {
 
@@ -95,7 +94,7 @@ public class MultipartBody extends PostBody {
    }
 
    private static long getContentLength(ArrayList<MultipartEntry> list,
-           String boundary) {
+                                        String boundary) {
       long size = (boundary.length() + 2) + 4;
 
       for (MultipartEntry entry : list) {
@@ -117,8 +116,8 @@ public class MultipartBody extends PostBody {
 
    @Override
    public void writeTo(Env env,
-           OutputStream os)
-           throws IOException {
+                       OutputStream os)
+      throws IOException {
       for (MultipartEntry entry : _postItems) {
          os.write('-');
          os.write('-');
@@ -158,8 +157,8 @@ public class MultipartBody extends PostBody {
       }
 
       static String getHeader(String name,
-              String contentType,
-              String fileName) {
+                              String contentType,
+                              String fileName) {
          StringBuilder sb = new StringBuilder();
 
          sb.append("Content-Disposition: form-data;");
@@ -183,7 +182,7 @@ public class MultipartBody extends PostBody {
       }
 
       final void write(Env env, OutputStream os)
-              throws IOException {
+         throws IOException {
          int len = _header.length();
 
          for (int i = 0; i < len; i++) {
@@ -213,8 +212,8 @@ public class MultipartBody extends PostBody {
 
       UrlEncodedEntry(Env env, String name, StringValue value) {
          super(env, name, getHeader(name,
-                 "application/x-www-form-urlencoded",
-                 null));
+            "application/x-www-form-urlencoded",
+            null));
          _value = value;
       }
 
@@ -225,7 +224,7 @@ public class MultipartBody extends PostBody {
 
       @Override
       void writeData(Env env, OutputStream os)
-              throws IOException {
+         throws IOException {
          os.write(_value.toString().getBytes());
       }
    }
@@ -236,8 +235,8 @@ public class MultipartBody extends PostBody {
 
       PathEntry(Env env, String name, Path path) {
          super(env, name, getHeader(name,
-                 getContentType(env, path.getTail()),
-                 path.getTail()));
+            getContentType(env, path.getTail()),
+            path.getTail()));
          _path = path;
       }
 
@@ -248,7 +247,7 @@ public class MultipartBody extends PostBody {
 
       @Override
       void writeData(Env env, OutputStream os)
-              throws IOException {
+         throws IOException {
          TempBuffer tempBuf = null;
 
          try {

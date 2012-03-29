@@ -29,7 +29,9 @@
  */
 package com.clevercloud.bianca.program;
 
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.ArrayValueImpl;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.marshal.Marshal;
 import com.clevercloud.bianca.marshal.MarshalFactory;
 import com.clevercloud.bianca.module.ModuleContext;
@@ -42,15 +44,15 @@ import java.lang.reflect.Array;
 public class JavaArrayClassDef extends JavaClassDef {
 
    public JavaArrayClassDef(ModuleContext moduleContext,
-           String name,
-           Class type) {
+                            String name,
+                            Class type) {
       super(moduleContext, name, type);
    }
 
    public JavaArrayClassDef(ModuleContext moduleContext,
-           String name,
-           Class type,
-           String extension) {
+                            String name,
+                            Class type,
+                            String extension) {
       super(moduleContext, name, type, extension);
    }
 

@@ -37,5 +37,5 @@ import org.xml.sax.ErrorHandler;
  * JARV verifier implementation
  */
 public interface VerifierHandler extends ContentHandler, ErrorHandler {
-  public boolean isValid();
+   public boolean isValid();
 }

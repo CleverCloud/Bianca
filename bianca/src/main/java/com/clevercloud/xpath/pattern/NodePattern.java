@@ -31,136 +31,126 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
  * Matches a named node, like para or @id.
  */
 public class NodePattern extends AbstractPattern {
-  private NodePattern _match;
-  
-  private String _tag;
-  private int _nodeType;
+   private NodePattern _match;
 
-  /**
-   * Creates a new node-matching pattern.
-   */
-  public NodePattern(AbstractPattern parent, String tag, int nodeType)
-  {
-    super(parent);
+   private String _tag;
+   private int _nodeType;
 
-    _tag = tag.intern();
-    _nodeType = nodeType;
-  }
+   /**
+    * Creates a new node-matching pattern.
+    */
+   public NodePattern(AbstractPattern parent, String tag, int nodeType) {
+      super(parent);
 
-  /**
-   * All priorities are based on the node priority.
-   */
-  public double getPriority()
-  {
-    if (_parent == null ||
-        _parent instanceof FromChildren &&
-        (_parent._parent instanceof FromAny ||
-         _parent._parent instanceof FromContext))
-      return 0;
-    else
-      return 0.5;
-  } 
+      _tag = tag.intern();
+      _nodeType = nodeType;
+   }
 
-  /**
-   * Returns the pattern's matching node name.
-   */
-  public String getNodeName()
-  {
-    return _tag;
-  }
+   /**
+    * All priorities are based on the node priority.
+    */
+   public double getPriority() {
+      if (_parent == null ||
+         _parent instanceof FromChildren &&
+            (_parent._parent instanceof FromAny ||
+               _parent._parent instanceof FromContext))
+         return 0;
+      else
+         return 0.5;
+   }
 
-  /**
-   * matches if the node type matches and the node name matches.
-   *
-   * @param node the node to test.
-   * @param env the variable environment
-   *
-   * @return true if the node matches
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
-      return false;
+   /**
+    * Returns the pattern's matching node name.
+    */
+   public String getNodeName() {
+      return _tag;
+   }
 
-    if (node.getNodeType() != _nodeType)
-      return false;
-    else if (! node.getNodeName().equals(_tag))
-      return false;
-    else if (node.getNamespaceURI() != null
-             && ! "".equals(node.getNamespaceURI())) {
-      return false;
-    }
-    else if (_parent != null && ! _parent.match(node, env))
-      return false;
+   /**
+    * matches if the node type matches and the node name matches.
+    *
+    * @param node the node to test.
+    * @param env  the variable environment
+    * @return true if the node matches
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         return false;
 
-    return true;
-  }
+      if (node.getNodeType() != _nodeType)
+         return false;
+      else if (!node.getNodeName().equals(_tag))
+         return false;
+      else if (node.getNamespaceURI() != null
+         && !"".equals(node.getNamespaceURI())) {
+         return false;
+      } else if (_parent != null && !_parent.match(node, env))
+         return false;
 
-  /**
-   * Copies the position (non-axis) portion of the pattern.
-   */
-  public AbstractPattern copyPosition()
-  {
-    if (_match == null) {
-      AbstractPattern parent = null;
-      if (_parent != null)
-        parent = _parent.copyPosition();
-      _match = new NodePattern(parent, _tag, _nodeType);
-    }
-    
-    return _match;
-  }
+      return true;
+   }
 
-  /**
-   * Returns true if the two patterns are equal.
-   */
-  public boolean equals(Object b)
-  {
-    if (! (b instanceof NodePattern))
-      return false;
+   /**
+    * Copies the position (non-axis) portion of the pattern.
+    */
+   public AbstractPattern copyPosition() {
+      if (_match == null) {
+         AbstractPattern parent = null;
+         if (_parent != null)
+            parent = _parent.copyPosition();
+         _match = new NodePattern(parent, _tag, _nodeType);
+      }
 
-    NodePattern bPattern = (NodePattern) b;
-    
-    return (_nodeType == bPattern._nodeType
-            && _tag.equals(bPattern._tag)
-            && (_parent == bPattern._parent
-                || (_parent != null && _parent.equals(bPattern._parent))));
-  }
+      return _match;
+   }
 
-  /**
-   * Converts the pattern back to its 
-   */
-  public String toString()
-  {
-    String prefix;
-    
-    if (_parent == null || _parent instanceof FromAny)
-      prefix = "";
-    else if (_parent instanceof FromChildren)
-      prefix = _parent.getPrefix();
-    else
-      prefix = _parent.toString();
+   /**
+    * Returns true if the two patterns are equal.
+    */
+   public boolean equals(Object b) {
+      if (!(b instanceof NodePattern))
+         return false;
 
-    switch (_nodeType) {
-    case Node.PROCESSING_INSTRUCTION_NODE:
-      return prefix + "pi('" + _tag + "')";
-      
-    case Node.ATTRIBUTE_NODE:
-      return prefix + _tag;
-      
-    case Node.ELEMENT_NODE:
-      return prefix + _tag;
+      NodePattern bPattern = (NodePattern) b;
 
-    default:
-      return super.toString();
-    }
-  }
+      return (_nodeType == bPattern._nodeType
+         && _tag.equals(bPattern._tag)
+         && (_parent == bPattern._parent
+         || (_parent != null && _parent.equals(bPattern._parent))));
+   }
+
+   /**
+    * Converts the pattern back to its
+    */
+   public String toString() {
+      String prefix;
+
+      if (_parent == null || _parent instanceof FromAny)
+         prefix = "";
+      else if (_parent instanceof FromChildren)
+         prefix = _parent.getPrefix();
+      else
+         prefix = _parent.toString();
+
+      switch (_nodeType) {
+         case Node.PROCESSING_INSTRUCTION_NODE:
+            return prefix + "pi('" + _tag + "')";
+
+         case Node.ATTRIBUTE_NODE:
+            return prefix + _tag;
+
+         case Node.ELEMENT_NODE:
+            return prefix + _tag;
+
+         default:
+            return super.toString();
+      }
+   }
 }

@@ -38,112 +38,102 @@ import com.clevercloud.relaxng.program.NsNameItem;
  * Relax name pattern
  */
 public class NsNamePattern extends NameClassPattern {
-  private String _name;
-  private String _ns;
+   private String _name;
+   private String _ns;
 
-  private NameClassPattern _except;
+   private NameClassPattern _except;
 
-  private NsNameItem _item;
-  
-  /**
-   * Creates a new element pattern.
-   */
-  public NsNamePattern()
-  {
-  }
+   private NsNameItem _item;
 
-  /**
-   * Creates a new element pattern.
-   */
-  public NsNamePattern(String ns)
-  {
-    _ns = ns;
-  }
+   /**
+    * Creates a new element pattern.
+    */
+   public NsNamePattern() {
+   }
 
-  /**
-   * Creates a new element pattern.
-   */
-  public NsNamePattern(String name, String ns)
-  {
-    _name = name;
-    _ns = ns;
-  }
+   /**
+    * Creates a new element pattern.
+    */
+   public NsNamePattern(String ns) {
+      _ns = ns;
+   }
 
-  public void setNamespace(String ns)
-  {
-    _ns = ns;
-  }
+   /**
+    * Creates a new element pattern.
+    */
+   public NsNamePattern(String name, String ns) {
+      _name = name;
+      _ns = ns;
+   }
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "nsName";
-  }
+   public void setNamespace(String ns) {
+      _ns = ns;
+   }
 
-  /**
-   * Sets the except name pattern.
-   */
-  public void setExcept(NameClassPattern pattern)
-  {
-    _except = pattern;
-  }
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "nsName";
+   }
 
-  /**
-   * Creates the program.
-   */
-  public NameClassItem createNameItem()
-    throws RelaxException
-  {
-    if (_item == null) {
-      NsNameItem item = new NsNameItem(_ns);
+   /**
+    * Sets the except name pattern.
+    */
+   public void setExcept(NameClassPattern pattern) {
+      _except = pattern;
+   }
 
-      if (_except != null)
-        item.setExcept(_except.createNameItem());
+   /**
+    * Creates the program.
+    */
+   public NameClassItem createNameItem()
+      throws RelaxException {
+      if (_item == null) {
+         NsNameItem item = new NsNameItem(_ns);
 
-      _item = item;
-    }
-    
-    return _item;
-  }
+         if (_except != null)
+            item.setExcept(_except.createNameItem());
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    if (_except == null)
-      return _ns + ":*";
-    else
-      return "(" + _ns + ":* - " + _except + ")";
-  }
+         _item = item;
+      }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+      return _item;
+   }
 
-    if (! (o instanceof NsNamePattern))
-      return false;
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      if (_except == null)
+         return _ns + ":*";
+      else
+         return "(" + _ns + ":* - " + _except + ")";
+   }
 
-    NsNamePattern pattern = (NsNamePattern) o;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    if (! _ns.equals(pattern._ns))
-      return false;
+      if (!(o instanceof NsNamePattern))
+         return false;
 
-    if (_except == null)
-      return pattern._except == null;
-    else
-      return _except.equals(pattern._except);
-  }
+      NsNamePattern pattern = (NsNamePattern) o;
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "NsName[" + _ns + "]";
-  }
+      if (!_ns.equals(pattern._ns))
+         return false;
+
+      if (_except == null)
+         return pattern._except == null;
+      else
+         return _except.equals(pattern._except);
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "NsName[" + _ns + "]";
+   }
 }
 

@@ -31,11 +31,10 @@ package com.clevercloud.bianca.lib.dom;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.Env;
-
 import org.w3c.dom.Comment;
 
 public class DOMComment
-        extends DOMCharacterData<Comment> {
+   extends DOMCharacterData<Comment> {
 
    public static DOMComment __construct(Env env, @Optional String value) {
       DOMComment comment = getImpl(env).createComment();

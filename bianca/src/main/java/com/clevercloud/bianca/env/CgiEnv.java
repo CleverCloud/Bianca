@@ -30,25 +30,23 @@
  */
 package com.clevercloud.bianca.env;
 
-import java.io.InputStream;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.clevercloud.bianca.BiancaContext;
-
 import com.clevercloud.bianca.lib.string.StringModule;
 import com.clevercloud.bianca.page.BiancaPage;
 import com.clevercloud.vfs.WriteStream;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+
 public class CgiEnv
-        extends Env {
+   extends Env {
 
    public CgiEnv(BiancaContext bianca,
-           BiancaPage page,
-           WriteStream out,
-           HttpServletRequest request,
-           HttpServletResponse response) {
+                 BiancaPage page,
+                 WriteStream out,
+                 HttpServletRequest request,
+                 HttpServletResponse response) {
       super(bianca, page, out, request, response);
    }
 
@@ -101,10 +99,10 @@ public class CgiEnv
    }
 
    private void addCookie(ArrayValue array,
-           String cookies,
-           int start,
-           int end,
-           boolean isMagicQuotes) {
+                          String cookies,
+                          int start,
+                          int end,
+                          boolean isMagicQuotes) {
       int eqIndex = cookies.indexOf('=', start);
 
       String name = "";
@@ -155,9 +153,9 @@ public class CgiEnv
          } else if (ch == '+') {
             i++;
          } else if (i + 2 < len
-                 && ch == '%'
-                 && name.charAt(i + 1) == '2'
-                 && name.charAt(i + 2) == '0') {
+            && ch == '%'
+            && name.charAt(i + 1) == '2'
+            && name.charAt(i + 2) == '0') {
             i += 3;
          } else {
             break;
@@ -172,8 +170,8 @@ public class CgiEnv
          switch (ch) {
             case '%':
                if (i + 2 < len
-                       && name.charAt(i + 1) == '2'
-                       && name.charAt(i + 2) == '0') {
+                  && name.charAt(i + 1) == '2'
+                  && name.charAt(i + 2) == '0') {
                   spaces++;
                   i += 2;
                } else {
@@ -295,9 +293,9 @@ public class CgiEnv
     */
    @Override
    protected void fillPost(ArrayValue postArray,
-           ArrayValue files,
-           HttpServletRequest request,
-           boolean isMagicQuotes) {
+                           ArrayValue files,
+                           HttpServletRequest request,
+                           boolean isMagicQuotes) {
       InputStream is = System.in;
 
       Value serverEnv = getGlobalValue("_SERVER");
@@ -314,14 +312,14 @@ public class CgiEnv
 
       if (method.equals("POST")) {
          Post.fillPost(this,
-                 postArray,
-                 files,
-                 is,
-                 contentType,
-                 null,
-                 contentLength,
-                 isMagicQuotes,
-                 getIniBoolean("file_uploads"));
+            postArray,
+            files,
+            is,
+            contentType,
+            null,
+            contentLength,
+            isMagicQuotes,
+            getIniBoolean("file_uploads"));
       } else if (!method.equals("GET")) {
          StringValue bb = new StringValue();
          //bb.appendReadAll(is, contentLength);

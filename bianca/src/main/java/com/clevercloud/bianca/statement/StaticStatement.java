@@ -31,8 +31,8 @@ package com.clevercloud.bianca.statement;
 
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.Var;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.expr.VarExpr;

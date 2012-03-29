@@ -29,12 +29,7 @@
  */
 package com.clevercloud.bianca.lib.file;
 
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.function.AbstractFunction;
 
 public class ProtocolWrapper {
@@ -49,7 +44,7 @@ public class ProtocolWrapper {
    }
 
    public BinaryStream fopen(Env env, StringValue path, StringValue mode,
-           LongValue options) {
+                             LongValue options) {
       return new WrappedStream(env, _qClass, path, mode, options);
    }
 
@@ -84,7 +79,7 @@ public class ProtocolWrapper {
    }
 
    public boolean mkdir(Env env,
-           StringValue path, LongValue mode, LongValue options) {
+                        StringValue path, LongValue mode, LongValue options) {
       AbstractFunction function = _qClass.getStaticFunction("mkdir");
 
       if (function == null) {

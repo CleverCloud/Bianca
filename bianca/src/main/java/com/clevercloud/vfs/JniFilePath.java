@@ -36,25 +36,24 @@ import java.lang.reflect.Method;
  * FilePath implements the native filesystem.
  */
 public class JniFilePath {
-  public static FilesystemPath create()
-  {
-    try {
-      Thread thread = Thread.currentThread();
-      ClassLoader loader = thread.getContextClassLoader();
+   public static FilesystemPath create() {
+      try {
+         Thread thread = Thread.currentThread();
+         ClassLoader loader = thread.getContextClassLoader();
 
-      Class pathClass
-        = Class.forName("com.clevercloud.vfs.JniFilePathImpl", false, loader);
+         Class pathClass
+            = Class.forName("com.clevercloud.vfs.JniFilePathImpl", false, loader);
 
-      Method isEnabled = pathClass.getMethod("isEnabled", new Class[0]);
+         Method isEnabled = pathClass.getMethod("isEnabled", new Class[0]);
 
-      Object result = isEnabled.invoke(null);
+         Object result = isEnabled.invoke(null);
 
-      if (Boolean.TRUE.equals(result))
-        return (FilesystemPath) pathClass.newInstance();
-    } catch (ClassNotFoundException e) {
-    } catch (Throwable e) {
-    }
+         if (Boolean.TRUE.equals(result))
+            return (FilesystemPath) pathClass.newInstance();
+      } catch (ClassNotFoundException e) {
+      } catch (Throwable e) {
+      }
 
-    return null;
-  }
+      return null;
+   }
 }

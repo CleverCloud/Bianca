@@ -31,11 +31,11 @@ package com.clevercloud.bianca;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.GoogleEnv;
-import com.clevercloud.bianca.page.BiancaPage;
 import com.clevercloud.bianca.module.ModuleContext;
+import com.clevercloud.bianca.page.BiancaPage;
 import com.clevercloud.util.L10N;
-import com.clevercloud.vfs.WriteStream;
 import com.clevercloud.vfs.Vfs;
+import com.clevercloud.vfs.WriteStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -81,15 +81,15 @@ public class GoogleBianca extends BiancaContext {
     */
    @Override
    protected ModuleContext createModuleContext(ModuleContext parent,
-           ClassLoader loader) {
+                                               ClassLoader loader) {
       return new ModuleContext(parent, loader);
    }
 
    @Override
    public Env createEnv(BiancaPage page,
-           WriteStream out,
-           HttpServletRequest request,
-           HttpServletResponse response) {
+                        WriteStream out,
+                        HttpServletRequest request,
+                        HttpServletResponse response) {
       return new GoogleEnv(this, page, out, request, response);
    }
 

@@ -33,7 +33,6 @@ package com.clevercloud.bianca.expr;
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.parser.BiancaParser;
 
@@ -83,6 +82,7 @@ public class LiteralStringExpr extends Expr {
    //
    // expression creation
    //
+
    /**
     * Creates a class field $class::foo
     */
@@ -121,7 +121,6 @@ public class LiteralStringExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -133,7 +132,6 @@ public class LiteralStringExpr extends Expr {
     * Evaluates the expression as a string value.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

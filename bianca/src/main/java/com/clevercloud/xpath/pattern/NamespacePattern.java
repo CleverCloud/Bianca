@@ -31,67 +31,61 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 public class NamespacePattern extends AbstractPattern {
-  private String _prefix;
-  private int _nodeType;
+   private String _prefix;
+   private int _nodeType;
 
-  public NamespacePattern(AbstractPattern parent, String prefix, int nodeType)
-  {
-    super(parent);
+   public NamespacePattern(AbstractPattern parent, String prefix, int nodeType) {
+      super(parent);
 
-    _prefix = prefix;
-    _nodeType = nodeType;
+      _prefix = prefix;
+      _nodeType = nodeType;
 
-    if (parent == null)
-      throw new RuntimeException();
-  }
+      if (parent == null)
+         throw new RuntimeException();
+   }
 
-  /**
-   * The node-type priority is less than nodes.
-   */
-  public double getPriority()
-  {
-    return -0.25;
-  } 
+   /**
+    * The node-type priority is less than nodes.
+    */
+   public double getPriority() {
+      return -0.25;
+   }
 
-  /**
-   * Matches if the namespace matches and the local name matches.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true if the node matches
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
-      return false;
+   /**
+    * Matches if the namespace matches and the local name matches.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true if the node matches
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         return false;
 
-    if (node.getNodeType() != _nodeType)
-      return false;
+      if (node.getNodeType() != _nodeType)
+         return false;
 
-    String prefix = node.getPrefix();
+      String prefix = node.getPrefix();
 
-    if (! (prefix == _prefix || (prefix != null && prefix.equals(_prefix))))
-      return false;
+      if (!(prefix == _prefix || (prefix != null && prefix.equals(_prefix))))
+         return false;
 
-    return _parent.match(node, env);
-  }
+      return _parent.match(node, env);
+   }
 
-  public String toString()
-  {
-    switch (_nodeType) {
-    case Node.ATTRIBUTE_NODE:
-      return _parent.toString() + "@" + _prefix + ":*";
-    case Node.ELEMENT_NODE:
-      return _parent.toString() + _prefix + ":*";
+   public String toString() {
+      switch (_nodeType) {
+         case Node.ATTRIBUTE_NODE:
+            return _parent.toString() + "@" + _prefix + ":*";
+         case Node.ELEMENT_NODE:
+            return _parent.toString() + _prefix + ":*";
 
-    default:
-      return super.toString();
-    }
-  }
+         default:
+            return super.toString();
+      }
+   }
 }

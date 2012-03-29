@@ -33,166 +33,153 @@ import com.clevercloud.xml.XmlUtil;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
  * Implements the ancestor:: axis.
  */
 public class FromAncestors extends Axis {
-  private boolean _self;
+   private boolean _self;
 
-  public FromAncestors(AbstractPattern parent, boolean self)
-  {
-    super(parent)
+   public FromAncestors(AbstractPattern parent, boolean self) {
+      super(parent)
       ;
-    _self = self;
+      _self = self;
 
-    if (parent == null)
-      throw new RuntimeException();
-  }
-  /**
-   * Matches if a descendant matches the parent pattern.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true if the pattern matches
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
+      if (parent == null)
+         throw new RuntimeException();
+   }
+
+   /**
+    * Matches if a descendant matches the parent pattern.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true if the pattern matches
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         return false;
+
+      Node lastNode = lastDescendantNode(node);
+
+      if (!_self)
+         node = XmlUtil.getNext(node);
+
+      for (;
+           node != null && node != lastNode;
+           node = XmlUtil.getNext(node)) {
+         if (_parent.match(node, env))
+            return true;
+      }
+
       return false;
+   }
 
-    Node lastNode = lastDescendantNode(node);
-    
-    if (! _self)
-      node = XmlUtil.getNext(node);
-    
-    for (;
-         node != null && node != lastNode;
-         node = XmlUtil.getNext(node)) {
-      if (_parent.match(node, env))
-        return true;
-    }
-    
-    return false;
-  }
+   public boolean isAscending() {
+      return false;
+   }
 
-  public boolean isAscending()
-  {
-    return false;
-  }
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      if (_self)
+         return node;
+      else
+         return node.getParentNode();
+   }
 
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    if (_self)
-      return node;
-    else
-      return node.getParentNode();
-  }
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node the current node
+    * @param last the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node last) {
+      return (node == null) ? null : node.getParentNode();
+   }
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param last the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node last)
-  {
-    return (node == null) ? null : node.getParentNode();
-  }
+   /**
+    * The ancestor position is the number of matching nodes between it
+    * and an axis-context.
+    */
+   public int position(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      int index = env.getPositionIndex();
 
-  /**
-   * The ancestor position is the number of matching nodes between it
-   * and an axis-context.
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    int index = env.getPositionIndex();
+      Node lastNode = lastDescendantNode(node);
 
-    Node lastNode = lastDescendantNode(node);
+      Node axis = _self ? node : XmlUtil.getNext(node);
 
-    Node axis = _self ? node : XmlUtil.getNext(node);
+      for (; index >= 0; index--) {
+         for (; axis != lastNode && axis != null; axis = XmlUtil.getNext(axis)) {
+            if (_parent.match(axis, env))
+               break;
+         }
 
-    for (; index >= 0; index--) {
-      for (; axis != lastNode && axis != null; axis = XmlUtil.getNext(axis)) {
-        if (_parent.match(axis, env))
-          break;
+         if (index > 0)
+            axis = XmlUtil.getNext(axis);
       }
 
-      if (index > 0)
-        axis = XmlUtil.getNext(axis);
-    }
+      if (axis == lastNode)
+         return 0;
 
-    if (axis == lastNode)
-      return 0;
-
-    Node next = XmlUtil.getNext(axis);
-    for (; next != lastNode; next = XmlUtil.getNext(next)) {
-      if (_parent.match(next, env)) {
-        env.setMorePositions(true);
-        break;
+      Node next = XmlUtil.getNext(axis);
+      for (; next != lastNode; next = XmlUtil.getNext(next)) {
+         if (_parent.match(next, env)) {
+            env.setMorePositions(true);
+            break;
+         }
       }
-    }
 
-    Node a1 = axis;
-    
-    if (! _self && axis != null)
-      axis = axis.getParentNode();
+      Node a1 = axis;
 
-    int count = 0;
-    for (; axis != null; axis = axis.getParentNode()) {
-      if (pattern.match(axis, env))
-        count++;
+      if (!_self && axis != null)
+         axis = axis.getParentNode();
 
-      if (node == axis)
-        break;
-    }
+      int count = 0;
+      for (; axis != null; axis = axis.getParentNode()) {
+         if (pattern.match(axis, env))
+            count++;
 
-    return count;
-  }
+         if (node == axis)
+            break;
+      }
 
-  /**
-   * Returns the last node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the last node
-   */
-  private Node lastDescendantNode(Node node)
-  {
-    Node last = node;
+      return count;
+   }
 
-    for (;
-         last != null && last.getNextSibling() == null;
-         last = last.getParentNode()) {
-    }
+   /**
+    * Returns the last node in the selection order.
+    *
+    * @param node the current node
+    * @return the last node
+    */
+   private Node lastDescendantNode(Node node) {
+      Node last = node;
 
-    return last != null ? last.getNextSibling() : null;
-  }
+      for (;
+           last != null && last.getNextSibling() == null;
+           last = last.getParentNode()) {
+      }
 
-  /**
-   * counts the number of matching ancestors from the axis context
-   */
-  public int count(Node node, Env env, AbstractPattern pattern)
-  {
-    throw new RuntimeException();
-  }
+      return last != null ? last.getNextSibling() : null;
+   }
 
-  public String toString()
-  {
-    return getPrefix() + (_self ? "ancestor-or-self::" : "ancestor::");
-  }
+   /**
+    * counts the number of matching ancestors from the axis context
+    */
+   public int count(Node node, Env env, AbstractPattern pattern) {
+      throw new RuntimeException();
+   }
+
+   public String toString() {
+      return getPrefix() + (_self ? "ancestor-or-self::" : "ancestor::");
+   }
 }

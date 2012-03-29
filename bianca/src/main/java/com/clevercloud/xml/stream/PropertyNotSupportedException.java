@@ -31,11 +31,10 @@
 package com.clevercloud.xml.stream;
 
 public class PropertyNotSupportedException
-  extends IllegalArgumentException {
+   extends IllegalArgumentException {
 
-  public PropertyNotSupportedException(String propertyName)
-  {
-    super("property \""+propertyName+"\" not supported.");
-  }
+   public PropertyNotSupportedException(String propertyName) {
+      super("property \"" + propertyName + "\" not supported.");
+   }
 
 }

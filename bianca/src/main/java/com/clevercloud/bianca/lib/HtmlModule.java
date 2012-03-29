@@ -30,6 +30,12 @@
  */
 package com.clevercloud.bianca.lib;
 
+import com.clevercloud.bianca.BiancaModuleException;
+import com.clevercloud.bianca.annotation.Optional;
+import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.module.AbstractBiancaModule;
+import com.clevercloud.util.L10N;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -37,19 +43,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.ConstArrayValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.util.L10N;
 
 /**
  * PHP functions implementing html code.
@@ -65,7 +58,7 @@ public class HtmlModule extends AbstractBiancaModule {
    public static final int ENT_HTML_QUOTE_DOUBLE = 2;
    public static final int ENT_COMPAT = ENT_HTML_QUOTE_DOUBLE;
    public static final int ENT_QUOTES =
-           ENT_HTML_QUOTE_SINGLE | ENT_HTML_QUOTE_DOUBLE;
+      ENT_HTML_QUOTE_SINGLE | ENT_HTML_QUOTE_DOUBLE;
    public static final int ENT_NOQUOTES = ENT_HTML_QUOTE_NONE;
    private static StringValue[] HTML_SPECIALCHARS_MAP;
    private static ArrayValue HTML_SPECIALCHARS_ARRAY;
@@ -107,23 +100,23 @@ public class HtmlModule extends AbstractBiancaModule {
     * Returns HTML translation tables.
     */
    public Value get_html_translation_table(
-           Env env,
-           @Optional("HTML_SPECIALCHARS") int table,
-           @Optional("ENT_COMPAT") int quoteStyle) {
+      Env env,
+      @Optional("HTML_SPECIALCHARS") int table,
+      @Optional("ENT_COMPAT") int quoteStyle) {
       Value result;
 
 
       if (table == HTML_ENTITIES) {
          if (HTML_ENTITIES_ARRAY_UNICODE == null) {
             HTML_ENTITIES_ARRAY_UNICODE = toUnicodeArray(
-                    env, HTML_ENTITIES_ARRAY);
+               env, HTML_ENTITIES_ARRAY);
          }
 
          result = HTML_ENTITIES_ARRAY_UNICODE.copy();
       } else {
          if (HTML_SPECIALCHARS_ARRAY_UNICODE == null) {
             HTML_SPECIALCHARS_ARRAY_UNICODE = toUnicodeArray(
-                    env, HTML_SPECIALCHARS_ARRAY);
+               env, HTML_SPECIALCHARS_ARRAY);
          }
 
          result = HTML_SPECIALCHARS_ARRAY_UNICODE.copy();
@@ -147,8 +140,8 @@ public class HtmlModule extends AbstractBiancaModule {
     * @param quoteStyle optional quote style used
     */
    public static StringValue htmlspecialchars_decode(Env env,
-           StringValue str,
-           @Optional("ENT_COMPAT") int quoteStyle) {
+                                                     StringValue str,
+                                                     @Optional("ENT_COMPAT") int quoteStyle) {
       int len = str.length();
 
       StringValue sb = new StringValue();
@@ -166,20 +159,20 @@ public class HtmlModule extends AbstractBiancaModule {
             case 'a':
                sb.append('&');
                if (i + 4 < len
-                       && str.charAt(i + 2) == 'm'
-                       && str.charAt(i + 3) == 'p'
-                       && str.charAt(i + 4) == ';') {
+                  && str.charAt(i + 2) == 'm'
+                  && str.charAt(i + 3) == 'p'
+                  && str.charAt(i + 4) == ';') {
                   i += 4;
                }
                break;
 
             case 'q':
                if ((quoteStyle & ENT_HTML_QUOTE_DOUBLE) != 0
-                       && i + 5 < len
-                       && str.charAt(i + 2) == 'u'
-                       && str.charAt(i + 3) == 'o'
-                       && str.charAt(i + 4) == 't'
-                       && str.charAt(i + 5) == ';') {
+                  && i + 5 < len
+                  && str.charAt(i + 2) == 'u'
+                  && str.charAt(i + 3) == 'o'
+                  && str.charAt(i + 4) == 't'
+                  && str.charAt(i + 5) == ';') {
                   i += 5;
                   sb.append('"');
                } else {
@@ -189,11 +182,11 @@ public class HtmlModule extends AbstractBiancaModule {
 
             case '#':
                if ((quoteStyle & ENT_HTML_QUOTE_SINGLE) != 0
-                       && i + 5 < len
-                       && str.charAt(i + 2) == '0'
-                       && str.charAt(i + 3) == '3'
-                       && str.charAt(i + 4) == '9'
-                       && str.charAt(i + 5) == ';') {
+                  && i + 5 < len
+                  && str.charAt(i + 2) == '0'
+                  && str.charAt(i + 3) == '3'
+                  && str.charAt(i + 4) == '9'
+                  && str.charAt(i + 5) == ';') {
                   i += 5;
                   sb.append('\'');
                } else {
@@ -204,8 +197,8 @@ public class HtmlModule extends AbstractBiancaModule {
 
             case 'l':
                if (i + 3 < len
-                       && str.charAt(i + 2) == 't'
-                       && str.charAt(i + 3) == ';') {
+                  && str.charAt(i + 2) == 't'
+                  && str.charAt(i + 3) == ';') {
                   i += 3;
 
                   sb.append('<');
@@ -216,8 +209,8 @@ public class HtmlModule extends AbstractBiancaModule {
 
             case 'g':
                if (i + 3 < len
-                       && str.charAt(i + 2) == 't'
-                       && str.charAt(i + 3) == ';') {
+                  && str.charAt(i + 2) == 't'
+                  && str.charAt(i + 3) == ';') {
                   i += 3;
 
                   sb.append('>');
@@ -237,16 +230,16 @@ public class HtmlModule extends AbstractBiancaModule {
    /**
     * Escapes HTML
     *
-    * @param env the calling environment
-    * @param string the string to be trimmed
+    * @param env         the calling environment
+    * @param string      the string to be trimmed
     * @param quoteStyleV optional quote style
-    * @param charsetV optional charset style
+    * @param charsetV    optional charset style
     * @return the trimmed string
     */
    public static Value htmlspecialchars(Env env,
-           StringValue string,
-           @Optional("ENT_COMPAT") int quoteStyle,
-           @Optional String charset) {
+                                        StringValue string,
+                                        @Optional("ENT_COMPAT") int quoteStyle,
+                                        @Optional String charset) {
       int len = string.length();
 
       StringValue sb = new StringValue();
@@ -290,15 +283,15 @@ public class HtmlModule extends AbstractBiancaModule {
    /**
     * Escapes HTML
     *
-    * @param env the calling environment
-    * @param stringV the string to be trimmed
+    * @param env         the calling environment
+    * @param stringV     the string to be trimmed
     * @param quoteStyleV optional quote style
-    * @param charsetV optional charset style
+    * @param charsetV    optional charset style
     * @return the trimmed string
     */
    public static Value htmlentities(Env env,
-           StringValue string,
-           @Optional("ENT_COMPAT") int quoteStyle) {
+                                    StringValue string,
+                                    @Optional("ENT_COMPAT") int quoteStyle) {
 
       Reader reader;
 
@@ -355,15 +348,15 @@ public class HtmlModule extends AbstractBiancaModule {
    /**
     * Escapes HTML
     *
-    * @param string the string to be trimmed
+    * @param string     the string to be trimmed
     * @param quoteStyle optional quote style
-    * @param charset optional charset style
+    * @param charset    optional charset style
     * @return the trimmed string
     */
    public static StringValue html_entity_decode(Env env,
-           StringValue string,
-           @Optional int quoteStyle,
-           @Optional String charset) {
+                                                StringValue string,
+                                                @Optional int quoteStyle,
+                                                @Optional String charset) {
       if (string.length() == 0) {
          return StringValue.EMPTY;
       }
@@ -372,7 +365,7 @@ public class HtmlModule extends AbstractBiancaModule {
 
       if (HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY == null) {
          HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY = toUnicodeArray(
-                 env, HTML_ENTITIES_ARRAY_ENTITY_KEY);
+            env, HTML_ENTITIES_ARRAY_ENTITY_KEY);
       }
 
       htmlEntities = HTML_ENTITIES_ARRAY_UNICODE_ENTITY_KEY;
@@ -421,8 +414,8 @@ public class HtmlModule extends AbstractBiancaModule {
    /**
     * Replaces newlines with HTML breaks.
     *
-    * @param env the calling environment
-    * @param string string to convert
+    * @param env      the calling environment
+    * @param string   string to convert
     * @param is_xhtml indicates if function returns <br /> (XHTML style, default) or <br>
     */
    public static Value nl2br(Env env, StringValue string, @Optional("true") boolean is_xhtml) {
@@ -440,7 +433,7 @@ public class HtmlModule extends AbstractBiancaModule {
    }
 
    private static void entity(ArrayValue array, StringValue[] map,
-           ArrayValue revMap, int ch, String entity) {
+                              ArrayValue revMap, int ch, String entity) {
       // TODO: i18n and optimize static variables usage
       array.put("" + (char) ch, entity);
       StringValue entityValue = new StringValue(entity);

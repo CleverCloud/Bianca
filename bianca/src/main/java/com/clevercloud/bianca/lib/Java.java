@@ -44,7 +44,7 @@ public class Java {
     * Create a new Java API object.
     */
    public static Object __construct(Env env,
-           String className, Value[] args) {
+                                    String className, Value[] args) {
       return JavaModule.java(env, className, args);
    }
 }

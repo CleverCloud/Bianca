@@ -141,7 +141,7 @@ public class CallbackFunction extends Callback {
     */
    @Override
    public Value call(Env env, Value a1, Value a2, Value a3,
-           Value a4) {
+                     Value a4) {
       return getFunction(env).call(env, a1, a2, a3, a4);
    }
 
@@ -152,7 +152,7 @@ public class CallbackFunction extends Callback {
     */
    @Override
    public Value call(Env env, Value a1, Value a2, Value a3,
-           Value a4, Value a5) {
+                     Value a4, Value a5) {
       return getFunction(env).call(env, a1, a2, a3, a4, a5);
    }
 

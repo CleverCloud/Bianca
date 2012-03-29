@@ -32,29 +32,25 @@ package com.clevercloud.xpath;
 import com.clevercloud.vfs.Path;
 
 public class StylesheetEnv {
-  private Path _path;
-  private String _systemId;
+   private Path _path;
+   private String _systemId;
 
-  public Path getPath()
-  {
-    return _path;
-  }
+   public Path getPath() {
+      return _path;
+   }
 
-  public void setPath(Path path)
-  {
-    _path = path;
-  }
+   public void setPath(Path path) {
+      _path = path;
+   }
 
-  public String getSystemId()
-  {
-    if (_systemId != null)
-      return _systemId;
-    else
-      return _path.getURL();
-  }
+   public String getSystemId() {
+      if (_systemId != null)
+         return _systemId;
+      else
+         return _path.getURL();
+   }
 
-  public void setSystemId(String systemId)
-  {
-    _systemId = systemId;
-  }
+   public void setSystemId(String systemId) {
+      _systemId = systemId;
+   }
 }

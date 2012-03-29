@@ -32,7 +32,7 @@ package com.clevercloud.bianca.lib.dom;
 import org.w3c.dom.DocumentType;
 
 public class DOMDocumentType
-        extends DOMNode<DocumentType> {
+   extends DOMNode<DocumentType> {
 
    DOMDocumentType(DOMImplementation impl, DocumentType delegate) {
       super(impl, delegate);

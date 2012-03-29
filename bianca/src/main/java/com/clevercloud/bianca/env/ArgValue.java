@@ -29,14 +29,14 @@
  */
 package com.clevercloud.bianca.env;
 
+import com.clevercloud.vfs.WriteStream;
+
 import java.io.IOException;
 import java.util.IdentityHashMap;
 
-import com.clevercloud.vfs.WriteStream;
-
 /**
  * Represents an array-get argument which might be a call to a reference.
- *
+ * <p/>
  * foo($a[0]), where is not known if foo is defined as foo($a) or foo(&amp;$a)
  */
 abstract public class ArgValue extends Value {
@@ -83,19 +83,19 @@ abstract public class ArgValue extends Value {
 
    @Override
    protected void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                              WriteStream out,
+                              int depth,
+                              IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       toLocalValue().varDumpImpl(env, out, depth, valueSet);
    }
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       toLocalValue().printRImpl(env, out, depth, valueSet);
    }
 }

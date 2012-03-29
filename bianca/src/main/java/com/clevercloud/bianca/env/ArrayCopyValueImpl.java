@@ -31,7 +31,7 @@ package com.clevercloud.bianca.env;
 
 /**
  * Represents a PHP array value copied as part of deserialization or APC.
- *
+ * <p/>
  * Any modification to the array will set the CopyRoot modified
  */
 public class ArrayCopyValueImpl extends ArrayValueImpl {
@@ -40,7 +40,7 @@ public class ArrayCopyValueImpl extends ArrayValueImpl {
 
    /**
     * Copy for unserialization.
-    *
+    * <p/>
     * XXX: need to update for references
     */
    protected ArrayCopyValueImpl(Env env, ArrayValue copy, CopyRoot root) {

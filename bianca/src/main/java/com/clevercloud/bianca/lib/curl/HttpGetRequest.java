@@ -33,7 +33,7 @@ package com.clevercloud.bianca.lib.curl;
  * Represents a GET Http request.
  */
 public class HttpGetRequest
-        extends HttpRequest {
+   extends HttpRequest {
 
    public HttpGetRequest(CurlResource curlResource) {
       super(curlResource);

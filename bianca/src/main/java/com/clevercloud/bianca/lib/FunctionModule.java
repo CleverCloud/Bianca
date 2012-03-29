@@ -31,8 +31,8 @@ package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.annotation.VariableArguments;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.bianca.function.AbstractFunction;
+import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 
 import java.io.IOException;
@@ -51,8 +51,8 @@ public class FunctionModule extends AbstractBiancaModule {
     * Calls a user function
     */
    public static Value call_user_func(Env env,
-           Callable function,
-           Value[] args) {
+                                      Callable function,
+                                      Value[] args) {
       return function.call(env, args).copyReturn();
    }
 
@@ -60,11 +60,11 @@ public class FunctionModule extends AbstractBiancaModule {
     * Calls a user function
     */
    public static Value call_user_func_array(Env env,
-           Callable function,
-           Value arg) {
+                                            Callable function,
+                                            Value arg) {
       if (function == null) {
          env.warning(
-                 "call_user_func_array: first argument is not a valid function");
+            "call_user_func_array: first argument is not a valid function");
          return NullValue.NULL;
       }
 
@@ -99,8 +99,8 @@ public class FunctionModule extends AbstractBiancaModule {
     * Creates an anonymous function
     */
    public static Value create_function(Env env,
-           String args,
-           String code) {
+                                       String args,
+                                       String code) {
       try {
          AbstractFunction fun = env.createAnonymousFunction(args, code);
 
@@ -161,7 +161,7 @@ public class FunctionModule extends AbstractBiancaModule {
    /**
     * Returns true if the function exists.
     *
-    * @param env the PHP environment
+    * @param env  the PHP environment
     * @param name the function name
     */
    public static boolean function_exists(Env env, String name) {
@@ -179,8 +179,8 @@ public class FunctionModule extends AbstractBiancaModule {
     * Registers a shutdown function.
     */
    public static Value register_shutdown_function(Env env,
-           Callable fun,
-           Value[] args) {
+                                                  Callable fun,
+                                                  Value[] args) {
       env.addShutdown(fun, args);
 
       return NullValue.NULL;

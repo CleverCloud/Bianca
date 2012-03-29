@@ -29,10 +29,10 @@
  */
 package com.clevercloud.bianca.parser;
 
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.expr.ExprFactory;
 import com.clevercloud.bianca.program.Function;
 import com.clevercloud.bianca.program.InterpretedClassDef;
-import com.clevercloud.bianca.Location;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -69,8 +69,8 @@ public class FunctionScope extends Scope {
     */
    @Override
    public void addFunction(String name,
-           Function function,
-           boolean isTop) {
+                           Function function,
+                           boolean isTop) {
       name = name.toLowerCase();
 
       if (_functionMap.get(name) == null) {
@@ -100,19 +100,19 @@ public class FunctionScope extends Scope {
     */
    @Override
    public InterpretedClassDef addClass(Location location,
-           String name,
-           String parentName,
-           ArrayList<String> ifaceList,
-           int index,
-           boolean isTop) {
+                                       String name,
+                                       String parentName,
+                                       ArrayList<String> ifaceList,
+                                       int index,
+                                       boolean isTop) {
       InterpretedClassDef existingClass = _classMap.get(name);
 
       String[] ifaceArray = new String[ifaceList.size()];
       ifaceList.toArray(ifaceArray);
 
       InterpretedClassDef cl = _exprFactory.createClassDef(location,
-              name, parentName, ifaceArray,
-              index);
+         name, parentName, ifaceArray,
+         index);
 
       if (existingClass == null) {
          _classMap.put(name, cl);

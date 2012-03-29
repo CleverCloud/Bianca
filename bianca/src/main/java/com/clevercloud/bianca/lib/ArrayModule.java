@@ -30,31 +30,12 @@
  */
 package com.clevercloud.bianca.lib;
 
-import java.text.Collator;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReadOnly;
 import com.clevercloud.bianca.annotation.Reference;
 import com.clevercloud.bianca.annotation.UsesSymbolTable;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Callable;
-import com.clevercloud.bianca.env.DoubleValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.NumberValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.Var;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.env.ArrayValue.AbstractGet;
 import com.clevercloud.bianca.env.ArrayValue.GetKey;
 import com.clevercloud.bianca.env.ArrayValue.KeyComparator;
@@ -64,15 +45,23 @@ import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.RandomUtil;
 
+import java.text.Collator;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * PHP array routines.
  */
 public class ArrayModule
-        extends AbstractBiancaModule {
+   extends AbstractBiancaModule {
 
    private static final L10N L = new L10N(ArrayModule.class);
    private static final Logger log =
-           Logger.getLogger(ArrayModule.class.getName());
+      Logger.getLogger(ArrayModule.class.getName());
    public static final int CASE_UPPER = 2;
    public static final int CASE_LOWER = 1;
    public static final int SORT_REGULAR = 0;
@@ -123,8 +112,8 @@ public class ArrayModule
     * Changes the key case
     */
    public static Value array_change_key_case(Env env,
-           ArrayValue array,
-           @Optional("CASE_LOWER") int toCase) {
+                                             ArrayValue array,
+                                             @Optional("CASE_LOWER") int toCase) {
       if (array == null) {
          return BooleanValue.FALSE;
       }
@@ -156,9 +145,9 @@ public class ArrayModule
     * Chunks the array
     */
    public static Value array_chunk(Env env,
-           ArrayValue array,
-           int size,
-           @Optional boolean preserveKeys) {
+                                   ArrayValue array,
+                                   int size,
+                                   @Optional boolean preserveKeys) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -198,8 +187,8 @@ public class ArrayModule
     * Combines array
     */
    public static Value array_combine(Env env,
-           ArrayValue keys,
-           ArrayValue values) {
+                                     ArrayValue keys,
+                                     ArrayValue values) {
       if (keys == null || values == null) {
          return BooleanValue.FALSE;
       }
@@ -261,15 +250,15 @@ public class ArrayModule
     * Returns an array with everything that is in array and not in the other
     * arrays, keys also used
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against
+    *               against
     * @return an array with all of the values that are in the primary array but
     *         not in the other arrays
     */
    public static Value array_diff_assoc(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                        ArrayValue array,
+                                        Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -297,7 +286,7 @@ public class ArrayModule
             }
 
             valueFound =
-                    ((ArrayValue) arrays[k]).contains(entryValue).eq(entryKey);
+               ((ArrayValue) arrays[k]).contains(entryValue).eq(entryKey);
          }
 
          if (!valueFound) {
@@ -312,15 +301,15 @@ public class ArrayModule
     * Returns an array with everything that is in array and not in the other
     * arrays, keys used for comparison
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against
+    *               against
     * @return an array with all of the values that are in the primary array but
     *         not in the other arrays
     */
    public static Value array_diff_key(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                      ArrayValue array,
+                                      Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -360,15 +349,15 @@ public class ArrayModule
     * Returns an array with everything that is in array and not in the other
     * arrays, keys used for comparison aswell
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against.  The last element is the callback function.
+    *               against.  The last element is the callback function.
     * @return an array with all of the values that are in the primary array but
     *         not in the other arrays
     */
    public static Value array_diff_uassoc(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                         ArrayValue array,
+                                         Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -380,7 +369,7 @@ public class ArrayModule
       }
 
       AbstractFunction func =
-              env.findFunction(arrays[arrays.length - 1].toString().intern());
+         env.findFunction(arrays[arrays.length - 1].toString().intern());
 
       if (func == null) {
          env.warning("Invalid comparison function");
@@ -408,7 +397,7 @@ public class ArrayModule
 
             if (!searchKey.isNull()) {
                ValueFound = ((int) func.call(env, searchKey, entryKey).toLong())
-                       == 0;
+                  == 0;
             }
          }
 
@@ -424,15 +413,15 @@ public class ArrayModule
     * Returns an array with everything that is in array and not in the other
     * arrays, keys used for comparison only
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against.  The last element is the callback function.
+    *               against.  The last element is the callback function.
     * @return an array with all of the values that are in the primary array but
     *         not in the other arrays
     */
    public static Value array_diff_ukey(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                       ArrayValue array,
+                                       Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -444,7 +433,7 @@ public class ArrayModule
       }
 
       AbstractFunction func =
-              env.findFunction(arrays[arrays.length - 1].toString().intern());
+         env.findFunction(arrays[arrays.length - 1].toString().intern());
 
       if (func == null) {
          env.warning("Invalid comparison function");
@@ -489,9 +478,9 @@ public class ArrayModule
     * Returns an array with everything that is in array and not in the other
     * arrays using a passed callback function for comparing
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against
+    *               against
     * @return an array with all of the values that are in the primary array but
     *         not in the other arrays
     */
@@ -523,7 +512,7 @@ public class ArrayModule
             }
 
             valueFound =
-                    !((ArrayValue) arrays[k]).contains(entryValue).isNull();
+               !((ArrayValue) arrays[k]).contains(entryValue).isNull();
          }
 
          if (!valueFound) {
@@ -545,8 +534,8 @@ public class ArrayModule
     * @return newly filled array
     */
    public static ArrayValue array_fill_keys(Env env,
-           ArrayValue keyArray,
-           Value value) {
+                                            ArrayValue keyArray,
+                                            Value value) {
       ArrayValue array = new ArrayValueImpl();
 
       Iterator<Value> iter = keyArray.getValueIterator(env);
@@ -563,7 +552,7 @@ public class ArrayModule
     * starting at the start index.
     *
     * @param start the index to start filling the array
-    * @param num the number of entries to fill
+    * @param num   the number of entries to fill
     * @param value the value to fill the entries with
     * @return an array filled with the given value starting from the given start
     *         index
@@ -588,13 +577,13 @@ public class ArrayModule
     * Returns an array that filters out any values that do not hold true when
     * used in the callback function.
     *
-    * @param array the array to filter
+    * @param array    the array to filter
     * @param callback the function name for filtering
     * @return a filtered array
     */
    public static Value array_filter(Env env,
-           ArrayValue array,
-           @Optional Value callbackName) {
+                                    ArrayValue array,
+                                    @Optional Value callbackName) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -656,7 +645,7 @@ public class ArrayModule
     * @return an array with it's keys and values swapped
     */
    public static Value array_flip(Env env,
-           ArrayValue array) {
+                                  ArrayValue array) {
       if (array == null) {
          return BooleanValue.FALSE;
       }
@@ -667,11 +656,11 @@ public class ArrayModule
          Value entryValue = entry.getValue();
 
          if (entryValue.isLongConvertible()
-                 || entryValue instanceof StringValue) {
+            || entryValue instanceof StringValue) {
             newArray.put(entryValue, entry.getKey());
          } else {
             env.warning(L.l("Can only flip string and integer values at '{0}'",
-                    entryValue));
+               entryValue));
          }
       }
 
@@ -682,15 +671,15 @@ public class ArrayModule
     * Returns an array with everything that is in array and also in the other
     * arrays, keys are also used in the comparison
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against.  The last element is the callback function.
+    *               against.  The last element is the callback function.
     * @return an array with all of the values that are in the primary array and
     *         in the other arrays
     */
    public static Value array_intersect_assoc(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                             ArrayValue array,
+                                             Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -742,15 +731,15 @@ public class ArrayModule
     * Returns an array with everything that is in array and also in the other
     * arrays, keys are only used in the comparison
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against.  The last element is the callback function.
+    *               against.  The last element is the callback function.
     * @return an array with all of the values that are in the primary array and
     *         in the other arrays
     */
    public static Value array_intersect_key(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                           ArrayValue array,
+                                           Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -795,15 +784,15 @@ public class ArrayModule
     * arrays, keys are also used in the comparison.  Uses a callback function for
     * evalutation the keys.
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against.  The last element is the callback function.
+    *               against.  The last element is the callback function.
     * @return an array with all of the values that are in the primary array and
     *         in the other arrays
     */
    public static Value array_intersect_uassoc(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                              ArrayValue array,
+                                              Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -815,7 +804,7 @@ public class ArrayModule
       }
 
       AbstractFunction func =
-              env.findFunction(arrays[arrays.length - 1].toString().intern());
+         env.findFunction(arrays[arrays.length - 1].toString().intern());
 
       if (func == null) {
          env.warning("Invalid comparison function");
@@ -865,15 +854,15 @@ public class ArrayModule
     * arrays, keys are only used in the comparison.  Uses a callback function for
     * evalutation the keys.
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against.  The last element is the callback function.
+    *               against.  The last element is the callback function.
     * @return an array with all of the values that are in the primary array and
     *         in the other arrays
     */
    public static Value array_intersect_ukey(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                            ArrayValue array,
+                                            Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -885,7 +874,7 @@ public class ArrayModule
       }
 
       AbstractFunction func =
-              env.findFunction(arrays[arrays.length - 1].toString().intern());
+         env.findFunction(arrays[arrays.length - 1].toString().intern());
 
       if (func == null) {
          env.warning("Invalid comparison function");
@@ -935,15 +924,15 @@ public class ArrayModule
     * Returns an array with everything that is in array and also in the other
     * arrays
     *
-    * @param array the primary array
+    * @param array  the primary array
     * @param arrays the vector of arrays to check the primary array's values
-    * against.  The last element is the callback function.
+    *               against.  The last element is the callback function.
     * @return an array with all of the values that are in the primary array and
     *         in the other arrays
     */
    public static Value array_intersect(Env env,
-           ArrayValue array,
-           Value[] arrays) {
+                                       ArrayValue array,
+                                       Value[] arrays) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -973,7 +962,7 @@ public class ArrayModule
             }
 
             valueFound =
-                    !((ArrayValue) arrays[k]).contains(entryValue).isNull();
+               !((ArrayValue) arrays[k]).contains(entryValue).isNull();
          }
 
          if (valueFound) {
@@ -987,13 +976,13 @@ public class ArrayModule
    /**
     * Checks if the key is in the given array
     *
-    * @param key a key to check for in the array
+    * @param key         a key to check for in the array
     * @param searchArray the array to search for the key in
     * @return true if the key is in the array, and false otherwise
     */
    public static boolean array_key_exists(Env env,
-           @ReadOnly Value key,
-           @ReadOnly Value searchArray) {
+                                          @ReadOnly Value key,
+                                          @ReadOnly Value searchArray) {
 
 
       if (!searchArray.isset() || !key.isset()) {
@@ -1002,18 +991,18 @@ public class ArrayModule
 
       if (!(searchArray.isArray() || searchArray.isObject())) {
          env.warning(
-                 L.l("'" + searchArray.toString()
-                 + "' is an unexpected argument, expected "
-                 + "ArrayValue or ObjectValue"));
+            L.l("'" + searchArray.toString()
+               + "' is an unexpected argument, expected "
+               + "ArrayValue or ObjectValue"));
          return false;
       }
 
       if (!(key.isString() || key.isLongConvertible())) {
          env.warning(
-                 L.l(
-                 "The first argument (a '{0}') should be "
-                 + "either a string or an integer",
-                 key.getType()));
+            L.l(
+               "The first argument (a '{0}') should be "
+                  + "either a string or an integer",
+               key.getType()));
          return false;
       }
 
@@ -1023,14 +1012,14 @@ public class ArrayModule
    /**
     * Returns an array of the keys in the given array
     *
-    * @param array the array to obtain the keys for
+    * @param array       the array to obtain the keys for
     * @param searchValue the corresponding value of the returned key array
     * @return an array containing the keys
     */
    public static Value array_keys(Env env,
-           @ReadOnly ArrayValue array,
-           @Optional @ReadOnly Value searchValue,
-           @Optional boolean isStrict) {
+                                  @ReadOnly ArrayValue array,
+                                  @Optional @ReadOnly Value searchValue,
+                                  @Optional boolean isStrict) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -1061,12 +1050,12 @@ public class ArrayModule
    /**
     * Maps the given function with the array arguments.
     *
-    * @param fun the function name
+    * @param fun  the function name
     * @param args the vector of array arguments
     * @return an array with all of the mapped values
     */
    public static Value array_map(Env env, Callable fun,
-           ArrayValue arg, Value[] args) {
+                                 ArrayValue arg, Value[] args) {
       // XXX: drupal
       if (arg == null) {
          return NullValue.NULL;
@@ -1186,8 +1175,8 @@ public class ArrayModule
    }
 
    private static void arrayMergeRecursiveImpl(Env env,
-           ArrayValue result,
-           ArrayValue array) {
+                                               ArrayValue result,
+                                               ArrayValue array) {
       Iterator<Map.Entry<Value, Value>> iter = array.getIterator(env);
 
       while (iter.hasNext()) {
@@ -1215,8 +1204,8 @@ public class ArrayModule
             if (oldValue != null && oldValue.isset()) {
                if (oldValue.isArray() && value.isArray()) {
                   arrayMergeRecursiveImpl(env,
-                          oldValue.toArrayValue(env),
-                          value.toArrayValue(env));
+                     oldValue.toArrayValue(env),
+                     value.toArrayValue(env));
                } else if (oldValue.isArray()) {
                   oldValue.put(value);
                } else if (value.isArray()) {
@@ -1238,8 +1227,8 @@ public class ArrayModule
 
    /**
     * Sort the arrays like rows in a database.
-    * @param arrays  arrays to sort
     *
+    * @param arrays arrays to sort
     * @return true on success, and false on failure
     */
    public static boolean array_multisort(Env env, Value[] arrays) {
@@ -1262,7 +1251,7 @@ public class ArrayModule
          }
       }
 
-      Value[] rows = (primary instanceof ArrayValue) ? ((ArrayValue)primary).getKeyArray(env) : new Value[0];
+      Value[] rows = (primary instanceof ArrayValue) ? ((ArrayValue) primary).getKeyArray(env) : new Value[0];
 
       int maxsize = 0;
       for (int i = 0; i < arrays.length; i++) {
@@ -1295,9 +1284,9 @@ public class ArrayModule
     *  before the call.
     */
    private static void permute(Env env,
-           ArrayValue array,
-           Value[] permutation,
-           boolean isNewKeys) {
+                               ArrayValue array,
+                               Value[] permutation,
+                               boolean isNewKeys) {
       Value[] keys = array.getKeyArray(env);
       Value[] values = array.getValueArray(env);
 
@@ -1328,16 +1317,16 @@ public class ArrayModule
     * array size.  If this size is not greater than the current array size, then
     * the original input array is returned.
     *
-    * @param input the array to pad
-    * @param padSize the amount to pad the array by
+    * @param input    the array to pad
+    * @param padSize  the amount to pad the array by
     * @param padValue determines front/back padding and the value to place in the
-    * padded space
+    *                 padded space
     * @return a padded array
     */
    public static Value array_pad(Env env,
-           ArrayValue input,
-           long padSize,
-           Value padValue) {
+                                 ArrayValue input,
+                                 long padSize,
+                                 Value padValue) {
       if (input == null) {
          return NullValue.NULL;
       }
@@ -1393,7 +1382,7 @@ public class ArrayModule
     * @return the produce of the array's elements
     */
    public static Value array_product(Env env,
-           ArrayValue array) {
+                                     ArrayValue array) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -1417,8 +1406,8 @@ public class ArrayModule
     * @return the number of elements in the final array
     */
    public static int array_push(Env env,
-           @Reference Value array,
-           Value[] values) {
+                                @Reference Value array,
+                                Value[] values) {
       for (Value value : values) {
          array.put(value);
       }
@@ -1430,12 +1419,12 @@ public class ArrayModule
     * Returns num sized array of random keys from the given array
     *
     * @param array the array from which the keys will come from
-    * @param num the number of random keys to return
+    * @param num   the number of random keys to return
     * @return the produce of the array's elements
     */
    public static Value array_rand(Env env,
-           ArrayValue array,
-           @Optional("1") long num) {
+                                  ArrayValue array,
+                                  @Optional("1") long num) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -1446,7 +1435,7 @@ public class ArrayModule
 
       if (num < 1 || array.getSize() < num) {
          env.warning("Second argument has to be between 1 and the number of "
-                 + "elements in the array");
+            + "elements in the array");
 
          return NullValue.NULL;
       }
@@ -1489,24 +1478,24 @@ public class ArrayModule
     * Returns the value of the array when its elements have been reduced using
     * the callback function.
     *
-    * @param array the array to reduce
-    * @param callback the function to use for reducing the array
+    * @param array        the array to reduce
+    * @param callback     the function to use for reducing the array
     * @param initialValue used as the element before the first element of the
-    * array for purposes of using the callback function
+    *                     array for purposes of using the callback function
     * @return the result from reducing the input array with the callback
     *         function
     */
    public static Value array_reduce(Env env,
-           ArrayValue array,
-           Callable callable,
-           @Optional("NULL") Value initialValue) {
+                                    ArrayValue array,
+                                    Callable callable,
+                                    @Optional("NULL") Value initialValue) {
       if (array == null) {
          return NullValue.NULL;
       }
 
       if (callable == null || !callable.isValid(env)) {
          env.warning("The second argument, '" + callable
-                 + "', should be a valid callable");
+            + "', should be a valid callable");
 
          return NullValue.NULL;
       }
@@ -1531,7 +1520,7 @@ public class ArrayModule
     * Replace elements in the first array with values from successive ones
     */
    public static Value array_replace_recursive(Env env,
-           Value[] args) {
+                                               Value[] args) {
       ArrayValue result = new ArrayValueImpl();
 
       for (int i = 0; i < args.length; i++) {
@@ -1542,8 +1531,8 @@ public class ArrayModule
    }
 
    private static void replaceRecursive(Env env,
-           Value result,
-           Value newValue) {
+                                        Value result,
+                                        Value newValue) {
       Iterator<Map.Entry<Value, Value>> iter = newValue.toArray().getIterator(env);
 
       while (iter.hasNext()) {
@@ -1564,7 +1553,7 @@ public class ArrayModule
     * Replace elements in the first array with values from successive ones
     */
    public static Value array_replace(Env env,
-           Value[] args) {
+                                     Value[] args) {
       ArrayValue result = new ArrayValueImpl();
 
       for (int i = 0; i < args.length; i++) {
@@ -1584,18 +1573,18 @@ public class ArrayModule
     * Returns the inputted array reversed, preserving the keys if keyed is true
     *
     * @param inputArray the array to reverse
-    * @param keyed true if the keys are to be preserved
+    * @param keyed      true if the keys are to be preserved
     * @return the array in reverse
     */
    public static Value array_reverse(Env env,
-           ArrayValue inputArray,
-           @Optional("false") boolean keyed) {
+                                     ArrayValue inputArray,
+                                     @Optional("false") boolean keyed) {
       if (inputArray == null) {
          return NullValue.NULL;
       }
 
       Map.Entry<Value, Value>[] entryArray =
-              new Map.Entry[inputArray.getSize()];
+         new Map.Entry[inputArray.getSize()];
 
       inputArray.entrySet().toArray(entryArray);
 
@@ -1625,14 +1614,14 @@ public class ArrayModule
     * found
     *
     * @param needle the value to search for
-    * @param array the array to search
+    * @param array  the array to search
     * @param strict checks for type aswell
     * @return the key of the needle
     */
    public static Value array_search(Env env,
-           @ReadOnly Value needle,
-           @ReadOnly ArrayValue array,
-           @Optional("false") boolean strict) {
+                                    @ReadOnly Value needle,
+                                    @ReadOnly ArrayValue array,
+                                    @Optional("false") boolean strict) {
       // php/171i
       // php/172y
 
@@ -1669,7 +1658,7 @@ public class ArrayModule
     * @return the left most value in the array
     */
    public static Value array_shift(Env env,
-           @Reference Value value) {
+                                   @Reference Value value) {
       if (!value.isArray()) {
          env.warning(L.l("cannot shift a non-array"));
          return NullValue.NULL;
@@ -1697,18 +1686,18 @@ public class ArrayModule
     * array.  If elements is negative, then the new array will have from offset
     * to elements number of values.
     *
-    * @param array the array to take the chunk from
-    * @param offset the start index for the new array chunk
+    * @param array    the array to take the chunk from
+    * @param offset   the start index for the new array chunk
     * @param elements the number of elements in the array chunk
     * @param presKeys true if the keys of the elements are to be preserved, false
-    * otherwise
+    *                 otherwise
     * @return the array chunk
     */
    public static Value array_slice(Env env,
-           @ReadOnly ArrayValue array,
-           int offset,
-           @Optional Value length,
-           @Optional boolean isPreserveKeys) {
+                                   @ReadOnly ArrayValue array,
+                                   int offset,
+                                   @Optional Value length,
+                                   @Optional boolean isPreserveKeys) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -1744,17 +1733,17 @@ public class ArrayModule
     * elements.  Otherwise that is the number of elements to remove.  If replace
     * is given, replace will be inserted into the arrayV at offset.
     *
-    * @param array the arrayV to splice
-    * @param offset the start index for the new arrayV chunk
-    * @param length the number of elements to remove / stop index
+    * @param array   the arrayV to splice
+    * @param offset  the start index for the new arrayV chunk
+    * @param length  the number of elements to remove / stop index
     * @param replace the elements to add to the arrayV
     * @return the part of the arrayV removed from input
     */
    public static Value array_splice(Env env,
-           @Reference Value arrayVar,
-           int offset,
-           @Optional("NULL") Value length,
-           @Optional Value replace) {
+                                    @Reference Value arrayVar,
+                                    int offset,
+                                    @Optional("NULL") Value length,
+                                    @Optional Value replace) {
       if (!arrayVar.isset()) {
          return NullValue.NULL;
       }
@@ -1786,15 +1775,15 @@ public class ArrayModule
       }
 
       return spliceImpl(env, arrayVar, array, startIndex, endIndex,
-              (ArrayValue) replace.toArray());
+         (ArrayValue) replace.toArray());
    }
 
    public static Value spliceImpl(Env env,
-           Value var,
-           ArrayValue array,
-           int start,
-           int end,
-           ArrayValue replace) {
+                                  Value var,
+                                  ArrayValue array,
+                                  int start,
+                                  int end,
+                                  ArrayValue replace) {
       int index = 0;
 
       ArrayValue newArray = new ArrayValueImpl();
@@ -1847,7 +1836,7 @@ public class ArrayModule
     * @return the sum of the elements
     */
    public static Value array_sum(Env env,
-           @ReadOnly ArrayValue array) {
+                                 @ReadOnly ArrayValue array) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -1868,7 +1857,7 @@ public class ArrayModule
     * comparison function.
     *
     * @param arrays first array is checked against the rest.  Last element is the
-    * callback function.
+    *               callback function.
     * @return an array with all the values of the first array that are not in the
     *         rest
     */
@@ -1953,7 +1942,7 @@ public class ArrayModule
     * function.
     *
     * @param arrays first array is checked against the rest.  Last two elementare
-    * the callback functions.
+    *               the callback functions.
     * @return an array with all the values of the first array that are not in the
     *         rest
     */
@@ -2007,13 +1996,13 @@ public class ArrayModule
             for (Map.Entry<Value, Value> entry : checkArray.entrySet()) {
                try {
                   boolean valueFound =
-                          cmpValue.call(env, entryValue, entry.getValue()).toLong() == 0;
+                     cmpValue.call(env, entryValue, entry.getValue()).toLong() == 0;
 
                   boolean keyFound = false;
 
                   if (valueFound) {
                      keyFound = cmpKey.call(env, entryKey, entry.getKey()).toLong()
-                             == 0;
+                        == 0;
                   }
 
                   isFound = valueFound && keyFound;
@@ -2047,7 +2036,7 @@ public class ArrayModule
     * determine equivalence.
     *
     * @param arrays first array is checked against the rest.  Last element is the
-    * callback function.
+    *               callback function.
     * @return an array with all the values of the first array that are not in the
     *         rest
     */
@@ -2124,7 +2113,7 @@ public class ArrayModule
     * comparison.
     *
     * @param arrays first array is checked against the rest.  Last element is the
-    * callback function.
+    *               callback function.
     * @return an array with all the values of the first array that are in the
     *         rest
     */
@@ -2207,7 +2196,7 @@ public class ArrayModule
     * function
     *
     * @param arrays first array is checked against the rest.  Last two elements
-    * are the callback functions.
+    *               are the callback functions.
     * @return an array with all the values of the first array that are in the
     *         rest
     */
@@ -2261,13 +2250,13 @@ public class ArrayModule
             for (Map.Entry<Value, Value> entry : checkArray.entrySet()) {
                try {
                   boolean valueFound =
-                          cmpValue.call(env, entryValue, entry.getValue()).toLong() == 0;
+                     cmpValue.call(env, entryValue, entry.getValue()).toLong() == 0;
 
                   boolean keyFound = false;
 
                   if (valueFound) {
                      keyFound = cmpKey.call(env, entryKey, entry.getKey()).toLong()
-                             == 0;
+                        == 0;
                   }
 
                   isFound = valueFound && keyFound;
@@ -2299,7 +2288,7 @@ public class ArrayModule
     * equivalence.
     *
     * @param arrays first array is checked against the rest.  Last element is the
-    * callback function.
+    *               callback function.
     * @return an array with all the values of the first array that are in the
     *         rest
     */
@@ -2374,7 +2363,7 @@ public class ArrayModule
     * @return an array without duplicates
     */
    public static Value array_unique(Env env,
-           ArrayValue array) {
+                                    ArrayValue array) {
       if (array == null) {
          return BooleanValue.FALSE;
       }
@@ -2413,13 +2402,13 @@ public class ArrayModule
    /**
     * Prepends the elements to the array
     *
-    * @param array the array to shift
+    * @param array  the array to shift
     * @param values
     * @return the left most value in the array
     */
    public static Value array_unshift(Env env,
-           @Reference Value value,
-           Value[] values) {
+                                     @Reference Value value,
+                                     Value[] values) {
       ArrayValue array = value.toArrayValue(env);
 
       if (array == null) {
@@ -2442,7 +2431,7 @@ public class ArrayModule
     * @return an array with the values of the passed array
     */
    public static Value array_values(Env env,
-           ArrayValue array) {
+                                    ArrayValue array) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -2456,17 +2445,17 @@ public class ArrayModule
     * if the process succeeded, otherwise false.
     *
     * @param array the array to walk
-    * @param call the name of the callback function
+    * @param call  the name of the callback function
     * @param extra extra parameter required by the callback function
     * @return true if the walk succedded, false otherwise
     */
    public static boolean array_walk_recursive(Env env,
-           @Reference Value arrayVar,
-           Callable callback,
-           @Optional("NULL") Value extra) {
+                                              @Reference Value arrayVar,
+                                              Callable callback,
+                                              @Optional("NULL") Value extra) {
       if (callback == null || !callback.isValid(env)) {
          env.error(
-                 L.l("'{0}' is an unknown function.", callback.getCallbackName()));
+            L.l("'{0}' is an unknown function.", callback.getCallbackName()));
          return false;
       }
 
@@ -2494,9 +2483,9 @@ public class ArrayModule
 
             if (value.isArray()) {
                boolean result = array_walk_recursive(env,
-                       (ArrayValue) value.toValue(),
-                       callback,
-                       extra);
+                  (ArrayValue) value.toValue(),
+                  callback,
+                  extra);
 
                if (!result) {
                   return false;
@@ -2518,19 +2507,18 @@ public class ArrayModule
    /**
     * Executes a callback on each of the elements in the array.
     *
-    * @param array the array to walk along
+    * @param array    the array to walk along
     * @param callback the callback function
     * @param userData extra parameter required by the callback function
-    *
     * @return true if the walk succeeded, false otherwise
     */
    public static boolean array_walk(Env env,
-           @Reference Value arrayVar,
-           Callable callback,
-           @Optional("NULL") Value userData) {
+                                    @Reference Value arrayVar,
+                                    Callable callback,
+                                    @Optional("NULL") Value userData) {
       if (callback == null || !callback.isValid(env)) {
          env.error(L.l("'{0}' is an unknown function.",
-                 callback.getCallbackName()));
+            callback.getCallbackName()));
          return false;
       }
 
@@ -2569,17 +2557,18 @@ public class ArrayModule
    }
 
    // array - implemented internally
+
    /**
     * Sorts the array based on values in reverse order, preserving keys
     *
-    * @param array the array to sort
+    * @param array    the array to sort
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean arsort(Env env,
-           @Reference Value arrayVar,
-           @Optional long sortFlag) {
+                                @Reference Value arrayVar,
+                                @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -2596,8 +2585,8 @@ public class ArrayModule
          case SORT_LOCALE_STRING:
             Locale locale = env.getLocaleInfo().getCollate().getLocale();
             array.sort(new CompareLocale(ArrayValue.GET_VALUE, SORT_REVERSE,
-                    Collator.getInstance(locale)),
-                    NO_KEY_RESET, NOT_STRICT);
+               Collator.getInstance(locale)),
+               NO_KEY_RESET, NOT_STRICT);
             break;
          default:
             array.sort(CNO_VALUE_REVERSE, NO_KEY_RESET, NOT_STRICT);
@@ -2610,14 +2599,14 @@ public class ArrayModule
    /**
     * Sorts the array based on values in ascending order, preserving keys
     *
-    * @param array the array to sort
+    * @param array    the array to sort
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean asort(Env env,
-           @Reference Value arrayVar,
-           @Optional long sortFlag) {
+                               @Reference Value arrayVar,
+                               @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -2634,8 +2623,8 @@ public class ArrayModule
          case SORT_LOCALE_STRING:
             Locale locale = env.getLocaleInfo().getCollate().getLocale();
             array.sort(new CompareLocale(ArrayValue.GET_VALUE, SORT_NORMAL,
-                    Collator.getInstance(locale)),
-                    NO_KEY_RESET, NOT_STRICT);
+               Collator.getInstance(locale)),
+               NO_KEY_RESET, NOT_STRICT);
             break;
          default:
             array.sort(CNO_VALUE_NORMAL, NO_KEY_RESET, NOT_STRICT);
@@ -2680,8 +2669,8 @@ public class ArrayModule
     * Returns the size of the array.
     */
    public static long count(Env env,
-           @ReadOnly Value value,
-           @Optional int countMethod) {
+                            @ReadOnly Value value,
+                            @Optional int countMethod) {
       boolean isRecursive = countMethod == COUNT_RECURSIVE;
 
       if (!isRecursive) {
@@ -2728,6 +2717,7 @@ public class ArrayModule
    // variables.  The extract() call messes that up, or at least forces the
    // compiler to synchronize its view of the variables.
    // (email Re:extract: symbol table)
+
    /**
     * Inputs new variables into the symbol table from the passed array
     *
@@ -2737,7 +2727,7 @@ public class ArrayModule
     */
    @UsesSymbolTable(replace = true)
    public static Value extract(Env env,
-           ArrayValue array) {
+                               ArrayValue array) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -2764,17 +2754,17 @@ public class ArrayModule
    /**
     * Inputs new variables into the symbol table from the passed array
     *
-    * @param array the array contained the new variables
-    * @param rawType flag to determine how to handle collisions
+    * @param array       the array contained the new variables
+    * @param rawType     flag to determine how to handle collisions
     * @param valuePrefix used along with the flag
     * @return the number of new variables added from the array to the symbol
     *         table
     */
    @UsesSymbolTable
    public static Value extract(Env env,
-           ArrayValue array,
-           long rawType,
-           @Optional("NULL") Value valuePrefix) {
+                               ArrayValue array,
+                               long rawType,
+                               @Optional("NULL") Value valuePrefix) {
       if (array == null) {
          return NullValue.NULL;
       }
@@ -2784,15 +2774,15 @@ public class ArrayModule
       boolean extrRefs = (rawType & EXTR_REFS) != 0;
 
       if (extractType < EXTR_OVERWRITE
-              || extractType > EXTR_IF_EXISTS && extractType != EXTR_REFS) {
+         || extractType > EXTR_IF_EXISTS && extractType != EXTR_REFS) {
          env.warning("Unknown extract type");
 
          return NullValue.NULL;
       }
 
       if (extractType >= EXTR_PREFIX_SAME
-              && extractType <= EXTR_PREFIX_IF_EXISTS
-              && (valuePrefix == null || !(valuePrefix.isString()))) {
+         && extractType <= EXTR_PREFIX_IF_EXISTS
+         && (valuePrefix == null || !(valuePrefix.isString()))) {
          env.warning("Prefix expected to be specified");
 
          return NullValue.NULL;
@@ -2906,8 +2896,8 @@ public class ArrayModule
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean in_array(@ReadOnly Value needle,
-           @ReadOnly ArrayValue stack,
-           @Optional("false") boolean strict) {
+                                  @ReadOnly ArrayValue stack,
+                                  @Optional("false") boolean strict) {
       if (stack == null) {
          return false;
       }
@@ -2934,22 +2924,22 @@ public class ArrayModule
     * Undocumented alias for {@link #array_key_exists}.
     */
    public static boolean key_exists(Env env,
-           @ReadOnly Value key,
-           @ReadOnly Value searchArray) {
+                                    @ReadOnly Value key,
+                                    @ReadOnly Value searchArray) {
       return array_key_exists(env, key, searchArray);
    }
 
    /**
     * Sorts the array based on keys in reverse order, preserving keys
     *
-    * @param array the array to sort
+    * @param array    the array to sort
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean krsort(Env env,
-           @Reference Value arrayVar,
-           @Optional long sortFlag) {
+                                @Reference Value arrayVar,
+                                @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -2966,8 +2956,8 @@ public class ArrayModule
          case SORT_LOCALE_STRING:
             Locale locale = env.getLocaleInfo().getCollate().getLocale();
             array.sort(new CompareLocale(ArrayValue.GET_KEY, SORT_REVERSE,
-                    Collator.getInstance(locale)),
-                    NO_KEY_RESET, NOT_STRICT);
+               Collator.getInstance(locale)),
+               NO_KEY_RESET, NOT_STRICT);
             break;
          default:
             array.sort(CNO_KEY_REVERSE, NO_KEY_RESET, NOT_STRICT);
@@ -2980,14 +2970,14 @@ public class ArrayModule
    /**
     * Sorts the array based on keys in ascending order, preserving keys
     *
-    * @param array the array to sort
+    * @param array    the array to sort
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean ksort(Env env,
-           @Reference Value arrayVar,
-           @Optional long sortFlag) {
+                               @Reference Value arrayVar,
+                               @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -3004,8 +2994,8 @@ public class ArrayModule
          case SORT_LOCALE_STRING:
             Locale locale = env.getLocaleInfo().getCollate().getLocale();
             array.sort(new CompareLocale(ArrayValue.GET_KEY, SORT_NORMAL,
-                    Collator.getInstance(locale)),
-                    NO_KEY_RESET, NOT_STRICT);
+               Collator.getInstance(locale)),
+               NO_KEY_RESET, NOT_STRICT);
             break;
          default:
             array.sort(CNO_KEY_NORMAL, NO_KEY_RESET, NOT_STRICT);
@@ -3016,6 +3006,7 @@ public class ArrayModule
    }
 
    // list is internal expression
+
    /**
     * Sorts the array based on string values using natural order, preserving
     * keys, case insensitive
@@ -3074,7 +3065,7 @@ public class ArrayModule
 
             if (entryValue instanceof StringValue) {
                array.put(entry.getKey(),
-                       StringValue.create(entryValue.toString().trim()));
+                  StringValue.create(entryValue.toString().trim()));
             }
          }
       }
@@ -3105,15 +3096,15 @@ public class ArrayModule
     * Creates an array using the start and end values provided
     *
     * @param start the 0 index element
-    * @param end the length - 1 index element
-    * @param step the new value is increased by this to determine the value for
-    * the next element
+    * @param end   the length - 1 index element
+    * @param step  the new value is increased by this to determine the value for
+    *              the next element
     * @return the new array
     */
    public static Value range(Env env,
-           @ReadOnly Value start,
-           @ReadOnly Value end,
-           @Optional("1") long step) {
+                             @ReadOnly Value start,
+                             @ReadOnly Value end,
+                             @Optional("1") long step) {
       if (step < 1) {
          step = 1;
       }
@@ -3131,12 +3122,12 @@ public class ArrayModule
 
       if (start.eq(end)) {
       } else if (start instanceof StringValue
-              && (Math.abs(end.toChar() - start.toChar()) < step)) {
+         && (Math.abs(end.toChar() - start.toChar()) < step)) {
          env.warning("steps exceeds the specified range");
 
          return BooleanValue.FALSE;
       } else if (start instanceof LongValue
-              && (Math.abs(end.toLong() - start.toLong()) < step)) {
+         && (Math.abs(end.toLong() - start.toLong()) < step)) {
          env.warning("steps exceeds the specified range");
 
          return BooleanValue.FALSE;
@@ -3156,7 +3147,7 @@ public class ArrayModule
 
          start = rangeIncrement(start, step);
       } while ((increment && start.leq(end))
-              || (!increment && start.geq(end)));
+         || (!increment && start.geq(end)));
 
       return array;
    }
@@ -3179,14 +3170,14 @@ public class ArrayModule
    /**
     * Sorts the array based on values in reverse order
     *
-    * @param array the array to sort
+    * @param array    the array to sort
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean rsort(Env env,
-           @Reference Value arrayVar,
-           @Optional long sortFlag) {
+                               @Reference Value arrayVar,
+                               @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -3203,8 +3194,8 @@ public class ArrayModule
          case SORT_LOCALE_STRING:
             Locale locale = env.getLocaleInfo().getCollate().getLocale();
             array.sort(new CompareLocale(ArrayValue.GET_VALUE, SORT_REVERSE,
-                    Collator.getInstance(locale)),
-                    KEY_RESET, STRICT);
+               Collator.getInstance(locale)),
+               KEY_RESET, STRICT);
             break;
          default:
             array.sort(CNO_VALUE_REVERSE, KEY_RESET, STRICT);
@@ -3225,22 +3216,22 @@ public class ArrayModule
     * Returns the size of the array.
     */
    public static long sizeof(Env env,
-           @ReadOnly Value value,
-           @Optional int countMethod) {
+                             @ReadOnly Value value,
+                             @Optional int countMethod) {
       return count(env, value, countMethod);
    }
 
    /**
     * Sorts the array based on values in ascending order
     *
-    * @param array the array to sort
+    * @param array    the array to sort
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean sort(Env env,
-           @Reference Value arrayVar,
-           @Optional long sortFlag) {
+                              @Reference Value arrayVar,
+                              @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -3257,8 +3248,8 @@ public class ArrayModule
          case SORT_LOCALE_STRING:
             Locale locale = env.getLocaleInfo().getCollate().getLocale();
             array.sort(new CompareLocale(ArrayValue.GET_VALUE, SORT_NORMAL,
-                    Collator.getInstance(locale)),
-                    KEY_RESET, STRICT);
+               Collator.getInstance(locale)),
+               KEY_RESET, STRICT);
             break;
          default:
             array.sort(CNO_VALUE_NORMAL, KEY_RESET, STRICT);
@@ -3272,16 +3263,16 @@ public class ArrayModule
     * Sorts the array based on values in ascending order using a callback
     * function
     *
-    * @param array the array to sort
-    * @param func the name of the callback function
+    * @param array    the array to sort
+    * @param func     the name of the callback function
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean uasort(Env env,
-           @Reference Value arrayVar,
-           Callable func,
-           @Optional long sortFlag) {
+                                @Reference Value arrayVar,
+                                Callable func,
+                                @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -3298,7 +3289,7 @@ public class ArrayModule
       }
 
       array.sort(new CompareCallBack(ArrayValue.GET_VALUE, SORT_NORMAL, func,
-              env), NO_KEY_RESET, NOT_STRICT);
+         env), NO_KEY_RESET, NOT_STRICT);
 
       return true;
    }
@@ -3307,16 +3298,16 @@ public class ArrayModule
     * Sorts the array based on values in ascending order using a callback
     * function
     *
-    * @param array the array to sort
-    * @param func the name of the callback function
+    * @param array    the array to sort
+    * @param func     the name of the callback function
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean uksort(Env env,
-           @Reference Value arrayVar,
-           Callable func,
-           @Optional long sortFlag) {
+                                @Reference Value arrayVar,
+                                Callable func,
+                                @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -3341,16 +3332,16 @@ public class ArrayModule
     * Sorts the array based on values in ascending order using a callback
     * function
     *
-    * @param array the array to sort
-    * @param func the name of the callback function
+    * @param array    the array to sort
+    * @param func     the name of the callback function
     * @param sortFlag provides optional methods to process the sort
     * @return true if the sort works, false otherwise
     * @throws ClassCastException if the elements are not mutually comparable
     */
    public static boolean usort(Env env,
-           @Reference Value arrayVar,
-           Callable func,
-           @Optional long sortFlag) {
+                               @Reference Value arrayVar,
+                               Callable func,
+                               @Optional long sortFlag) {
       ArrayValue array = arrayVar.toArrayValue(env);
 
       if (array == null) {
@@ -3374,8 +3365,8 @@ public class ArrayModule
    }
 
    private static class CompareString
-           implements
-           Comparator<Map.Entry<Value, Value>> {
+      implements
+      Comparator<Map.Entry<Value, Value>> {
 
       private AbstractGet _getter;
       private int _order;
@@ -3387,7 +3378,7 @@ public class ArrayModule
 
       @Override
       public int compare(Map.Entry<Value, Value> aEntry,
-              Map.Entry<Value, Value> bEntry) {
+                         Map.Entry<Value, Value> bEntry) {
          String aElement = _getter.get(aEntry).toString();
          String bElement = _getter.get(bEntry).toString();
 
@@ -3396,8 +3387,8 @@ public class ArrayModule
    }
 
    private static class CompareNumeric
-           implements
-           Comparator<Map.Entry<Value, Value>> {
+      implements
+      Comparator<Map.Entry<Value, Value>> {
 
       private AbstractGet _getter;
       private int _order;
@@ -3409,7 +3400,7 @@ public class ArrayModule
 
       @Override
       public int compare(Map.Entry<Value, Value> aEntry,
-              Map.Entry<Value, Value> bEntry) {
+                         Map.Entry<Value, Value> bEntry) {
          try {
             // php/1756
             double aElement = _getter.get(aEntry).toDouble();
@@ -3429,8 +3420,8 @@ public class ArrayModule
    }
 
    private static class CompareLocale
-           implements
-           Comparator<Map.Entry<Value, Value>> {
+      implements
+      Comparator<Map.Entry<Value, Value>> {
 
       private AbstractGet _getter;
       private int _order;
@@ -3444,7 +3435,7 @@ public class ArrayModule
 
       @Override
       public int compare(Map.Entry<Value, Value> aEntry,
-              Map.Entry<Value, Value> bEntry) {
+                         Map.Entry<Value, Value> bEntry) {
          String aElement = _getter.get(aEntry).toString();
          String bElement = _getter.get(bEntry).toString();
 
@@ -3453,7 +3444,7 @@ public class ArrayModule
    }
 
    private static class CompareNormal
-           implements Comparator<Map.Entry<Value, Value>> {
+      implements Comparator<Map.Entry<Value, Value>> {
 
       private AbstractGet _getter;
       private int _order;
@@ -3465,7 +3456,7 @@ public class ArrayModule
 
       @Override
       public int compare(Map.Entry<Value, Value> aEntry,
-              Map.Entry<Value, Value> bEntry) {
+                         Map.Entry<Value, Value> bEntry) {
          if (_getter instanceof GetKey) {
             KeyComparator k = KeyComparator.CMP;
 
@@ -3479,8 +3470,8 @@ public class ArrayModule
    }
 
    private static class CompareNatural
-           implements
-           Comparator<Map.Entry<Value, Value>> {
+      implements
+      Comparator<Map.Entry<Value, Value>> {
 
       private AbstractGet _getter;
       private int _order;
@@ -3494,7 +3485,7 @@ public class ArrayModule
 
       @Override
       public int compare(Map.Entry<Value, Value> aEntry,
-              Map.Entry<Value, Value> bEntry) {
+                         Map.Entry<Value, Value> bEntry) {
          try {
             String aElement = _getter.get(aEntry).toString();
             String bElement = _getter.get(bEntry).toString();
@@ -3544,7 +3535,7 @@ public class ArrayModule
    }
 
    private static class CompareCallBack
-           implements Comparator<Map.Entry<Value, Value>> {
+      implements Comparator<Map.Entry<Value, Value>> {
 
       private AbstractGet _getter;
       private int _order;
@@ -3552,7 +3543,7 @@ public class ArrayModule
       private Env _env;
 
       CompareCallBack(AbstractGet getter, int order, Callable func,
-              Env env) {
+                      Env env) {
          _getter = getter;
          _order = order;
          _func = func;
@@ -3561,7 +3552,7 @@ public class ArrayModule
 
       @Override
       public int compare(Map.Entry<Value, Value> aEntry,
-              Map.Entry<Value, Value> bEntry) {
+                         Map.Entry<Value, Value> bEntry) {
          try {
             Value aElement = _getter.get(aEntry);
             Value bElement = _getter.get(bEntry);
@@ -3578,7 +3569,7 @@ public class ArrayModule
     *  column-arrays.
     */
    private static class MultiSortComparator
-           implements Comparator<LongValue> {
+      implements Comparator<LongValue> {
 
       private final Env _env;
       private final Value[] _rows;
@@ -3605,7 +3596,7 @@ public class ArrayModule
 
             // process all flags appearing *after* an array but before the next one
             while ((i + 1) < _arrays.length
-                    && _arrays[i + 1] instanceof LongValue) {
+               && _arrays[i + 1] instanceof LongValue) {
                i++;
 
                int flag = _arrays[i].toInt();
@@ -3701,7 +3692,7 @@ public class ArrayModule
                if (type == LETTER && Character.isLetter(_string.charAt(_current))) {
                } else if (type == DIGIT && Character.isDigit(_string.charAt(_current))) {
                } else if (type == SYMBOL
-                       && !Character.isLetterOrDigit(_string.charAt(_current))) {
+                  && !Character.isLetterOrDigit(_string.charAt(_current))) {
                } else {
                   break;
                }

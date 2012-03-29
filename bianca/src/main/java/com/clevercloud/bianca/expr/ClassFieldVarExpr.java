@@ -29,17 +29,16 @@
  */
 package com.clevercloud.bianca.expr;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Var;
 import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.util.L10N;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Represents a PHP static field reference.
@@ -62,14 +61,15 @@ public class ClassFieldVarExpr extends AbstractVarExpr {
    //
    // function call creation
    //
+
    /**
     * Creates a function call expression
     */
    @Override
    public Expr createCall(BiancaParser parser,
-           Location location,
-           ArrayList<Expr> args)
-           throws IOException {
+                          Location location,
+                          ArrayList<Expr> args)
+      throws IOException {
       ExprFactory factory = parser.getExprFactory();
 
       Expr var = factory.createVarVar(_varName);
@@ -81,7 +81,6 @@ public class ClassFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -97,7 +96,6 @@ public class ClassFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -113,7 +111,6 @@ public class ClassFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -131,14 +128,13 @@ public class ClassFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
    public void evalUnset(Env env) {
       env.error(getLocation(),
-              L.l("{0}::${1}: Cannot unset static variables.",
-              _className, _varName));
+         L.l("{0}::${1}: Cannot unset static variables.",
+            _className, _varName));
    }
 
    @Override

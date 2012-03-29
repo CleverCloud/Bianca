@@ -36,139 +36,123 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class StartDocumentImpl extends XMLEventImpl implements StartDocument {
-  private final boolean _encodingSet;
-  private final String _characterEncodingScheme;
-  private final String _systemId;
-  private final String _version;
-  private final boolean _isStandalone;
-  private final boolean _standaloneSet;
+   private final boolean _encodingSet;
+   private final String _characterEncodingScheme;
+   private final String _systemId;
+   private final String _version;
+   private final boolean _isStandalone;
+   private final boolean _standaloneSet;
 
-  public StartDocumentImpl()
-  {
-    this(false, null, null, "1.0", false, false);
-  }
+   public StartDocumentImpl() {
+      this(false, null, null, "1.0", false, false);
+   }
 
-  public StartDocumentImpl(boolean encodingSet, String characterEncodingScheme,
-                           String systemId, String version, 
-                           boolean isStandalone, boolean standaloneSet)
-  {
-    _encodingSet = encodingSet;
-    _characterEncodingScheme = characterEncodingScheme;
-    _systemId = systemId;
-    _version = version;
-    _isStandalone = isStandalone;
-    _standaloneSet = standaloneSet;
-  }
+   public StartDocumentImpl(boolean encodingSet, String characterEncodingScheme,
+                            String systemId, String version,
+                            boolean isStandalone, boolean standaloneSet) {
+      _encodingSet = encodingSet;
+      _characterEncodingScheme = characterEncodingScheme;
+      _systemId = systemId;
+      _version = version;
+      _isStandalone = isStandalone;
+      _standaloneSet = standaloneSet;
+   }
 
-  public boolean encodingSet()
-  {
-    return _encodingSet;
-  }
+   public boolean encodingSet() {
+      return _encodingSet;
+   }
 
-  public String getCharacterEncodingScheme()
-  {
-    return _characterEncodingScheme;
-  }
+   public String getCharacterEncodingScheme() {
+      return _characterEncodingScheme;
+   }
 
-  public String getSystemId()
-  {
-    return _systemId;
-  }
+   public String getSystemId() {
+      return _systemId;
+   }
 
-  public String getVersion()
-  {
-    return _version;
-  }
+   public String getVersion() {
+      return _version;
+   }
 
-  public boolean isStandalone()
-  {
-    return _isStandalone;
-  }
+   public boolean isStandalone() {
+      return _isStandalone;
+   }
 
-  public boolean standaloneSet()
-  {
-    return _standaloneSet;
-  }
+   public boolean standaloneSet() {
+      return _standaloneSet;
+   }
 
-  public int getEventType()
-  {
-    return START_DOCUMENT;
-  }
+   public int getEventType() {
+      return START_DOCUMENT;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    try {
-      writer.write("<?xml version=\"" + _version + "\"");
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      try {
+         writer.write("<?xml version=\"" + _version + "\"");
+
+         if (_encodingSet)
+            writer.write(" encoding=\"" + _characterEncodingScheme + "\"");
+
+         if (_standaloneSet)
+            writer.write(" standalone=\"" + _standaloneSet + "\"");
+
+         writer.write("?>");
+
+         // XXX system id?
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
+      }
+   }
+
+   public String toString() {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("<?xml version=\"" + _version + "\"");
 
       if (_encodingSet)
-        writer.write(" encoding=\"" + _characterEncodingScheme + "\"");
+         sb.append(" encoding=\"" + _characterEncodingScheme + "\"");
 
       if (_standaloneSet)
-        writer.write(" standalone=\"" + _standaloneSet + "\"");
+         sb.append(" standalone=\"" + _standaloneSet + "\"");
 
-      writer.write("?>");
+      sb.append("?>");
 
-      // XXX system id?
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+      return sb.toString();
+   }
 
-  public String toString()
-  {
-    StringBuilder sb = new StringBuilder();
+   public boolean equals(Object o) {
+      if (!(o instanceof StartDocument))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    sb.append("<?xml version=\"" + _version + "\"");
+      StartDocument start = (StartDocument) o;
 
-    if (_encodingSet)
-      sb.append(" encoding=\"" + _characterEncodingScheme + "\"");
-
-    if (_standaloneSet)
-      sb.append(" standalone=\"" + _standaloneSet + "\"");
-
-    sb.append("?>");
-
-    return sb.toString();
-  }
-
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof StartDocument))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
-
-    StartDocument start = (StartDocument) o;
-
-    if (getCharacterEncodingScheme() != null) {
-      if (! getCharacterEncodingScheme().equals
+      if (getCharacterEncodingScheme() != null) {
+         if (!getCharacterEncodingScheme().equals
             (start.getCharacterEncodingScheme()))
-        return false;
-    }
-    else if (start.getCharacterEncodingScheme() != null)
-      return false;
+            return false;
+      } else if (start.getCharacterEncodingScheme() != null)
+         return false;
 
-    if (getSystemId() != null) {
-      if (! getSystemId().equals(start.getSystemId()))
-        return false;
-    }
-    else if (start.getSystemId() != null)
-      return false;
+      if (getSystemId() != null) {
+         if (!getSystemId().equals(start.getSystemId()))
+            return false;
+      } else if (start.getSystemId() != null)
+         return false;
 
-    if (getVersion() != null) {
-      if (! getVersion().equals(start.getVersion()))
-        return false;
-    }
-    else if (start.getVersion() != null)
-      return false;
+      if (getVersion() != null) {
+         if (!getVersion().equals(start.getVersion()))
+            return false;
+      } else if (start.getVersion() != null)
+         return false;
 
-    return encodingSet() == start.encodingSet() &&
-           isStandalone() == start.isStandalone() &&
-           standaloneSet() == start.standaloneSet();
-  }
+      return encodingSet() == start.encodingSet() &&
+         isStandalone() == start.isStandalone() &&
+         standaloneSet() == start.standaloneSet();
+   }
 }
 

@@ -35,21 +35,21 @@ import java.util.logging.Logger;
  * Static facade.
  */
 public class Log {
-  /**
-   * Returns the logger for a class.
-   */
-  public static Logger open(Class cl)
-  {
-    try {
-      return Logger.getLogger(cl.getName());
-    } catch (RuntimeException e) {
-      e.printStackTrace();
-      throw e;
-    } catch (Error e) {
-      e.printStackTrace();
-      throw e;
-    }
-  }
+   /**
+    * Returns the logger for a class.
+    */
+   public static Logger open(Class cl) {
+      try {
+         return Logger.getLogger(cl.getName());
+      } catch (RuntimeException e) {
+         e.printStackTrace();
+         throw e;
+      } catch (Error e) {
+         e.printStackTrace();
+         throw e;
+      }
+   }
 
-  private Log() {}
+   private Log() {
+   }
 }

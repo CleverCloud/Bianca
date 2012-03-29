@@ -30,6 +30,13 @@
  */
 package com.clevercloud.bianca.lib.file;
 
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.EnvCleanup;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.resources.StreamContextResource;
+import com.clevercloud.vfs.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -39,23 +46,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.EnvCleanup;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.resources.StreamContextResource;
-import com.clevercloud.vfs.Encoding;
-import com.clevercloud.vfs.HttpStreamWrapper;
-import com.clevercloud.vfs.LockableStream;
-import com.clevercloud.vfs.Path;
-import com.clevercloud.vfs.ReadStream;
-import com.clevercloud.vfs.ReadWritePair;
-import com.clevercloud.vfs.TempBuffer;
-import com.clevercloud.vfs.WriteStream;
-
 public class HttpInputOutput extends AbstractBinaryOutput
-        implements BinaryInput, BinaryOutput, LockableStream, EnvCleanup {
+   implements BinaryInput, BinaryOutput, LockableStream, EnvCleanup {
 
    private static final Logger log = Logger.getLogger(HttpInputOutput.class.getName());
    private Env _env;
@@ -70,12 +62,12 @@ public class HttpInputOutput extends AbstractBinaryOutput
    private String _bodyStart;
 
    public HttpInputOutput(Env env, Path path, StreamContextResource context)
-           throws IOException {
+      throws IOException {
       init(env, path, context);
    }
 
    private void init(Env env, Path path, StreamContextResource context)
-           throws IOException {
+      throws IOException {
       _env = env;
       _path = path;
 
@@ -113,7 +105,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
    }
 
    private void setOptions(Env env, Value options)
-           throws IOException {
+      throws IOException {
       Iterator<Map.Entry<Value, Value>> iter = options.getIterator(env);
 
       while (iter.hasNext()) {
@@ -182,7 +174,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
 
    @Override
    public void write(int ch)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.write(ch);
       }
@@ -193,7 +185,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     */
    @Override
    public StringValue appendTo(StringValue builder)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return builder.append(_is);
       } else {
@@ -214,7 +206,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       return new HttpInputOutput(_env, _path, _context);
    }
 
@@ -223,7 +215,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return _is.read();
       } else {
@@ -236,7 +228,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     */
    @Override
    public int read(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return _is.read(buffer, offset, length);
       } else {
@@ -248,7 +240,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     * Reads a buffer from a file, returning -1 on EOF.
     */
    public int read(char[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return _is.read(buffer, offset, length);
       } else {
@@ -261,7 +253,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     */
    @Override
    public StringValue read(int length)
-           throws IOException {
+      throws IOException {
       StringValue bb = new StringValue();
       TempBuffer temp = TempBuffer.allocate();
 
@@ -296,7 +288,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     */
    @Override
    public StringValue readLine(long length)
-           throws IOException {
+      throws IOException {
       return _lineReader.readLine(_env, this, length);
    }
 
@@ -305,7 +297,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     */
    @Override
    public boolean readOptionalLinefeed()
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       if (ch == '\n') {
@@ -339,7 +331,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     * @param encoding name of the read encoding
     */
    public void setEncoding(String encoding)
-           throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
       String mimeName = Encoding.getMimeName(encoding);
 
       if (mimeName != null && mimeName.equals(_readEncodingName)) {
@@ -355,7 +347,7 @@ public class HttpInputOutput extends AbstractBinaryOutput
     */
    @Override
    public void unread()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          _is.unread();
       }

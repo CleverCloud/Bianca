@@ -32,13 +32,11 @@ package com.clevercloud.xml;
 import java.io.IOException;
 
 public class RemoteURLException extends IOException {
-  RemoteURLException(String msg)
-  {
-    super(msg);
-  }
+   RemoteURLException(String msg) {
+      super(msg);
+   }
 
-  RemoteURLException()
-  {
-    super("generic");
-  }
+   RemoteURLException() {
+      super("generic");
+   }
 }

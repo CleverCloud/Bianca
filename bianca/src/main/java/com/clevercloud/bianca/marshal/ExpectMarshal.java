@@ -39,6 +39,7 @@ public class ExpectMarshal extends Marshal {
 
       STRING, NUMERIC, BOOLEAN
    }
+
    private Type _type;
    public static final Marshal MARSHAL_EXPECT_STRING = new ExpectMarshal(Type.STRING);
    public static final Marshal MARSHAL_EXPECT_NUMERIC = new ExpectMarshal(Type.NUMERIC);

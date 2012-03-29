@@ -32,14 +32,7 @@ package com.clevercloud.bianca.lib.mcrypt;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.RandomUtil;
@@ -55,7 +48,7 @@ public class McryptModule extends AbstractBiancaModule {
 
    private static final L10N L = new L10N(McryptModule.class);
    private static final Logger log =
-           Logger.getLogger(McryptModule.class.getName());
+      Logger.getLogger(McryptModule.class.getName());
    public static final int MCRYPT_DEV_RANDOM = 0;
    public static final int MCRYPT_DEV_URANDOM = 1;
    public static final int MCRYPT_RAND = 2;
@@ -86,11 +79,11 @@ public class McryptModule extends AbstractBiancaModule {
     * Encrypt with cbc
     */
    public static StringValue mcrypt_cbc(Env env,
-           String cipher,
-           byte[] key,
-           byte[] data,
-           int mode,
-           @Optional byte[] iv) {
+                                        String cipher,
+                                        byte[] key,
+                                        byte[] data,
+                                        int mode,
+                                        @Optional byte[] iv) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, cipher, "cbc");
 
@@ -114,11 +107,11 @@ public class McryptModule extends AbstractBiancaModule {
     * Encrypt with cfb
     */
    public static StringValue mcrypt_cfb(Env env,
-           String cipher,
-           byte[] key,
-           byte[] data,
-           int mode,
-           @Optional byte[] iv) {
+                                        String cipher,
+                                        byte[] key,
+                                        byte[] data,
+                                        int mode,
+                                        @Optional byte[] iv) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, cipher, "cfb");
 
@@ -142,8 +135,8 @@ public class McryptModule extends AbstractBiancaModule {
     * Creates the IV vector.
     */
    public static StringValue mcrypt_create_iv(Env env,
-           int size,
-           @Optional int randomMode) {
+                                              int size,
+                                              @Optional int randomMode) {
       StringValue bb = new StringValue();
 
       for (int i = 0; i < size; i++) {
@@ -157,11 +150,11 @@ public class McryptModule extends AbstractBiancaModule {
     * Decrypt
     */
    public static StringValue mcrypt_decrypt(Env env,
-           String cipher,
-           byte[] key,
-           byte[] data,
-           String mode,
-           @Optional byte[] iv) {
+                                            String cipher,
+                                            byte[] key,
+                                            byte[] data,
+                                            String mode,
+                                            @Optional byte[] iv) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, cipher, mode);
 
@@ -179,11 +172,11 @@ public class McryptModule extends AbstractBiancaModule {
     * Encrypt with cfb
     */
    public static StringValue mcrypt_ecb(Env env,
-           String cipher,
-           byte[] key,
-           byte[] data,
-           int mode,
-           @Optional byte[] iv) {
+                                        String cipher,
+                                        byte[] key,
+                                        byte[] data,
+                                        int mode,
+                                        @Optional byte[] iv) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, cipher, "ecb");
 
@@ -317,11 +310,11 @@ public class McryptModule extends AbstractBiancaModule {
     * Encrypt
     */
    public static StringValue mcrypt_encrypt(Env env,
-           String cipher,
-           byte[] key,
-           byte[] data,
-           String mode,
-           @Optional byte[] iv) {
+                                            String cipher,
+                                            byte[] key,
+                                            byte[] data,
+                                            String mode,
+                                            @Optional byte[] iv) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, cipher, mode);
 
@@ -359,8 +352,8 @@ public class McryptModule extends AbstractBiancaModule {
     * Initialize encrption
     */
    public static Value mcrypt_generic_init(Mcrypt mcrypt,
-           byte[] key,
-           byte[] iv) {
+                                           byte[] key,
+                                           byte[] iv) {
       if (mcrypt == null) {
          return BooleanValue.FALSE;
       } else {
@@ -385,8 +378,8 @@ public class McryptModule extends AbstractBiancaModule {
     * Returns the IV size.
     */
    public static Value mcrypt_get_block_size(Env env,
-           String cipher,
-           String mode) {
+                                             String cipher,
+                                             String mode) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, cipher, mode);
 
@@ -443,6 +436,7 @@ public class McryptModule extends AbstractBiancaModule {
          return BooleanValue.FALSE;
       }
    }
+
    private static final String[] ALGORITHMS = {
       MCRYPT_ARCFOUR, MCRYPT_BLOWFISH, MCRYPT_DES, MCRYPT_3DES,
       MCRYPT_RC4, MCRYPT_RIJNDAEL_128, MCRYPT_RIJNDAEL_192,
@@ -499,8 +493,8 @@ public class McryptModule extends AbstractBiancaModule {
     * Returns the block size for an algorithm.
     */
    public static int mcrypt_module_get_algo_block_size(Env env,
-           String cipher,
-           @Optional String libDir) {
+                                                       String cipher,
+                                                       @Optional String libDir) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, cipher, "cbc");
 
@@ -516,8 +510,8 @@ public class McryptModule extends AbstractBiancaModule {
     * Returns the key size for an algorithm.
     */
    public static int mcrypt_module_get_algo_key_size(Env env,
-           String cipher,
-           @Optional String libDir) {
+                                                     String cipher,
+                                                     @Optional String libDir) {
       try {
          // use ofb because it exists for most ciphers
          Mcrypt mcrypt = new Mcrypt(env, cipher, "ofb");
@@ -534,9 +528,9 @@ public class McryptModule extends AbstractBiancaModule {
     * Returns the key size for an algorithm.
     */
    public static Value mcrypt_module_get_supported_key_sizes(
-           Env env,
-           String cipher,
-           @Optional String libDir) {
+      Env env,
+      String cipher,
+      @Optional String libDir) {
       try {
          // use ofb because it exists for most ciphers
          Mcrypt mcrypt = new Mcrypt(env, cipher, "ofb");
@@ -553,9 +547,9 @@ public class McryptModule extends AbstractBiancaModule {
     * Returns true for block algorithms
     */
    public static boolean mcrypt_module_is_block_algorithm(
-           Env env,
-           String cipher,
-           @Optional String libDir) {
+      Env env,
+      String cipher,
+      @Optional String libDir) {
       try {
          // use ofb because it exists for most ciphers
          Mcrypt mcrypt = new Mcrypt(env, cipher, "ofb");
@@ -572,9 +566,9 @@ public class McryptModule extends AbstractBiancaModule {
     * Returns true for block modes
     */
    public static boolean mcrypt_module_is_block_algorithm_mode(
-           Env env,
-           String mode,
-           @Optional String libDir) {
+      Env env,
+      String mode,
+      @Optional String libDir) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, "des", mode);
 
@@ -590,8 +584,8 @@ public class McryptModule extends AbstractBiancaModule {
     * Returns true for block modes
     */
    public static boolean mcrypt_module_is_block_mode(Env env,
-           String mode,
-           @Optional String libDir) {
+                                                     String mode,
+                                                     @Optional String libDir) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, "des", mode);
 
@@ -607,8 +601,8 @@ public class McryptModule extends AbstractBiancaModule {
     * Returns true for block modes
     */
    public static boolean mcrypt_module_self_test(Env env,
-           String algorithm,
-           Path libDir) {
+                                                 String algorithm,
+                                                 Path libDir) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, algorithm, "cbc");
 
@@ -624,10 +618,10 @@ public class McryptModule extends AbstractBiancaModule {
     * Open a new mcrypt object.
     */
    public static Value mcrypt_module_open(Env env,
-           String algorithm,
-           Path algorithm_directory,
-           String mode,
-           Path mode_directory) {
+                                          String algorithm,
+                                          Path algorithm_directory,
+                                          String mode,
+                                          Path mode_directory) {
       try {
          return env.wrapJava(new Mcrypt(env, algorithm, mode));
       } catch (Exception e) {
@@ -641,11 +635,11 @@ public class McryptModule extends AbstractBiancaModule {
     * Encrypt with ofb
     */
    public static StringValue mcrypt_ofb(Env env,
-           String cipher,
-           byte[] key,
-           byte[] data,
-           int mode,
-           @Optional byte[] iv) {
+                                        String cipher,
+                                        byte[] key,
+                                        byte[] data,
+                                        int mode,
+                                        @Optional byte[] iv) {
       try {
          Mcrypt mcrypt = new Mcrypt(env, cipher, "ofb");
 

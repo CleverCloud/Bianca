@@ -30,43 +30,44 @@
 
 package com.clevercloud.util;
 
-import java.util.logging.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * convenience methods for jdbc
  */
 public class JdbcUtil {
-  private static final Logger log
-    = Logger.getLogger(JdbcUtil.class.getName());
+   private static final Logger log
+      = Logger.getLogger(JdbcUtil.class.getName());
 
-  public static void close(Connection conn)
-  {
-    try {
-      if (conn != null)
-        conn.close();
-    } catch (SQLException e) {
-      log.log(Level.FINER, e.toString(), e);
-    }
-  }
+   public static void close(Connection conn) {
+      try {
+         if (conn != null)
+            conn.close();
+      } catch (SQLException e) {
+         log.log(Level.FINER, e.toString(), e);
+      }
+   }
 
-  public static void close(Statement stmt)
-  {
-    try {
-      if (stmt != null)
-        stmt.close();
-    } catch (SQLException e) {
-      log.log(Level.FINER, e.toString(), e);
-    }
-  }
+   public static void close(Statement stmt) {
+      try {
+         if (stmt != null)
+            stmt.close();
+      } catch (SQLException e) {
+         log.log(Level.FINER, e.toString(), e);
+      }
+   }
 
-  public static void close(ResultSet rs)
-  {
-    try {
-      if (rs != null)
-        rs.close();
-    } catch (SQLException e) {
-      log.log(Level.FINER, e.toString(), e);
-    }
-  }
+   public static void close(ResultSet rs) {
+      try {
+         if (rs != null)
+            rs.close();
+      } catch (SQLException e) {
+         log.log(Level.FINER, e.toString(), e);
+      }
+   }
 }

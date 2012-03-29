@@ -32,102 +32,89 @@ package com.clevercloud.xpath.pattern;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
  * Matches the current node.
  */
 public class CurrentPattern extends Axis {
-  public CurrentPattern()
-  {
-    super(null);
-  }
+   public CurrentPattern() {
+      super(null);
+   }
 
-  /**
-   * Matches the current node
-   *
-   * @param node the starting node
-   * @param env the xpath environment
-   *
-   * @return true if the node is the current node.
-   */
-  public boolean match(Node node, ExprEnvironment env)
-  {
-    return (node == env.getCurrentNode());
-  }
-  
-  /**
-   * Returns true if the pattern selects a single node
-   */
-  boolean isSingleSelect()
-  {
-    return true;
-  }
+   /**
+    * Matches the current node
+    *
+    * @param node the starting node
+    * @param env  the xpath environment
+    * @return true if the node is the current node.
+    */
+   public boolean match(Node node, ExprEnvironment env) {
+      return (node == env.getCurrentNode());
+   }
 
-  /**
-   * Creates a new node iterator.
-   *
-   * @param node the starting node
-   * @param env the xpath environment
-   * @param match the axis match pattern
-   *
-   * @return the node iterator
-   */
-  public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
-                                         AbstractPattern match)
-    throws XPathException
-  {
-    Node current = env.getCurrentNode();
-    
-    if (match == null || match.match(current, env))
-      return new SingleNodeIterator(env, current);
-    else
+   /**
+    * Returns true if the pattern selects a single node
+    */
+   boolean isSingleSelect() {
+      return true;
+   }
+
+   /**
+    * Creates a new node iterator.
+    *
+    * @param node  the starting node
+    * @param env   the xpath environment
+    * @param match the axis match pattern
+    * @return the node iterator
+    */
+   public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
+                                          AbstractPattern match)
+      throws XPathException {
+      Node current = env.getCurrentNode();
+
+      if (match == null || match.match(current, env))
+         return new SingleNodeIterator(env, current);
+      else
+         return null;
+   }
+
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      return env.getCurrentNode();
+   }
+
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node the current node
+    * @param last the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node last) {
       return null;
-  }
+   }
 
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    return env.getCurrentNode();
-  }
+   /**
+    * There is only a single node in the current
+    */
+   public int position(Node node, Env env, AbstractPattern pattern) {
+      return 1;
+   }
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param last the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node last)
-  {
-    return null;
-  }
-  
-  /**
-   * There is only a single node in the current
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-  {
-    return 1;
-  }
-  /**
-   * There is only a single node in the current
-   */
-  public int count(Node node, Env env, Node context)
-  {
-    return 1;
-  }
+   /**
+    * There is only a single node in the current
+    */
+   public int count(Node node, Env env, Node context) {
+      return 1;
+   }
 
-  public String toString()
-  {
-    return "current()";
-  }
+   public String toString() {
+      return "current()";
+   }
 }

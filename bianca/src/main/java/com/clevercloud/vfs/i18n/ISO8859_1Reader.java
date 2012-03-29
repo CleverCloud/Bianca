@@ -37,61 +37,55 @@ import java.io.Reader;
  * Implements an encoding reader for ISO-8859-1
  */
 public class ISO8859_1Reader extends EncodingReader {
-  private InputStream is;
+   private InputStream is;
 
-  /**
-   * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
-   */
-  public ISO8859_1Reader()
-  {
-  }
+   /**
+    * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
+    */
+   public ISO8859_1Reader() {
+   }
 
-  /**
-   * Create an ISO-8859-1 reader based on the readStream.
-   */
-  public ISO8859_1Reader(InputStream is)
-  {
-    this.is = is;
-  }
+   /**
+    * Create an ISO-8859-1 reader based on the readStream.
+    */
+   public ISO8859_1Reader(InputStream is) {
+      this.is = is;
+   }
 
-  /**
-   * Create a ISO-8859-1 reader based on the readStream.
-   *
-   * @param is the input stream providing the bytes.
-   * @param javaEncoding the JDK name for the encoding.
-   *
-   * @return null, since ReadStream handles this directly.
-   */
-  public Reader create(InputStream is, String javaEncoding)
-  {
-    return null;
-  }
+   /**
+    * Create a ISO-8859-1 reader based on the readStream.
+    *
+    * @param is           the input stream providing the bytes.
+    * @param javaEncoding the JDK name for the encoding.
+    * @return null, since ReadStream handles this directly.
+    */
+   public Reader create(InputStream is, String javaEncoding) {
+      return null;
+   }
 
-  /**
-   * Reads the next character.
-   */
-  public int read()
-    throws IOException
-  {
-    return is.read();
-  }
+   /**
+    * Reads the next character.
+    */
+   public int read()
+      throws IOException {
+      return is.read();
+   }
 
-  /**
-   * Reads the next character.
-   */
-  public int read(char []buf, int offset, int length)
-    throws IOException
-  {
-    for (int i = 0; i < length; i++) {
-      int ch = is.read();
+   /**
+    * Reads the next character.
+    */
+   public int read(char[] buf, int offset, int length)
+      throws IOException {
+      for (int i = 0; i < length; i++) {
+         int ch = is.read();
 
-      if (ch < 0)
-        return i > 0 ? i : -1;
-      else {
-        buf[offset + i] = (char) ch;
+         if (ch < 0)
+            return i > 0 ? i : -1;
+         else {
+            buf[offset + i] = (char) ch;
+         }
       }
-    }
-      
-    return length;
-  }
+
+      return length;
+   }
 }

@@ -30,6 +30,16 @@
  */
 package com.clevercloud.bianca.lib.string;
 
+import com.clevercloud.bianca.BiancaException;
+import com.clevercloud.bianca.BiancaModuleException;
+import com.clevercloud.bianca.annotation.*;
+import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.lib.file.BinaryOutput;
+import com.clevercloud.bianca.lib.file.FileModule;
+import com.clevercloud.bianca.module.AbstractBiancaModule;
+import com.clevercloud.util.*;
+import com.clevercloud.vfs.Path;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -37,48 +47,9 @@ import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Currency;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.clevercloud.bianca.BiancaException;
-import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.annotation.Expect;
-import com.clevercloud.bianca.annotation.NotNull;
-import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.annotation.Reference;
-import com.clevercloud.bianca.annotation.UsesSymbolTable;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.DefaultValue;
-import com.clevercloud.bianca.env.DoubleValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LocaleInfo;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.BiancaLocale;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.UnexpectedValue;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.Var;
-import com.clevercloud.bianca.lib.file.BinaryOutput;
-import com.clevercloud.bianca.lib.file.FileModule;
-import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.util.CharBuffer;
-import com.clevercloud.util.FreeList;
-import com.clevercloud.util.IntSet;
-import com.clevercloud.util.L10N;
-import com.clevercloud.util.RandomUtil;
-import com.clevercloud.vfs.Path;
 
 /**
  * PHP functions implemented from the string module
@@ -86,7 +57,7 @@ import com.clevercloud.vfs.Path;
 public class StringModule extends AbstractBiancaModule {
 
    private static final Logger log =
-           Logger.getLogger(StringModule.class.getName());
+      Logger.getLogger(StringModule.class.getName());
    private static final L10N L = new L10N(StringModule.class);
    public static final int CODESET = 14;
    public static final int CRYPT_SALT_LENGTH = 2;
@@ -169,14 +140,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Escapes a string using C syntax.
     *
-    * @see #stripcslashes
-    *
-    * @param source the source string to convert
+    * @param source     the source string to convert
     * @param characters the set of characters to convert
     * @return the escaped string
+    * @see #stripcslashes
     */
    public static StringValue addcslashes(
-           Env env, StringValue source, String characters) {
+      Env env, StringValue source, String characters) {
       if (characters == null) {
          characters = "";
       }
@@ -240,7 +210,7 @@ public class StringModule extends AbstractBiancaModule {
     * Parses the cslashes bitmap returning an actual bitmap.
     *
     * @param charset the bitmap string
-    * @return  the actual bitmap
+    * @return the actual bitmap
     */
    private static boolean[] parseCharsetBitmap(Env env, String charset) {
       boolean[] bitmap = new boolean[256];
@@ -268,7 +238,7 @@ public class StringModule extends AbstractBiancaModule {
 
          if (last < ch) {
             env.warning(L.l("character set range is invalid: {0}..{1}",
-                    ch, last));
+               ch, last));
             continue;
          }
 
@@ -353,14 +323,14 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Alias of rtrim.  Removes trailing whitespace.
     *
-    * @param env the bianca environment
-    * @param str the string to be trimmed
+    * @param env     the bianca environment
+    * @param str     the string to be trimmed
     * @param charset optional set of characters to trim
     * @return the trimmed string
     */
    public static StringValue chop(Env env,
-           StringValue str,
-           @Optional String charset) {
+                                  StringValue str,
+                                  @Optional String charset) {
       return rtrim(env, str, charset);
    }
 
@@ -368,7 +338,6 @@ public class StringModule extends AbstractBiancaModule {
     * converts a number to its character equivalent
     *
     * @param value the integer value
-    *
     * @return the string equivalent
     */
    public static StringValue chr(Env env, long value) {
@@ -382,13 +351,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Splits a string into chunks
     *
-    * @param body the body string
+    * @param body     the body string
     * @param chunkLen the optional chunk length, defaults to 76
-    * @param end the optional end value, defaults to "\r\n"
+    * @param end      the optional end value, defaults to "\r\n"
     */
    public static String chunk_split(String body,
-           @Optional("76") int chunkLen,
-           @Optional("\"\\r\\n\"") String end) {
+                                    @Optional("76") int chunkLen,
+                                    @Optional("\"\\r\\n\"") String end) {
       if (body == null) {
          body = "";
       }
@@ -421,63 +390,63 @@ public class StringModule extends AbstractBiancaModule {
 
    /**
     * Converts from one cyrillic set to another.
-    *
+    * <p/>
     * This implementation does nothing, because bianca stores strings as
     * 16 bit unicode.
     */
    public static String convert_cyr_string(Env env,
-           String str,
-           String from,
-           String to) {
+                                           String str,
+                                           String from,
+                                           String to) {
       env.stub("convert_cyr_string");
 
       return str;
    }
 
    public static Value convert_uudecode(Env env, StringValue source) {
-         int length = source.length();
+      int length = source.length();
 
-         if (length == 0) {
-            return BooleanValue.FALSE;
+      if (length == 0) {
+         return BooleanValue.FALSE;
+      }
+
+      StringBuilder builder = new StringBuilder();
+
+      int i = 0;
+      while (i < length) {
+         int ch1 = source.charAt(i++);
+
+         if (ch1 == 0x60 || ch1 == 0x20) {
+            break;
+         } else if (ch1 < 0x20 || 0x5f < ch1) {
+            continue;
          }
 
-         StringBuilder builder = new StringBuilder();
+         int sublen = ch1 - 0x20;
 
-         int i = 0;
-         while (i < length) {
-            int ch1 = source.charAt(i++);
+         while (sublen > 0) {
+            int code;
 
-            if (ch1 == 0x60 || ch1 == 0x20) {
-               break;
-            } else if (ch1 < 0x20 || 0x5f < ch1) {
-               continue;
+            code = ((source.charAt(i++) - 0x20) & 0x3f) << 18;
+            code += ((source.charAt(i++) - 0x20) & 0x3f) << 12;
+            code += ((source.charAt(i++) - 0x20) & 0x3f) << 6;
+            code += ((source.charAt(i++) - 0x20) & 0x3f);
+
+            builder.append(code >> 16);
+
+            if (sublen > 1) {
+               builder.append(code >> 8);
             }
 
-            int sublen = ch1 - 0x20;
-
-            while (sublen > 0) {
-               int code;
-
-               code = ((source.charAt(i++) - 0x20) & 0x3f) << 18;
-               code += ((source.charAt(i++) - 0x20) & 0x3f) << 12;
-               code += ((source.charAt(i++) - 0x20) & 0x3f) << 6;
-               code += ((source.charAt(i++) - 0x20) & 0x3f);
-
-               builder.append(code >> 16);
-
-               if (sublen > 1) {
-                  builder.append(code >> 8);
-               }
-
-               if (sublen > 2) {
-                  builder.append(code);
-               }
-
-               sublen -= 3;
+            if (sublen > 2) {
+               builder.append(code);
             }
+
+            sublen -= 3;
          }
+      }
 
-         return env.createString(builder.toString());
+      return env.createString(builder.toString());
    }
 
    /**
@@ -533,7 +502,7 @@ public class StringModule extends AbstractBiancaModule {
     * Returns an array of information about the characters.
     */
    public static Value count_chars(StringValue data,
-           @Optional("0") int mode) {
+                                   @Optional("0") int mode) {
       int[] count = new int[256];
 
       int length = data.length();
@@ -610,7 +579,6 @@ public class StringModule extends AbstractBiancaModule {
     * Calculates the crc32 value for a string
     *
     * @param str the string value
-    *
     * @return the crc32 hash
     */
    public static long crc32(StringValue str) {
@@ -624,25 +592,26 @@ public class StringModule extends AbstractBiancaModule {
 
       if (salt == null || salt.equals("")) {
          salt = ("" + Crypt.resultToChar(RandomUtil.nextInt(0x40))
-                 + Crypt.resultToChar(RandomUtil.nextInt(0x40)));
+            + Crypt.resultToChar(RandomUtil.nextInt(0x40)));
       }
 
       return Crypt.crypt(string, salt);
    }
 
    // TODO: echo
+
    /**
     * Explodes a string into an array
     *
     * @param separator the separator string
-    * @param string the string to be exploded
-    * @param limit the max number of elements
+    * @param string    the string to be exploded
+    * @param limit     the max number of elements
     * @return an array of exploded values
     */
    public static Value explode(Env env,
-           StringValue separator,
-           StringValue string,
-           @Optional("0x7fffffff") long limit) {
+                               StringValue separator,
+                               StringValue string,
+                               @Optional("0x7fffffff") long limit) {
       if (separator.length() == 0) {
          env.warning(L.l("Delimiter is empty"));
          return BooleanValue.FALSE;
@@ -690,36 +659,36 @@ public class StringModule extends AbstractBiancaModule {
 
    /**
     * Use printf style formatting to write a string to a file.
-    * @param fd the file to write to
+    *
+    * @param fd     the file to write to
     * @param format the format string
-    * @param args the valujes to apply to the format string
+    * @param args   the valujes to apply to the format string
     */
    public static Value fprintf(Env env,
-           @NotNull BinaryOutput os,
-           StringValue format,
-           Value[] args) {
+                               @NotNull BinaryOutput os,
+                               StringValue format,
+                               Value[] args) {
       Value value = sprintf(env, format, args);
 
       return FileModule.fwrite(env, os, value.toInputStream(),
-              Integer.MAX_VALUE);
+         Integer.MAX_VALUE);
    }
 
    /**
     * implodes an array into a string
     *
-    * @param glueV the separator string
+    * @param glueV   the separator string
     * @param piecesV the array to be imploded
-    *
     * @return a string of imploded values
     */
    public static Value implode(Env env,
-           Value glueV,
-           @Optional Value piecesV) {
+                               Value glueV,
+                               @Optional Value piecesV) {
       StringValue glue;
       ArrayValue pieces;
 
       if ((piecesV.isArray() && glueV.isArray())
-              || glueV.isArray()) {
+         || glueV.isArray()) {
          pieces = glueV.toArrayValue(env);
          glue = piecesV.toStringValue();
       } else if (piecesV.isArray()) {
@@ -727,7 +696,7 @@ public class StringModule extends AbstractBiancaModule {
          glue = glueV.toStringValue();
       } else {
          env.warning(L.l("neither argument to implode is an array: {0}, {1}",
-                 glueV.getClass().getName(), piecesV.getClass().getName()));
+            glueV.getClass().getName(), piecesV.getClass().getName()));
 
          return NullValue.NULL;
       }
@@ -753,14 +722,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * implodes an array into a string
     *
-    * @param glueV the separator string
+    * @param glueV   the separator string
     * @param piecesV the array to be imploded
-    *
     * @return a string of imploded values
     */
    public static Value join(Env env,
-           Value glueV,
-           Value piecesV) {
+                            Value glueV,
+                            Value piecesV) {
       return implode(env, glueV, piecesV);
    }
 
@@ -787,8 +755,8 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Calculate Levenshtein distance between two strings
     *
-    * @param str1 first string
-    * @param str2 second string
+    * @param str1     first string
+    * @param str2     second string
     * @param cost_ins defines the cost of insertion
     * @param cost_rep defines the cost of replacement
     * @param cost_del defines the cost of deletion
@@ -866,26 +834,26 @@ public class StringModule extends AbstractBiancaModule {
       Currency currency = NumberFormat.getInstance(locale).getCurrency();
 
       array.put(env.createString("decimal_point"),
-              new StringValue(decimal.getDecimalSeparator()));
+         new StringValue(decimal.getDecimalSeparator()));
       array.put(env.createString("thousands_sep"),
-              new StringValue(decimal.getGroupingSeparator()));
+         new StringValue(decimal.getGroupingSeparator()));
       //array.put("grouping", "");
       array.put(env.createString("int_curr_symbol"),
-              new StringValue(decimal.getInternationalCurrencySymbol()));
+         new StringValue(decimal.getInternationalCurrencySymbol()));
       array.put(env.createString("currency_symbol"),
-              new StringValue(decimal.getCurrencySymbol()));
+         new StringValue(decimal.getCurrencySymbol()));
       array.put(env.createString("mon_decimal_point"),
-              new StringValue(decimal.getMonetaryDecimalSeparator()));
+         new StringValue(decimal.getMonetaryDecimalSeparator()));
       array.put(env.createString("mon_thousands_sep"),
-              new StringValue(decimal.getGroupingSeparator()));
+         new StringValue(decimal.getGroupingSeparator()));
       //array.put("mon_grouping", "");
       array.put(new StringValue("positive_sign"), StringValue.EMPTY);
       array.put(env.createString("negative_sign"),
-              new StringValue(decimal.getMinusSign()));
+         new StringValue(decimal.getMinusSign()));
       array.put(env.createString("int_frac_digits"),
-              LongValue.create(currency.getDefaultFractionDigits()));
+         LongValue.create(currency.getDefaultFractionDigits()));
       array.put(env.createString("frac_digits"),
-              LongValue.create(currency.getDefaultFractionDigits()));
+         LongValue.create(currency.getDefaultFractionDigits()));
       //array.put("p_cs_precedes", "");
       //array.put("p_sep_by_space", "");
       //array.put("n_cs_precedes", "");
@@ -899,13 +867,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Removes leading whitespace.
     *
-    * @param string the string to be trimmed
+    * @param string     the string to be trimmed
     * @param characters optional set of characters to trim
     * @return the trimmed string
     */
    public static StringValue ltrim(Env env,
-           StringValue string,
-           @Optional String characters) {
+                                   StringValue string,
+                                   @Optional String characters) {
       if (characters == null) {
          characters = "";
       }
@@ -936,14 +904,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * returns the md5 hash
     *
-    * @param source the string
+    * @param source    the string
     * @param rawOutput if true, return the raw binary
-    *
     * @return a string of imploded values
     */
    public static Value md5(Env env,
-           InputStream is,
-           @Optional boolean rawOutput) {
+                           InputStream is,
+                           @Optional boolean rawOutput) {
       try {
          MessageDigest md = _md5FreeList.allocate();
 
@@ -971,14 +938,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * returns the md5 hash
     *
-    * @param source the string
+    * @param source    the string
     * @param rawOutput if true, return the raw binary
-    *
     * @return a string of imploded values
     */
    public static Value md5_file(Env env,
-           Path source,
-           @Optional boolean rawOutput) {
+                                Path source,
+                                @Optional boolean rawOutput) {
       try {
          MessageDigest md = MessageDigest.getInstance("MD5");
          InputStream is = null;
@@ -1046,8 +1012,8 @@ public class StringModule extends AbstractBiancaModule {
       // special case first letter
 
       char nextCh = index < lastIndex
-              ? toUpperCase(string.charAt(index + 1))
-              : 0;
+         ? toUpperCase(string.charAt(index + 1))
+         : 0;
 
       switch (ch) {
          case 'A':
@@ -1376,8 +1342,7 @@ public class StringModule extends AbstractBiancaModule {
     * XXX: locale charset
     *
     * @param format the format
-    * @param value the value
-    *
+    * @param value  the value
     * @return a string of formatted values
     */
    public static String money_format(Env env, String format, double value) {
@@ -1413,18 +1378,17 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Returns a formatted number.
     *
-    * @param value the value
-    * @param decimals the number of decimals
+    * @param value      the value
+    * @param decimals   the number of decimals
     * @param pointValue the decimal point string
     * @param groupValue the thousands separator
-    *
     * @return a string of the formatted number
     */
    public static String number_format(Env env,
-           double value,
-           @Optional int decimals,
-           @Optional Value pointValue,
-           @Optional Value groupValue) {
+                                      double value,
+                                      @Optional int decimals,
+                                      @Optional Value pointValue,
+                                      @Optional Value groupValue) {
       boolean isGroupDefault = (groupValue instanceof DefaultValue);
       boolean isPointDefault = (pointValue instanceof DefaultValue);
 
@@ -1495,7 +1459,6 @@ public class StringModule extends AbstractBiancaModule {
     * Converts the first character to an integer.
     *
     * @param string the string to be converted
-    *
     * @return the integer value
     */
    public static long ord(StringValue string) {
@@ -1509,13 +1472,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Parses the string as a query string.
     *
-    * @param env the calling environment
-    * @param str the query string
+    * @param env   the calling environment
+    * @param str   the query string
     * @param array the optional result array
     */
    @UsesSymbolTable
    public static Value parse_str(Env env, StringValue str,
-           @Optional @Reference Value ref) {
+                                 @Optional @Reference Value ref) {
       boolean isRef = ref instanceof Var;
 
       ArrayValue result = null;
@@ -1531,16 +1494,16 @@ public class StringModule extends AbstractBiancaModule {
       }
 
       return StringUtility.parseStr(env,
-              str,
-              result,
-              isRef,
-              env.getHttpInputEncoding());
+         str,
+         result,
+         isRef,
+         env.getHttpInputEncoding());
    }
 
    /**
     * Prints the string.
     *
-    * @param env the bianca environment
+    * @param env   the bianca environment
     * @param value the string to print
     */
    public static long print(Env env, Value value) {
@@ -1552,10 +1515,9 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * print to the output with a formatter
     *
-    * @param env the bianca environment
+    * @param env    the bianca environment
     * @param format the format string
-    * @param args the format arguments
-    *
+    * @param args   the format arguments
     * @return the formatted string
     */
    public static int printf(Env env, StringValue format, Value[] args) {
@@ -1588,7 +1550,7 @@ public class StringModule extends AbstractBiancaModule {
             sb.append(ch);
          } else if (ch == ' ' || ch == '\t') {
             if (i + 1 < str.length()
-                    && (str.charAt(i + 1) == '\r' || str.charAt(i + 1) == '\n')) {
+               && (str.charAt(i + 1) == '\r' || str.charAt(i + 1) == '\n')) {
                sb.append('=');
                sb.append(toUpperHexChar(ch >> 4));
                sb.append(toUpperHexChar(ch));
@@ -1611,7 +1573,6 @@ public class StringModule extends AbstractBiancaModule {
     * Escapes meta characters.
     *
     * @param string the string to be quoted
-    *
     * @return the quoted
     */
    public static Value quotemeta(StringValue string) {
@@ -1645,6 +1606,7 @@ public class StringModule extends AbstractBiancaModule {
 
       return sb;
    }
+
    private static final boolean[] TRIM_WHITESPACE = new boolean[256];
 
    static {
@@ -1660,14 +1622,14 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Removes trailing whitespace.
     *
-    * @param env the bianca environment
-    * @param string the string to be trimmed
+    * @param env        the bianca environment
+    * @param string     the string to be trimmed
     * @param characters optional set of characters to trim
     * @return the trimmed string
     */
    public static StringValue rtrim(Env env,
-           StringValue string,
-           @Optional String characters) {
+                                   StringValue string,
+                                   @Optional String characters) {
       if (characters == null) {
          characters = "";
       }
@@ -1699,16 +1661,16 @@ public class StringModule extends AbstractBiancaModule {
     * Sets locale configuration.
     */
    public static Value setlocale(Env env,
-           int category,
-           Value localeArg,
-           Value[] fallback) {
+                                 int category,
+                                 Value localeArg,
+                                 Value[] fallback) {
       LocaleInfo localeInfo = env.getLocaleInfo();
 
       if (localeArg instanceof ArrayValue) {
          for (Value value : ((ArrayValue) localeArg).values()) {
             BiancaLocale locale = setLocale(localeInfo,
-                    category,
-                    value.toString());
+               category,
+               value.toString());
 
             if (locale != null) {
                return env.createString(locale.toString());
@@ -1716,8 +1678,8 @@ public class StringModule extends AbstractBiancaModule {
          }
       } else {
          BiancaLocale locale = setLocale(localeInfo,
-                 category,
-                 localeArg.toString());
+            category,
+            localeArg.toString());
 
          if (locale != null) {
             return env.createString(locale.toString());
@@ -1726,8 +1688,8 @@ public class StringModule extends AbstractBiancaModule {
 
       for (int i = 0; i < fallback.length; i++) {
          BiancaLocale locale = setLocale(localeInfo,
-                 category,
-                 fallback[i].toString());
+            category,
+            fallback[i].toString());
 
          if (locale != null) {
             return env.createString(locale.toString());
@@ -1741,8 +1703,8 @@ public class StringModule extends AbstractBiancaModule {
     * Sets locale configuration.
     */
    private static BiancaLocale setLocale(LocaleInfo localeInfo,
-           int category,
-           String localeName) {
+                                         int category,
+                                         String localeName) {
       BiancaLocale locale = findLocale(localeName);
 
       if (locale == null) {
@@ -1862,14 +1824,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * returns the md5 hash
     *
-    * @param source the string
+    * @param source    the string
     * @param rawOutput if true, return the raw binary
-    *
     * @return a string of imploded values
     */
    public static Value sha1(Env env,
-           String source,
-           @Optional boolean rawOutput) {
+                            String source,
+                            @Optional boolean rawOutput) {
       if (source == null) {
          source = "";
       }
@@ -1894,14 +1855,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * returns the md5 hash
     *
-    * @param source the string
+    * @param source    the string
     * @param rawOutput if true, return the raw binary
-    *
     * @return a string of imploded values
     */
    public static Value sha1_file(Env env,
-           Path source,
-           @Optional boolean rawOutput) {
+                                 Path source,
+                                 @Optional boolean rawOutput) {
       try {
          MessageDigest md = MessageDigest.getInstance("SHA1");
          InputStream is = null;
@@ -1963,6 +1923,7 @@ public class StringModule extends AbstractBiancaModule {
          return v;
       }
    }
+
    // TODO: similar_text
    private static final char[] SOUNDEX_VALUES = "01230120022455012623010202".toCharArray();
 
@@ -2008,8 +1969,7 @@ public class StringModule extends AbstractBiancaModule {
     * Print to a string with a formatter
     *
     * @param format the format string
-    * @param args the format arguments
-    *
+    * @param args   the format arguments
     * @return the formatted string
     */
    public static Value sprintf(Env env, StringValue format, Value[] args) {
@@ -2027,7 +1987,7 @@ public class StringModule extends AbstractBiancaModule {
    }
 
    private static ArrayList<PrintfSegment> parsePrintfFormat(Env env,
-           StringValue format) {
+                                                             StringValue format) {
       ArrayList<PrintfSegment> segments = new ArrayList<PrintfSegment>();
 
       StringBuilder sb = new StringBuilder();
@@ -2207,13 +2167,13 @@ public class StringModule extends AbstractBiancaModule {
                      index++;
 
                      segments.add(new StringPrintfSegment(
-                             sb,
-                             isLeft || isAlt,
-                             padChar,
-                             ch == 'S',
-                             width,
-                             format.substring(head, j).toString(),
-                             argIndex));
+                        sb,
+                        isLeft || isAlt,
+                        padChar,
+                        ch == 'S',
+                        width,
+                        format.substring(head, j).toString(),
+                        argIndex));
                      sb.setLength(0);
                      i = j;
                      break loop;
@@ -2229,13 +2189,13 @@ public class StringModule extends AbstractBiancaModule {
                      index++;
 
                      segments.add(new CharPrintfSegment(
-                             sb,
-                             isLeft || isAlt,
-                             padChar,
-                             ch == 'C',
-                             width,
-                             format.substring(head, j).toString(),
-                             argIndex));
+                        sb,
+                        isLeft || isAlt,
+                        padChar,
+                        ch == 'C',
+                        width,
+                        format.substring(head, j).toString(),
+                        argIndex));
                      sb.setLength(0);
                      i = j;
                      break loop;
@@ -2305,7 +2265,7 @@ public class StringModule extends AbstractBiancaModule {
                      index++;
 
                      segments.add(
-                             LongPrintfSegment.create(env, sb.toString(), argIndex));
+                        LongPrintfSegment.create(env, sb.toString(), argIndex));
                      sb.setLength(0);
                      i = j;
                      break loop;
@@ -2360,9 +2320,9 @@ public class StringModule extends AbstractBiancaModule {
                      index++;
 
                      segments.add(new DoublePrintfSegment(sb.toString(),
-                             isLeft && padChar == '0',
-                             argIndex,
-                             locale));
+                        isLeft && padChar == '0',
+                        argIndex,
+                        locale));
                      sb.setLength(0);
                      i = j;
                      break loop;
@@ -2397,14 +2357,13 @@ public class StringModule extends AbstractBiancaModule {
     * scans a string
     *
     * @param format the format string
-    * @param args the format arguments
-    *
+    * @param args   the format arguments
     * @return the formatted string
     */
    public static Value sscanf(Env env,
-           StringValue string,
-           StringValue format,
-           @Optional @Reference Value[] args) {
+                              StringValue string,
+                              StringValue format,
+                              @Optional @Reference Value[] args) {
       ScanfSegment[] formatArray = sscanfParseFormat(env, format);
 
       int strlen = string.length();
@@ -2445,10 +2404,10 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          sIndex = segment.apply(string,
-                 strlen,
-                 sIndex,
-                 var,
-                 isReturnArray);
+            strlen,
+            sIndex,
+            var,
+            isReturnArray);
 
          if (sIndex < 0) {
             if (isReturnArray) {
@@ -2471,7 +2430,7 @@ public class StringModule extends AbstractBiancaModule {
    }
 
    private static Value sscanfFillNull(
-           ArrayValue array, ScanfSegment[] formatArray, int fIndex) {
+      ArrayValue array, ScanfSegment[] formatArray, int fIndex) {
       for (; fIndex < formatArray.length; fIndex++) {
          ScanfSegment segment = formatArray[fIndex];
 
@@ -2487,12 +2446,11 @@ public class StringModule extends AbstractBiancaModule {
     * scans a string
     *
     * @param format the format string
-    * @param args the format arguments
-    *
+    * @param args   the format arguments
     * @return the formatted string
     */
    private static ScanfSegment[] sscanfParseFormat(Env env,
-           StringValue format) {
+                                                   StringValue format) {
       int fmtLen = format.length();
       int fIndex = 0;
 
@@ -2504,9 +2462,9 @@ public class StringModule extends AbstractBiancaModule {
 
          if (isWhitespace(ch)) {
             for (;
-                    (fIndex < fmtLen
+                 (fIndex < fmtLen
                     && isWhitespace(ch = format.charAt(fIndex)));
-                    fIndex++) {
+                 fIndex++) {
             }
 
             scanfAddConstant(segmentList, sb);
@@ -2602,7 +2560,7 @@ public class StringModule extends AbstractBiancaModule {
                      boolean isNegated = false;
 
                      if (fIndex < fmtLen
-                             && format.charAt(fIndex) == '^') {
+                        && format.charAt(fIndex) == '^') {
                         isNegated = true;
                         fIndex++;
                      }
@@ -2655,7 +2613,7 @@ public class StringModule extends AbstractBiancaModule {
    }
 
    private static void scanfAddConstant(
-           ArrayList<ScanfSegment> segmentList, StringBuilder sb) {
+      ArrayList<ScanfSegment> segmentList, StringBuilder sb) {
       if (sb.length() == 0) {
          return;
       }
@@ -2669,14 +2627,13 @@ public class StringModule extends AbstractBiancaModule {
     * scans a string
     *
     * @param format the format string
-    * @param args the format arguments
-    *
+    * @param args   the format arguments
     * @return the formatted string
     */
    public static Value sscanfOld(Env env,
-           StringValue string,
-           StringValue format,
-           @Optional @Reference Value[] args) {
+                                 StringValue string,
+                                 StringValue format,
+                                 @Optional @Reference Value[] args) {
       int fmtLen = format.length();
       int strlen = string.length();
 
@@ -2698,9 +2655,9 @@ public class StringModule extends AbstractBiancaModule {
 
          if (isWhitespace(ch)) {
             for (;
-                    (fIndex < fmtLen
+                 (fIndex < fmtLen
                     && isWhitespace(ch = format.charAt(fIndex)));
-                    fIndex++) {
+                 fIndex++) {
             }
 
             /*ch = string.charAt(sIndex);
@@ -2710,8 +2667,8 @@ public class StringModule extends AbstractBiancaModule {
             }*/
 
             for (;
-                    sIndex < strlen && isWhitespace(string.charAt(sIndex));
-                    sIndex++) {
+                 sIndex < strlen && isWhitespace(string.charAt(sIndex));
+                 sIndex++) {
             }
          } else if (ch == '%') {
             int maxLen = -1;
@@ -2842,18 +2799,18 @@ public class StringModule extends AbstractBiancaModule {
    }
 
    private static Value sscanfReturn(Env env,
-           ArrayValue array,
-           Value[] args,
-           int argIndex,
-           boolean isReturnArray,
-           boolean isWarn) {
+                                     ArrayValue array,
+                                     Value[] args,
+                                     int argIndex,
+                                     boolean isReturnArray,
+                                     boolean isWarn) {
       if (isReturnArray) {
          return array;
       } else {
          if (isWarn && argIndex != args.length) {
             env.warning(
-                    L.l("{0} vars passed in but saw only {1} '%' args",
-                    args.length, argIndex));
+               L.l("{0} vars passed in but saw only {1} '%' args",
+                  args.length, argIndex));
          }
 
          return LongValue.create(argIndex);
@@ -2864,10 +2821,10 @@ public class StringModule extends AbstractBiancaModule {
     * Scans a string with a given length.
     */
    private static int sscanfString(StringValue string,
-           int sIndex,
-           int maxLen,
-           Value obj,
-           boolean isAssignment) {
+                                   int sIndex,
+                                   int maxLen,
+                                   Value obj,
+                                   boolean isAssignment) {
       int strlen = string.length();
 
       if (maxLen < 0) {
@@ -2903,12 +2860,12 @@ public class StringModule extends AbstractBiancaModule {
     * Scans a integer with a given length.
     */
    private static int sscanfInteger(StringValue string,
-           int sIndex,
-           int maxLen,
-           Value obj,
-           boolean isAssign,
-           int base,
-           boolean isUnsigned) {
+                                    int sIndex,
+                                    int maxLen,
+                                    Value obj,
+                                    boolean isAssign,
+                                    int base,
+                                    boolean isUnsigned) {
       int strlen = string.length();
 
       if (maxLen < 0) {
@@ -2966,10 +2923,10 @@ public class StringModule extends AbstractBiancaModule {
     * Scans a integer with a given length.
     */
    private static int sscanfHex(StringValue string,
-           int sIndex,
-           int maxLen,
-           Value obj,
-           boolean isAssign) {
+                                int sIndex,
+                                int maxLen,
+                                Value obj,
+                                boolean isAssign) {
       int strlen = string.length();
 
       if (maxLen < 0) {
@@ -3023,10 +2980,10 @@ public class StringModule extends AbstractBiancaModule {
     * Scans a integer with a given length.
     */
    private static int sscanfScientific(StringValue s,
-           int i,
-           int maxLen,
-           Value obj,
-           boolean isAssign) {
+                                       int i,
+                                       int maxLen,
+                                       Value obj,
+                                       boolean isAssign) {
       if (maxLen < 0) {
          maxLen = Integer.MAX_VALUE;
       }
@@ -3041,7 +2998,7 @@ public class StringModule extends AbstractBiancaModule {
       }
 
       for (; i < len && maxLen > 0
-              && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
+         && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
          maxLen--;
       }
 
@@ -3049,7 +3006,7 @@ public class StringModule extends AbstractBiancaModule {
          maxLen--;
 
          for (i++; i < len && maxLen > 0
-                 && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
+            && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
             maxLen--;
          }
       }
@@ -3070,7 +3027,7 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          for (; i < len && maxLen > 0
-                 && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
+            && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
             maxLen--;
          }
 
@@ -3093,19 +3050,20 @@ public class StringModule extends AbstractBiancaModule {
    }
 
    // TODO: str_getcsv
+
    /**
     * replaces substrings.
     *
-    * @param search search string
+    * @param search  search string
     * @param replace replacement string
     * @param subject replacement
-    * @param count return value
+    * @param count   return value
     */
    public static Value str_ireplace(Env env,
-           Value search,
-           Value replace,
-           Value subject,
-           @Reference @Optional Value count) {
+                                    Value search,
+                                    Value replace,
+                                    Value subject,
+                                    @Reference @Optional Value count) {
       return strReplace(env, search, replace, subject, count, true);
    }
 
@@ -3114,13 +3072,13 @@ public class StringModule extends AbstractBiancaModule {
     *
     * @param string string
     * @param length length
-    * @param pad padding string
-    * @param type padding type
+    * @param pad    padding string
+    * @param type   padding type
     */
    public static StringValue str_pad(StringValue string,
-           int length,
-           @Optional("' '") String pad,
-           @Optional("STR_PAD_RIGHT") int type) {
+                                     int length,
+                                     @Optional("' '") String pad,
+                                     @Optional("STR_PAD_RIGHT") int type) {
       int strLen = string.length();
       int padLen = length - strLen;
 
@@ -3170,7 +3128,7 @@ public class StringModule extends AbstractBiancaModule {
     * repeats a string
     *
     * @param string string to repeat
-    * @param count number of times to repeat
+    * @param count  number of times to repeat
     */
    public static Value str_repeat(StringValue string, int count) {
       StringValue sb = new StringValue();
@@ -3185,33 +3143,33 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * replaces substrings.
     *
-    * @param search search string
+    * @param search  search string
     * @param replace replacement string
     * @param subject replacement
-    * @param count return value
+    * @param count   return value
     */
    public static Value str_replace(Env env,
-           Value search,
-           Value replace,
-           Value subject,
-           @Reference @Optional Value count) {
+                                   Value search,
+                                   Value replace,
+                                   Value subject,
+                                   @Reference @Optional Value count) {
       return strReplace(env, search, replace, subject, count, false);
    }
 
    /**
     * replaces substrings.
     *
-    * @param search search string
+    * @param search  search string
     * @param replace replacement string
     * @param subject replacement
-    * @param count return value
+    * @param count   return value
     */
    private static Value strReplace(Env env,
-           Value search,
-           Value replace,
-           Value subject,
-           @Reference @Optional Value count,
-           boolean isInsensitive) {
+                                   Value search,
+                                   Value replace,
+                                   Value subject,
+                                   @Reference @Optional Value count,
+                                   boolean isInsensitive) {
       count.set(LongValue.ZERO);
 
       if (subject.isNull()) {
@@ -3232,11 +3190,11 @@ public class StringModule extends AbstractBiancaModule {
                resultArray.append(entry.getKey(), entry.getValue());
             } else {
                Value result = strReplaceImpl(env,
-                       search,
-                       replace,
-                       entry.getValue().toStringValue(),
-                       count,
-                       isInsensitive);
+                  search,
+                  replace,
+                  entry.getValue().toStringValue(),
+                  count,
+                  isInsensitive);
 
                resultArray.append(entry.getKey(), result);
             }
@@ -3251,28 +3209,28 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          return strReplaceImpl(env,
-                 search,
-                 replace,
-                 subjectString,
-                 count,
-                 isInsensitive);
+            search,
+            replace,
+            subjectString,
+            count,
+            isInsensitive);
       }
    }
 
    /**
     * replaces substrings.
     *
-    * @param search search string
+    * @param search  search string
     * @param replace replacement string
     * @param subject replacement
-    * @param count return value
+    * @param count   return value
     */
    private static Value strReplaceImpl(Env env,
-           Value search,
-           Value replace,
-           StringValue subject,
-           Value count,
-           boolean isInsensitive) {
+                                       Value search,
+                                       Value replace,
+                                       StringValue subject,
+                                       Value count,
+                                       boolean isInsensitive) {
       if (!search.isArray()) {
          StringValue searchString = search.toStringValue();
 
@@ -3285,11 +3243,11 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          subject = strReplaceImpl(env,
-                 searchString,
-                 replace.toStringValue(),
-                 subject,
-                 count,
-                 isInsensitive);
+            searchString,
+            replace.toStringValue(),
+            subject,
+            count,
+            isInsensitive);
       } else if (replace instanceof ArrayValue) {
          ArrayValue searchArray = (ArrayValue) search;
          ArrayValue replaceArray = (ArrayValue) replace;
@@ -3306,11 +3264,11 @@ public class StringModule extends AbstractBiancaModule {
             }
 
             subject = strReplaceImpl(env,
-                    searchItem.toStringValue(),
-                    replaceItem.toStringValue(),
-                    subject,
-                    count,
-                    isInsensitive);
+               searchItem.toStringValue(),
+               replaceItem.toStringValue(),
+               subject,
+               count,
+               isInsensitive);
          }
       } else {
          ArrayValue searchArray = (ArrayValue) search;
@@ -3321,11 +3279,11 @@ public class StringModule extends AbstractBiancaModule {
             Value searchItem = searchIter.next();
 
             subject = strReplaceImpl(env,
-                    searchItem.toStringValue(),
-                    replace.toStringValue(),
-                    subject,
-                    count,
-                    isInsensitive);
+               searchItem.toStringValue(),
+               replace.toStringValue(),
+               subject,
+               count,
+               isInsensitive);
          }
       }
 
@@ -3335,17 +3293,17 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * replaces substrings.
     *
-    * @param search search string
+    * @param search  search string
     * @param replace replacement string
     * @param subject replacement
-    * @param countV return value
+    * @param countV  return value
     */
    private static StringValue strReplaceImpl(Env env,
-           StringValue search,
-           StringValue replace,
-           StringValue subject,
-           Value countV,
-           boolean isInsensitive) {
+                                             StringValue search,
+                                             StringValue replace,
+                                             StringValue subject,
+                                             Value countV,
+                                             boolean isInsensitive) {
       long count = countV.toLong();
 
       int head = 0;
@@ -3389,9 +3347,9 @@ public class StringModule extends AbstractBiancaModule {
     * Returns the next index.
     */
    private static int indexOf(StringValue subject,
-           StringValue match,
-           int head,
-           boolean isInsensitive) {
+                              StringValue match,
+                              int head,
+                              boolean isInsensitive) {
       if (!isInsensitive) {
          return subject.indexOf(match, head);
       } else {
@@ -3408,7 +3366,7 @@ public class StringModule extends AbstractBiancaModule {
             if (ch == Character.toLowerCase(subject.charAt(head))) {
                for (int i = 1; i < matchLen; i++) {
                   if (Character.toLowerCase(subject.charAt(head + i))
-                          != Character.toLowerCase(match.charAt(i))) {
+                     != Character.toLowerCase(match.charAt(i))) {
                      continue loop;
                   }
                }
@@ -3480,10 +3438,10 @@ public class StringModule extends AbstractBiancaModule {
     * split into an array
     *
     * @param string string to split
-    * @param chunk chunk size
+    * @param chunk  chunk size
     */
    public static Value str_split(StringValue string,
-           @Optional("1") int chunk) {
+                                 @Optional("1") int chunk) {
       ArrayValue array = new ArrayValueImpl();
 
       if (string.length() == 0) {
@@ -3509,8 +3467,8 @@ public class StringModule extends AbstractBiancaModule {
    }
 
    public static Value str_word_count(StringValue string,
-           @Optional int format,
-           @Optional String additionalWordCharacters) {
+                                      @Optional int format,
+                                      @Optional String additionalWordCharacters) {
       if (format < 0 || format > 2) {
          return NullValue.NULL;
       }
@@ -3539,10 +3497,10 @@ public class StringModule extends AbstractBiancaModule {
             int ch = string.charAt(i);
 
             isWordCharacter = Character.isLetter(ch)
-                    || ch == '-'
-                    || ch == '\''
-                    || (isAdditionalWordCharacters
-                    && additionalWordCharacters.indexOf(ch) > -1);
+               || ch == '-'
+               || ch == '\''
+               || (isAdditionalWordCharacters
+               && additionalWordCharacters.indexOf(ch) > -1);
          } else {
             isWordCharacter = false;
          }
@@ -3703,18 +3661,17 @@ public class StringModule extends AbstractBiancaModule {
     * Finds the number of initial characters in <i>string</i> that do not match
     * one of the characters in <i>characters</i>
     *
-    * @param string the string to search in
+    * @param string     the string to search in
     * @param characters the character set
-    * @param offset the starting offset
-    * @param length the length
-    *
+    * @param offset     the starting offset
+    * @param length     the length
     * @return the length of the match or FALSE if
-    * the offset or length are invalid
+    *         the offset or length are invalid
     */
    public static Value strcspn(StringValue string,
-           StringValue characters,
-           @Optional("0") int offset,
-           @Optional("-2147483648") int length) {
+                               StringValue characters,
+                               @Optional("0") int offset,
+                               @Optional("-2147483648") int length) {
       if (characters.length() == 0) {
          characters = StringValue.create((char) 0);
       }
@@ -3724,11 +3681,11 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Removes tags from a string.
     *
-    * @param string the string to remove
+    * @param string    the string to remove
     * @param allowTags the allowable tags
     */
    public static StringValue strip_tags(StringValue string,
-           @Optional Value allowTags) {
+                                        @Optional Value allowTags) {
       StringValue result = new StringValue();
 
       HashSet<StringValue> allowedTagMap = null;
@@ -3766,9 +3723,9 @@ public class StringModule extends AbstractBiancaModule {
          int j = tagNameStart;
 
          while (j < len
-                 && (ch = string.charAt(j)) != '>'
-                 // && ch != '/'
-                 && !Character.isWhitespace(ch)) {
+            && (ch = string.charAt(j)) != '>'
+            // && ch != '/'
+            && !Character.isWhitespace(ch)) {
             j++;
          }
 
@@ -3807,15 +3764,15 @@ public class StringModule extends AbstractBiancaModule {
                int j = i + 1;
 
                while (j < len
-                       && (ch = str.charAt(j)) != '>'
-                       //&& ch != '/'
-                       && !Character.isWhitespace(ch)) {
+                  && (ch = str.charAt(j)) != '>'
+                  //&& ch != '/'
+                  && !Character.isWhitespace(ch)) {
                   j++;
                }
 
                if (ch == '>'
-                       && i + 1 < j
-                       && j < len) {
+                  && i + 1 < j
+                  && j < len) {
                   set.add(str.substring(i + 1, j));
                }
 
@@ -3957,12 +3914,12 @@ public class StringModule extends AbstractBiancaModule {
     * Returns the position of a substring, testing case insensitive.
     *
     * @param haystack the full argument to check
-    * @param needleV the substring argument to check
-    * @param offsetV optional starting position
+    * @param needleV  the substring argument to check
+    * @param offsetV  optional starting position
     */
    public static Value stripos(Env env, StringValue haystack,
-           Value needleV,
-           @Optional int offset) {
+                               Value needleV,
+                               @Optional int offset) {
       StringValue needle;
       int len = haystack.length();
 
@@ -4022,11 +3979,11 @@ public class StringModule extends AbstractBiancaModule {
     * Finds the first instance of a substring, testing case insensitively
     *
     * @param haystack the string to search in
-    * @param needleV the string to search for
+    * @param needleV  the string to search for
     * @return the trailing match or FALSE
     */
    public static Value stristr(StringValue haystack,
-           Value needleV) {
+                               Value needleV) {
       CharSequence needleLower;
 
       if (needleV instanceof StringValue) {
@@ -4083,8 +4040,8 @@ public class StringModule extends AbstractBiancaModule {
     * http://sourcefrog.net/projects/natsort/
     */
    private static int naturalOrderCompare(StringValue a,
-           StringValue b,
-           boolean ignoreCase) {
+                                          StringValue b,
+                                          boolean ignoreCase) {
       SimpleStringReader aIn = new SimpleStringReader(a);
       SimpleStringReader bIn = new SimpleStringReader(b);
 
@@ -4137,7 +4094,7 @@ public class StringModule extends AbstractBiancaModule {
                }
             }
          } else if ('0' < aChar && aChar <= '9'
-                 && '0' < bChar && bChar <= '9') {
+            && '0' < bChar && bChar <= '9') {
             int aInteger = aIn.readInt(aChar);
             int bInteger = bIn.readInt(bChar);
 
@@ -4183,10 +4140,10 @@ public class StringModule extends AbstractBiancaModule {
     * @return -1, 0, or 1
     */
    public static Value strncasecmp(
-           Env env, StringValue a, StringValue b, int length) {
+      Env env, StringValue a, StringValue b, int length) {
       if (length < 0) {
          env.warning(L.l("strncasecmp() length '{0}' must be non-negative",
-                 length));
+            length));
          return BooleanValue.FALSE;
       }
 
@@ -4223,7 +4180,7 @@ public class StringModule extends AbstractBiancaModule {
    public static Value strncmp(Env env, StringValue a, StringValue b, int length) {
       if (length < 0) {
          env.warning(L.l("strncmp() length '{0}' must be non-negative",
-                 length));
+            length));
          return BooleanValue.FALSE;
       }
 
@@ -4247,7 +4204,7 @@ public class StringModule extends AbstractBiancaModule {
     * @return substring, else FALSE
     */
    public static Value strpbrk(StringValue haystack,
-           StringValue charList) {
+                               StringValue charList) {
       int len = haystack.length();
       int sublen = charList.length();
 
@@ -4266,12 +4223,12 @@ public class StringModule extends AbstractBiancaModule {
     * Returns the position of a substring.
     *
     * @param haystack the string to search in
-    * @param needleV the string to search for
+    * @param needleV  the string to search for
     */
    public static Value strpos(Env env,
-           StringValue haystack,
-           Value needleV,
-           @Optional int offset) {
+                              StringValue haystack,
+                              Value needleV,
+                              @Optional int offset) {
       StringValue needle;
 
       if (offset > haystack.length()) {
@@ -4299,11 +4256,11 @@ public class StringModule extends AbstractBiancaModule {
     * Finds the last instance of a substring
     *
     * @param haystack the string to search in
-    * @param needleV the string to search for
+    * @param needleV  the string to search for
     * @return the trailing match or FALSE
     */
    public static Value strrchr(StringValue haystack,
-           Value needleV) {
+                               Value needleV) {
       CharSequence needle;
 
       if (needleV instanceof StringValue) {
@@ -4323,7 +4280,6 @@ public class StringModule extends AbstractBiancaModule {
 
    /**
     * Reverses a string.
-    *
     */
    public static Value strrev(StringValue string) {
       StringValue sb = new StringValue();
@@ -4339,13 +4295,13 @@ public class StringModule extends AbstractBiancaModule {
     * Returns the position of a substring, testing case-insensitive.
     *
     * @param haystack the full string to test
-    * @param needleV the substring string to test
-    * @param offsetV the optional offset to start searching
+    * @param needleV  the substring string to test
+    * @param offsetV  the optional offset to start searching
     */
    public static Value strripos(Env env,
-           String haystack,
-           Value needleV,
-           @Optional Value offsetV) {
+                                String haystack,
+                                Value needleV,
+                                @Optional Value offsetV) {
       if (haystack == null) {
          haystack = "";
       }
@@ -4388,12 +4344,12 @@ public class StringModule extends AbstractBiancaModule {
     * Returns the position of a substring.
     *
     * @param haystack the string to search in
-    * @param needleV the string to search for
+    * @param needleV  the string to search for
     */
    public static Value strrpos(Env env,
-           StringValue haystack,
-           Value needleV,
-           @Optional Value offsetV) {
+                               StringValue haystack,
+                               Value needleV,
+                               @Optional Value offsetV) {
       StringValue needle;
 
       if (needleV instanceof StringValue) {
@@ -4423,26 +4379,25 @@ public class StringModule extends AbstractBiancaModule {
     * Finds the number of initial characters in <i>string</i> that match one of
     * the characters in <i>characters</i>
     *
-    * @param string the string to search in
+    * @param string     the string to search in
     * @param characters the character set
-    * @param offset the starting offset
-    * @param length the length
-    *
+    * @param offset     the starting offset
+    * @param length     the length
     * @return the length of the match or FALSE
-    * if the offset or length are invalid
+    *         if the offset or length are invalid
     */
    public static Value strspn(StringValue string,
-           StringValue characters,
-           @Optional int offset,
-           @Optional("-2147483648") int length) {
+                              StringValue characters,
+                              @Optional int offset,
+                              @Optional("-2147483648") int length) {
       return strspnImpl(string, characters, offset, length, true);
    }
 
    private static Value strspnImpl(StringValue string,
-           StringValue characters,
-           int offset,
-           int length,
-           boolean isMatch) {
+                                   StringValue characters,
+                                   int offset,
+                                   int length,
+                                   boolean isMatch) {
       int strlen = string.length();
 
       // see also strcspn which uses the same procedure for determining
@@ -4496,15 +4451,15 @@ public class StringModule extends AbstractBiancaModule {
     * the portion of haystack from the beginning of
     * needle to the end of haystack.
     *
-    * @param env the calling environment
+    * @param env       the calling environment
     * @param haystackV the string to search in
-    * @param needleV the string to search for, or the
-    * original value of a character
+    * @param needleV   the string to search for, or the
+    *                  original value of a character
     * @return the trailing match or FALSE if needle is not found
     */
    public static Value strstr(Env env,
-           StringValue haystackV,
-           Value needleV) {
+                              StringValue haystackV,
+                              Value needleV) {
       if (haystackV == null) {
          haystackV = StringValue.EMPTY;
       }
@@ -4534,7 +4489,7 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Split a string into tokens using any character
     * in another string as a delimiter.
-    *
+    * <p/>
     * The first call establishes the string to
     * search and the characters to use as tokens,
     * the first token is returned:
@@ -4542,7 +4497,7 @@ public class StringModule extends AbstractBiancaModule {
     *   strtok("hello, world", ", ")
     *     => "hello"
     * </pre>
-    *
+    * <p/>
     * Subsequent calls pass only the token
     * characters, the next token is returned:
     * <pre>
@@ -4551,7 +4506,7 @@ public class StringModule extends AbstractBiancaModule {
     *   strtok(", ")
     *     => "world"
     * </pre>
-    *
+    * <p/>
     * False is returned if there are no more tokens:
     * <pre>
     *   strtok("hello, world", ", ")
@@ -4561,7 +4516,7 @@ public class StringModule extends AbstractBiancaModule {
     *   strtok(", ")
     *     => false
     * </pre>
-    *
+    * <p/>
     * Calls that pass two arguments reset the search string:
     * <pre>
     *   strtok("hello, world", ", ")
@@ -4575,8 +4530,8 @@ public class StringModule extends AbstractBiancaModule {
     * </pre>
     */
    public static Value strtok(Env env,
-           StringValue string1,
-           @Optional Value string2) {
+                              StringValue string1,
+                              @Optional Value string2) {
       StringValue string;
       StringValue characters;
       int offset;
@@ -4671,13 +4626,13 @@ public class StringModule extends AbstractBiancaModule {
     * Translates characters in a string to target values.
     *
     * @param string the source string
-    * @param fromV the from characters
-    * @param to the to character map
+    * @param fromV  the from characters
+    * @param to     the to character map
     */
    public static StringValue strtr(Env env,
-           StringValue string,
-           Value fromV,
-           @Optional StringValue to) {
+                                   StringValue string,
+                                   Value fromV,
+                                   @Optional StringValue to) {
       if (fromV instanceof ArrayValue) {
          return strtrArray(string, (ArrayValue) fromV);
       }
@@ -4715,7 +4670,7 @@ public class StringModule extends AbstractBiancaModule {
     * Translates characters in a string to target values.
     *
     * @param string the source string
-    * @param map the character map
+    * @param map    the character map
     */
    private static StringValue strtrArray(StringValue string, ArrayValue map) {
       int size = map.getSize();
@@ -4788,7 +4743,7 @@ public class StringModule extends AbstractBiancaModule {
     * Comparator for sorting in descending fashion based on length.
     */
    static class StrtrComparator<T extends Map.Entry<Value, Value>>
-           implements Comparator<T> {
+      implements Comparator<T> {
 
       @Override
       public int compare(T a, T b) {
@@ -4808,15 +4763,15 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Returns a substring
     *
-    * @param env the calling environment
+    * @param env    the calling environment
     * @param string the string
-    * @param start the start offset
-    * @param lenV the optional length
+    * @param start  the start offset
+    * @param lenV   the optional length
     */
    public static Value substr(Env env,
-           StringValue string,
-           int start,
-           @Optional Value lenV) {
+                              StringValue string,
+                              int start,
+                              @Optional Value lenV) {
       int len = lenV.toInt();
 
       int strLen = string.length();
@@ -4852,11 +4807,11 @@ public class StringModule extends AbstractBiancaModule {
    }
 
    public static Value substr_compare(Env env,
-           StringValue mainStr,
-           StringValue str,
-           int offset,
-           @Optional Value lenV,
-           @Optional boolean isCaseInsensitive) {
+                                      StringValue mainStr,
+                                      StringValue str,
+                                      int offset,
+                                      @Optional Value lenV,
+                                      @Optional boolean isCaseInsensitive) {
       int strLen = mainStr.length();
       int len = lenV.toInt();
 
@@ -4870,7 +4825,7 @@ public class StringModule extends AbstractBiancaModule {
       }
 
       if (len > strLen
-              || len + offset > strLen) {
+         || len + offset > strLen) {
          return BooleanValue.FALSE;
       }
 
@@ -4885,10 +4840,10 @@ public class StringModule extends AbstractBiancaModule {
    }
 
    public static Value substr_count(Env env,
-           StringValue haystackV,
-           StringValue needleV,
-           @Optional int offset,
-           @Optional("-1") int length) {
+                                    StringValue haystackV,
+                                    StringValue needleV,
+                                    @Optional int offset,
+                                    @Optional("-1") int length) {
       String haystack = haystackV.toString();
 
       String needle = needleV.toString();
@@ -4938,15 +4893,15 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Replaces a substring with a replacement
     *
-    * @param subjectV a string to modify, or an array of strings to modify
+    * @param subjectV    a string to modify, or an array of strings to modify
     * @param replacement the replacement string
-    * @param startV the start offset
-    * @param lengthV the optional length
+    * @param startV      the start offset
+    * @param lengthV     the optional length
     */
    public static Value substr_replace(Value subjectV,
-           StringValue replacement,
-           Value startV,
-           @Optional Value lengthV) {
+                                      StringValue replacement,
+                                      Value startV,
+                                      @Optional Value lengthV) {
       int start = 0;
       int length = Integer.MAX_VALUE / 2;
 
@@ -4959,14 +4914,14 @@ public class StringModule extends AbstractBiancaModule {
       }
 
       Iterator<Value> startIterator =
-              startV.isArray()
-              ? ((ArrayValue) startV).values().iterator()
-              : null;
+         startV.isArray()
+            ? ((ArrayValue) startV).values().iterator()
+            : null;
 
       Iterator<Value> lengthIterator =
-              lengthV.isArray()
-              ? ((ArrayValue) lengthV).values().iterator()
-              : null;
+         lengthV.isArray()
+            ? ((ArrayValue) lengthV).values().iterator()
+            : null;
 
       if (subjectV.isArray()) {
          ArrayValue resultArray = new ArrayValueImpl();
@@ -4984,7 +4939,7 @@ public class StringModule extends AbstractBiancaModule {
             }
 
             Value result = substrReplaceImpl(
-                    value.toStringValue(), replacement, start, length);
+               value.toStringValue(), replacement, start, length);
 
             resultArray.append(result);
          }
@@ -5000,14 +4955,14 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          return substrReplaceImpl(
-                 subjectV.toStringValue(), replacement, start, length);
+            subjectV.toStringValue(), replacement, start, length);
       }
    }
 
    private static Value substrReplaceImpl(StringValue string,
-           StringValue replacement,
-           int start,
-           int len) {
+                                          StringValue replacement,
+                                          int start,
+                                          int len) {
       int strLen = string.length();
 
       if (start > strLen) {
@@ -5037,13 +4992,13 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Removes leading and trailing whitespace.
     *
-    * @param string the string to be trimmed
+    * @param string     the string to be trimmed
     * @param characters optional set of characters to trim
     * @return the trimmed string
     */
    public static Value trim(Env env,
-           StringValue string,
-           @Optional String characters) {
+                            StringValue string,
+                            @Optional String characters) {
       boolean[] trim;
 
       if (characters == null || characters.equals("")) {
@@ -5143,11 +5098,11 @@ public class StringModule extends AbstractBiancaModule {
     * Formatted strings with array arguments
     *
     * @param format the format string
-    * @param array the arguments to apply to the format string
+    * @param array  the arguments to apply to the format string
     */
    public static int vprintf(Env env,
-           StringValue format,
-           @NotNull ArrayValue array) {
+                             StringValue format,
+                             @NotNull ArrayValue array) {
       Value[] args;
 
       if (array != null) {
@@ -5167,11 +5122,11 @@ public class StringModule extends AbstractBiancaModule {
     * Formatted strings with array arguments
     *
     * @param format the format string
-    * @param array the arguments to apply to the format string
+    * @param array  the arguments to apply to the format string
     */
    public static Value vsprintf(Env env,
-           StringValue format,
-           @NotNull ArrayValue array) {
+                                StringValue format,
+                                @NotNull ArrayValue array) {
       Value[] args;
 
       if (array != null) {
@@ -5190,25 +5145,25 @@ public class StringModule extends AbstractBiancaModule {
    /**
     * Wraps a string to the given number of characters.
     *
-    * @param string the input string
-    * @param width the width
+    * @param string      the input string
+    * @param width       the width
     * @param breakString the break string
-    * @param cut if true, break on exact match
+    * @param cut         if true, break on exact match
     */
    public static Value wordwrap(Env env,
-           @Expect(type = Expect.Type.STRING) Value value,
-           @Optional @Expect(type = Expect.Type.NUMERIC) Value widthV,
-           @Optional @Expect(type = Expect.Type.STRING) Value breakV,
-           @Optional @Expect(type = Expect.Type.BOOLEAN) Value cutV) {
+                                @Expect(type = Expect.Type.STRING) Value value,
+                                @Optional @Expect(type = Expect.Type.NUMERIC) Value widthV,
+                                @Optional @Expect(type = Expect.Type.STRING) Value breakV,
+                                @Optional @Expect(type = Expect.Type.BOOLEAN) Value cutV) {
       if (value instanceof UnexpectedValue) {
          env.warning(L.l("word must be a string, but {0} given",
-                 value.getType()));
+            value.getType()));
          return NullValue.NULL;
       }
 
       if (widthV instanceof UnexpectedValue) {
          env.warning(L.l("width must be numeric, but {0} given",
-                 widthV.getType()));
+            widthV.getType()));
          return NullValue.NULL;
       }
 
@@ -5224,7 +5179,7 @@ public class StringModule extends AbstractBiancaModule {
 
       if (cutV instanceof UnexpectedValue) {
          env.warning(L.l("cut must be a boolean, but {0} given",
-                 cutV.getType()));
+            cutV.getType()));
          return NullValue.NULL;
       }
 
@@ -5239,7 +5194,7 @@ public class StringModule extends AbstractBiancaModule {
 
       if (breakV instanceof UnexpectedValue) {
          env.warning(L.l("break string must be a string, but {0} given",
-                 breakV.getType()));
+            breakV.getType()));
          return NullValue.NULL;
       }
 
@@ -5272,7 +5227,7 @@ public class StringModule extends AbstractBiancaModule {
          char ch = string.charAt(i);
 
          if (ch == breakChar && string.regionMatches(
-                 i, breakString, 0, breakLen)) {
+            i, breakString, 0, breakLen)) {
             sb.append(string, head, i + breakLen);
             head = i + breakLen;
          } else if (width <= i - head) {
@@ -5457,7 +5412,7 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          if (format.charAt(format.length() - 1) == 'x'
-                 || format.charAt(format.length() - 1) == 'X') {
+            || format.charAt(format.length() - 1) == 'X') {
             HexPrintfSegment hex = HexPrintfSegment.create(format, index);
 
             if (hex != null) {
@@ -5466,7 +5421,7 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          if (format.charAt(format.length() - 1) == 'b'
-                 || format.charAt(format.length() - 1) == 'B') {
+            || format.charAt(format.length() - 1) == 'B') {
             BinaryPrintfSegment bin = BinaryPrintfSegment.create(format, index);
 
             if (bin != null) {
@@ -5483,7 +5438,7 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          return new LongPrintfSegment(format, index,
-                 env.getLocaleInfo().getNumeric());
+            env.getLocaleInfo().getNumeric());
       }
 
       @Override
@@ -5786,9 +5741,9 @@ public class StringModule extends AbstractBiancaModule {
       private final BiancaLocale _locale;
 
       DoublePrintfSegment(String format,
-              boolean isLeftZero,
-              int index,
-              BiancaLocale locale) {
+                          boolean isLeftZero,
+                          int index,
+                          BiancaLocale locale) {
          if (hasIndex(format)) {
             _index = getIndex(format);
             _format = getIndexFormat(format);
@@ -5853,9 +5808,9 @@ public class StringModule extends AbstractBiancaModule {
       protected final int _index;
 
       StringPrintfSegment(StringBuilder prefix,
-              boolean isLeft, int pad, boolean isUpper,
-              int width,
-              String format, int index) {
+                          boolean isLeft, int pad, boolean isUpper,
+                          int width,
+                          String format, int index) {
          _prefix = new char[prefix.length()];
 
          _isLeft = isLeft;
@@ -5951,9 +5906,9 @@ public class StringModule extends AbstractBiancaModule {
    static class CharPrintfSegment extends StringPrintfSegment {
 
       CharPrintfSegment(StringBuilder prefix,
-              boolean isLeft, int pad, boolean isUpper,
-              int width,
-              String format, int index) {
+                        boolean isLeft, int pad, boolean isUpper,
+                        int width,
+                        String format, int index) {
          super(prefix, isLeft, pad, isUpper, width, format, index);
       }
 
@@ -6026,10 +5981,10 @@ public class StringModule extends AbstractBiancaModule {
       abstract public boolean isAssigned();
 
       abstract public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray);
+                                int strlen,
+                                int sIndex,
+                                Value var,
+                                boolean isReturnArray);
 
       void sscanfPut(Value var, Value val, boolean isReturnArray) {
          if (isReturnArray) {
@@ -6057,10 +6012,10 @@ public class StringModule extends AbstractBiancaModule {
 
       @Override
       public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int sIndex,
+                       Value var,
+                       boolean isReturnArray) {
          int fStrlen = _strlen;
          String fString = _string;
 
@@ -6092,13 +6047,13 @@ public class StringModule extends AbstractBiancaModule {
 
       @Override
       public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int sIndex,
+                       Value var,
+                       boolean isReturnArray) {
          for (;
-                 sIndex < strlen && isWhitespace(string.charAt(sIndex));
-                 sIndex++) {
+              sIndex < strlen && isWhitespace(string.charAt(sIndex));
+              sIndex++) {
          }
 
          return sIndex;
@@ -6119,10 +6074,10 @@ public class StringModule extends AbstractBiancaModule {
 
       @Override
       public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int sIndex,
+                       Value var,
+                       boolean isReturnArray) {
          sscanfPut(var, LongValue.create(sIndex), isReturnArray);
 
          return sIndex;
@@ -6144,10 +6099,10 @@ public class StringModule extends AbstractBiancaModule {
 
       @Override
       public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int sIndex,
+                       Value var,
+                       boolean isReturnArray) {
          StringValue sb = new StringValue();
 
          for (; sIndex < strlen; sIndex++) {
@@ -6185,10 +6140,10 @@ public class StringModule extends AbstractBiancaModule {
 
       @Override
       public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int sIndex,
+                       Value var,
+                       boolean isReturnArray) {
          StringValue sb = new StringValue();
 
          for (; sIndex < strlen; sIndex++) {
@@ -6230,10 +6185,10 @@ public class StringModule extends AbstractBiancaModule {
 
       @Override
       public int apply(StringValue s,
-              int strlen,
-              int i,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int i,
+                       Value var,
+                       boolean isReturnArray) {
          if (i == strlen) {
             if (isReturnArray) {
                var.put(NullValue.NULL);
@@ -6254,7 +6209,7 @@ public class StringModule extends AbstractBiancaModule {
          }
 
          for (; i < len && maxLen > 0
-                 && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
+            && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
             maxLen--;
          }
 
@@ -6262,7 +6217,7 @@ public class StringModule extends AbstractBiancaModule {
             maxLen--;
 
             for (i++; i < len && maxLen > 0
-                    && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
+               && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
                maxLen--;
             }
          }
@@ -6283,7 +6238,7 @@ public class StringModule extends AbstractBiancaModule {
             }
 
             for (; i < len && maxLen > 0
-                    && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
+               && '0' <= (ch = s.charAt(i)) && ch <= '9'; i++) {
                maxLen--;
             }
 
@@ -6327,10 +6282,10 @@ public class StringModule extends AbstractBiancaModule {
 
       @Override
       public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int sIndex,
+                       Value var,
+                       boolean isReturnArray) {
          if (sIndex == strlen) {
             if (isReturnArray) {
                var.put(NullValue.NULL);
@@ -6409,10 +6364,10 @@ public class StringModule extends AbstractBiancaModule {
 
       @Override
       public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int sIndex,
+                       Value var,
+                       boolean isReturnArray) {
          if (sIndex == strlen) {
             if (isReturnArray) {
                var.put(NullValue.NULL);
@@ -6464,7 +6419,7 @@ public class StringModule extends AbstractBiancaModule {
          if (_isUnsigned) {
             if (sign == -1 && val != 0) {
                sscanfPut(
-                       var, StringValue.create(0xffffffffL - val + 1), isReturnArray);
+                  var, StringValue.create(0xffffffffL - val + 1), isReturnArray);
             } else {
                sscanfPut(var, LongValue.create(val), isReturnArray);
             }
@@ -6498,10 +6453,10 @@ public class StringModule extends AbstractBiancaModule {
        */
       @Override
       public int apply(StringValue string,
-              int strlen,
-              int sIndex,
-              Value var,
-              boolean isReturnArray) {
+                       int strlen,
+                       int sIndex,
+                       Value var,
+                       boolean isReturnArray) {
          if (sIndex == strlen) {
             if (isReturnArray) {
                var.put(NullValue.NULL);

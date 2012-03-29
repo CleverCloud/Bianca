@@ -39,89 +39,83 @@ import java.io.IOException;
  * using the '\\uxxxx' escapes for non-ascii characters.
  */
 public class JAVAWriter extends EncodingWriter {
-  private static JAVAWriter _writer = new JAVAWriter();
-  
-  /**
-   * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
-   */
-  public JAVAWriter()
-  {
-  }
+   private static JAVAWriter _writer = new JAVAWriter();
 
-  /**
-   * Returns the encoding.
-   */
-  public String getJavaEncoding()
-  {
-    return "JAVA";
-  }
+   /**
+    * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
+    */
+   public JAVAWriter() {
+   }
 
-  /**
-   * Create a Java source-code writer using on the WriteStream to send bytes.
-   *
-   * @param os the write stream receiving the bytes.
-   * @param javaEncoding the JDK name for the encoding.
-   *
-   * @return the UTF-8 writer.
-   */
-  public EncodingWriter create(String javaEncoding)
-  {
-    return _writer;
-  }
+   /**
+    * Returns the encoding.
+    */
+   public String getJavaEncoding() {
+      return "JAVA";
+   }
 
-  /**
-   * Writes a character to the output stream with the correct encoding.
-   *
-   * @param ch the character to write.
-   */
-  public void write(ByteAppendable os, char ch)
-    throws IOException
-  {
-    if (ch < 0x80)
-      os.write(ch);
-    else {
-      os.write('\\');
-      os.write('u');
+   /**
+    * Create a Java source-code writer using on the WriteStream to send bytes.
+    *
+    * @param os           the write stream receiving the bytes.
+    * @param javaEncoding the JDK name for the encoding.
+    * @return the UTF-8 writer.
+    */
+   public EncodingWriter create(String javaEncoding) {
+      return _writer;
+   }
 
-      int b = (ch >> 12) & 0xf;
-      os.write(b < 10 ? b + '0' : b + 'a' - 10);
-      b = (ch >> 8) & 0xf;
-      os.write(b < 10 ? b + '0' : b + 'a' - 10);
-      b = (ch >> 4) & 0xf;
-      os.write(b < 10 ? b + '0' : b + 'a' - 10);
-      b = ch & 0xf;
-      os.write(b < 10 ? b + '0' : b + 'a' - 10);
-    }
-  }
-
-  /**
-   * Writes into a character buffer using the correct encoding.
-   *
-   * @param cbuf character array with the data to write.
-   * @param off starting offset into the character array.
-   * @param len the number of characters to write.
-   */
-  public void write(OutputStreamWithBuffer os, char []cbuf, int off, int len)
-    throws IOException
-  {
-    for (int i = 0; i < len; i++) {
-      char ch = cbuf[off + i];
-
+   /**
+    * Writes a character to the output stream with the correct encoding.
+    *
+    * @param ch the character to write.
+    */
+   public void write(ByteAppendable os, char ch)
+      throws IOException {
       if (ch < 0x80)
-        os.write(ch);
+         os.write(ch);
       else {
-        os.write('\\');
-        os.write('u');
+         os.write('\\');
+         os.write('u');
 
-        int b = (ch >> 12) & 0xf;
-        os.write(b < 10 ? b + '0' : b + 'a' - 10);
-        b = (ch >> 8) & 0xf;
-        os.write(b < 10 ? b + '0' : b + 'a' - 10);
-        b = (ch >> 4) & 0xf;
-        os.write(b < 10 ? b + '0' : b + 'a' - 10);
-        b = ch & 0xf;
-        os.write(b < 10 ? b + '0' : b + 'a' - 10);
+         int b = (ch >> 12) & 0xf;
+         os.write(b < 10 ? b + '0' : b + 'a' - 10);
+         b = (ch >> 8) & 0xf;
+         os.write(b < 10 ? b + '0' : b + 'a' - 10);
+         b = (ch >> 4) & 0xf;
+         os.write(b < 10 ? b + '0' : b + 'a' - 10);
+         b = ch & 0xf;
+         os.write(b < 10 ? b + '0' : b + 'a' - 10);
       }
-    }
-  }  
+   }
+
+   /**
+    * Writes into a character buffer using the correct encoding.
+    *
+    * @param cbuf character array with the data to write.
+    * @param off  starting offset into the character array.
+    * @param len  the number of characters to write.
+    */
+   public void write(OutputStreamWithBuffer os, char[] cbuf, int off, int len)
+      throws IOException {
+      for (int i = 0; i < len; i++) {
+         char ch = cbuf[off + i];
+
+         if (ch < 0x80)
+            os.write(ch);
+         else {
+            os.write('\\');
+            os.write('u');
+
+            int b = (ch >> 12) & 0xf;
+            os.write(b < 10 ? b + '0' : b + 'a' - 10);
+            b = (ch >> 8) & 0xf;
+            os.write(b < 10 ? b + '0' : b + 'a' - 10);
+            b = (ch >> 4) & 0xf;
+            os.write(b < 10 ? b + '0' : b + 'a' - 10);
+            b = ch & 0xf;
+            os.write(b < 10 ? b + '0' : b + 'a' - 10);
+         }
+      }
+   }
 }

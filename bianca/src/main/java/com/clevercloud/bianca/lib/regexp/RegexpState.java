@@ -30,13 +30,15 @@
  */
 package com.clevercloud.bianca.lib.regexp;
 
-import java.util.logging.*;
-
 import com.clevercloud.bianca.BiancaException;
 import com.clevercloud.bianca.BiancaRuntimeException;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.util.*;
+import com.clevercloud.util.CharBuffer;
+import com.clevercloud.util.L10N;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RegexpState {
 
@@ -201,10 +203,10 @@ public class RegexpState {
          return false;
       } catch (StackOverflowError e) {
          log.warning(L.l("regexp '{0}' produces a StackOverflowError for\n{1}",
-                 _regexp, _subject));
+            _regexp, _subject));
 
          throw new BiancaRuntimeException(
-                 L.l("regexp '{0}' produces a StackOverflowError", _regexp), e);
+            L.l("regexp '{0}' produces a StackOverflowError", _regexp), e);
       }
    }
 
@@ -221,10 +223,10 @@ public class RegexpState {
          return find();
       } catch (StackOverflowError e) {
          log.warning(L.l("regexp '{0}' produces a StackOverflowError for\n{1}",
-                 _regexp, subject));
+            _regexp, subject));
 
          throw new BiancaRuntimeException(
-                 L.l("regexp '{0}' produces a StackOverflowError", _regexp), e);
+            L.l("regexp '{0}' produces a StackOverflowError", _regexp), e);
       }
    }
 
@@ -247,10 +249,10 @@ public class RegexpState {
          return _regexp._prog.match(_subject, _subjectLength, first, this);
       } catch (StackOverflowError e) {
          log.warning(L.l("regexp '{0}' produces a StackOverflowError for\n{1}",
-                 _regexp, subject));
+            _regexp, subject));
 
          throw new BiancaRuntimeException(
-                 L.l("regexp '{0}' produces a StackOverflowError", _regexp), e);
+            L.l("regexp '{0}' produces a StackOverflowError", _regexp), e);
       }
    }
 
@@ -311,10 +313,10 @@ public class RegexpState {
          return -1;
       } catch (StackOverflowError e) {
          log.warning(L.l("regexp '{0}' produces a StackOverflowError for\n{1}",
-                 _regexp, subject));
+            _regexp, subject));
 
          throw new BiancaRuntimeException(
-                 L.l("regexp '{0}' produces a StackOverflowError", _regexp), e);
+            L.l("regexp '{0}' produces a StackOverflowError", _regexp), e);
       }
    }
 

@@ -46,8 +46,8 @@ public class FunArrayExpr extends Expr {
    protected final Expr[] _values;
 
    public FunArrayExpr(Location location,
-           ArrayList<Expr> keyList,
-           ArrayList<Expr> valueList) {
+                       ArrayList<Expr> keyList,
+                       ArrayList<Expr> valueList) {
       super(location);
 
       _keys = new Expr[keyList.size()];
@@ -103,7 +103,6 @@ public class FunArrayExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

@@ -35,44 +35,39 @@ import com.clevercloud.util.ExceptionWrapper;
  * Exception thrown while evaluating an xpath expression.
  */
 public class XPathException extends Exception
-  implements ExceptionWrapper, java.io.Serializable {
+   implements ExceptionWrapper, java.io.Serializable {
 
-  /**
-   * zero-arg constructor.
-   */
-  public XPathException()
-  {
-  }
+   /**
+    * zero-arg constructor.
+    */
+   public XPathException() {
+   }
 
-  /**
-   * Creates an exception with a message.
-   */
-  public XPathException(String msg)
-  {
-    super(msg);
-  }
+   /**
+    * Creates an exception with a message.
+    */
+   public XPathException(String msg) {
+      super(msg);
+   }
 
-  /**
-   * Creates an exception with a message and wrapped exception.
-   */
-  public XPathException(String msg, Throwable e)
-  {
-    super(msg, e);
-  }
+   /**
+    * Creates an exception with a message and wrapped exception.
+    */
+   public XPathException(String msg, Throwable e) {
+      super(msg, e);
+   }
 
-  /**
-   * Creates an exception with a wrapped exception.
-   */
-  public XPathException(Throwable e)
-  {
-    super(e);
-  }
+   /**
+    * Creates an exception with a wrapped exception.
+    */
+   public XPathException(Throwable e) {
+      super(e);
+   }
 
-  /**
-   * Returns the root cause.
-   */
-  public Throwable getRootCause()
-  {
-    return getCause();
-  }
+   /**
+    * Returns the root cause.
+    */
+   public Throwable getRootCause() {
+      return getCause();
+   }
 }

@@ -30,25 +30,23 @@
 package com.clevercloud.xml;
 
 public class NamespaceMap {
-  NamespaceMap next;
+   NamespaceMap next;
 
-  String prefix;
-  String url;
+   String prefix;
+   String url;
 
-  NamespaceMap(NamespaceMap next, String prefix, String url)
-  {
-    this.next = next;
-    this.prefix = prefix;
-    this.url = url;
-  }
+   NamespaceMap(NamespaceMap next, String prefix, String url) {
+      this.next = next;
+      this.prefix = prefix;
+      this.url = url;
+   }
 
-  static String get(NamespaceMap map, String prefix)
-  {
-    for (; map != null; map = map.next) {
-      if (map.prefix.equals(prefix))
-        return map.url;
-    }
+   static String get(NamespaceMap map, String prefix) {
+      for (; map != null; map = map.next) {
+         if (map.prefix.equals(prefix))
+            return map.url;
+      }
 
-    return null;
-  }
+      return null;
+   }
 }

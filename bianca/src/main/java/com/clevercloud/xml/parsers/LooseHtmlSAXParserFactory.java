@@ -31,7 +31,6 @@ package com.clevercloud.xml.parsers;
 
 import com.clevercloud.xml.LooseHtml;
 import com.clevercloud.xml.XmlParser;
-
 import org.xml.sax.Parser;
 import org.xml.sax.XMLReader;
 
@@ -42,67 +41,55 @@ import javax.xml.parsers.SAXParserFactory;
  * JAXP SAX parser factory for loose HTML parsing.
  */
 public class LooseHtmlSAXParserFactory extends SAXParserFactory {
-  /**
-   * Creates a new SAX Parser
-   */
-  public SAXParser newSAXParser()
-  {
-    return new LooseHtmlSAXParser();
-  }
+   /**
+    * Creates a new SAX Parser
+    */
+   public SAXParser newSAXParser() {
+      return new LooseHtmlSAXParser();
+   }
 
-  public Object getProperty(String key)
-  {
-    return null;
-  }
-
-  public void setProperty(String key, Object value)
-  {
-  }
-
-  public boolean getFeature(String key)
-  {
-    return false;
-  }
-
-  public void setFeature(String key, boolean value)
-  {
-  }
-
-  class LooseHtmlSAXParser extends SAXParser {
-    private XmlParser parser;
-
-    LooseHtmlSAXParser()
-    {
-      parser = new LooseHtml();
-    }
-  
-    public Parser getParser()
-    {
-      return parser;
-    }
-
-    public XMLReader getXMLReader()
-    {
-      return parser;
-    }
-
-    public Object getProperty(String key)
-    {
+   public Object getProperty(String key) {
       return null;
-    }
+   }
 
-    public void setProperty(String key, Object value)
-    {
-    }
-    
-    public boolean isNamespaceAware()
-    {
-      return true;
-    }
-    
-    public boolean isValidating()
-    {
+   public void setProperty(String key, Object value) {
+   }
+
+   public boolean getFeature(String key) {
       return false;
-    }
-  }
+   }
+
+   public void setFeature(String key, boolean value) {
+   }
+
+   class LooseHtmlSAXParser extends SAXParser {
+      private XmlParser parser;
+
+      LooseHtmlSAXParser() {
+         parser = new LooseHtml();
+      }
+
+      public Parser getParser() {
+         return parser;
+      }
+
+      public XMLReader getXMLReader() {
+         return parser;
+      }
+
+      public Object getProperty(String key) {
+         return null;
+      }
+
+      public void setProperty(String key, Object value) {
+      }
+
+      public boolean isNamespaceAware() {
+         return true;
+      }
+
+      public boolean isValidating() {
+         return false;
+      }
+   }
 }

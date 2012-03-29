@@ -29,128 +29,104 @@
 
 package com.clevercloud.xml;
 
-import org.xml.sax.AttributeList;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.DocumentHandler;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
 
 /**
  * Loose XML parser interface.  The parser can parse directly into
  * the DOM, or it can be used as a SAX parser.
  */
 class ContentHandlerAdapter implements ContentHandler {
-  private DocumentHandler handler;
-  private QAttributeList attributeList;
+   private DocumentHandler handler;
+   private QAttributeList attributeList;
 
-  ContentHandlerAdapter(DocumentHandler handler)
-  {
-    this.handler = handler;
-    attributeList = new QAttributeList();
-  }
-  
-  public void setDocumentLocator(Locator locator)
-  {
-    handler.setDocumentLocator(locator);
-  }
-  
-  public void startDocument()
-    throws SAXException
-  {
-    handler.startDocument();
-  }
-  
-  public void endDocument()
-    throws SAXException
-  {
-    handler.endDocument();
-  }
-  
-  public void startPrefixMapping(String prefix, String uri)
-    throws SAXException
-  {
-  }
-  
-  public void endPrefixMapping(String prefix)
-    throws SAXException
-  {
-  }
-  
-  public void startElement(String namespaceURI, String localName,
-                           String qName, Attributes attrs)
-    throws SAXException
-  {
-    attributeList.init((QAttributes) attrs);
-    
-    handler.startElement(qName, attributeList);
-  }
-  
-  public void endElement (String namespaceURI, String localName, String qName)
-    throws SAXException
-  {
-    handler.endElement(qName);
-  }
-  
-  public void characters(char ch[], int start, int length)
-    throws SAXException
-  {
-    handler.characters(ch, start, length);
-  }
-  
-  public void ignorableWhitespace(char ch[], int start, int length)
-    throws SAXException
-  {
-    handler.ignorableWhitespace(ch, start, length);
-  }
-  
-  public void processingInstruction (String target, String data)
-    throws SAXException
-  {
-    handler.processingInstruction(target, data);
-  }
-  
-  public void skippedEntity(String name)
-    throws SAXException
-  {
-  }
+   ContentHandlerAdapter(DocumentHandler handler) {
+      this.handler = handler;
+      attributeList = new QAttributeList();
+   }
 
-  static class QAttributeList implements AttributeList {
-    private QAttributes attributes;
+   public void setDocumentLocator(Locator locator) {
+      handler.setDocumentLocator(locator);
+   }
 
-    void init(QAttributes attributes)
-    {
-      this.attributes = attributes;
-    }
+   public void startDocument()
+      throws SAXException {
+      handler.startDocument();
+   }
 
-    public int getLength()
-    {
-      return attributes.getLength();
-    }    
+   public void endDocument()
+      throws SAXException {
+      handler.endDocument();
+   }
 
-    public String getName(int i)
-    {
-      return attributes.getQName(i);
-    }    
+   public void startPrefixMapping(String prefix, String uri)
+      throws SAXException {
+   }
 
-    public String getValue(int i)
-    {
-      return attributes.getValue(i);
-    }    
+   public void endPrefixMapping(String prefix)
+      throws SAXException {
+   }
 
-    public String getValue(String qName)
-    {
-      return attributes.getValue(qName);
-    }    
+   public void startElement(String namespaceURI, String localName,
+                            String qName, Attributes attrs)
+      throws SAXException {
+      attributeList.init((QAttributes) attrs);
 
-    public String getType(int i)
-    {
-      return attributes.getType(i);
-    }    
+      handler.startElement(qName, attributeList);
+   }
 
-    public String getType(String qName)
-    {
-      return attributes.getType(qName);
-    }    
-  }
+   public void endElement(String namespaceURI, String localName, String qName)
+      throws SAXException {
+      handler.endElement(qName);
+   }
+
+   public void characters(char ch[], int start, int length)
+      throws SAXException {
+      handler.characters(ch, start, length);
+   }
+
+   public void ignorableWhitespace(char ch[], int start, int length)
+      throws SAXException {
+      handler.ignorableWhitespace(ch, start, length);
+   }
+
+   public void processingInstruction(String target, String data)
+      throws SAXException {
+      handler.processingInstruction(target, data);
+   }
+
+   public void skippedEntity(String name)
+      throws SAXException {
+   }
+
+   static class QAttributeList implements AttributeList {
+      private QAttributes attributes;
+
+      void init(QAttributes attributes) {
+         this.attributes = attributes;
+      }
+
+      public int getLength() {
+         return attributes.getLength();
+      }
+
+      public String getName(int i) {
+         return attributes.getQName(i);
+      }
+
+      public String getValue(int i) {
+         return attributes.getValue(i);
+      }
+
+      public String getValue(String qName) {
+         return attributes.getValue(qName);
+      }
+
+      public String getType(int i) {
+         return attributes.getType(i);
+      }
+
+      public String getType(String qName) {
+         return attributes.getType(qName);
+      }
+   }
 }

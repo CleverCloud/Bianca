@@ -32,10 +32,8 @@ package com.clevercloud.bianca.lib.file;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 
-import java.nio.ByteBuffer;
-import java.io.IOException; 
+import java.io.IOException;
 
 /**
  * A helper class that handles line endings when reading from a BinaryInput.
@@ -58,7 +56,7 @@ public class LineReader {
     * Reads a line from the BinaryInput, returning null on EOF.
     */
    public StringValue readLine(Env env, BinaryInput input, long length)
-           throws IOException {
+      throws IOException {
       StringBuilder str = new StringBuilder();
 
       int ch;
@@ -100,7 +98,7 @@ public class LineReader {
                }
 
                if (_isMacLineEnding) {
-                  return new StringValue (str.toString());
+                  return new StringValue(str.toString());
                }
             }
 
@@ -112,7 +110,7 @@ public class LineReader {
       if (str.length() == 0) {
          return null;
       } else {
-         return new StringValue (str.toString());
+         return new StringValue(str.toString());
       }
 
    }

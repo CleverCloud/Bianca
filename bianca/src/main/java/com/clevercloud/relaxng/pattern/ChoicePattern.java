@@ -41,189 +41,176 @@ import java.util.ArrayList;
  * Relax element pattern
  */
 public class ChoicePattern extends Pattern {
-  private ArrayList<Pattern> _patterns = new ArrayList<Pattern>();
-  private boolean _hasEmpty;
+   private ArrayList<Pattern> _patterns = new ArrayList<Pattern>();
+   private boolean _hasEmpty;
 
-  private Item _item;
-  
-  /**
-   * Creates a new choice pattern.
-   */
-  public ChoicePattern()
-  {
-  }
+   private Item _item;
 
-  /**
-   * Returns the number of children.
-   */
-  public int getSize()
-  {
-    return _patterns.size();
-  }
+   /**
+    * Creates a new choice pattern.
+    */
+   public ChoicePattern() {
+   }
 
-  /**
-   * Returns the n-th child.
-   */
-  public Pattern getChild(int i)
-  {
-    return _patterns.get(i);
-  }
+   /**
+    * Returns the number of children.
+    */
+   public int getSize() {
+      return _patterns.size();
+   }
 
-  public boolean hasEmpty()
-  {
-    return _hasEmpty;
-  }
+   /**
+    * Returns the n-th child.
+    */
+   public Pattern getChild(int i) {
+      return _patterns.get(i);
+   }
 
-  /**
-   * Returns true if it contains a data element.
-   */
-  public boolean hasData()
-  {
-    for (int i = 0; i < _patterns.size(); i++) {
-      if (_patterns.get(i).hasData())
-        return true;
-    }
+   public boolean hasEmpty() {
+      return _hasEmpty;
+   }
 
-    return false;
-  }
+   /**
+    * Returns true if it contains a data element.
+    */
+   public boolean hasData() {
+      for (int i = 0; i < _patterns.size(); i++) {
+         if (_patterns.get(i).hasData())
+            return true;
+      }
 
-  /**
-   * Returns true if it contains a data element.
-   */
-  public boolean hasElement()
-  {
-    for (int i = 0; i < _patterns.size(); i++) {
-      if (_patterns.get(i).hasElement())
-        return true;
-    }
+      return false;
+   }
 
-    return false;
-  }
-  
-  /**
-   * Adds an element.
-   */
-  public void addChild(Pattern child)
-    throws RelaxException
-  {
-    child.setElementName(getElementName());
+   /**
+    * Returns true if it contains a data element.
+    */
+   public boolean hasElement() {
+      for (int i = 0; i < _patterns.size(); i++) {
+         if (_patterns.get(i).hasElement())
+            return true;
+      }
 
-    if (child instanceof ChoicePattern) {
-      ChoicePattern list = (ChoicePattern) child;
+      return false;
+   }
 
-      if (list._hasEmpty)
-        _hasEmpty = true;
+   /**
+    * Adds an element.
+    */
+   public void addChild(Pattern child)
+      throws RelaxException {
+      child.setElementName(getElementName());
 
-      for (int i = 0; i < list.getSize(); i++)
-        addChild(list.getChild(i));
-      
-      return;
-    }
+      if (child instanceof ChoicePattern) {
+         ChoicePattern list = (ChoicePattern) child;
 
-    if (child instanceof EmptyPattern) {
-      _hasEmpty = true;
-      return;
-    }
+         if (list._hasEmpty)
+            _hasEmpty = true;
 
-    if (! _patterns.contains(child))
-      _patterns.add(child);
-  }
+         for (int i = 0; i < list.getSize(); i++)
+            addChild(list.getChild(i));
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "choice";
-  }
+         return;
+      }
 
-  /**
-   * Creates the production item.
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    if (_item == null) {
-      ChoiceItem item = new ChoiceItem();
+      if (child instanceof EmptyPattern) {
+         _hasEmpty = true;
+         return;
+      }
+
+      if (!_patterns.contains(child))
+         _patterns.add(child);
+   }
+
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "choice";
+   }
+
+   /**
+    * Creates the production item.
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      if (_item == null) {
+         ChoiceItem item = new ChoiceItem();
+
+         for (int i = 0; i < _patterns.size(); i++) {
+            item.addItem(_patterns.get(i).createItem(grammar));
+         }
+
+         if (_hasEmpty)
+            item.addItem(EmptyItem.create());
+
+         _item = item.getMin();
+      }
+
+      return _item;
+   }
+
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      if (_hasEmpty && _patterns.size() == 1)
+         return "(" + _patterns.get(0).toProduction() + ")?";
+
+      CharBuffer cb = new CharBuffer();
+
+      if (_hasEmpty)
+         cb.append("(");
 
       for (int i = 0; i < _patterns.size(); i++) {
-        item.addItem(_patterns.get(i).createItem(grammar));
+         if (i != 0)
+            cb.append(" | ");
+         cb.append(_patterns.get(i).toProduction());
       }
 
       if (_hasEmpty)
-        item.addItem(EmptyItem.create());
+         cb.append(")?");
 
-      _item = item.getMin();
-    }
+      return cb.toString();
+   }
 
-    return _item;
-  }
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    if (_hasEmpty && _patterns.size() == 1)
-      return "(" + _patterns.get(0).toProduction() + ")?";
-        
-    CharBuffer cb = new CharBuffer();
+      if (!(o instanceof ChoicePattern))
+         return false;
 
-    if (_hasEmpty)
-      cb.append("(");
-    
-    for (int i = 0; i < _patterns.size(); i++) {
-      if (i != 0)
-        cb.append(" | ");
-      cb.append(_patterns.get(i).toProduction());
-    }
+      ChoicePattern choice = (ChoicePattern) o;
 
-    if (_hasEmpty)
-      cb.append(")?");
-    
-    return cb.toString();
-  }
+      if (_hasEmpty != choice._hasEmpty)
+         return false;
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
+      if (_patterns.size() != choice._patterns.size())
+         return false;
+
+      return isSubset(choice) && choice.isSubset(this);
+   }
+
+   private boolean isSubset(ChoicePattern item) {
+      if (_patterns.size() != item._patterns.size())
+         return false;
+
+      for (int i = 0; i < _patterns.size(); i++) {
+         Pattern subPattern = _patterns.get(i);
+
+         if (!item._patterns.contains(subPattern))
+            return false;
+      }
+
       return true;
+   }
 
-    if (! (o instanceof ChoicePattern))
-      return false;
-
-    ChoicePattern choice = (ChoicePattern) o;
-
-    if (_hasEmpty != choice._hasEmpty)
-      return false;
-    
-    if (_patterns.size() != choice._patterns.size())
-      return false;
-
-    return isSubset(choice) && choice.isSubset(this);
-  }
-
-  private boolean isSubset(ChoicePattern item)
-  {
-    if (_patterns.size() != item._patterns.size())
-      return false;
-
-    for (int i = 0; i < _patterns.size(); i++) {
-      Pattern subPattern = _patterns.get(i);
-
-      if (! item._patterns.contains(subPattern))
-        return false;
-    }
-
-    return true;
-  }
-
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "ChoicePattern" + _patterns;
-  }
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "ChoicePattern" + _patterns;
+   }
 }
 

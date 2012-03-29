@@ -32,40 +32,34 @@ package com.clevercloud.vfs;
 import java.util.Map;
 
 public class NullPath extends Path {
-  public static final Path NULL = new NullPath("null:");
+   public static final Path NULL = new NullPath("null:");
 
-  private String _url;
+   private String _url;
 
-  public NullPath(String url)
-  {
-    super(SchemeMap.getNullSchemeMap());
+   public NullPath(String url) {
+      super(SchemeMap.getNullSchemeMap());
 
-    _url = url;
-  }
+      _url = url;
+   }
 
-  public Path schemeWalk(String userPath, Map<String,Object> attributes,
-                         String path, int offset)
-  {
-    return this;
-  }
+   public Path schemeWalk(String userPath, Map<String, Object> attributes,
+                          String path, int offset) {
+      return this;
+   }
 
-  public String getURL()
-  {
-    return _url;
-  }
+   public String getURL() {
+      return _url;
+   }
 
-  public String getScheme()
-  {
-    return "null";
-  }
+   public String getScheme() {
+      return "null";
+   }
 
-  public String getPath()
-  {
-    return _url;
-  }
+   public String getPath() {
+      return _url;
+   }
 
-  public Path lookupImpl(String userPath, Map<String,Object> newAttributes)
-  {
-    return this;
-  }
+   public Path lookupImpl(String userPath, Map<String, Object> newAttributes) {
+      return this;
+   }
 }

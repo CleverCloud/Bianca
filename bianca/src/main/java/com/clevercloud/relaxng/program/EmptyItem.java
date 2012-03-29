@@ -38,80 +38,70 @@ import java.util.HashSet;
  * Generates programs from patterns.
  */
 public class EmptyItem extends Item {
-  protected final static L10N L = new L10N(EmptyItem.class);
+   protected final static L10N L = new L10N(EmptyItem.class);
 
-  private static final EmptyItem EMPTY = new EmptyItem();
+   private static final EmptyItem EMPTY = new EmptyItem();
 
-  /**
-   * Creates the empty item.
-   */
-  public static EmptyItem create()
-  {
-    return EMPTY;
-  }
+   /**
+    * Creates the empty item.
+    */
+   public static EmptyItem create() {
+      return EMPTY;
+   }
 
-  /**
-   * Adds to the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-  }
-  
-  /**
-   * The empty item can produce empty.
-   */
-  public boolean allowEmpty()
-  {
-    return true;
-  }
-  
-  /**
-   * Sets an attribute.
-   *
-   * @param name the name of the attribute
-   * @param value the value of the attribute
-   *
-   * @return the program for handling the element
-   */
-  public Item setAttribute(QName name, String value)
-  {
-    return this;
-  }
+   /**
+    * Adds to the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+   }
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(int depth)
-  {
-    return "empty";
-  }
+   /**
+    * The empty item can produce empty.
+    */
+   public boolean allowEmpty() {
+      return true;
+   }
 
-  /**
-   * True for simple syntax.
-   */
-  public boolean isSimpleSyntax()
-  {
-    return true;
-  }
+   /**
+    * Sets an attribute.
+    *
+    * @param name  the name of the attribute
+    * @param value the value of the attribute
+    * @return the program for handling the element
+    */
+   public Item setAttribute(QName name, String value) {
+      return this;
+   }
 
-  /**
-   * Returns the hash code for the empty item.
-   */
-  public int hashCode()
-  {
-    return 37;
-  }
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(int depth) {
+      return "empty";
+   }
 
-  /**
-   * Returns true if the object is an empty item.
-   */
-  public boolean equals(Object o)
-  {
-    return o instanceof EmptyItem;
-  }
+   /**
+    * True for simple syntax.
+    */
+   public boolean isSimpleSyntax() {
+      return true;
+   }
 
-  public String toString()
-  {
-    return "EmptyItem[]";
-  }
+   /**
+    * Returns the hash code for the empty item.
+    */
+   public int hashCode() {
+      return 37;
+   }
+
+   /**
+    * Returns true if the object is an empty item.
+    */
+   public boolean equals(Object o) {
+      return o instanceof EmptyItem;
+   }
+
+   public String toString() {
+      return "EmptyItem[]";
+   }
 }

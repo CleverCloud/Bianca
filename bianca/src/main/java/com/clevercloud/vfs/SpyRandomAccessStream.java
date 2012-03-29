@@ -39,146 +39,132 @@ import java.util.logging.Logger;
  * Reads from a file in a random-access fashion.
  */
 public class SpyRandomAccessStream extends RandomAccessStream {
-  private static final Logger log
-    = Logger.getLogger(SpyRandomAccessStream.class.getName());
-  
-  private RandomAccessStream _file;
+   private static final Logger log
+      = Logger.getLogger(SpyRandomAccessStream.class.getName());
 
-  public SpyRandomAccessStream(RandomAccessStream file)
-  {
-    _file = file;
-  }
-  
-  /**
-   * Returns the length.
-   */
-  public long getLength()
-    throws IOException
-  {
-    return _file.getLength();
-  }
-  
-  /**
-   * Reads a block from a given location.
-   */
-  public int read(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    log.finest("random-read(0x" + Long.toHexString(getFilePointer()) + "," +
-               length + ")");
-    
-    return _file.read(buffer, offset, length);
-  }
+   private RandomAccessStream _file;
 
-  /**
-   * Reads a block from a given location.
-   */
-  public int read(char []buffer, int offset, int length)
-    throws IOException
-  {
-    log.finest("random-read(0x" + Long.toHexString(getFilePointer()) + "," +
-               length + ")");
+   public SpyRandomAccessStream(RandomAccessStream file) {
+      _file = file;
+   }
 
-    return _file.read(buffer, offset, length);
-  }
+   /**
+    * Returns the length.
+    */
+   public long getLength()
+      throws IOException {
+      return _file.getLength();
+   }
 
-  /**
-   * Reads a block from a given location.
-   */
-  public int read(long fileOffset, byte []buffer, int offset, int length)
-    throws IOException
-  {
-    log.info("random-read(0x" + Long.toHexString(fileOffset) + "," + 
-             length + ")");
-    
-    return _file.read(fileOffset, buffer, offset, length);
-  }
+   /**
+    * Reads a block from a given location.
+    */
+   public int read(byte[] buffer, int offset, int length)
+      throws IOException {
+      log.finest("random-read(0x" + Long.toHexString(getFilePointer()) + "," +
+         length + ")");
 
-  public void write(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    log.info("random-write(0x" + Long.toHexString(getFilePointer()) + "," + 
-             length + ")");
-    
-    _file.write(buffer, offset, length);
-  }
+      return _file.read(buffer, offset, length);
+   }
 
-  /**
-   * Writes a block from a given location.
-   */
-  public void write(long fileOffset, byte []buffer, int offset, int length)
-    throws IOException
-  {
-    log.info("random-write(0x" + Long.toHexString(fileOffset) + "," + 
-             length + ")");
-    
-    _file.write(fileOffset, buffer, offset, length);
-  }
+   /**
+    * Reads a block from a given location.
+    */
+   public int read(char[] buffer, int offset, int length)
+      throws IOException {
+      log.finest("random-read(0x" + Long.toHexString(getFilePointer()) + "," +
+         length + ")");
 
-    /**
-   * Seeks to the given position in the file.
-   */
-  public boolean seek(long position)
-  {
-    log.info("random-seek(0x" + position + ")");
+      return _file.read(buffer, offset, length);
+   }
 
-    return _file.seek(position);
-  }
+   /**
+    * Reads a block from a given location.
+    */
+   public int read(long fileOffset, byte[] buffer, int offset, int length)
+      throws IOException {
+      log.info("random-read(0x" + Long.toHexString(fileOffset) + "," +
+         length + ")");
 
-  /**
-   * Returns an OutputStream for this stream.
-   */
-  public OutputStream getOutputStream()
-    throws IOException
-  {
-    return _file.getOutputStream();
-  }
+      return _file.read(fileOffset, buffer, offset, length);
+   }
 
-  /**
-   * Returns an InputStream for this stream.
-   */
-  public InputStream getInputStream()
-    throws IOException
-  {
-    return _file.getInputStream();
-  }
+   public void write(byte[] buffer, int offset, int length)
+      throws IOException {
+      log.info("random-write(0x" + Long.toHexString(getFilePointer()) + "," +
+         length + ")");
 
-  /**
-   * Read a byte from the file, advancing the pointer.
-   */
-  public int read()
-    throws IOException
-  {
-    log.info("random-read(0x" + Long.toHexString(getFilePointer()) + ",1)");
+      _file.write(buffer, offset, length);
+   }
 
-    return _file.read();
-  }
+   /**
+    * Writes a block from a given location.
+    */
+   public void write(long fileOffset, byte[] buffer, int offset, int length)
+      throws IOException {
+      log.info("random-write(0x" + Long.toHexString(fileOffset) + "," +
+         length + ")");
 
-  /**
-   * Write a byte to the file, advancing the pointer.
-   */
-  public void write(int b)
-    throws IOException
-  {
-    log.info("random-write(0x" + Long.toHexString(getFilePointer()) + ",1)");
-    
-    _file.write(b);
-  }
+      _file.write(fileOffset, buffer, offset, length);
+   }
 
-  /**
-   * Returns the current position of the file pointer.
-   */
-  public long getFilePointer()
-    throws IOException
-  {
-    return _file.getFilePointer();
-  }
+   /**
+    * Seeks to the given position in the file.
+    */
+   public boolean seek(long position) {
+      log.info("random-seek(0x" + position + ")");
 
-  /**
-   * Closes the stream.
-   */
-  public void close() throws IOException
-  {
-    _file.close();
-  }
+      return _file.seek(position);
+   }
+
+   /**
+    * Returns an OutputStream for this stream.
+    */
+   public OutputStream getOutputStream()
+      throws IOException {
+      return _file.getOutputStream();
+   }
+
+   /**
+    * Returns an InputStream for this stream.
+    */
+   public InputStream getInputStream()
+      throws IOException {
+      return _file.getInputStream();
+   }
+
+   /**
+    * Read a byte from the file, advancing the pointer.
+    */
+   public int read()
+      throws IOException {
+      log.info("random-read(0x" + Long.toHexString(getFilePointer()) + ",1)");
+
+      return _file.read();
+   }
+
+   /**
+    * Write a byte to the file, advancing the pointer.
+    */
+   public void write(int b)
+      throws IOException {
+      log.info("random-write(0x" + Long.toHexString(getFilePointer()) + ",1)");
+
+      _file.write(b);
+   }
+
+   /**
+    * Returns the current position of the file pointer.
+    */
+   public long getFilePointer()
+      throws IOException {
+      return _file.getFilePointer();
+   }
+
+   /**
+    * Closes the stream.
+    */
+   public void close() throws IOException {
+      _file.close();
+   }
 }

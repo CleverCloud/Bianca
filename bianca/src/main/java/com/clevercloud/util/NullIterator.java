@@ -35,58 +35,48 @@ import java.util.ListIterator;
  * A null iterator
  */
 public class NullIterator<E> implements ListIterator<E> {
-  private static NullIterator _singleton;
+   private static NullIterator _singleton;
 
-  public static NullIterator create()
-  {
-    if (_singleton == null)
-      _singleton = new NullIterator();
+   public static NullIterator create() {
+      if (_singleton == null)
+         _singleton = new NullIterator();
 
-    return _singleton;
-  }
+      return _singleton;
+   }
 
-  public boolean hasNext()
-  {
-    return false;
-  }
+   public boolean hasNext() {
+      return false;
+   }
 
-  public E next()
-  {
-    return null;
-  }
+   public E next() {
+      return null;
+   }
 
-  public int nextIndex()
-  {
-    return -1;
-  }
+   public int nextIndex() {
+      return -1;
+   }
 
-  public boolean hasPrevious()
-  {
-    return false;
-  }
+   public boolean hasPrevious() {
+      return false;
+   }
 
-  public E previous()
-  {
-    return null;
-  }
+   public E previous() {
+      return null;
+   }
 
-  public int previousIndex()
-  {
-    return -1;
-  }
+   public int previousIndex() {
+      return -1;
+   }
 
-  public void add(E o)
-  {
-    throw new UnsupportedOperationException();
-  }
+   public void add(E o) {
+      throw new UnsupportedOperationException();
+   }
 
-  public void set(E o)
-  {
-    throw new UnsupportedOperationException();
-  }
+   public void set(E o) {
+      throw new UnsupportedOperationException();
+   }
 
-  public void remove()
-  {
-    throw new UnsupportedOperationException();
-  }
+   public void remove() {
+      throw new UnsupportedOperationException();
+   }
 }

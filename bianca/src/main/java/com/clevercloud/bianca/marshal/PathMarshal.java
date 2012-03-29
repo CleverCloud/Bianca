@@ -63,7 +63,7 @@ public class PathMarshal extends Marshal {
    @Override
    protected int getMarshalingCostImpl(Value argValue) {
       if (argValue instanceof JavaValue
-              && Path.class.isAssignableFrom(argValue.toJavaObject().getClass())) {
+         && Path.class.isAssignableFrom(argValue.toJavaObject().getClass())) {
          return Marshal.ZERO;
       } else if (argValue.isString()) {
          return Marshal.THREE;

@@ -31,7 +31,10 @@
 package com.clevercloud.bianca.lib.file;
 
 import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.BooleanValue;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.vfs.VfsStream;
 
@@ -93,12 +96,12 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       return new ReadStreamInput(_env, _lineReader, _is.getPath().openRead());
    }
 
    public void setEncoding(String encoding)
-           throws UnsupportedEncodingException {
+      throws UnsupportedEncodingException {
       if (_is != null) {
          _is.setEncoding(encoding);
       }
@@ -109,7 +112,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
     */
    @Override
    public void unread()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          _is.unread();
       }
@@ -120,7 +123,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return _is.read();
       } else {
@@ -133,7 +136,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
     */
    @Override
    public int read(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       ReadStream is = _is;
 
       if (is == null) {
@@ -161,7 +164,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
     * Reads a buffer from a file, returning -1 on EOF.
     */
    public int read(char[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return _is.read(buffer, offset, length);
       } else {
@@ -174,7 +177,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
     */
    @Override
    public StringValue read(int length)
-           throws IOException {
+      throws IOException {
       if (_is == null) {
          return null;
       }
@@ -191,7 +194,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
     */
    @Override
    public boolean readOptionalLinefeed()
-           throws IOException {
+      throws IOException {
       if (_is == null) {
          return false;
       }
@@ -207,7 +210,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
    }
 
    public void writeToStream(OutputStream os, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          _is.writeToStream(os, length);
       }
@@ -230,7 +233,7 @@ public class ReadStreamInput extends InputStream implements BinaryInput {
     */
    @Override
    public StringValue readLine(long length)
-           throws IOException {
+      throws IOException {
       return getLineReader().readLine(_env, this, length);
    }
 

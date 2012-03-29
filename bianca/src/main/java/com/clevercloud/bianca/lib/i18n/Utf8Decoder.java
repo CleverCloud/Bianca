@@ -35,7 +35,7 @@ import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
 
 public class Utf8Decoder
-        extends Decoder {
+   extends Decoder {
    private static final int ERROR_CHARACTER = 0xFFFE;
    private static final int EOF = -1;
 
@@ -57,7 +57,7 @@ public class Utf8Decoder
          } else if (0xC2 <= ch && ch <= 0xDF) {
             int ch2;
             if (i + 1 < len
-                    && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF) {
+               && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF) {
                i++;
 
                int code = ((ch - 0xC0) << 6) + (ch2 - 0x80);
@@ -75,13 +75,13 @@ public class Utf8Decoder
             int ch2;
             int ch3;
             if (i + 2 < len
-                    && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF
-                    && 0x80 <= (ch3 = str.charAt(i + 2)) && ch3 <= 0xBF) {
+               && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF
+               && 0x80 <= (ch3 = str.charAt(i + 2)) && ch3 <= 0xBF) {
                i += 2;
 
                int code = ((ch - 0xE0) << 12)
-                       + ((ch2 - 0x80) << 6)
-                       + (ch3 - 0x80);
+                  + ((ch2 - 0x80) << 6)
+                  + (ch3 - 0x80);
 
                if (0xD800 <= code && code <= 0xDBFF) {
                   code &= 0xFFFFF;
@@ -108,15 +108,15 @@ public class Utf8Decoder
             int ch4;
 
             if (i + 3 < len
-                    && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF
-                    && 0x80 <= (ch3 = str.charAt(i + 2)) && ch3 <= 0xBF
-                    && 0x80 <= (ch4 = str.charAt(i + 3)) && ch4 <= 0xBF) {
+               && 0x80 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xBF
+               && 0x80 <= (ch3 = str.charAt(i + 2)) && ch3 <= 0xBF
+               && 0x80 <= (ch4 = str.charAt(i + 3)) && ch4 <= 0xBF) {
                i += 3;
 
                int code = ((ch - 0xF0) << 18)
-                       + ((ch2 - 0x80) << 12)
-                       + ((ch3 - 0x80) << 6)
-                       + (ch4 - 0x80);
+                  + ((ch2 - 0x80) << 12)
+                  + ((ch3 - 0x80) << 6)
+                  + (ch4 - 0x80);
 
                if (code > 0xFFFF || 0xD800 <= code && code <= 0xDBFF) {
                   code &= 0xFFFFF;
@@ -281,9 +281,9 @@ public class Utf8Decoder
             }
 
             int ch = (((ch1 & 0xf) << 18)
-                    + ((ch2 & 0x3f) << 12)
-                    + ((ch3 & 0x3f) << 6)
-                    + ((ch4 & 0x3f)));
+               + ((ch2 & 0x3f) << 12)
+               + ((ch3 & 0x3f) << 6)
+               + ((ch4 & 0x3f)));
 
             _peek = 0xdc00 + (ch & 0x3ff);
 

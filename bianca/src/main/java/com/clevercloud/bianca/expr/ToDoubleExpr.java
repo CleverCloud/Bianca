@@ -51,7 +51,6 @@ public class ToDoubleExpr extends AbstractUnaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

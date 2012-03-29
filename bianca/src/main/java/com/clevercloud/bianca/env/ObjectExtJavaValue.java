@@ -41,13 +41,13 @@ import java.util.IdentityHashMap;
  * Represents a PHP object which extends a Java value.
  */
 public class ObjectExtJavaValue extends ObjectExtValue
-        implements Serializable {
+   implements Serializable {
 
    private Object _object;
    private final JavaClassDef _javaClassDef;
 
    public ObjectExtJavaValue(BiancaClass cl, Object object,
-           JavaClassDef javaClassDef) {
+                             JavaClassDef javaClassDef) {
       super(cl);
 
       _object = object;
@@ -55,7 +55,7 @@ public class ObjectExtJavaValue extends ObjectExtValue
    }
 
    public ObjectExtJavaValue(BiancaClass cl,
-           JavaClassDef javaClassDef) {
+                             JavaClassDef javaClassDef) {
       super(cl);
 
       _javaClassDef = javaClassDef;
@@ -64,6 +64,7 @@ public class ObjectExtJavaValue extends ObjectExtValue
    //
    // field
    //
+
    /**
     * Returns fields not explicitly specified by this value.
     */
@@ -136,10 +137,10 @@ public class ObjectExtJavaValue extends ObjectExtValue
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       if (_object == null) {
          _object = createJavaObject(Env.getInstance());
       }
@@ -151,10 +152,10 @@ public class ObjectExtJavaValue extends ObjectExtValue
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       if (_object == null) {
          _object = createJavaObject(Env.getInstance());
       }

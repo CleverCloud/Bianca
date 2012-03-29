@@ -39,18 +39,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.IdentityHashMap;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a PHP null value.
  */
 public class NullValue extends Value
-        implements Serializable {
+   implements Serializable {
 
    public static final NullValue NULL = new NullValue();
 
@@ -99,6 +94,7 @@ public class NullValue extends Value
    //
    // marshal cost
    //
+
    /**
     * Cost to convert to a double
     */
@@ -181,6 +177,7 @@ public class NullValue extends Value
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override
@@ -218,7 +215,7 @@ public class NullValue extends Value
    @Override
    public Object toJavaObjectNotNull(Env env, Class type) {
       env.warning(L.l("null is an unexpected argument; expected '{0}'",
-              type.getName()));
+         type.getName()));
 
       return null;
    }
@@ -521,6 +518,7 @@ public class NullValue extends Value
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    @Override
@@ -570,6 +568,7 @@ public class NullValue extends Value
    //
    // Java generator code
    //
+
    /**
     * Generates code to recreate the expression.
     *
@@ -577,7 +576,7 @@ public class NullValue extends Value
     */
    @Override
    public void generate(PrintWriter out)
-           throws IOException {
+      throws IOException {
       out.print("NullValue.NULL");
    }
 
@@ -596,10 +595,10 @@ public class NullValue extends Value
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("NULL");
    }
 

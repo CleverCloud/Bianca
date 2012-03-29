@@ -31,7 +31,6 @@ package com.clevercloud.xml.parsers;
 
 import com.clevercloud.xml.Html;
 import com.clevercloud.xml.XmlParser;
-
 import org.xml.sax.Parser;
 import org.xml.sax.XMLReader;
 
@@ -42,67 +41,55 @@ import javax.xml.parsers.SAXParserFactory;
  * JAXP SAX parser factory for strict HTML parsing.
  */
 public class HtmlSAXParserFactory extends SAXParserFactory {
-  /**
-   * Creates a new SAX Parser
-   */
-  public SAXParser newSAXParser()
-  {
-    return new HtmlSAXParser();
-  }
+   /**
+    * Creates a new SAX Parser
+    */
+   public SAXParser newSAXParser() {
+      return new HtmlSAXParser();
+   }
 
-  public Object getProperty(String key)
-  {
-    return null;
-  }
-
-  public void setProperty(String key, Object value)
-  {
-  }
-
-  public boolean getFeature(String key)
-  {
-    return false;
-  }
-
-  public void setFeature(String key, boolean value)
-  {
-  }
-
-  class HtmlSAXParser extends SAXParser {
-    private XmlParser parser;
-
-    HtmlSAXParser()
-    {
-      parser = new Html();
-    }
-
-    public Object getProperty(String key)
-    {
+   public Object getProperty(String key) {
       return null;
-    }
+   }
 
-    public void setProperty(String key, Object value)
-    {
-    }
-  
-    public Parser getParser()
-    {
-      return parser;
-    }
+   public void setProperty(String key, Object value) {
+   }
 
-    public XMLReader getXMLReader()
-    {
-      return parser;
-    }
-    
-    public boolean isNamespaceAware()
-    {
-      return true;
-    }
-    
-    public boolean isValidating()
-    {
+   public boolean getFeature(String key) {
       return false;
-    }
-  }
+   }
+
+   public void setFeature(String key, boolean value) {
+   }
+
+   class HtmlSAXParser extends SAXParser {
+      private XmlParser parser;
+
+      HtmlSAXParser() {
+         parser = new Html();
+      }
+
+      public Object getProperty(String key) {
+         return null;
+      }
+
+      public void setProperty(String key, Object value) {
+      }
+
+      public Parser getParser() {
+         return parser;
+      }
+
+      public XMLReader getXMLReader() {
+         return parser;
+      }
+
+      public boolean isNamespaceAware() {
+         return true;
+      }
+
+      public boolean isValidating() {
+         return false;
+      }
+   }
 }

@@ -33,8 +33,8 @@ package com.clevercloud.bianca.lib.jms;
 import com.clevercloud.bianca.annotation.NotNull;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.vfs.TempBuffer;
 import com.clevercloud.util.L10N;
+import com.clevercloud.vfs.TempBuffer;
 
 import javax.jms.*;
 import java.io.Serializable;
@@ -60,8 +60,8 @@ public class JMSQueue {
     * Connects to a named queue.
     */
    public JMSQueue(ConnectionFactory connectionFactory,
-           Destination queue)
-           throws Exception {
+                   Destination queue)
+      throws Exception {
       _connection = connectionFactory.createConnection();
 
       _session = _connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -90,7 +90,7 @@ public class JMSQueue {
    }
 
    public boolean send(@NotNull Value value, @Optional JMSQueue replyTo)
-           throws JMSException {
+      throws JMSException {
       Message message = null;
 
       if (value.isArray()) {
@@ -108,7 +108,7 @@ public class JMSQueue {
             } else {
                // every primitive except for bytes can be translated from a string
                ((MapMessage) message).setString(entry.getKey().toString(),
-                       entry.getValue().toString());
+                  entry.getValue().toString());
             }
          }
       } else if (value instanceof StringValue) {
@@ -148,7 +148,7 @@ public class JMSQueue {
    }
 
    public Value receive(Env env, @Optional("1") long timeout)
-           throws JMSException {
+      throws JMSException {
       Message message = _consumer.receive(timeout);
 
       if (message == null) {

@@ -37,86 +37,74 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class AttributeImpl extends XMLEventImpl implements Attribute {
-  private final QName _name;
-  private final String _value;
-  private final boolean _specified;
-  private final String _dtdType;
+   private final QName _name;
+   private final String _value;
+   private final boolean _specified;
+   private final String _dtdType;
 
-  public AttributeImpl(QName name, String value)
-  {
-    this(name, value, true);
-  }
+   public AttributeImpl(QName name, String value) {
+      this(name, value, true);
+   }
 
-  public AttributeImpl(QName name, String value, boolean specified)
-  {
-    this(name, value, specified, "CDATA");
-  }
+   public AttributeImpl(QName name, String value, boolean specified) {
+      this(name, value, specified, "CDATA");
+   }
 
-  public AttributeImpl(QName name, String value, boolean specified, 
-                       String dtdType)
-  {
-    _name = name;
-    _value = value;
-    _specified = specified;
-    _dtdType = dtdType;
-  }
+   public AttributeImpl(QName name, String value, boolean specified,
+                        String dtdType) {
+      _name = name;
+      _value = value;
+      _specified = specified;
+      _dtdType = dtdType;
+   }
 
-  public String getDTDType()
-  {
-    return _dtdType;
-  }
+   public String getDTDType() {
+      return _dtdType;
+   }
 
-  public QName getName()
-  {
-    return _name;
-  }
+   public QName getName() {
+      return _name;
+   }
 
-  public String getValue()
-  {
-    return _value;
-  }
+   public String getValue() {
+      return _value;
+   }
 
-  public boolean isSpecified()
-  {
-    return _specified;
-  }
+   public boolean isSpecified() {
+      return _specified;
+   }
 
-  public int getEventType()
-  {
-    return ATTRIBUTE;
-  }
+   public int getEventType() {
+      return ATTRIBUTE;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    try {
-      writer.write(_name + "=\"" + _value + "\"");
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      try {
+         writer.write(_name + "=\"" + _value + "\"");
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  public String toString()
-  {
-    return _name + "=\"" + _value + "\"";
-  }
+   public String toString() {
+      return _name + "=\"" + _value + "\"";
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof Attribute))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof Attribute))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    Attribute attr = (Attribute) o;
+      Attribute attr = (Attribute) o;
 
-    return getName().equals(attr.getName()) &&
-           getDTDType().equals(attr.getDTDType()) &&
-           getValue().equals(attr.getValue()) &&
-           isSpecified() == attr.isSpecified();
-  }
+      return getName().equals(attr.getName()) &&
+         getDTDType().equals(attr.getDTDType()) &&
+         getValue().equals(attr.getValue()) &&
+         isSpecified() == attr.isSpecified();
+   }
 }
 

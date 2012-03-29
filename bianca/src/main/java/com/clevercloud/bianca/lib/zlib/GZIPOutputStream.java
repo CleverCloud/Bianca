@@ -63,7 +63,7 @@ public class GZIPOutputStream extends DeflaterOutputStream {
     * @param def
     */
    private GZIPOutputStream(OutputStream out, Deflater def)
-           throws IOException {
+      throws IOException {
       super(out, def);
 
       out.write(_header, 0, _header.length);
@@ -72,16 +72,16 @@ public class GZIPOutputStream extends DeflaterOutputStream {
    /**
     * @param out
     * @param compressionLevel
-    * @param strategy Deflate compression strategy
-    * @param encodingMode FORCE_GZIP to write gzwrite compatible output;
-    *    FORCE_DEFLATE to write gzip header and zlib header,
-    *    but do not write crc32 trailer
+    * @param strategy         Deflate compression strategy
+    * @param encodingMode     FORCE_GZIP to write gzwrite compatible output;
+    *                         FORCE_DEFLATE to write gzip header and zlib header,
+    *                         but do not write crc32 trailer
     */
    public GZIPOutputStream(OutputStream out,
-           int compressionLevel,
-           int strategy,
-           int encodingMode)
-           throws IOException {
+                           int compressionLevel,
+                           int strategy,
+                           int encodingMode)
+      throws IOException {
       this(out, createDeflater(compressionLevel, strategy, encodingMode));
 
       _isGzip = (encodingMode == ZlibModule.FORCE_GZIP);
@@ -97,8 +97,8 @@ public class GZIPOutputStream extends DeflaterOutputStream {
     * Creates a deflater based on the Zlib arguments.
     */
    private static Deflater createDeflater(int compressionLevel,
-           int strategy,
-           int encodingMode) {
+                                          int strategy,
+                                          int encodingMode) {
       Deflater defl;
 
       if (encodingMode == ZlibModule.FORCE_GZIP) {
@@ -115,10 +115,10 @@ public class GZIPOutputStream extends DeflaterOutputStream {
    /**
     * @param out
     * @param compressionLevel
-    * @param strategy Deflate compression strategy
+    * @param strategy         Deflate compression strategy
     */
    public GZIPOutputStream(OutputStream out, int compressionLevel, int strategy)
-           throws IOException {
+      throws IOException {
       this(out, compressionLevel, strategy, ZlibModule.FORCE_GZIP);
    }
 
@@ -126,7 +126,7 @@ public class GZIPOutputStream extends DeflaterOutputStream {
     * @param out
     */
    public GZIPOutputStream(OutputStream out)
-           throws IOException {
+      throws IOException {
       this(out, Deflater.DEFAULT_COMPRESSION, Deflater.DEFAULT_STRATEGY);
    }
 
@@ -137,7 +137,7 @@ public class GZIPOutputStream extends DeflaterOutputStream {
     */
    @Override
    public void write(int v)
-           throws IOException {
+      throws IOException {
       super.write(v);
 
       if (_isGzip) {
@@ -152,7 +152,7 @@ public class GZIPOutputStream extends DeflaterOutputStream {
     */
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       super.write(buffer, offset, length);
 
       if (_isGzip) {
@@ -162,7 +162,7 @@ public class GZIPOutputStream extends DeflaterOutputStream {
 
    @Override
    public void finish()
-           throws IOException {
+      throws IOException {
       super.finish();
 
       if (_isGzip) {
@@ -197,7 +197,7 @@ public class GZIPOutputStream extends DeflaterOutputStream {
     */
    @Override
    public void close()
-           throws IOException {
+      throws IOException {
       if (!def.finished()) {
          finish();
       }

@@ -29,17 +29,13 @@
  */
 package com.clevercloud.bianca.lib.dom;
 
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.ObjectValue;
-import com.clevercloud.bianca.env.TraversableDelegate;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 
 import java.util.Iterator;
 import java.util.Map;
 
 public class DOMNodeListDelegate
-        implements TraversableDelegate {
+   implements TraversableDelegate {
 
    public DOMNodeListDelegate() {
    }
@@ -60,7 +56,7 @@ public class DOMNodeListDelegate
    }
 
    public class DOMNodeListKeyIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private DOMNodeList _list;
       private int _index;
@@ -86,7 +82,7 @@ public class DOMNodeListDelegate
    }
 
    public class DOMNodeListValueIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private Env _env;
       private DOMNodeList _list;
@@ -114,7 +110,7 @@ public class DOMNodeListDelegate
    }
 
    public class DOMNodeListIterator
-           implements Iterator<Map.Entry<Value, Value>> {
+      implements Iterator<Map.Entry<Value, Value>> {
 
       private Env _env;
       private DOMNodeList _list;
@@ -142,7 +138,7 @@ public class DOMNodeListDelegate
    }
 
    public class DOMNodeListEntry
-           implements Map.Entry<Value, Value> {
+      implements Map.Entry<Value, Value> {
 
       private int _key;
       private Value _value;

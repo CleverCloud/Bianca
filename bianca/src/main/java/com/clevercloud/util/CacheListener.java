@@ -33,5 +33,5 @@ package com.clevercloud.util;
  * Notifies the cache entry that it's been removed from the cache.
  */
 public interface CacheListener {
-  public void removeEvent();
+   public void removeEvent();
 }

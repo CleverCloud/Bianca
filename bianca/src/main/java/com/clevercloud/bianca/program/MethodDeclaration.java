@@ -35,7 +35,7 @@ import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.expr.ExprFactory;
-import com.clevercloud.bianca.statement.*;
+import com.clevercloud.bianca.statement.Statement;
 
 /**
  * Declaration for an abstract function or interface.
@@ -45,14 +45,14 @@ public class MethodDeclaration extends Function {
    private final ClassDef _qClass;
 
    public MethodDeclaration(ExprFactory exprFactory,
-           Location location,
-           ClassDef qClass,
-           String name,
-           FunctionInfo info,
-           Arg[] argList) {
+                            Location location,
+                            ClassDef qClass,
+                            String name,
+                            FunctionInfo info,
+                            Arg[] argList) {
       super(exprFactory, location,
-              name, info, argList,
-              new Statement[0]);
+         name, info, argList,
+         new Statement[0]);
 
       _qClass = qClass;
    }

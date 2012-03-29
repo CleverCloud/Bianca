@@ -32,7 +32,6 @@ package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.lib.file.BinaryInput;
 import com.clevercloud.bianca.lib.file.BinaryStream;
 import com.clevercloud.bianca.lib.file.FileModule;
@@ -41,12 +40,7 @@ import com.clevercloud.util.Base64;
 import com.clevercloud.util.CharBuffer;
 import com.clevercloud.util.L10N;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.LinkedHashMap;
@@ -58,7 +52,7 @@ import java.util.logging.Logger;
  * PHP URL
  */
 public class UrlModule
-        extends AbstractBiancaModule {
+   extends AbstractBiancaModule {
 
    private static final L10N L = new L10N(UrlModule.class);
    private static final Logger log = Logger.getLogger(UrlModule.class.getName());
@@ -117,8 +111,8 @@ public class UrlModule
     * Decodes base64
     */
    public static Value base64_decode(Env env,
-           StringValue str,
-           @Optional boolean isStrict) {
+                                     StringValue str,
+                                     @Optional boolean isStrict) {
       if (str.length() == 0) {
          return str;
       }
@@ -143,14 +137,14 @@ public class UrlModule
     * the headers sent in the response.
     */
    public static Value get_headers(Env env, String urlString,
-           @Optional Value format) {
+                                   @Optional Value format) {
       Socket socket = null;
 
       try {
          URL url = new URL(urlString);
 
          if (!url.getProtocol().equals("http")
-                 && !url.getProtocol().equals("https")) {
+            && !url.getProtocol().equals("https")) {
             env.warning(L.l("Not an HTTP URL"));
             return null;
          }
@@ -206,8 +200,8 @@ public class UrlModule
 
          if (format.toBoolean()) {
             for (String line = reader.readLine();
-                    line != null;
-                    line = reader.readLine()) {
+                 line != null;
+                 line = reader.readLine()) {
                line = line.trim();
 
                if (line.length() == 0) {
@@ -222,7 +216,7 @@ public class UrlModule
                   result.put(env.createString(line.trim()));
                } else {
                   StringValue key =
-                          env.createString(line.substring(0, colon).trim());
+                     env.createString(line.substring(0, colon).trim());
 
                   StringValue value;
 
@@ -255,8 +249,8 @@ public class UrlModule
             }
          } else {
             for (String line = reader.readLine();
-                    line != null;
-                    line = reader.readLine()) {
+                 line != null;
+                 line = reader.readLine()) {
                line = line.trim();
 
                if (line.length() == 0) {
@@ -287,7 +281,7 @@ public class UrlModule
     * Extracts the meta tags from a file and returns them as an array.
     */
    public static Value get_meta_tags(Env env, StringValue filename,
-           @Optional("false") boolean use_include_path) {
+                                     @Optional("false") boolean use_include_path) {
       InputStream in = null;
 
       ArrayValue result = new ArrayValueImpl();
@@ -323,7 +317,7 @@ public class UrlModule
 
                   if (name != null && content != null) {
                      result.put(env.createString(name),
-                             env.createString(content));
+                        env.createString(content));
                      break;
                   }
                }
@@ -347,28 +341,28 @@ public class UrlModule
    }
 
    public static Value http_build_query(
-           Env env,
-           Value formdata,
-           @Optional StringValue numeric_prefix,
-           @Optional("'&'") StringValue separator) {
+      Env env,
+      Value formdata,
+      @Optional StringValue numeric_prefix,
+      @Optional("'&'") StringValue separator) {
       StringValue result = new StringValue();
 
       httpBuildQueryImpl(env,
-              result,
-              formdata,
-              StringValue.EMPTY,
-              numeric_prefix,
-              separator);
+         result,
+         formdata,
+         StringValue.EMPTY,
+         numeric_prefix,
+         separator);
 
       return result;
    }
 
    private static void httpBuildQueryImpl(Env env,
-           StringValue result,
-           Value formdata,
-           StringValue path,
-           StringValue numeric_prefix,
-           StringValue separator) {
+                                          StringValue result,
+                                          Value formdata,
+                                          StringValue path,
+                                          StringValue numeric_prefix,
+                                          StringValue separator) {
       Set<Map.Entry<Value, Value>> entrySet;
 
       if (formdata.isArray()) {
@@ -416,8 +410,8 @@ public class UrlModule
    }
 
    private static StringValue makeNewPath(StringValue oldPath,
-           Value key,
-           StringValue numeric_prefix) {
+                                          Value key,
+                                          StringValue numeric_prefix) {
       StringValue path = new StringValue();
 
       if (oldPath.length() != 0) {
@@ -508,12 +502,13 @@ public class UrlModule
    }
    }
     */
+
    /**
     * Parses the URL into an array.
     */
    public static Value parse_url(Env env,
-           StringValue str,
-           @Optional("-1") int component) {
+                                 StringValue str,
+                                 @Optional("-1") int component) {
       ArrayValueImpl array = new ArrayValueImpl();
 
       parseUrl(env, str, array);
@@ -541,8 +536,8 @@ public class UrlModule
    }
 
    private static void parseUrl(Env env,
-           StringValue str,
-           ArrayValue array) {
+                                StringValue str,
+                                ArrayValue array) {
       int strlen = str.length();
 
       if (strlen == 0) {
@@ -576,8 +571,8 @@ public class UrlModule
 
             i = end + 1;
          } else if (colon + 1 == strlen
-                 || (ch = str.charAt(colon + 1)) <= '0'
-                 || '9' <= ch) {
+            || (ch = str.charAt(colon + 1)) <= '0'
+            || '9' <= ch) {
             StringValue sb = new StringValue();
             sb.append(str, 0, colon);
             array.put(SCHEME_U, sb);
@@ -797,9 +792,9 @@ public class UrlModule
          char ch = str.charAt(i);
 
          if ('a' <= ch && ch <= 'z'
-                 || 'A' <= ch && ch <= 'Z'
-                 || '0' <= ch && ch <= '9'
-                 || ch == '-' || ch == '_' || ch == '.' || ch == '~') {
+            || 'A' <= ch && ch <= 'Z'
+            || '0' <= ch && ch <= '9'
+            || ch == '-' || ch == '_' || ch == '.' || ch == '~') {
             sb.append(ch);
          } else {
             sb.append('%');
@@ -814,7 +809,9 @@ public class UrlModule
    enum ParseUrlState {
 
       INIT, USER, PASS, HOST, PORT, PATH, QUERY, FRAGMENT
-   };
+   }
+
+   ;
 
    /**
     * Gets the magic quotes value.
@@ -909,7 +906,7 @@ public class UrlModule
    }
 
    private static String getNextTag(BinaryInput input)
-           throws IOException {
+      throws IOException {
       StringBuilder tag = new StringBuilder();
 
       for (int ch = 0; !input.isEOF() && ch != '<'; ch = input.read()) {
@@ -934,7 +931,7 @@ public class UrlModule
     * as an array.
     */
    private static String[] getNextAttribute(BinaryInput input)
-           throws IOException {
+      throws IOException {
       int ch;
 
       consumeWhiteSpace(input);
@@ -995,7 +992,7 @@ public class UrlModule
 
          // mimics PHP behavior
          if ((quoted && ch == quote)
-                 || (!quoted && Character.isWhitespace(ch)) || ch == '>') {
+            || (!quoted && Character.isWhitespace(ch)) || ch == '>') {
             break;
          }
 
@@ -1006,7 +1003,7 @@ public class UrlModule
    }
 
    private static void consumeWhiteSpace(BinaryInput input)
-           throws IOException {
+      throws IOException {
       int ch = 0;
 
       while (!input.isEOF() && Character.isWhitespace(ch = input.read())) {
@@ -1020,7 +1017,7 @@ public class UrlModule
 
    private static boolean isValidAttributeCharacter(int ch) {
       return Character.isLetterOrDigit(ch)
-              || (ch == '-') || (ch == '.') || (ch == '_') || (ch == ':');
+         || (ch == '-') || (ch == '.') || (ch == '_') || (ch == ':');
    }
 
    private static char toHexDigit(int d) {

@@ -30,9 +30,9 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
+import com.clevercloud.bianca.env.BooleanValue;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.BooleanValue;
 
 /**
  * Represents a PHP isset call
@@ -59,7 +59,6 @@ public class FunIssetExpr extends AbstractUnaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

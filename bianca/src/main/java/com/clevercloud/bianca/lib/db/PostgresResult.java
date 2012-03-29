@@ -29,18 +29,12 @@
  */
 package com.clevercloud.bianca.lib.db;
 
-import com.clevercloud.util.L10N;
 import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.NullValue;
+import com.clevercloud.bianca.env.Value;
+import com.clevercloud.util.L10N;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.sql.Time;
+import java.sql.*;
 import java.util.logging.Logger;
 
 /**
@@ -57,13 +51,13 @@ public class PostgresResult extends JdbcResultResource {
     * Constructor for PostgresResult
     *
     * @param stmt the corresponding statement
-    * @param rs the corresponding result set
+    * @param rs   the corresponding result set
     * @param conn the corresponding connection
     */
    public PostgresResult(Env env,
-           Statement stmt,
-           ResultSet rs,
-           Postgres conn) {
+                         Statement stmt,
+                         ResultSet rs,
+                         Postgres conn) {
       super(env, stmt, rs, conn);
    }
 
@@ -71,11 +65,11 @@ public class PostgresResult extends JdbcResultResource {
     * Constructor for PostgresResult
     *
     * @param metaData the corresponding result set meta data
-    * @param conn the corresponding connection
+    * @param conn     the corresponding connection
     */
    public PostgresResult(Env env,
-           ResultSetMetaData metaData,
-           Postgres conn) {
+                         ResultSetMetaData metaData,
+                         Postgres conn) {
       super(env, metaData, conn);
    }
 
@@ -106,7 +100,7 @@ public class PostgresResult extends JdbcResultResource {
     */
    @Override
    protected Value getColumnTime(Env env, ResultSet rs, int column)
-           throws SQLException {
+      throws SQLException {
       Time time = rs.getTime(column);
 
       if (time == null) {
@@ -118,7 +112,7 @@ public class PostgresResult extends JdbcResultResource {
 
    @Override
    protected Value getColumnDate(Env env, ResultSet rs, int column)
-           throws SQLException {
+      throws SQLException {
       Date date = rs.getDate(column);
 
       if (date == null) {
@@ -130,7 +124,7 @@ public class PostgresResult extends JdbcResultResource {
 
    @Override
    protected Value getColumnTimestamp(Env env, ResultSet rs, int column)
-           throws SQLException {
+      throws SQLException {
       Timestamp timestamp = rs.getTimestamp(column);
 
       if (timestamp == null) {

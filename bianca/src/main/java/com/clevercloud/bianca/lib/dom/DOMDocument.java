@@ -33,16 +33,10 @@ import com.clevercloud.bianca.UnimplementedException;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.util.L10N;
 import com.clevercloud.util.IoUtil;
-import com.clevercloud.vfs.Path;
-import com.clevercloud.vfs.ReadStream;
-import com.clevercloud.vfs.StringStream;
-import com.clevercloud.vfs.TempStream;
-import com.clevercloud.vfs.WriteStream;
-import com.clevercloud.vfs.Vfs;
+import com.clevercloud.util.L10N;
+import com.clevercloud.vfs.*;
 import com.clevercloud.xml.XmlPrinter;
-
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -52,7 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DOMDocument
-        extends DOMNode<Document> {
+   extends DOMNode<Document> {
 
    private final static L10N L = new L10N(DOMDocument.class);
    private final static Logger log = Logger.getLogger(DOMDocument.class.getName());
@@ -63,8 +57,8 @@ public class DOMDocument
    }
 
    public static DOMDocument __construct(Env env,
-           @Optional("'1.0'") String version,
-           @Optional String encoding) {
+                                         @Optional("'1.0'") String version,
+                                         @Optional String encoding) {
       DOMDocument document = getImpl(env).createDocument();
 
       if (version != null && version.length() > 0) {
@@ -91,12 +85,12 @@ public class DOMDocument
    }
 
    public DOMNode adoptNode(DOMNode source)
-           throws DOMException {
+      throws DOMException {
       return wrap(_delegate.adoptNode(source.getDelegate()));
    }
 
    public DOMAttr createAttribute(String name)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.createAttribute(name));
       } catch (org.w3c.dom.DOMException ex) {
@@ -105,7 +99,7 @@ public class DOMDocument
    }
 
    public DOMAttr createAttributeNS(String namespaceURI, String qualifiedName)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.createAttributeNS(namespaceURI, qualifiedName));
       } catch (org.w3c.dom.DOMException ex) {
@@ -126,7 +120,7 @@ public class DOMDocument
    }
 
    public DOMElement createElement(String tagName)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.createElement(tagName));
       } catch (org.w3c.dom.DOMException ex) {
@@ -135,7 +129,7 @@ public class DOMDocument
    }
 
    public DOMElement createElement(String tagName, String textContent)
-           throws DOMException {
+      throws DOMException {
       try {
          DOMElement element = createElement(tagName);
 
@@ -148,7 +142,7 @@ public class DOMDocument
    }
 
    public DOMElement createElementNS(String namespaceURI, String tagName)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.createElementNS(namespaceURI, tagName));
       } catch (org.w3c.dom.DOMException ex) {
@@ -157,9 +151,9 @@ public class DOMDocument
    }
 
    public DOMElement createElementNS(String namespaceURI,
-           String tagName,
-           String textContent)
-           throws DOMException {
+                                     String tagName,
+                                     String textContent)
+      throws DOMException {
       try {
          DOMElement element = createElementNS(namespaceURI, tagName);
 
@@ -172,7 +166,7 @@ public class DOMDocument
    }
 
    public DOMEntityReference createEntityReference(String name)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.createEntityReference(name));
       } catch (org.w3c.dom.DOMException ex) {
@@ -181,7 +175,7 @@ public class DOMDocument
    }
 
    public DOMProcessingInstruction createProcessingInstruction(String target)
-           throws DOMException {
+      throws DOMException {
       try {
          return createProcessingInstruction(target, null);
       } catch (org.w3c.dom.DOMException ex) {
@@ -190,8 +184,8 @@ public class DOMDocument
    }
 
    public DOMProcessingInstruction createProcessingInstruction(String target,
-           String data)
-           throws DOMException {
+                                                               String data)
+      throws DOMException {
       try {
          return wrap(_delegate.createProcessingInstruction(target, data));
       } catch (org.w3c.dom.DOMException ex) {
@@ -292,7 +286,7 @@ public class DOMDocument
    }
 
    public DOMNode importNode(DOMNode importedNode, boolean deep)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.importNode(importedNode.getDelegate(), deep));
       } catch (org.w3c.dom.DOMException ex) {
@@ -302,7 +296,7 @@ public class DOMDocument
 
    // TODO: also can be called statically, returns a DOMDocument in that case
    public boolean load(Env env, Path path, @Optional Value options)
-           throws IOException {
+      throws IOException {
       if (options != null) {
          env.stub(L.l("`{0}' is ignored", "options"));
       }
@@ -343,9 +337,9 @@ public class DOMDocument
 
          /**
           * XXX:
-         _delegate.setDoctype(new QDocumentType("html",
-         "-//W3C//DTD HTML 4.0 Transitional//EN",
-         "http://www.w3.org/TR/REC-html40/loose.dtd"));
+          _delegate.setDoctype(new QDocumentType("html",
+          "-//W3C//DTD HTML 4.0 Transitional//EN",
+          "http://www.w3.org/TR/REC-html40/loose.dtd"));
           */
       } catch (SAXException ex) {
          env.warning(ex);
@@ -374,9 +368,9 @@ public class DOMDocument
          _delegate.setXmlStandalone(true);
          /**
           * XXX:
-         _delegate.setDoctype(new QDocumentType("html",
-         "-//W3C//DTD HTML 4.0 Transitional//EN",
-         "http://www.w3.org/TR/REC-html40/loose.dtd"));
+          _delegate.setDoctype(new QDocumentType("html",
+          "-//W3C//DTD HTML 4.0 Transitional//EN",
+          "http://www.w3.org/TR/REC-html40/loose.dtd"));
           */
       } catch (SAXException ex) {
          env.warning(ex);
@@ -434,11 +428,11 @@ public class DOMDocument
    }
 
    public DOMNode renameNode(
-           DOMNode node, String namespaceURI, String qualifiedName)
-           throws DOMException {
+      DOMNode node, String namespaceURI, String qualifiedName)
+      throws DOMException {
       try {
          return wrap(_delegate.renameNode(
-                 node.getDelegate(), namespaceURI, qualifiedName));
+            node.getDelegate(), namespaceURI, qualifiedName));
       } catch (org.w3c.dom.DOMException ex) {
          throw wrap(ex);
       }
@@ -478,7 +472,7 @@ public class DOMDocument
    }
 
    private void saveToStream(WriteStream os, boolean isHTML)
-           throws IOException {
+      throws IOException {
       XmlPrinter printer = new XmlPrinter(os);
 
       printer.setMethod(isHTML ? "html" : "xml");
@@ -580,12 +574,12 @@ public class DOMDocument
    }
 
    public void setXmlStandalone(boolean xmlStandalone)
-           throws DOMException {
+      throws DOMException {
       _delegate.setXmlStandalone(xmlStandalone);
    }
 
    public void setXmlVersion(String xmlVersion)
-           throws DOMException {
+      throws DOMException {
       _delegate.setXmlVersion(xmlVersion);
    }
 

@@ -86,7 +86,7 @@ public class JavaArrayMarshal extends Marshal {
    protected int getMarshalingCostImpl(Value argValue) {
       if (argValue.isArray()) {
          if (Value[].class.equals(_expectedClass)
-                 || Object[].class.equals(_expectedClass)) {
+            || Object[].class.equals(_expectedClass)) {
             return Marshal.ONE;
          } else {
             return Marshal.THREE;

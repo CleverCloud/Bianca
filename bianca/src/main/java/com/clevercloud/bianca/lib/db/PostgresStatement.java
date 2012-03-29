@@ -30,11 +30,7 @@
  */
 package com.clevercloud.bianca.lib.db;
 
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.UnsetValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -50,7 +46,7 @@ import java.util.regex.Pattern;
 public class PostgresStatement extends JdbcStatementResource {
 
    private static final Logger log = Logger.getLogger(
-           PostgresStatement.class.getName());
+      PostgresStatement.class.getName());
    private static final L10N L = new L10N(PostgresStatement.class);
    // Map JDBC ?,?,? to any unsorted or duplicated params.
    // Ex: INSERT INTO test VALUES($2, $1) is mapped as [0]->2, [1]->1

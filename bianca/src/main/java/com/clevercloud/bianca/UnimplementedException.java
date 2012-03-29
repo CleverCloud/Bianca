@@ -31,14 +31,14 @@ package com.clevercloud.bianca;
 import com.clevercloud.util.L10N;
 
 public class UnimplementedException
-        extends UnsupportedOperationException {
+   extends UnsupportedOperationException {
 
    private final static L10N L = new L10N(UnimplementedException.class);
    private static final String MESSAGE = "{0} has not been implemented. "
-           + "A more recent version of Bianca may be available "
-           + "at http://www.clevercloud.com/download "
-           + "Requests for unimplemented features can be "
-           + "entered in the bugtracking system at http://bugs.clevercloud.com";
+      + "A more recent version of Bianca may be available "
+      + "at http://www.clevercloud.com/download "
+      + "Requests for unimplemented features can be "
+      + "entered in the bugtracking system at http://bugs.clevercloud.com";
 
    public UnimplementedException() {
       super(createMessage(null));

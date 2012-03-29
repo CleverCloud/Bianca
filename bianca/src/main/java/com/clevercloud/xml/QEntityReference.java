@@ -35,69 +35,70 @@ import org.w3c.dom.Node;
 import java.io.IOException;
 
 public class QEntityReference extends QNode implements EntityReference {
-  String _name;
+   String _name;
 
-  public QEntityReference(String name)
-  {
-    _name = name;
-  }
+   public QEntityReference(String name) {
+      _name = name;
+   }
 
-  protected QEntityReference(QDocument owner, String name)
-  {
-    super(owner);
+   protected QEntityReference(QDocument owner, String name) {
+      super(owner);
 
-    _name = name;
-  }
+      _name = name;
+   }
 
-  public String getNodeName() { return _name; }
-  public String getTagName() { return _name; }
-  public short getNodeType() { return ENTITY_REFERENCE_NODE; }
+   public String getNodeName() {
+      return _name;
+   }
 
-  private void lazyEvaluateChild()
-  {
-    if (_owner == null || _owner._dtd == null)
-      return;
+   public String getTagName() {
+      return _name;
+   }
 
-    QEntity entity = _owner._dtd.getEntity(_name);
-    if (entity == null || entity._firstChild == null)
-      return;
+   public short getNodeType() {
+      return ENTITY_REFERENCE_NODE;
+   }
 
-    _firstChild = entity._firstChild;
-    _lastChild = entity._lastChild;
-  }
+   private void lazyEvaluateChild() {
+      if (_owner == null || _owner._dtd == null)
+         return;
 
-  public Node getFirstChild()
-  {
-    if (_firstChild != null)
+      QEntity entity = _owner._dtd.getEntity(_name);
+      if (entity == null || entity._firstChild == null)
+         return;
+
+      _firstChild = entity._firstChild;
+      _lastChild = entity._lastChild;
+   }
+
+   public Node getFirstChild() {
+      if (_firstChild != null)
+         return _firstChild;
+
+      lazyEvaluateChild();
+
       return _firstChild;
+   }
 
-    lazyEvaluateChild();
+   public Node getLastChild() {
+      if (_lastChild != null)
+         return _lastChild;
 
-    return _firstChild;
-  }
+      lazyEvaluateChild();
 
-  public Node getLastChild()
-  {
-    if (_lastChild != null)
       return _lastChild;
+   }
 
-    lazyEvaluateChild();
+   public void print(XmlPrinter os) throws IOException {
+      if (os.finishAttributes())
+         os.print(">");
 
-    return _lastChild;
-  }
+      os.print("&");
+      os.print(getNodeName());
+      os.print(";");
+   }
 
-  public void print(XmlPrinter os) throws IOException
-  {
-    if (os.finishAttributes())
-      os.print(">");
-    
-    os.print("&");
-    os.print(getNodeName());
-    os.print(";");
-  }
-
-  public String toString()
-  {
-    return "EntityRef[" + getNodeName() + "]";
-  }
+   public String toString() {
+      return "EntityRef[" + getNodeName() + "]";
+   }
 }

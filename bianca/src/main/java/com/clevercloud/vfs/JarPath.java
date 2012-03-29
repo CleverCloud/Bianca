@@ -41,213 +41,189 @@ import java.util.jar.Manifest;
  * A filesystem for .jar files.
  */
 public class JarPath extends FilesystemPath {
-  private static LruCache<Path,JarPath> _jarCache
-    = new LruCache<Path,JarPath>(256);
-  
-  private Path _backing;
+   private static LruCache<Path, JarPath> _jarCache
+      = new LruCache<Path, JarPath>(256);
 
-  /**
-   * Creates a new jar path for the specific file
-   *
-   * @param root the root of this jar
-   * @param userPath the path specified by the user in the lookup()
-   * @param path the normalized path
-   * @param jarFile the underlying jar
-   */
-  protected JarPath(FilesystemPath root, String userPath,
-                    String path, Path backing)
-  {
-    super(root, userPath, path);
+   private Path _backing;
 
-    if (_root == null)
-      _root = this;
+   /**
+    * Creates a new jar path for the specific file
+    *
+    * @param root     the root of this jar
+    * @param userPath the path specified by the user in the lookup()
+    * @param path     the normalized path
+    * @param jarFile  the underlying jar
+    */
+   protected JarPath(FilesystemPath root, String userPath,
+                     String path, Path backing) {
+      super(root, userPath, path);
 
-    if (backing instanceof JarPath)
-      throw new IllegalStateException(backing.toString() + " is already a jar");
-    
-    _backing = backing;
-  }
+      if (_root == null)
+         _root = this;
 
-  /**
-   * Creates a new root Jar path.
-   */
-  public static JarPath create(Path backing)
-  {
-    if (backing instanceof JarPath)
-      return (JarPath) backing;
-    
-    JarPath path = _jarCache.get(backing);
+      if (backing instanceof JarPath)
+         throw new IllegalStateException(backing.toString() + " is already a jar");
 
-    if (path == null) {
-      path = new JarPath(null, "/", "/", backing);
-      _jarCache.put(backing, path);
-    }
+      _backing = backing;
+   }
 
-    return path;
-  }
+   /**
+    * Creates a new root Jar path.
+    */
+   public static JarPath create(Path backing) {
+      if (backing instanceof JarPath)
+         return (JarPath) backing;
 
-  public Path fsWalk(String userPath,
-                     Map<String,Object> attributes,
-                     String path)
-  {
-    if ("/".equals(userPath) && "/".equals(path))
-      return _root;
-    else
-      return new JarPath(_root, userPath, path, _backing);
-  }
+      JarPath path = _jarCache.get(backing);
 
-  /**
-   * Returns the scheme (jar)
-   */
-  public String getScheme()
-  {
-    return "jar";
-  }
+      if (path == null) {
+         path = new JarPath(null, "/", "/", backing);
+         _jarCache.put(backing, path);
+      }
 
-  @Override
-  public boolean isPathCacheable()
-  {
-    return true;
-  }
+      return path;
+   }
 
-  /**
-   * Returns the full url.
-   *
-   * <p>jar:<container-url>!/entry-path
-   */
-  public String getURL()
-  {
-    String path = getFullPath();
+   public Path fsWalk(String userPath,
+                      Map<String, Object> attributes,
+                      String path) {
+      if ("/".equals(userPath) && "/".equals(path))
+         return _root;
+      else
+         return new JarPath(_root, userPath, path, _backing);
+   }
 
-    return getScheme() + ":" + getContainer().getURL() + "!" + path;
-  }
+   /**
+    * Returns the scheme (jar)
+    */
+   public String getScheme() {
+      return "jar";
+   }
 
-  /**
-   * Returns the underlying file below the jar.
-   */
-  public Path getContainer()
-  {
-    return _backing;
-  }
-
-  /**
-   * Returns any signing certificates.
-   */
-  @Override
-  public Certificate []getCertificates()
-  {
-    return getJar().getCertificates(getPath());
-  }
-
-  /**
-   * Returns true if the entry exists in the jar file.
-   */
-  public boolean exists()
-  {
-    return getJar().exists(getPath());
-  }
-
-  /**
-   * Returns true if the entry is a directory in the jar file.
-   */
-  public boolean isDirectory()
-  {
-    return getJar().isDirectory(getPath());
-  }
-
-  /**
-   * Returns true if the entry is a file in the jar file.
-   */
-  public boolean isFile()
-  {
-    return getJar().isFile(getPath());
-  }
-
-  public long getLength()
-  {
-    return getJar().getLength(getPath());
-  }
-
-  public long getLastModified()
-  {
-    return getJar().getLastModified(getPath());
-  }
-  
-  public boolean canRead()
-  {
-    return getJar().canRead(getPath());
-  }
-
-  public boolean canWrite()
-  {
-    return getJar().canWrite(getPath());
-  }
-
-  /**
-   * Returns a list of the directories in the jar.
-   */
-  public String []list() throws IOException
-  {
-    return getJar().list(getPath());
-  }
-
-  /**
-   * Returns the manifest.
-   */
-  public Manifest getManifest() throws IOException
-  {
-    return getJar().getManifest();
-  }
-
-  /**
-   * Returns the dependency checker from the jar.
-   */
-  public PersistentDependency getDepend()
-  {
-    return getJar().getDepend();
-  }
-
-  public StreamImpl openReadImpl() throws IOException
-  {
-    return getJar().openReadImpl(this);
-  }
-
-  protected Jar getJar()
-  {
-    return Jar.create(_backing);
-  }
-
-  public void closeJar()
-  {
-    Jar jar = Jar.getJar(_backing);
-
-    if (jar != null)
-      jar.close();
-  }
-
-  public String toString()
-  {
-    return "jar:(" + _backing + ")" + getPath();
-  }
-
-  public int hashCode()
-  {
-    return 65531 * getPath().hashCode() + getContainer().hashCode();
-  }
-
-  /**
-   * Tests for equality.
-   */
-  public boolean equals(Object o)
-  {
-    if (this == o)
+   @Override
+   public boolean isPathCacheable() {
       return true;
-    else if (o == null || ! o.getClass().equals(this.getClass()))
-      return false;
+   }
 
-    JarPath jarPath = (JarPath) o;
+   /**
+    * Returns the full url.
+    * <p/>
+    * <p>jar:<container-url>!/entry-path
+    */
+   public String getURL() {
+      String path = getFullPath();
 
-    return (_backing.equals(jarPath._backing)
-            && getPath().equals(jarPath.getPath()));
-  }
+      return getScheme() + ":" + getContainer().getURL() + "!" + path;
+   }
+
+   /**
+    * Returns the underlying file below the jar.
+    */
+   public Path getContainer() {
+      return _backing;
+   }
+
+   /**
+    * Returns any signing certificates.
+    */
+   @Override
+   public Certificate[] getCertificates() {
+      return getJar().getCertificates(getPath());
+   }
+
+   /**
+    * Returns true if the entry exists in the jar file.
+    */
+   public boolean exists() {
+      return getJar().exists(getPath());
+   }
+
+   /**
+    * Returns true if the entry is a directory in the jar file.
+    */
+   public boolean isDirectory() {
+      return getJar().isDirectory(getPath());
+   }
+
+   /**
+    * Returns true if the entry is a file in the jar file.
+    */
+   public boolean isFile() {
+      return getJar().isFile(getPath());
+   }
+
+   public long getLength() {
+      return getJar().getLength(getPath());
+   }
+
+   public long getLastModified() {
+      return getJar().getLastModified(getPath());
+   }
+
+   public boolean canRead() {
+      return getJar().canRead(getPath());
+   }
+
+   public boolean canWrite() {
+      return getJar().canWrite(getPath());
+   }
+
+   /**
+    * Returns a list of the directories in the jar.
+    */
+   public String[] list() throws IOException {
+      return getJar().list(getPath());
+   }
+
+   /**
+    * Returns the manifest.
+    */
+   public Manifest getManifest() throws IOException {
+      return getJar().getManifest();
+   }
+
+   /**
+    * Returns the dependency checker from the jar.
+    */
+   public PersistentDependency getDepend() {
+      return getJar().getDepend();
+   }
+
+   public StreamImpl openReadImpl() throws IOException {
+      return getJar().openReadImpl(this);
+   }
+
+   protected Jar getJar() {
+      return Jar.create(_backing);
+   }
+
+   public void closeJar() {
+      Jar jar = Jar.getJar(_backing);
+
+      if (jar != null)
+         jar.close();
+   }
+
+   public String toString() {
+      return "jar:(" + _backing + ")" + getPath();
+   }
+
+   public int hashCode() {
+      return 65531 * getPath().hashCode() + getContainer().hashCode();
+   }
+
+   /**
+    * Tests for equality.
+    */
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+      else if (o == null || !o.getClass().equals(this.getClass()))
+         return false;
+
+      JarPath jarPath = (JarPath) o;
+
+      return (_backing.equals(jarPath._backing)
+         && getPath().equals(jarPath.getPath()));
+   }
 }

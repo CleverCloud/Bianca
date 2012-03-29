@@ -39,114 +39,105 @@ import com.clevercloud.vfs.Vfs;
 import javax.annotation.PostConstruct;
 
 public class WorkDir {
-  private static final EnvironmentLocal<Path> _localWorkDir
-    = new EnvironmentLocal<Path>("clevercloud.work-dir");
-  
-  private Path _path;
+   private static final EnvironmentLocal<Path> _localWorkDir
+      = new EnvironmentLocal<Path>("clevercloud.work-dir");
 
-  public WorkDir()
-  {
-  }
-  
-  /**
-   * Returns the local work directory.
-   */
-  public static Path getLocalWorkDir()
-  {
-    return getLocalWorkDir(Thread.currentThread().getContextClassLoader());
-  }
+   private Path _path;
 
-  /**
-   * Returns the local work directory.
-   */
-  public static Path getLocalWorkDir(ClassLoader loader)
-  {
-    Path path = _localWorkDir.get();
+   public WorkDir() {
+   }
 
-    if (path != null)
-      return path;
-    
-    path = getTmpWorkDir();
+   /**
+    * Returns the local work directory.
+    */
+   public static Path getLocalWorkDir() {
+      return getLocalWorkDir(Thread.currentThread().getContextClassLoader());
+   }
 
-    _localWorkDir.setGlobal(path);
-    
-    try {
-      path.mkdirs();
-    } catch (java.io.IOException e) {
-    }
+   /**
+    * Returns the local work directory.
+    */
+   public static Path getLocalWorkDir(ClassLoader loader) {
+      Path path = _localWorkDir.get();
 
-    return path;
-  }
-  
-  /**
-   * Returns the user directory from /tmp/
-   */
-  public static Path getTmpWorkDir()
-  {
-    String userName = System.getProperty("user.name");
-    
-    // Windows uses /temp as a work dir
-    if (com.clevercloud.server.util.CleverCloudSystem.isWindows())
-      return Vfs.lookup("file:/c:/tmp/" + userName);
-    else
-      return Vfs.lookup("file:/tmp/" + userName);
-  }
+      if (path != null)
+         return path;
 
-  /**
-   * Sets the work dir.
-   */
-  public static void setLocalWorkDir(Path path)
-  {
-    setLocalWorkDir(path, Thread.currentThread().getContextClassLoader());
-  }
+      path = getTmpWorkDir();
 
-  /**
-   * Sets the work dir.
-   */
-  public static void setLocalWorkDir(Path path, ClassLoader loader)
-  {
-    try {
-      if (path instanceof MergePath)
-        path = ((MergePath) path).getWritePath();
+      _localWorkDir.setGlobal(path);
 
-      if (path instanceof MemoryPath) {
-        String pathName = path.getPath();
-
-        path = WorkDir.getTmpWorkDir().lookup("qa/" + pathName);
+      try {
+         path.mkdirs();
+      } catch (java.io.IOException e) {
       }
-    
-      // path.mkdirs();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    
-    _localWorkDir.set(path);
-  }
-  
-  /**
-   * Sets the value.
-   */
-  public void setValue(Path path)
-  {
-    _path = path;
-  }
-  
-  /**
-   * @deprecated
-   */
-  public void setId(Path path)
-    throws java.io.IOException
-  {
-    setValue(path);
-  }
 
-  /**
-   * Stores self.
-   */
-  @PostConstruct
-  public void init()
-  {
-    setLocalWorkDir(_path);
-  }
+      return path;
+   }
+
+   /**
+    * Returns the user directory from /tmp/
+    */
+   public static Path getTmpWorkDir() {
+      String userName = System.getProperty("user.name");
+
+      // Windows uses /temp as a work dir
+      if (com.clevercloud.server.util.CleverCloudSystem.isWindows())
+         return Vfs.lookup("file:/c:/tmp/" + userName);
+      else
+         return Vfs.lookup("file:/tmp/" + userName);
+   }
+
+   /**
+    * Sets the work dir.
+    */
+   public static void setLocalWorkDir(Path path) {
+      setLocalWorkDir(path, Thread.currentThread().getContextClassLoader());
+   }
+
+   /**
+    * Sets the work dir.
+    */
+   public static void setLocalWorkDir(Path path, ClassLoader loader) {
+      try {
+         if (path instanceof MergePath)
+            path = ((MergePath) path).getWritePath();
+
+         if (path instanceof MemoryPath) {
+            String pathName = path.getPath();
+
+            path = WorkDir.getTmpWorkDir().lookup("qa/" + pathName);
+         }
+
+         // path.mkdirs();
+      } catch (Exception e) {
+         throw new RuntimeException(e);
+      }
+
+      _localWorkDir.set(path);
+   }
+
+   /**
+    * Sets the value.
+    */
+   public void setValue(Path path) {
+      _path = path;
+   }
+
+   /**
+    * @deprecated
+    */
+   public void setId(Path path)
+      throws java.io.IOException {
+      setValue(path);
+   }
+
+   /**
+    * Stores self.
+    */
+   @PostConstruct
+   public void init() {
+      setLocalWorkDir(_path);
+   }
 }
 

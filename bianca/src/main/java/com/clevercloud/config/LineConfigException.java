@@ -29,149 +29,131 @@
 
 package com.clevercloud.config;
 
-import com.clevercloud.util.*;
+import com.clevercloud.util.DisplayableException;
+import com.clevercloud.util.LineCompileException;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Thrown by the various Builders
  */
 public class LineConfigException extends ConfigException
-  implements LineCompileException, LineException
-{
-  private String _filename;
-  private int _line = -1;
+   implements LineCompileException, LineException {
+   private String _filename;
+   private int _line = -1;
 
-  /**
-   * Create a null exception
+   /**
+    * Create a null exception
+    */
+   public LineConfigException() {
+   }
+
+   /**
+    * Creates an exception with a message
+    */
+   public LineConfigException(String msg) {
+      super(msg);
+   }
+
+   /**
+    * Creates an exception with a message
+    */
+   public LineConfigException(String msg, Throwable cause) {
+      super(msg, cause);
+   }
+
+   /**
+    * Creates an exception with a message
+    */
+   /*
+   public LineConfigException(Throwable cause)
+   {
+     super(cause);
+   }
    */
-  public LineConfigException()
-  {
-  }
+   public LineConfigException(String filename, int line, String message) {
+      super(filename + ":" + line + ": " + message);
 
-  /**
-   * Creates an exception with a message
-   */
-  public LineConfigException(String msg)
-  {
-    super(msg);
-  }
+      _filename = filename;
+      _line = line;
+   }
 
-  /**
-   * Creates an exception with a message
-   */
-  public LineConfigException(String msg, Throwable cause)
-  {
-    super(msg, cause);
-  }
+   public LineConfigException(String filename, int line, Throwable cause) {
+      super(filename + ":" + line + ": " + cause.getMessage(), cause);
 
-  /**
-   * Creates an exception with a message
-   */
-  /*
-  public LineConfigException(Throwable cause)
-  {
-    super(cause);
-  }
-  */
+      _filename = filename;
+      _line = line;
+   }
 
-  public LineConfigException(String filename, int line, String message)
-  {
-    super(filename + ":" + line + ": " + message);
+   public LineConfigException(String filename, int line,
+                              String message, Throwable cause) {
+      super(filename + ":" + line + ": " + message, cause);
 
-    _filename = filename;
-    _line = line;
-  }
+      _filename = filename;
+      _line = line;
+   }
 
-  public LineConfigException(String filename, int line, Throwable cause)
-  {
-    super(filename + ":" + line + ": " + cause.getMessage(), cause);
+   public String getFilename() {
+      return _filename;
+   }
 
-    _filename = filename;
-    _line = line;
-  }
+   public int getLineNumber() {
+      return _line;
+   }
 
-  public LineConfigException(String filename, int line,
-                             String message, Throwable cause)
-  {
-    super(filename + ":" + line + ": " + message, cause);
+   public String toString() {
+      return getMessage();
+   }
 
-    _filename = filename;
-    _line = line;
-  }
+   public static RuntimeException create(String filename, int line, Throwable e) {
+      String loc = filename + ": " + line + ": ";
 
-  public String getFilename()
-  {
-    return _filename;
-  }
-
-  public int getLineNumber()
-  {
-    return _line;
-  }
-
-  public String toString()
-  {
-    return getMessage();
-  }
-
-  public static RuntimeException create(String filename, int line, Throwable e)
-  {
-    String loc = filename + ": " + line + ": ";
-    
-    if (e instanceof LineException) {
-      if (e instanceof RuntimeException)
-        throw (RuntimeException) e;
+      if (e instanceof LineException) {
+         if (e instanceof RuntimeException)
+            throw (RuntimeException) e;
+         else
+            return new LineConfigException(filename, line, e.getMessage(), e);
+      } else if (e instanceof DisplayableException)
+         return new LineConfigException(filename, line, e.getMessage(), e);
       else
-        return new LineConfigException(filename, line, e.getMessage(), e);
-    }
-    else if (e instanceof DisplayableException)
-      return new LineConfigException(filename, line, e.getMessage(), e);
-    else
-      return new LineConfigException(filename, line, e.toString(), e);
-  }
+         return new LineConfigException(filename, line, e.toString(), e);
+   }
 
-  public static RuntimeException create(Field field, Throwable e)
-  {
-    return create(loc(field), e);
-  }
+   public static RuntimeException create(Field field, Throwable e) {
+      return create(loc(field), e);
+   }
 
-  public static RuntimeException create(Method method, Throwable e)
-  {
-    return create(loc(method), e);
-  }
+   public static RuntimeException create(Method method, Throwable e) {
+      return create(loc(method), e);
+   }
 
-  public static RuntimeException create(String loc, Throwable e)
-  {
-    if (e instanceof LineException) {
-      if (e instanceof RuntimeException)
-        return (RuntimeException) e;
+   public static RuntimeException create(String loc, Throwable e) {
+      if (e instanceof LineException) {
+         if (e instanceof RuntimeException)
+            return (RuntimeException) e;
+         else
+            return new LineConfigException(e.getMessage(), e);
+      } else if (e instanceof DisplayableException)
+         return new LineConfigException(loc + e.getMessage(), e);
       else
-        return new LineConfigException(e.getMessage(), e);
-    }
-    else if (e instanceof DisplayableException)
-      return new LineConfigException(loc + e.getMessage(), e);
-    else
-      return new LineConfigException(loc + e, e);
-  }
+         return new LineConfigException(loc + e, e);
+   }
 
-  public static RuntimeException create(Throwable e)
-  {
-    if (e instanceof LineCompileException)
-      return new LineConfigException(e.getMessage(), e);
-    else if (e instanceof DisplayableException)
-      return new ConfigException(e.getMessage(), e);
-    else
-      return new ConfigException(e.toString(), e);
-  }
+   public static RuntimeException create(Throwable e) {
+      if (e instanceof LineCompileException)
+         return new LineConfigException(e.getMessage(), e);
+      else if (e instanceof DisplayableException)
+         return new ConfigException(e.getMessage(), e);
+      else
+         return new ConfigException(e.toString(), e);
+   }
 
-  public static String loc(Field field)
-  {
-    return field.getDeclaringClass().getName() + "." + field.getName() + ": ";
-  }
+   public static String loc(Field field) {
+      return field.getDeclaringClass().getName() + "." + field.getName() + ": ";
+   }
 
-  public static String loc(Method method)
-  {
-    return method.getDeclaringClass().getName() + "." + method.getName() + "(): ";
-  }
+   public static String loc(Method method) {
+      return method.getDeclaringClass().getName() + "." + method.getName() + "(): ";
+   }
 }

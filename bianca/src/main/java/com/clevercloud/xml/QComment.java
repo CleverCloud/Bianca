@@ -35,37 +35,36 @@ import org.w3c.dom.Node;
 import java.io.IOException;
 
 public class QComment extends QCharacterData implements Comment {
-  public QComment()
-  {
-  }
+   public QComment() {
+   }
 
-  public QComment(String data)
-  {
-    super(data);
-  }
+   public QComment(String data) {
+      super(data);
+   }
 
-  public String getNodeName() { return "#comment"; }
-  public short getNodeType() { return COMMENT_NODE; }
+   public String getNodeName() {
+      return "#comment";
+   }
 
-  Node importNode(QDocument owner, boolean deep) 
-  {
-    QComment comment = new QComment(_data);
-    comment._owner = owner;
-    return comment;
-  }
+   public short getNodeType() {
+      return COMMENT_NODE;
+   }
 
-  public void print(XmlPrinter os) throws IOException
-  {
-    os.comment(getData());
-  }
+   Node importNode(QDocument owner, boolean deep) {
+      QComment comment = new QComment(_data);
+      comment._owner = owner;
+      return comment;
+   }
 
-  private Object writeReplace()
-  {
-    return new SerializedXml(this);
-  }
+   public void print(XmlPrinter os) throws IOException {
+      os.comment(getData());
+   }
 
-  public String toString()
-  {
-    return "Comment[" + getData() + "]";
-  }
+   private Object writeReplace() {
+      return new SerializedXml(this);
+   }
+
+   public String toString() {
+      return "Comment[" + getData() + "]";
+   }
 }

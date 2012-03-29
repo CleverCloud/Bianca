@@ -31,7 +31,6 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 import java.util.logging.Level;
@@ -40,62 +39,58 @@ import java.util.logging.Level;
  * Uses the axis to select new nodes.
  */
 public class AttributeIterator extends AxisIterator {
-  private AttributeIterator(ExprEnvironment env)
-  {
-    super(env);
-  }
-  /**
-   * Creates the new AxisIterator.
-   *
-   * @param parentIter the parent iterator
-   * @param axis the owning axis
-   * @param node the first node
-   * @param env the xpath environment
-   * @param context the context node
-   * @param match the node matching pattern
-   */
-  public AttributeIterator(NodeIterator parentIter, AbstractPattern axis,
-                           Node node, ExprEnvironment env,
-                           AbstractPattern match)
-    throws XPathException
-  {
-    super(parentIter, axis, node, env, match);
-  }
-  
-  /**
-   * Returns the next selected node.
-   */
-  public SelectedNode nextSelectedNode()
-    throws XPathException
-  {
-    Node node = nextNode();
+   private AttributeIterator(ExprEnvironment env) {
+      super(env);
+   }
 
-    return node == null ? null : new SelectedAttribute(node);
-  }
+   /**
+    * Creates the new AxisIterator.
+    *
+    * @param parentIter the parent iterator
+    * @param axis       the owning axis
+    * @param node       the first node
+    * @param env        the xpath environment
+    * @param context    the context node
+    * @param match      the node matching pattern
+    */
+   public AttributeIterator(NodeIterator parentIter, AbstractPattern axis,
+                            Node node, ExprEnvironment env,
+                            AbstractPattern match)
+      throws XPathException {
+      super(parentIter, axis, node, env, match);
+   }
 
-  public Object clone()
-  {
-    try {
-      AttributeIterator iter = new AttributeIterator(_env);
+   /**
+    * Returns the next selected node.
+    */
+   public SelectedNode nextSelectedNode()
+      throws XPathException {
+      Node node = nextNode();
 
-      iter._position = _position;
-      if (_parentIter != null)
-        iter._parentIter = (NodeIterator) _parentIter.clone();
-      iter._axis = _axis;
-      iter._node = _node;
-      iter._env = _env; // clone?
-      iter._match = _match;
+      return node == null ? null : new SelectedAttribute(node);
+   }
 
-      return iter;
-    } catch (Exception e) {
-      log.log(Level.FINE, e.toString(), e);
+   public Object clone() {
+      try {
+         AttributeIterator iter = new AttributeIterator(_env);
 
-      return null;
-    }
-  }
+         iter._position = _position;
+         if (_parentIter != null)
+            iter._parentIter = (NodeIterator) _parentIter.clone();
+         iter._axis = _axis;
+         iter._node = _node;
+         iter._env = _env; // clone?
+         iter._match = _match;
 
-  public String toString()
-  {
-    return "AttributeIterator[axis:" + _axis + ",match:" + _match + "]";
-  }
+         return iter;
+      } catch (Exception e) {
+         log.log(Level.FINE, e.toString(), e);
+
+         return null;
+      }
+   }
+
+   public String toString() {
+      return "AttributeIterator[axis:" + _axis + ",match:" + _match + "]";
+   }
 }

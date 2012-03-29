@@ -37,108 +37,100 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class StringWriter extends StreamImpl {
-  private WriteStream ws;
-  private CharBuffer cb;
+   private WriteStream ws;
+   private CharBuffer cb;
 
-  public StringWriter()
-  {
-  }
-  
-  public StringWriter(CharBuffer cb)
-  {
-    this.cb = cb;
-  }
+   public StringWriter() {
+   }
 
-  /**
-   * Opens a write stream using this StringWriter as the resulting string
-   */
-  public WriteStream openWrite()
-  {
-    if (cb != null)
-      cb.clear();
-    else
-      cb = CharBuffer.allocate();
+   public StringWriter(CharBuffer cb) {
+      this.cb = cb;
+   }
 
-    if (ws == null)
-      ws = new WriteStream(this);
-    else
-      ws.init(this);
-
-    try {
-      ws.setEncoding("utf-8");
-    } catch (UnsupportedEncodingException e) {
-    }
-
-    return ws;
-  }
-
-  public String getString()
-  {
-    try {
-      ws.close();
-    } catch (IOException e) {
-    }
-
-    String str = cb.close();
-
-    cb = null;
-
-    return str;
-  }
-
-  /**
-   * Returns true since StringWriter is for writing.
-   */
-  public boolean canWrite()
-  {
-    return true;
-  }
-
-  /**
-   * Writes a utf-8 encoded buffer to the underlying string.
-   *
-   * @param buf byte buffer containing the bytes
-   * @param offset offset where to start writing
-   * @param length number of bytes to write
-   * @param isEnd true when the write is flushing a close.
-   */
-  public void write(byte []buf, int offset, int length, boolean isEnd)
-    throws IOException
-  {
-    int end = offset + length;
-    while (offset < end) {
-      int ch1 = buf[offset++] & 0xff;
-
-      if (ch1 < 0x80)
-        cb.append((char) ch1);
-      else if ((ch1 & 0xe0) == 0xc0) {
-        if (offset >= end)
-          throw new EOFException("unexpected end of file in utf8 character");
-        
-        int ch2 = buf[offset++] & 0xff;
-        if ((ch2 & 0xc0) != 0x80)
-          throw new CharConversionException("illegal utf8 encoding");
-      
-        cb.append((char) (((ch1 & 0x1f) << 6) + (ch2 & 0x3f)));
-      }
-      else if ((ch1 & 0xf0) == 0xe0) {
-        if (offset + 1 >= end)
-          throw new EOFException("unexpected end of file in utf8 character");
-        
-        int ch2 = buf[offset++] & 0xff;
-        int ch3 = buf[offset++] & 0xff;
-      
-        if ((ch2 & 0xc0) != 0x80)
-          throw new CharConversionException("illegal utf8 encoding");
-      
-        if ((ch3 & 0xc0) != 0x80)
-          throw new CharConversionException("illegal utf8 encoding");
-      
-        cb.append((char) (((ch1 & 0x1f) << 12) + ((ch2 & 0x3f) << 6) + (ch3 & 0x3f)));
-      }
+   /**
+    * Opens a write stream using this StringWriter as the resulting string
+    */
+   public WriteStream openWrite() {
+      if (cb != null)
+         cb.clear();
       else
-        throw new CharConversionException("illegal utf8 encoding at (" +
-                                          (int) ch1 + ")");
-    }
-  }
+         cb = CharBuffer.allocate();
+
+      if (ws == null)
+         ws = new WriteStream(this);
+      else
+         ws.init(this);
+
+      try {
+         ws.setEncoding("utf-8");
+      } catch (UnsupportedEncodingException e) {
+      }
+
+      return ws;
+   }
+
+   public String getString() {
+      try {
+         ws.close();
+      } catch (IOException e) {
+      }
+
+      String str = cb.close();
+
+      cb = null;
+
+      return str;
+   }
+
+   /**
+    * Returns true since StringWriter is for writing.
+    */
+   public boolean canWrite() {
+      return true;
+   }
+
+   /**
+    * Writes a utf-8 encoded buffer to the underlying string.
+    *
+    * @param buf    byte buffer containing the bytes
+    * @param offset offset where to start writing
+    * @param length number of bytes to write
+    * @param isEnd  true when the write is flushing a close.
+    */
+   public void write(byte[] buf, int offset, int length, boolean isEnd)
+      throws IOException {
+      int end = offset + length;
+      while (offset < end) {
+         int ch1 = buf[offset++] & 0xff;
+
+         if (ch1 < 0x80)
+            cb.append((char) ch1);
+         else if ((ch1 & 0xe0) == 0xc0) {
+            if (offset >= end)
+               throw new EOFException("unexpected end of file in utf8 character");
+
+            int ch2 = buf[offset++] & 0xff;
+            if ((ch2 & 0xc0) != 0x80)
+               throw new CharConversionException("illegal utf8 encoding");
+
+            cb.append((char) (((ch1 & 0x1f) << 6) + (ch2 & 0x3f)));
+         } else if ((ch1 & 0xf0) == 0xe0) {
+            if (offset + 1 >= end)
+               throw new EOFException("unexpected end of file in utf8 character");
+
+            int ch2 = buf[offset++] & 0xff;
+            int ch3 = buf[offset++] & 0xff;
+
+            if ((ch2 & 0xc0) != 0x80)
+               throw new CharConversionException("illegal utf8 encoding");
+
+            if ((ch3 & 0xc0) != 0x80)
+               throw new CharConversionException("illegal utf8 encoding");
+
+            cb.append((char) (((ch1 & 0x1f) << 12) + ((ch2 & 0x3f) << 6) + (ch3 & 0x3f)));
+         } else
+            throw new CharConversionException("illegal utf8 encoding at (" +
+               (int) ch1 + ")");
+      }
+   }
 }

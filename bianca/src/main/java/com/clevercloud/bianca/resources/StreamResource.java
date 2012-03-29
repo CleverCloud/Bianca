@@ -44,7 +44,7 @@ public class StreamResource extends ResourceValue {
     * Reads the next byte, returning -1 on eof.
     */
    public int read()
-           throws IOException {
+      throws IOException {
       return -1;
    }
 
@@ -52,7 +52,7 @@ public class StreamResource extends ResourceValue {
     * Reads a buffer, returning -1 on eof.
     */
    public int read(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       return -1;
    }
 
@@ -60,7 +60,7 @@ public class StreamResource extends ResourceValue {
     * Reads the optional linefeed character from a \r\n
     */
    public boolean readOptionalLinefeed()
-           throws IOException {
+      throws IOException {
       return false;
    }
 
@@ -68,7 +68,7 @@ public class StreamResource extends ResourceValue {
     * Reads a line from the buffer.
     */
    public StringValue readLine(Env env)
-           throws IOException {
+      throws IOException {
       return null;
    }
 
@@ -76,7 +76,7 @@ public class StreamResource extends ResourceValue {
     * Writes to a buffer.
     */
    public int write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       return -1;
    }
 
@@ -84,7 +84,7 @@ public class StreamResource extends ResourceValue {
     * prints
     */
    public void print(char ch)
-           throws IOException {
+      throws IOException {
       print(String.valueOf(ch));
    }
 
@@ -92,7 +92,7 @@ public class StreamResource extends ResourceValue {
     * prints
     */
    public void print(String s)
-           throws IOException {
+      throws IOException {
    }
 
    /**

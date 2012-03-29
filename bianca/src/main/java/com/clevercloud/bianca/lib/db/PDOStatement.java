@@ -35,7 +35,6 @@ import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReadOnly;
 import com.clevercloud.bianca.annotation.Reference;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.lib.file.FileReadValue;
 import com.clevercloud.util.IntMap;
 import com.clevercloud.util.L10N;
@@ -46,11 +45,7 @@ import com.clevercloud.vfs.TempReadStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,10 +53,10 @@ import java.util.logging.Logger;
  * PDO object oriented API facade.
  */
 public class PDOStatement
-        implements Iterable<Value>, EnvCleanup {
+   implements Iterable<Value>, EnvCleanup {
 
    private static final Logger log = Logger.getLogger(
-           PDOStatement.class.getName());
+      PDOStatement.class.getName());
    private static final L10N L = new L10N(PDOStatement.class);
    private static final Value[] NULL_VALUES = new Value[0];
    //private static final Value FETCH_FAILURE = new NullValue() {};
@@ -89,9 +84,9 @@ public class PDOStatement
    private IntMap _parameterNameMap;
 
    PDOStatement(Env env, Connection conn,
-           String query, boolean isPrepared,
-           ArrayValue options)
-           throws SQLException {
+                String query, boolean isPrepared,
+                ArrayValue options)
+      throws SQLException {
       _env = env;
       _error = new PDOError(_env);
 
@@ -110,10 +105,10 @@ public class PDOStatement
 
          int ch;
          if (query.length() > 4
-                 && ((ch = query.charAt(0)) == 'c' || ch == 'C')
-                 && ((ch = query.charAt(1)) == 'a' || ch == 'A')
-                 && ((ch = query.charAt(2)) == 'l' || ch == 'L')
-                 && ((ch = query.charAt(3)) == 'l' || ch == 'L')) {
+            && ((ch = query.charAt(0)) == 'c' || ch == 'C')
+            && ((ch = query.charAt(1)) == 'a' || ch == 'A')
+            && ((ch = query.charAt(2)) == 'l' || ch == 'L')
+            && ((ch = query.charAt(3)) == 'l' || ch == 'L')) {
             _preparedStatement = conn.prepareCall(query);
          } else {
             _preparedStatement = conn.prepareStatement(query);
@@ -182,7 +177,7 @@ public class PDOStatement
             continue;
          } // TODO: check what characters are allowed
          else if (name != null
-                 && (ch == -1 || !Character.isJavaIdentifierPart(ch))) {
+            && (ch == -1 || !Character.isJavaIdentifierPart(ch))) {
             if (_parameterNameMap == null) {
                _parameterNameMap = new IntMap();
             }
@@ -238,7 +233,7 @@ public class PDOStatement
    }
 
    public boolean bindColumn(
-           Value column, @Reference Value var, @Optional("-1") int type) {
+      Value column, @Reference Value var, @Optional("-1") int type) {
       if (_bindColumns == null) {
          _bindColumns = new ArrayList<BindColumn>();
       }
@@ -254,10 +249,10 @@ public class PDOStatement
    }
 
    public boolean bindParam(Value parameter,
-           @Reference Value variable,
-           @Optional("-1") int dataType,
-           @Optional("-1") int length,
-           @Optional Value driverOptions) {
+                            @Reference Value variable,
+                            @Optional("-1") int dataType,
+                            @Optional("-1") int length,
+                            @Optional Value driverOptions) {
       if (length != -1) {
          throw new UnimplementedException("length");
       }
@@ -298,7 +293,7 @@ public class PDOStatement
       }
 
       BindParam bindParam = new BindParam(
-              parameter, variable, dataType, length, driverOptions);
+         parameter, variable, dataType, length, driverOptions);
 
       _bindParams.add(bindParam);
 
@@ -306,8 +301,8 @@ public class PDOStatement
    }
 
    public boolean bindValue(Value parameter,
-           Value value,
-           @Optional("-1") int dataType) {
+                            Value value,
+                            @Optional("-1") int dataType) {
       return bindParam(parameter, value.toValue(), dataType, -1, null);
    }
 
@@ -355,11 +350,11 @@ public class PDOStatement
    }
 
    public BindParam createBindParam(
-           Value parameter,
-           Value value,
-           int dataType,
-           int length,
-           Value driverOptions) {
+      Value parameter,
+      Value value,
+      int dataType,
+      int length,
+      Value driverOptions) {
       return new BindParam(parameter, value, dataType, length, driverOptions);
    }
 
@@ -420,8 +415,7 @@ public class PDOStatement
     * Execute the statement.
     *
     * @param inputParameters an array containing input values to correspond to
-    * the bound parameters for the statement.
-    *
+    *                        the bound parameters for the statement.
     * @return true for success, false for failure
     */
    public boolean execute(@Optional @ReadOnly Value inputParameters) {
@@ -435,8 +429,8 @@ public class PDOStatement
          parameters = null;
       } else {
          _env.warning(L.l(
-                 "'{0}' is an unexpected argument, expected ArrayValue",
-                 inputParameters));
+            "'{0}' is an unexpected argument, expected ArrayValue",
+            inputParameters));
          return false;
       }
 
@@ -492,13 +486,13 @@ public class PDOStatement
     * Fetch the next row.
     *
     * @param fetchMode the mode, 0 to use the value
-    * set by {@link #setFetchMode}.
+    *                  set by {@link #setFetchMode}.
     * @return a value, BooleanValue.FALSE if there
-    * are no more rows or an error occurs.
+    *         are no more rows or an error occurs.
     */
    public Value fetch(@Optional int fetchMode,
-           @Optional("-1") int cursorOrientation,
-           @Optional("-1") int cursorOffset) {
+                      @Optional("-1") int cursorOrientation,
+                      @Optional("-1") int cursorOffset) {
       if (cursorOrientation != -1) {
          throw new UnimplementedException("fetch with cursorOrientation");
       }
@@ -511,12 +505,11 @@ public class PDOStatement
    }
 
    /**
-    *
     * @param fetchMode
     * @param columnIndex 0-based column index when fetchMode is FETCH_BOTH
     */
    public Value fetchAll(
-           @Optional("0") int fetchMode, @Optional("-1") int columnIndex) {
+      @Optional("0") int fetchMode, @Optional("-1") int columnIndex) {
       int effectiveFetchMode;
 
       if (fetchMode == 0) {
@@ -537,7 +530,7 @@ public class PDOStatement
       }
 
       effectiveFetchMode = effectiveFetchMode
-              & (~(PDO.FETCH_GROUP | PDO.FETCH_UNIQUE));
+         & (~(PDO.FETCH_GROUP | PDO.FETCH_UNIQUE));
 
       switch (effectiveFetchMode) {
          case PDO.FETCH_COLUMN:
@@ -545,7 +538,7 @@ public class PDOStatement
 
          case PDO.FETCH_LAZY:
             _error.warning(L.l(
-                    "PDO::FETCH_LAZY can't be used with PDOStatement::fetchAll()"));
+               "PDO::FETCH_LAZY can't be used with PDOStatement::fetchAll()"));
             return BooleanValue.FALSE;
 
          default:
@@ -739,7 +732,7 @@ public class PDOStatement
     *
     * @param fetchMode the mode, 0 to use the value set by {@link #setFetchMode}.
     * @return a value, BooleanValue.FALSE if there are no more
-    *  rows or an error occurs.
+    *         rows or an error occurs.
     */
    private Value fetchImpl(int fetchMode, int columnIndex) {
       if (fetchMode == 0) {
@@ -992,17 +985,17 @@ public class PDOStatement
     * @param column 1-based column index
     */
    private Value getColumnValue(int column)
-           throws SQLException {
+      throws SQLException {
       return getColumnValue(column, -1, -1);
    }
 
    /**
-    * @param column 1-based column index
-    * @param jdbcType a jdbc type, or -1 if it is unknown
+    * @param column     1-based column index
+    * @param jdbcType   a jdbc type, or -1 if it is unknown
     * @param returnType a PDO.PARAM_* type, or -1
     */
    private Value getColumnValue(int column, int jdbcType, int returnType)
-           throws SQLException {
+      throws SQLException {
       if (returnType != -1) {
          throw new UnimplementedException("parm type " + returnType);
       }
@@ -1057,7 +1050,7 @@ public class PDOStatement
    }
 
    private ResultSetMetaData getResultSetMetaData()
-           throws SQLException {
+      throws SQLException {
       if (_resultSetMetaData == null) {
          _resultSetMetaData = _resultSet.getMetaData();
       }
@@ -1180,7 +1173,7 @@ public class PDOStatement
    }
 
    public boolean setAttribute(
-           int attribute, Value value, boolean isFromConstructor) {
+      int attribute, Value value, boolean isFromConstructor) {
       if (isFromConstructor) {
          switch (attribute) {
             case PDO.CURSOR_FWDONLY:
@@ -1270,7 +1263,7 @@ public class PDOStatement
 
          case PDO.FETCH_FUNC:
             _error.warning(L.l(
-                    "PDO::FETCH_FUNC can only be used with PDOStatement::fetchAll()"));
+               "PDO::FETCH_FUNC can only be used with PDOStatement::fetchAll()"));
             return false;
 
          case PDO.FETCH_INTO:
@@ -1294,7 +1287,6 @@ public class PDOStatement
    /**
     * @param index 1-based position number
     * @param value the value for the parameter
-    *
     * @return true for success, false for failure
     */
    private boolean setLobParameter(int index, Value value, long length) {
@@ -1304,18 +1296,18 @@ public class PDOStatement
          } else if (value instanceof StringValue) {
             if (length < 0) {
                _preparedStatement.setBinaryStream(
-                       index, value.toInputStream(), value.toString().length());
+                  index, value.toInputStream(), value.toString().length());
             } else {
                _preparedStatement.setBinaryStream(
-                       index, value.toInputStream(), (int) length);
+                  index, value.toInputStream(), (int) length);
             }
          } else {
             InputStream inputStream = value.toInputStream();
 
             if (inputStream == null) {
                _error.warning(L.l(
-                       "type {0} ({1}) for parameter index {2} cannot be used for lob",
-                       value.getType(), value.getClass(), index));
+                  "type {0} ({1}) for parameter index {2} cannot be used for lob",
+                  value.getType(), value.getClass(), index));
                return false;
             }
 
@@ -1347,7 +1339,7 @@ public class PDOStatement
                tempReadStream.setFreeWhenDone(true);
 
                _preparedStatement.setBinaryStream(
-                       index, new ReadStream(tempReadStream), tempBuffer.getLength());
+                  index, new ReadStream(tempReadStream), tempBuffer.getLength());
             } else {
                _preparedStatement.setBinaryStream(index, inputStream, (int) length);
             }
@@ -1363,7 +1355,6 @@ public class PDOStatement
    /**
     * @param index 1-based position number
     * @param value the value for the parameter
-    *
     * @return true for success, false for failure
     */
    private boolean setParameter(int index, Value value, long length) {
@@ -1386,8 +1377,8 @@ public class PDOStatement
             _preparedStatement.setObject(index, null);
          } else {
             _error.warning(L.l(
-                    "unknown type {0} ({1}) for parameter index {2}",
-                    value.getType(), value.getClass(), index));
+               "unknown type {0} ({1}) for parameter index {2}",
+               value.getType(), value.getClass(), index));
             return false;
          }
       } catch (SQLException ex) {
@@ -1418,11 +1409,11 @@ public class PDOStatement
 
       /**
        * @param column 1-based column index
-       * @param var reference that receives the value
-       * @param type a PARM_* type, -1 for default
+       * @param var    reference that receives the value
+       * @param type   a PARM_* type, -1 for default
        */
       private BindColumn(Value column, Value var, int type)
-              throws SQLException {
+         throws SQLException {
          assert column != null;
          assert var != null;
 
@@ -1442,7 +1433,7 @@ public class PDOStatement
       }
 
       private boolean init()
-              throws SQLException {
+         throws SQLException {
          if (_isInit) {
             return true;
          }
@@ -1474,7 +1465,7 @@ public class PDOStatement
       }
 
       public boolean bind()
-              throws SQLException {
+         throws SQLException {
          if (!init()) {
             return false;
          }
@@ -1504,11 +1495,11 @@ public class PDOStatement
       private final Value _driverOptions;
 
       public BindParam(
-              Value parameter,
-              Value value,
-              int dataType,
-              int length,
-              Value driverOptions) {
+         Value parameter,
+         Value value,
+         int dataType,
+         int length,
+         Value driverOptions) {
          int index = resolveParameter(parameter);
 
          _index = index;
@@ -1519,7 +1510,7 @@ public class PDOStatement
       }
 
       public boolean apply()
-              throws SQLException {
+         throws SQLException {
          switch (_dataType) {
             case PDO.PARAM_BOOL:
             case PDO.PARAM_INT:

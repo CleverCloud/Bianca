@@ -68,8 +68,8 @@ public class BooleanMarshal extends Marshal {
          return NullValue.NULL;
       } else {
          return Boolean.TRUE.equals(value)
-                 ? BooleanValue.TRUE
-                 : BooleanValue.FALSE;
+            ? BooleanValue.TRUE
+            : BooleanValue.FALSE;
       }
    }
 

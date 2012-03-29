@@ -30,11 +30,10 @@
 package com.clevercloud.bianca.lib.dom;
 
 import com.clevercloud.bianca.env.Env;
-
 import org.w3c.dom.EntityReference;
 
 public class DOMEntityReference
-        extends DOMNode<EntityReference> {
+   extends DOMNode<EntityReference> {
 
    public static DOMEntityReference __construct(Env env, String name) {
       return getImpl(env).createEntityReference(name);

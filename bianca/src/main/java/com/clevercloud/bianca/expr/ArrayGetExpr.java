@@ -71,7 +71,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -86,7 +85,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression as a copyable result.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -101,7 +99,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression, creating an array if the value is unset..
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -116,7 +113,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression, marking as dirty.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -131,7 +127,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression, creating an object if the value is unset.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -146,7 +141,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -160,7 +154,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -176,7 +169,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -191,7 +183,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -217,7 +208,6 @@ public class ArrayGetExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

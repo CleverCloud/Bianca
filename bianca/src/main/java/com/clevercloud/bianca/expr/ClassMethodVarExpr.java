@@ -30,12 +30,12 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.parser.BiancaParser;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.function.AbstractFunction;
+import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -54,9 +54,9 @@ public class ClassMethodVarExpr extends AbstractMethodExpr {
    protected boolean _isMethod;
 
    public ClassMethodVarExpr(Location location,
-           String className,
-           Expr nameExpr,
-           ArrayList<Expr> args) {
+                             String className,
+                             Expr nameExpr,
+                             ArrayList<Expr> args) {
       super(location);
 
       _className = className.intern();
@@ -68,9 +68,9 @@ public class ClassMethodVarExpr extends AbstractMethodExpr {
    }
 
    public ClassMethodVarExpr(Location location,
-           String className,
-           Expr nameExpr,
-           Expr[] args) {
+                             String className,
+                             Expr nameExpr,
+                             Expr[] args) {
       super(location);
 
       _className = className.intern();
@@ -81,8 +81,8 @@ public class ClassMethodVarExpr extends AbstractMethodExpr {
    }
 
    public ClassMethodVarExpr(String className,
-           Expr nameExpr,
-           ArrayList<Expr> args) {
+                             Expr nameExpr,
+                             ArrayList<Expr> args) {
       this(Location.UNKNOWN, className, nameExpr, args);
    }
 
@@ -92,6 +92,7 @@ public class ClassMethodVarExpr extends AbstractMethodExpr {
 
    /**
     * Returns the reference of the value.
+    *
     * @param location
     */
    @Override
@@ -101,6 +102,7 @@ public class ClassMethodVarExpr extends AbstractMethodExpr {
 
    /**
     * Returns the copy of the value.
+    *
     * @param location
     */
    @Override
@@ -112,7 +114,6 @@ public class ClassMethodVarExpr extends AbstractMethodExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

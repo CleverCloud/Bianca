@@ -30,9 +30,9 @@
 package com.clevercloud.bianca.program;
 
 import com.clevercloud.bianca.BiancaContext;
-import com.clevercloud.bianca.expr.VarInfo;
 import com.clevercloud.bianca.env.MethodIntern;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.expr.VarInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;

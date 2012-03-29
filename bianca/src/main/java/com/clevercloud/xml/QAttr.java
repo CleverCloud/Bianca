@@ -37,147 +37,122 @@ import org.w3c.dom.TypeInfo;
 import java.io.IOException;
 
 public class QAttr extends QNode implements Attr {
-  QName _name;
-  private String _value;
-  private boolean _specified = true;
+   QName _name;
+   private String _value;
+   private boolean _specified = true;
 
-  public QAttr(String name)
-  {
-    _name = new QName(name);
-  }
+   public QAttr(String name) {
+      _name = new QName(name);
+   }
 
-  public QAttr(QName name)
-  {
-    _name = name;
-  }
+   public QAttr(QName name) {
+      _name = name;
+   }
 
-  protected QAttr(QName name, String value)
-  { 
-    _name = name; 
-    _value = value;
-  }
+   protected QAttr(QName name, String value) {
+      _name = name;
+      _value = value;
+   }
 
-  protected QAttr(QDocument owner, QName name)
-  {
-    super(owner);
+   protected QAttr(QDocument owner, QName name) {
+      super(owner);
 
-    _name = name;
-  }
+      _name = name;
+   }
 
-  public Element getOwnerElement()
-  {
-    return (Element) getParentNode();
-  }
+   public Element getOwnerElement() {
+      return (Element) getParentNode();
+   }
 
-  public short getNodeType()
-  {
-    return ATTRIBUTE_NODE;
-  }
+   public short getNodeType() {
+      return ATTRIBUTE_NODE;
+   }
 
-  /**
-   * Returns the full QName.
-   */
-  public QName getQName()
-  {
-    return _name;
-  }
+   /**
+    * Returns the full QName.
+    */
+   public QName getQName() {
+      return _name;
+   }
 
-  public String getNodeName()
-  {
-    return _name.getName();
-  }
+   public String getNodeName() {
+      return _name.getName();
+   }
 
-  public boolean isId()
-  {
-    return false;
-  }
+   public boolean isId() {
+      return false;
+   }
 
-  public String getName()
-  {
-    return _name.getName();
-  }
+   public String getName() {
+      return _name.getName();
+   }
 
-  public String getPrefix()
-  {
-    return _name.getPrefix();
-  }
+   public String getPrefix() {
+      return _name.getPrefix();
+   }
 
-  public String getLocalName()
-  {
-    return _name.getLocalName();
-  }
+   public String getLocalName() {
+      return _name.getLocalName();
+   }
 
-  public String getCanonicalName()
-  {
-    return _name.getCanonicalName();
-  }
+   public String getCanonicalName() {
+      return _name.getCanonicalName();
+   }
 
-  public String getNamespaceURI()
-  {
-    return _name.getNamespace();
-  }
+   public String getNamespaceURI() {
+      return _name.getNamespace();
+   }
 
-  public String getNodeValue()
-  {
-    return _value;
-  }
+   public String getNodeValue() {
+      return _value;
+   }
 
-  public TypeInfo getSchemaTypeInfo()
-  {
-    return null;
-  }
+   public TypeInfo getSchemaTypeInfo() {
+      return null;
+   }
 
-  public void setNodeValue(String value)
-  {
-    _value = value;
-  }
+   public void setNodeValue(String value) {
+      _value = value;
+   }
 
-  public String getValue()
-  {
-    return _value;
-  }
+   public String getValue() {
+      return _value;
+   }
 
-  public void setValue(String value)
-  {
-    _value = value;
-  }
+   public void setValue(String value) {
+      _value = value;
+   }
 
-  public boolean getSpecified()
-  {
-    return _specified;
-  }
-  
-  public void setSpecified(boolean specified)
-  {
-    _specified = specified;
-  }
+   public boolean getSpecified() {
+      return _specified;
+   }
 
-  Node importNode(QDocument owner, boolean deep) 
-  {
-    QNode node = new QAttr(_name, _value);
-    node._owner = owner;
-    return node;
-  }
+   public void setSpecified(boolean specified) {
+      _specified = specified;
+   }
 
-  public void print(XmlPrinter out) throws IOException
-  {
-    if (! _specified)
-      return;
+   Node importNode(QDocument owner, boolean deep) {
+      QNode node = new QAttr(_name, _value);
+      node._owner = owner;
+      return node;
+   }
 
-    out.attribute(getNamespaceURI(), getLocalName(),
-                  getNodeName(), getNodeValue());
-  }
+   public void print(XmlPrinter out) throws IOException {
+      if (!_specified)
+         return;
 
-  private Object writeReplace()
-  {
-    return new SerializedXml(this);
-  }
+      out.attribute(getNamespaceURI(), getLocalName(),
+         getNodeName(), getNodeValue());
+   }
 
-  public String toString()
-  {
-    if (_value != null)
-      return "Attr[" + _name + " " + _value + "]";
-    else
-      return "Attr[" + _name + "]";
-  }
+   private Object writeReplace() {
+      return new SerializedXml(this);
+   }
+
+   public String toString() {
+      if (_value != null)
+         return "Attr[" + _name + " " + _value + "]";
+      else
+         return "Attr[" + _name + "]";
+   }
 }

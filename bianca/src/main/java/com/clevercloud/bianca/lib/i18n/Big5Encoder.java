@@ -30,15 +30,15 @@
  */
 package com.clevercloud.bianca.lib.i18n;
 
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CoderResult;
 
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.StringValue;
-
 public class Big5Encoder
-        extends GenericEncoder {
+   extends GenericEncoder {
 
    public Big5Encoder(String charsetName) {
       super(charsetName);
@@ -64,7 +64,7 @@ public class Big5Encoder
 
    @Override
    protected boolean fill(StringValue sb, CharBuffer in,
-           ByteBuffer out, CoderResult coder) {
+                          ByteBuffer out, CoderResult coder) {
       int len = out.position();
 
       if (len > 0) {

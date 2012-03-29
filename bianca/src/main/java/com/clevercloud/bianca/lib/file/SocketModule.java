@@ -33,12 +33,7 @@ package com.clevercloud.bianca.lib.file;
 import com.clevercloud.bianca.annotation.NotNull;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 import com.clevercloud.vfs.TempBuffer;
@@ -207,9 +202,9 @@ public class SocketModule extends AbstractBiancaModule {
 
    @ReturnNullAsFalse
    public static SocketInputOutput socket_create(Env env,
-           int domain,
-           int type,
-           int protocol) {
+                                                 int domain,
+                                                 int type,
+                                                 int protocol) {
       try {
          SocketInputOutput.Domain socketDomain = SocketInputOutput.Domain.AF_INET;
 
@@ -245,9 +240,9 @@ public class SocketModule extends AbstractBiancaModule {
    }
 
    public static boolean socket_bind(Env env,
-           @NotNull SocketInputOutput socket,
-           StringValue address,
-           @Optional("0") int port) {
+                                     @NotNull SocketInputOutput socket,
+                                     StringValue address,
+                                     @Optional("0") int port) {
       try {
          InetAddress[] addresses = InetAddress.getAllByName(address.toString());
 
@@ -257,7 +252,7 @@ public class SocketModule extends AbstractBiancaModule {
          }
 
          InetSocketAddress socketAddress =
-                 new InetSocketAddress(addresses[0], port);
+            new InetSocketAddress(addresses[0], port);
 
          socket.bind(socketAddress);
 
@@ -272,8 +267,8 @@ public class SocketModule extends AbstractBiancaModule {
    }
 
    public static boolean socket_connect(Env env,
-           @NotNull SocketInputOutput socket,
-           StringValue address, @Optional int port) {
+                                        @NotNull SocketInputOutput socket,
+                                        StringValue address, @Optional int port) {
       try {
          InetAddress[] addresses = InetAddress.getAllByName(address.toString());
 
@@ -283,7 +278,7 @@ public class SocketModule extends AbstractBiancaModule {
          }
 
          InetSocketAddress socketAddress =
-                 new InetSocketAddress(addresses[0], port);
+            new InetSocketAddress(addresses[0], port);
 
          socket.connect(socketAddress);
 
@@ -298,8 +293,8 @@ public class SocketModule extends AbstractBiancaModule {
    }
 
    public static Value socket_read(Env env,
-           @NotNull SocketInputOutput socket,
-           int length, @Optional int type) {
+                                   @NotNull SocketInputOutput socket,
+                                   int length, @Optional int type) {
       TempBuffer tempBuffer = null;
 
       try {
@@ -335,16 +330,16 @@ public class SocketModule extends AbstractBiancaModule {
    }
 
    public static boolean socket_set_timeout(Env env,
-           @NotNull Value stream,
-           int seconds,
-           @Optional("-1") int milliseconds) {
+                                            @NotNull Value stream,
+                                            int seconds,
+                                            @Optional("-1") int milliseconds) {
       return StreamModule.stream_set_timeout(env, stream, seconds, milliseconds);
    }
 
    public static Value socket_write(Env env,
-           @NotNull SocketInputOutput socket,
-           @NotNull InputStream is,
-           @Optional("-1") int length) {
+                                    @NotNull SocketInputOutput socket,
+                                    @NotNull InputStream is,
+                                    @Optional("-1") int length) {
       if (is == null) {
          return BooleanValue.FALSE;
       }
@@ -375,8 +370,8 @@ public class SocketModule extends AbstractBiancaModule {
     * @param how 0 = read, 1 = write, 2 = both
     */
    public boolean socket_shutdown(Env env,
-           @NotNull SocketInputOutput file,
-           int how) {
+                                  @NotNull SocketInputOutput file,
+                                  int how) {
       if (file == null) {
          return false;
       }
@@ -512,15 +507,15 @@ public class SocketModule extends AbstractBiancaModule {
       addConstant(_constMap, "SOCKET_EPROTOTYPE", SOCKET_EPROTOTYPE);
       addConstant(_constMap, "SOCKET_ENOPROTOOPT", SOCKET_ENOPROTOOPT);
       addConstant(_constMap, "SOCKET_EPROTONOSUPPORT",
-              SOCKET_EPROTONOSUPPORT);
+         SOCKET_EPROTONOSUPPORT);
       addConstant(_constMap, "SOCKET_ESOCKTNOSUPPORT",
-              SOCKET_ESOCKTNOSUPPORT);
+         SOCKET_ESOCKTNOSUPPORT);
       addConstant(_constMap, "SOCKET_EOPNOTSUPP", SOCKET_EOPNOTSUPP);
       addConstant(_constMap, "SOCKET_EPFNOSUPPORT", SOCKET_EPFNOSUPPORT);
       addConstant(_constMap, "SOCKET_EAFNOSUPPORT", SOCKET_EAFNOSUPPORT);
       addConstant(_constMap, "SOCKET_EADDRINUSE", SOCKET_EADDRINUSE);
       addConstant(_constMap, "SOCKET_EADDRNOTAVAIL",
-              SOCKET_EADDRNOTAVAIL);
+         SOCKET_EADDRNOTAVAIL);
       addConstant(_constMap, "SOCKET_ENETDOWN", SOCKET_ENETDOWN);
       addConstant(_constMap, "SOCKET_ENETUNREACH", SOCKET_ENETUNREACH);
       addConstant(_constMap, "SOCKET_ENETRESET", SOCKET_ENETRESET);

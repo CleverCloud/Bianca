@@ -41,153 +41,140 @@ import java.util.Map;
  * Implements a tcp stream, essentially just a socket pair.
  */
 public class TcpPath extends Path {
-  // Attribute name for connection timeouts
-  public static final String CONNECT_TIMEOUT = "connect-timeout";
+   // Attribute name for connection timeouts
+   public static final String CONNECT_TIMEOUT = "connect-timeout";
 
-  protected String _host;
-  protected int _port;
-  protected SocketAddress _address;
-  protected long _connectTimeout = 5000L;
-  protected long _socketTimeout = 600000L;
-  private boolean _noDelay;
+   protected String _host;
+   protected int _port;
+   protected SocketAddress _address;
+   protected long _connectTimeout = 5000L;
+   protected long _socketTimeout = 600000L;
+   private boolean _noDelay;
 
-  public TcpPath(TcpPath root, String userPath,
-                 Map<String,Object> newAttributes,
-                 String host, int port)
-  {
-    super(root);
+   public TcpPath(TcpPath root, String userPath,
+                  Map<String, Object> newAttributes,
+                  String host, int port) {
+      super(root);
 
-    setUserPath(userPath);
+      setUserPath(userPath);
 
-    _host = host;
-    _port = port == 0 ? 80 : port;
+      _host = host;
+      _port = port == 0 ? 80 : port;
 
-    if (newAttributes != null) {
-      Object connTimeout = newAttributes.get("connect-timeout");
+      if (newAttributes != null) {
+         Object connTimeout = newAttributes.get("connect-timeout");
 
-      if (connTimeout instanceof Number)
-        _connectTimeout = ((Number) connTimeout).longValue();
-      
-      Object socketTimeout = newAttributes.get("socket-timeout");
+         if (connTimeout instanceof Number)
+            _connectTimeout = ((Number) connTimeout).longValue();
 
-      if (socketTimeout == null)
-        socketTimeout = newAttributes.get("timeout");
+         Object socketTimeout = newAttributes.get("socket-timeout");
 
-      if (socketTimeout instanceof Number)
-        _socketTimeout = ((Number) socketTimeout).longValue();
-      
-      if (Boolean.TRUE.equals(newAttributes.get("no-delay"))) {
-        _noDelay = true;
+         if (socketTimeout == null)
+            socketTimeout = newAttributes.get("timeout");
+
+         if (socketTimeout instanceof Number)
+            _socketTimeout = ((Number) socketTimeout).longValue();
+
+         if (Boolean.TRUE.equals(newAttributes.get("no-delay"))) {
+            _noDelay = true;
+         }
       }
-    }
-  }
+   }
 
-  /**
-   * Lookup the new path assuming we're the scheme root.
-   */
-  protected Path schemeWalk(String userPath,
-                            Map<String,Object> newAttributes,
-                            String uri,
-                            int offset)
-  {
-    int length = uri.length();
+   /**
+    * Lookup the new path assuming we're the scheme root.
+    */
+   protected Path schemeWalk(String userPath,
+                             Map<String, Object> newAttributes,
+                             String uri,
+                             int offset) {
+      int length = uri.length();
 
-    if (length < 2 + offset
-        || uri.charAt(offset) != '/'
-        || uri.charAt(1 + offset) != '/')
-      throw new RuntimeException("bad scheme");
+      if (length < 2 + offset
+         || uri.charAt(offset) != '/'
+         || uri.charAt(1 + offset) != '/')
+         throw new RuntimeException("bad scheme");
 
-    CharBuffer buf = new CharBuffer();
-    int i = 2 + offset;
-    int ch = 0;
-    boolean isIpv6 = false;
-    
-    for (; 
-          (i < length
-           && (ch = uri.charAt(i)) != '/'
-           && ch != '?'
-           && ! (ch == ':' && ! isIpv6));
-         i++) {
-      if (ch == '[')
-        isIpv6 = true;
-      else if (ch == ']')
-        isIpv6 = false;
-      
-      buf.append((char) ch);
-    }
+      CharBuffer buf = new CharBuffer();
+      int i = 2 + offset;
+      int ch = 0;
+      boolean isIpv6 = false;
 
-    String host = buf.toString();
-    if (host.length() == 0)
-      throw new RuntimeException("bad host");
+      for (;
+           (i < length
+              && (ch = uri.charAt(i)) != '/'
+              && ch != '?'
+              && !(ch == ':' && !isIpv6));
+           i++) {
+         if (ch == '[')
+            isIpv6 = true;
+         else if (ch == ']')
+            isIpv6 = false;
 
-    int port = 0;
-    if (ch == ':') {
-      for (i++; i < length && (ch = uri.charAt(i)) >= '0' && ch <= '9'; i++) {
-        port = 10 * port + uri.charAt(i) - '0';
+         buf.append((char) ch);
       }
-    }
 
-    return create(this, userPath, newAttributes, host, port);
-  }
+      String host = buf.toString();
+      if (host.length() == 0)
+         throw new RuntimeException("bad host");
 
-  protected TcpPath create(TcpPath root,
-                           String userPath, Map<String,Object> newAttributes,
-                           String host, int port)
-  {
-    return new TcpPath(root, userPath, newAttributes, host, port);
-  }
+      int port = 0;
+      if (ch == ':') {
+         for (i++; i < length && (ch = uri.charAt(i)) >= '0' && ch <= '9'; i++) {
+            port = 10 * port + uri.charAt(i) - '0';
+         }
+      }
 
-  public String getScheme()
-  {
-    return "tcp";
-  }
+      return create(this, userPath, newAttributes, host, port);
+   }
 
-  public String getURL()
-  {
-    return (getScheme() + "://" + getHost() + ":" + getPort());
-  }
+   protected TcpPath create(TcpPath root,
+                            String userPath, Map<String, Object> newAttributes,
+                            String host, int port) {
+      return new TcpPath(root, userPath, newAttributes, host, port);
+   }
 
-  public String getPath()
-  {
-    return "";
-  }
+   public String getScheme() {
+      return "tcp";
+   }
 
-  public String getHost()
-  {
-    return _host;
-  }
+   public String getURL() {
+      return (getScheme() + "://" + getHost() + ":" + getPort());
+   }
 
-  public int getPort()
-  {
-    return _port;
-  }
+   public String getPath() {
+      return "";
+   }
 
-  public SocketAddress getSocketAddress()
-  {
-    if (_address == null)
-      _address = new InetSocketAddress(_host, _port);
+   public String getHost() {
+      return _host;
+   }
 
-    return _address;
-  }
+   public int getPort() {
+      return _port;
+   }
 
-  public StreamImpl openReadImpl() throws IOException
-  {
-    return TcpStream.openRead(this, _connectTimeout, _socketTimeout, _noDelay);
-  }
+   public SocketAddress getSocketAddress() {
+      if (_address == null)
+         _address = new InetSocketAddress(_host, _port);
 
-  public StreamImpl openReadWriteImpl() throws IOException
-  {
-    return TcpStream.openReadWrite(this, _connectTimeout, _socketTimeout, _noDelay);
-  }
+      return _address;
+   }
 
-  @Override
-  protected Path cacheCopy()
-  {
-    return new TcpPath(null, getUserPath(), null, _host, _port);
-  }
+   public StreamImpl openReadImpl() throws IOException {
+      return TcpStream.openRead(this, _connectTimeout, _socketTimeout, _noDelay);
+   }
 
-  public String toString()
-  {
-    return getURL();
-  }
+   public StreamImpl openReadWriteImpl() throws IOException {
+      return TcpStream.openReadWrite(this, _connectTimeout, _socketTimeout, _noDelay);
+   }
+
+   @Override
+   protected Path cacheCopy() {
+      return new TcpPath(null, getUserPath(), null, _host, _port);
+   }
+
+   public String toString() {
+      return getURL();
+   }
 }

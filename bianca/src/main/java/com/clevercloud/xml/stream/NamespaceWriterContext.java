@@ -32,198 +32,177 @@ package com.clevercloud.xml.stream;
 
 import com.clevercloud.vfs.WriteStream;
 
-import org.w3c.dom.*;
-
-import static javax.xml.XMLConstants.*;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *  Maintains a stack of namespace contexts
+ * Maintains a stack of namespace contexts
  */
-public class NamespaceWriterContext extends NamespaceContextImpl
-{
-  // map from URIs -> NamespaceBinding
-  private final LinkedHashMap<String,NamespaceBinding> _bindings
-    = new LinkedHashMap<String,NamespaceBinding>();
+public class NamespaceWriterContext extends NamespaceContextImpl {
+   // map from URIs -> NamespaceBinding
+   private final LinkedHashMap<String, NamespaceBinding> _bindings
+      = new LinkedHashMap<String, NamespaceBinding>();
 
-  // xml/310w
-  private ArrayList<NamespaceBinding> _duplicatePrefixes
-    = new ArrayList<NamespaceBinding>();
-  private int _uniqueId = 0;
-  private NamespaceBinding _nullBinding = new NamespaceBinding(null, null, 0);
+   // xml/310w
+   private ArrayList<NamespaceBinding> _duplicatePrefixes
+      = new ArrayList<NamespaceBinding>();
+   private int _uniqueId = 0;
+   private NamespaceBinding _nullBinding = new NamespaceBinding(null, null, 0);
 
-  private boolean _repair = false;
+   private boolean _repair = false;
 
-  public NamespaceWriterContext()
-  {
-    this(false);
-  }
+   public NamespaceWriterContext() {
+      this(false);
+   }
 
-  public NamespaceWriterContext(boolean repair)
-  {
-    super();
+   public NamespaceWriterContext(boolean repair) {
+      super();
 
-    _repair = repair;
-  }
-  
-  protected void remove(String prefix, String uri)
-  {
-    _bindings.remove(uri);
-  }
+      _repair = repair;
+   }
 
-  public boolean getRepair()
-  {
-    return _repair;
-  }
+   protected void remove(String prefix, String uri) {
+      _bindings.remove(uri);
+   }
 
-  public void setRepair(boolean repair)
-  {
-    _repair = repair;
-  }
+   public boolean getRepair() {
+      return _repair;
+   }
 
-  public void declare(String prefix, String uri)
-  {
-    declare(prefix, uri, false);
-  }
+   public void setRepair(boolean repair) {
+      _repair = repair;
+   }
 
-  /**
-   * declares a new namespace prefix in the current context
-   */
-  public void declare(String prefix, String uri, boolean forceEmit)
-  {
-    NamespaceBinding binding;
+   public void declare(String prefix, String uri) {
+      declare(prefix, uri, false);
+   }
 
-    if (uri == null)
-      binding = _nullBinding;
+   /**
+    * declares a new namespace prefix in the current context
+    */
+   public void declare(String prefix, String uri, boolean forceEmit) {
+      NamespaceBinding binding;
 
-    else {
-      binding = _bindings.get(uri);
+      if (uri == null)
+         binding = _nullBinding;
 
-      if (binding != null
-          && binding.getPrefix() != null
-          && binding.getPrefix().equals(prefix)) {
-        // for writing, ignore matching prefixes
-        if (forceEmit)
-          binding.setEmit(true);
+      else {
+         binding = _bindings.get(uri);
 
-        return;
+         if (binding != null
+            && binding.getPrefix() != null
+            && binding.getPrefix().equals(prefix)) {
+            // for writing, ignore matching prefixes
+            if (forceEmit)
+               binding.setEmit(true);
+
+            return;
+         } else if (binding == null) {
+            // set the URI to null so that addOldBinding registers that there
+            // was no previous binding
+            binding = new NamespaceBinding(prefix, null, _version);
+
+            _bindings.put(uri, binding);
+         }
       }
-      else if (binding == null) {
-        // set the URI to null so that addOldBinding registers that there
-        // was no previous binding
-        binding = new NamespaceBinding(prefix, null, _version);
 
-        _bindings.put(uri, binding);
+      ElementBinding eltBinding = _stack.get(_stack.size() - 1);
+
+      if (eltBinding == null) {
+         eltBinding = new ElementBinding();
+
+         _stack.set(_stack.size() - 1, eltBinding);
       }
-    }
 
-    ElementBinding eltBinding = _stack.get(_stack.size() - 1);
+      eltBinding.addOldBinding(binding, prefix, binding.getUri(), uri);
 
-    if (eltBinding == null) {
-      eltBinding = new ElementBinding();
-      
-      _stack.set(_stack.size() - 1, eltBinding);
-    }
+      if (binding.isEmit() && !prefix.equals(binding.getPrefix())) {
+         NamespaceBinding copy = new NamespaceBinding(binding.getPrefix(),
+            binding.getUri(),
+            binding.getVersion());
+         copy.setEmit(true);
+         _duplicatePrefixes.add(copy);
+      }
 
-    eltBinding.addOldBinding(binding, prefix, binding.getUri(), uri);
+      _version++;
+      binding.setPrefix(prefix);
+      binding.setUri(uri);
+      binding.setVersion(_version);
+      binding.setEmit(forceEmit);
+   }
 
-    if (binding.isEmit() && ! prefix.equals(binding.getPrefix())) {
-      NamespaceBinding copy = new NamespaceBinding(binding.getPrefix(), 
-                                                   binding.getUri(),
-                                                   binding.getVersion());
-      copy.setEmit(true);
-      _duplicatePrefixes.add(copy);
-    }
+   /**
+    * declares a new namespace prefix in the current context; the
+    * auto-allocated prefix is returned
+    */
+   public String declare(String uri) {
+      NamespaceBinding binding = _bindings.get(uri);
 
-    _version++;
-    binding.setPrefix(prefix);
-    binding.setUri(uri);
-    binding.setVersion(_version);
-    binding.setEmit(forceEmit);
-  }
+      // without an explicit prefix, don't add a new prefix
+      if (binding != null)
+         return binding.getPrefix();
 
-  /**
-   *  declares a new namespace prefix in the current context; the
-   *  auto-allocated prefix is returned
-   */
-  public String declare(String uri)
-  {
-    NamespaceBinding binding = _bindings.get(uri);
+      String prefix = "ns" + _uniqueId++;
 
-    // without an explicit prefix, don't add a new prefix
-    if (binding != null)
+      declare(prefix, uri, _repair);
+
+      return prefix;
+   }
+
+   /**
+    * looks up the uri, returns the prefix it corresponds to
+    */
+   public String getPrefix(String uri) {
+      NamespaceBinding binding = _bindings.get(uri);
+
+      if (binding == null)
+         return null;
+
       return binding.getPrefix();
+   }
 
-    String prefix = "ns" + _uniqueId++;
+   public String getNamespaceURI(String prefix) {
+      for (NamespaceBinding binding : _bindings.values()) {
+         if (prefix.equals(binding.getPrefix()))
+            return binding.getUri();
+      }
 
-    declare(prefix, uri, _repair);
-    
-    return prefix;
-  }
-
-  /**
-   * looks up the uri, returns the prefix it corresponds to
-   */
-  public String getPrefix(String uri)
-  {
-    NamespaceBinding binding = _bindings.get(uri);
-
-    if (binding == null)
       return null;
-    
-    return binding.getPrefix();
-  }
+   }
 
-  public String getNamespaceURI(String prefix)
-  {
-    for (NamespaceBinding binding : _bindings.values()) {
-      if (prefix.equals(binding.getPrefix()))
-        return binding.getUri();
-    }
+   public Iterator getPrefixes(String uri) {
+      ArrayList<String> prefixes = new ArrayList<String>();
 
-    return null;
-  }
+      for (NamespaceBinding binding : _bindings.values()) {
+         if (uri.equals(binding.getUri()))
+            prefixes.add(binding.getPrefix());
+      }
 
-  public Iterator getPrefixes(String uri)
-  {
-    ArrayList<String> prefixes = new ArrayList<String>();
+      return prefixes.iterator();
+   }
 
-    for (NamespaceBinding binding : _bindings.values()) {
-      if (uri.equals(binding.getUri()))
-        prefixes.add(binding.getPrefix());
-    }
+   public void emitDeclarations(WriteStream ws)
+      throws IOException {
+      for (NamespaceBinding binding : _bindings.values())
+         binding.emit(ws);
 
-    return prefixes.iterator();
-  }
+      for (int i = 0; i < _duplicatePrefixes.size(); i++)
+         _duplicatePrefixes.get(i).emit(ws);
 
-  public void emitDeclarations(WriteStream ws)
-    throws IOException
-  {
-    for (NamespaceBinding binding : _bindings.values())
-      binding.emit(ws);
+      _duplicatePrefixes.clear();
+   }
 
-    for (int i = 0; i < _duplicatePrefixes.size(); i++)
-      _duplicatePrefixes.get(i).emit(ws);
+   public String toString() {
+      StringBuilder sb = new StringBuilder();
 
-    _duplicatePrefixes.clear();
-  }
+      sb.append("NamespaceWriterContext:\n");
 
-  public String toString()
-  {
-    StringBuilder sb = new StringBuilder();
+      for (Map.Entry<String, NamespaceBinding> entry : _bindings.entrySet())
+         sb.append(entry.getKey() + "->" + entry.getValue() + "\n");
 
-    sb.append("NamespaceWriterContext:\n");
-
-    for (Map.Entry<String,NamespaceBinding> entry : _bindings.entrySet())
-      sb.append(entry.getKey() + "->" + entry.getValue() + "\n");
-
-    return sb.toString();
-  }
+      return sb.toString();
+   }
 }

@@ -32,16 +32,12 @@ package com.clevercloud.bianca.lib.reflection;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.ObjectValue;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.program.ClassDef;
 import com.clevercloud.util.L10N;
 
 public class ReflectionProperty
-        implements Reflector {
+   implements Reflector {
 
    private static final L10N L = new L10N(ReflectionProperty.class);
    public static final int IS_STATIC = 1;
@@ -59,9 +55,9 @@ public class ReflectionProperty
    }
 
    protected static ReflectionProperty create(Env env,
-           BiancaClass cls,
-           StringValue propName,
-           boolean isStatic) {
+                                              BiancaClass cls,
+                                              StringValue propName,
+                                              boolean isStatic) {
       Property prop;
 
       if (isStatic) {
@@ -77,8 +73,8 @@ public class ReflectionProperty
    }
 
    public static ReflectionProperty __construct(Env env,
-           String clsName,
-           StringValue propName) {
+                                                String clsName,
+                                                StringValue propName) {
       BiancaClass cls = env.findClass(clsName);
 
       if (cls == null) {
@@ -89,9 +85,9 @@ public class ReflectionProperty
    }
 
    public static String export(Env env,
-           Value cls,
-           String name,
-           @Optional boolean isReturn) {
+                               Value cls,
+                               String name,
+                               @Optional boolean isReturn) {
       return null;
    }
 
@@ -161,7 +157,7 @@ public class ReflectionProperty
             return new StaticProperty(cls, nameV);
          } else {
             throw new ReflectionException(L.l("Property {0}->${1} does not exist",
-                    cls.getName(), nameV));
+               cls.getName(), nameV));
          }
       }
 

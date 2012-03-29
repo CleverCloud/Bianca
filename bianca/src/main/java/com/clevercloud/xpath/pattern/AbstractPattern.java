@@ -32,7 +32,6 @@ package com.clevercloud.xpath.pattern;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 import java.util.logging.Logger;
@@ -41,7 +40,7 @@ import java.util.logging.Logger;
  * A node selection pattern.  AbstractPatterns represent compiled XPath node selectors.
  * They can be used to find nodes, select nodes, and test if a node matches
  * a pattern.
- *
+ * <p/>
  * <p>There are two types of patterns: select patterns and match patterns.
  * <p>Select patterns match a node relative to another node.
  * <code>find</code> and <code>select</code> use select patterns.
@@ -49,299 +48,266 @@ import java.util.logging.Logger;
  * match patterns.
  */
 abstract public class AbstractPattern {
-  protected static final Logger log
-    = Logger.getLogger(AbstractPattern.class.getName());
+   protected static final Logger log
+      = Logger.getLogger(AbstractPattern.class.getName());
 
-  // This is the value Axis wants
-  public static final String XMLNS = "http://www.w3.org/2000/xmlns/";
-  
-  protected AbstractPattern _parent;
-  protected AbstractPattern _child;
+   // This is the value Axis wants
+   public static final String XMLNS = "http://www.w3.org/2000/xmlns/";
 
-  AbstractPattern(AbstractPattern parent)
-  {
-    _parent = parent;
-    
-    if (parent != null && parent._child == null)
-      parent._child = this;
-  }
+   protected AbstractPattern _parent;
+   protected AbstractPattern _child;
 
-  /**
-   * Returns the parent pattern.
-   */
-  public AbstractPattern getParent()
-  {
-    return _parent;
-  }
- 
-  /**
-   * Returns the pattern's default priority as defined by the XSLT draft.
-   */
-  public double getPriority()
-  {
-    return 0.5;
-  } 
+   AbstractPattern(AbstractPattern parent) {
+      _parent = parent;
 
-  /**
-   * Returns the name of the matching node or '*' if many nodes match.
-   *
-   * <p>The Xsl package uses this to speed template matching.
-   */
-  public String getNodeName()
-  {
-    return "*";
-  }
+      if (parent != null && parent._child == null)
+         parent._child = this;
+   }
 
-  /**
-   * Returns an iterator selecting nodes in document order.
-   *
-   * @param node the starting node.
-   * @param env the variable environment.
-   *
-   * @return an iterator selecting nodes in document order.
-   */
-  public NodeIterator select(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    NodeIterator base = createNodeIterator(node, env, copyPosition());
+   /**
+    * Returns the parent pattern.
+    */
+   public AbstractPattern getParent() {
+      return _parent;
+   }
 
-    if (isStrictlyAscending())
-      return base;
-    else
-      return new MergeIterator(env, base);
-  }
+   /**
+    * Returns the pattern's default priority as defined by the XSLT draft.
+    */
+   public double getPriority() {
+      return 0.5;
+   }
 
-  /**
-   * Returns an iterator selecting unique nodes.  The nodes are not
-   * necessarily in document order.
-   *
-   * @param node the starting node.
-   * @param env the variable environment.
-   * @param context the context node.
-   *
-   * @return an iterator selecting unique nodes.
-   */
-  public NodeIterator selectUnique(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    NodeIterator base = createNodeIterator(node, env, copyPosition());
+   /**
+    * Returns the name of the matching node or '*' if many nodes match.
+    * <p/>
+    * <p>The Xsl package uses this to speed template matching.
+    */
+   public String getNodeName() {
+      return "*";
+   }
 
-    if (isUnique())
-      return base;
-    else
-      return new UniqueIterator(env, base);
-  }
+   /**
+    * Returns an iterator selecting nodes in document order.
+    *
+    * @param node the starting node.
+    * @param env  the variable environment.
+    * @return an iterator selecting nodes in document order.
+    */
+   public NodeIterator select(Node node, ExprEnvironment env)
+      throws XPathException {
+      NodeIterator base = createNodeIterator(node, env, copyPosition());
 
-  /**
-   * Find any node matching the pattern.
-   *
-   * @param node the current node
-   * @param env the xpath environment
-   *
-   * @return one of the matching nodes
-   */
-  public Node findAny(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    NodeIterator base = createNodeIterator(node, env, copyPosition());
+      if (isStrictlyAscending())
+         return base;
+      else
+         return new MergeIterator(env, base);
+   }
 
-    return base.nextNode();
-  }
-  
-  /**
-   * Returns true if the pattern is strictly ascending.
-   */
-  public boolean isStrictlyAscending()
-  {
-    if (_parent != null)
-      return _parent.isStrictlyAscending();
-    else
-      return false;
-  }
-  
-  /**
-   * Returns true if the pattern's iterator returns unique nodes.
-   */
-  public boolean isUnique()
-  {
-    if (_parent != null)
-      return _parent.isUnique();
-    else
-      return false;
-  }
-  
-  /**
-   * Returns true if the pattern selects a single node
-   */
-  boolean isSingleSelect()
-  {
-    if (_parent != null)
-      return _parent.isSingleSelect();
-    else
-      return false;
-  }
-  
-  /**
-   * Returns true if the pattern returns nodes on a single level.
-   */
-  boolean isSingleLevel()
-  {
-    return isSingleSelect();
-  }
+   /**
+    * Returns an iterator selecting unique nodes.  The nodes are not
+    * necessarily in document order.
+    *
+    * @param node    the starting node.
+    * @param env     the variable environment.
+    * @param context the context node.
+    * @return an iterator selecting unique nodes.
+    */
+   public NodeIterator selectUnique(Node node, ExprEnvironment env)
+      throws XPathException {
+      NodeIterator base = createNodeIterator(node, env, copyPosition());
 
-  /**
-   * Creates a new node iterator.
-   *
-   * @param node the starting node
-   * @param env the variable environment
-   * @param pattern the level pattern
-   *
-   * @return the node iterator
-   */
-  public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
-                                         AbstractPattern pattern)
-    throws XPathException
-  {
-    if (_parent == null)
-      throw new RuntimeException(String.valueOf(this) + " " + getClass());
-    else
-      return _parent.createNodeIterator(node, env, pattern);
-  }
+      if (isUnique())
+         return base;
+      else
+         return new UniqueIterator(env, base);
+   }
 
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   * @param variable environment
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    throw new UnsupportedOperationException(String.valueOf(this) + " " + getClass());
-  }
-  
-  /**
-   * Returns the last node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the last node
-   */
-  public Node lastNode(Node node)
-  {
-    return null;
-  }
+   /**
+    * Find any node matching the pattern.
+    *
+    * @param node the current node
+    * @param env  the xpath environment
+    * @return one of the matching nodes
+    */
+   public Node findAny(Node node, ExprEnvironment env)
+      throws XPathException {
+      NodeIterator base = createNodeIterator(node, env, copyPosition());
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param last the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node last)
-    throws XPathException
-  {
-    throw new UnsupportedOperationException();
-  }
+      return base.nextNode();
+   }
 
-  /**
-   * The core match function test if the pattern matches the node.
-   *
-   * @param node the node to test
-   * @param env the variable environment.
-   *
-   * @return true if the node matches the pattern.
-   */
-  public abstract boolean match(Node node, ExprEnvironment env)
-    throws XPathException;
+   /**
+    * Returns true if the pattern is strictly ascending.
+    */
+   public boolean isStrictlyAscending() {
+      if (_parent != null)
+         return _parent.isStrictlyAscending();
+      else
+         return false;
+   }
 
-  /**
-   * Return true if the iterator is in document-order.
-   */
-  public boolean isAscending()
-  {
-    return true;
-  }
+   /**
+    * Returns true if the pattern's iterator returns unique nodes.
+    */
+   public boolean isUnique() {
+      if (_parent != null)
+         return _parent.isUnique();
+      else
+         return false;
+   }
 
-  /**
-   * Returns the position of the node in its context for a match pattern.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   * @param pattern the position pattern
-   *
-   * @return the node's position.
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    return _parent.position(node, env, pattern);
-  }
+   /**
+    * Returns true if the pattern selects a single node
+    */
+   boolean isSingleSelect() {
+      if (_parent != null)
+         return _parent.isSingleSelect();
+      else
+         return false;
+   }
 
-  /**
-   * Returns the number of nodes in its context for a match pattern.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   * @param pattern the position pattern
-   *
-   * @return the count of nodes in the match selection
-   */
-  public int count(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    return _parent.count(node, env, pattern);
-  }
+   /**
+    * Returns true if the pattern returns nodes on a single level.
+    */
+   boolean isSingleLevel() {
+      return isSingleSelect();
+   }
 
-  /**
-   * Returns the owning axis for the pattern.
-   */
-  public AbstractPattern copyAxis()
-  {
-    if (_parent != null)
-      return _parent.copyAxis();
-    else
+   /**
+    * Creates a new node iterator.
+    *
+    * @param node    the starting node
+    * @param env     the variable environment
+    * @param pattern the level pattern
+    * @return the node iterator
+    */
+   public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
+                                          AbstractPattern pattern)
+      throws XPathException {
+      if (_parent == null)
+         throw new RuntimeException(String.valueOf(this) + " " + getClass());
+      else
+         return _parent.createNodeIterator(node, env, pattern);
+   }
+
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node     the current node
+    * @param variable environment
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env)
+      throws XPathException {
+      throw new UnsupportedOperationException(String.valueOf(this) + " " + getClass());
+   }
+
+   /**
+    * Returns the last node in the selection order.
+    *
+    * @param node the current node
+    * @return the last node
+    */
+   public Node lastNode(Node node) {
       return null;
-  }
+   }
 
-  /**
-   * Returns the position matching pattern.
-   */
-  public AbstractPattern copyPosition()
-  {
-    return this;
-  }
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node the current node
+    * @param last the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node last)
+      throws XPathException {
+      throw new UnsupportedOperationException();
+   }
 
-  /**
-   * For string conversion, returns the string prefix corresponding to
-   * the parents.
-   */
-  protected String getPrefix()
-  {
-    if (_parent == null ||
-        _parent instanceof FromAny)
-      return "";
-    else if (_parent instanceof FromContext) { // check for in Filter?
-      FromContext context = (FromContext) _parent;
+   /**
+    * The core match function test if the pattern matches the node.
+    *
+    * @param node the node to test
+    * @param env  the variable environment.
+    * @return true if the node matches the pattern.
+    */
+   public abstract boolean match(Node node, ExprEnvironment env)
+      throws XPathException;
 
-      String name = "";
-      for (int i = 0; i < context.getCount(); i++) {
-        name += "../";
-      }
-      return name;
-    }
-    else if (_parent instanceof FromRoot)
-      return "/";
-    else
-      return _parent + "/";
-  }
+   /**
+    * Return true if the iterator is in document-order.
+    */
+   public boolean isAscending() {
+      return true;
+   }
 
-  public String toPatternString()
-  {
-    return toString();
-  }
+   /**
+    * Returns the position of the node in its context for a match pattern.
+    *
+    * @param node    the current node
+    * @param env     the variable environment
+    * @param pattern the position pattern
+    * @return the node's position.
+    */
+   public int position(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      return _parent.position(node, env, pattern);
+   }
+
+   /**
+    * Returns the number of nodes in its context for a match pattern.
+    *
+    * @param node    the current node
+    * @param env     the variable environment
+    * @param pattern the position pattern
+    * @return the count of nodes in the match selection
+    */
+   public int count(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      return _parent.count(node, env, pattern);
+   }
+
+   /**
+    * Returns the owning axis for the pattern.
+    */
+   public AbstractPattern copyAxis() {
+      if (_parent != null)
+         return _parent.copyAxis();
+      else
+         return null;
+   }
+
+   /**
+    * Returns the position matching pattern.
+    */
+   public AbstractPattern copyPosition() {
+      return this;
+   }
+
+   /**
+    * For string conversion, returns the string prefix corresponding to
+    * the parents.
+    */
+   protected String getPrefix() {
+      if (_parent == null ||
+         _parent instanceof FromAny)
+         return "";
+      else if (_parent instanceof FromContext) { // check for in Filter?
+         FromContext context = (FromContext) _parent;
+
+         String name = "";
+         for (int i = 0; i < context.getCount(); i++) {
+            name += "../";
+         }
+         return name;
+      } else if (_parent instanceof FromRoot)
+         return "/";
+      else
+         return _parent + "/";
+   }
+
+   public String toPatternString() {
+      return toString();
+   }
 }

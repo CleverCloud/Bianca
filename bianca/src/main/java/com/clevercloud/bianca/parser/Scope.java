@@ -29,10 +29,10 @@
  */
 package com.clevercloud.bianca.parser;
 
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.program.Function;
 import com.clevercloud.bianca.program.InterpretedClassDef;
-import com.clevercloud.bianca.Location;
 
 import java.util.ArrayList;
 
@@ -125,14 +125,14 @@ abstract public class Scope {
     * Adds a function.
     */
    abstract public void addFunction(String name,
-           Function function,
-           boolean isTop);
+                                    Function function,
+                                    boolean isTop);
 
    /*
     *  Adds a function defined in a conditional block.
     */
    protected void addConditionalFunction(String name,
-           Function function) {
+                                         Function function) {
       addConditionalFunction(function);
    }
 
@@ -146,11 +146,11 @@ abstract public class Scope {
     * Adds a class.
     */
    abstract public InterpretedClassDef addClass(Location location,
-           String name,
-           String parent,
-           ArrayList<String> ifaceList,
-           int index,
-           boolean isTop);
+                                                String name,
+                                                String parent,
+                                                ArrayList<String> ifaceList,
+                                                int index,
+                                                boolean isTop);
 
    /*
     *  Adds a conditional class.

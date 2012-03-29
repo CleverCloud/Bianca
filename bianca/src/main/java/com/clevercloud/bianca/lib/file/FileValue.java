@@ -32,7 +32,6 @@ package com.clevercloud.bianca.lib.file;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.resources.StreamResource;
 import com.clevercloud.vfs.Path;
 
@@ -62,7 +61,7 @@ public class FileValue extends StreamResource {
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       return -1;
    }
 
@@ -71,12 +70,12 @@ public class FileValue extends StreamResource {
     */
    @Override
    public StringValue readLine(Env env)
-           throws IOException {
+      throws IOException {
       StringValue sb = new StringValue();
       int ch;
 
       while ((ch = read()) >= 0) {
-         sb.append((char)ch);
+         sb.append((char) ch);
 
          if (ch == '\n') {
             return sb;
@@ -95,11 +94,11 @@ public class FileValue extends StreamResource {
     * Read a maximum of <i>length</i> bytes from the file and write
     * them to the outputStream.
     *
-    * @param os the {@link OutputStream}
+    * @param os     the {@link OutputStream}
     * @param length the maximum number of bytes to read
     */
    public void writeToStream(OutputStream os, int length)
-           throws IOException {
+      throws IOException {
    }
 
    /**
@@ -107,7 +106,7 @@ public class FileValue extends StreamResource {
     */
    @Override
    public void print(String v)
-           throws IOException {
+      throws IOException {
    }
 
    /**

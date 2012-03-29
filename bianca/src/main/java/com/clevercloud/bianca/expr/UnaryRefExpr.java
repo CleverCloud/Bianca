@@ -61,7 +61,7 @@ public class UnaryRefExpr extends AbstractUnaryExpr {
     */
    @Override
    public Expr createAssignFrom(BiancaParser parser,
-           AbstractVarExpr leftHandSide) {
+                                AbstractVarExpr leftHandSide) {
       ExprFactory factory = parser.getExprFactory();
 
       return factory.createAssignRef(leftHandSide, _expr);
@@ -71,7 +71,6 @@ public class UnaryRefExpr extends AbstractUnaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -86,7 +85,6 @@ public class UnaryRefExpr extends AbstractUnaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -100,7 +98,6 @@ public class UnaryRefExpr extends AbstractUnaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

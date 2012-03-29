@@ -31,9 +31,9 @@ package com.clevercloud.bianca.marshal;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.lib.regexp.RegexpModule;
 import com.clevercloud.bianca.lib.regexp.UnicodeEregi;
-import com.clevercloud.bianca.expr.Expr;
 
 /**
  * Code for marshaling (PHP to Java) and unmarshaling (Java to PHP) arguments.
@@ -45,7 +45,7 @@ public class UnicodeEregiMarshal extends StringMarshal {
    @Override
    public Object marshal(Env env, Expr expr, Class expectedClass) {
       return RegexpModule.createUnicodeEregi(env,
-              expr.eval(env).toStringValue());
+         expr.eval(env).toStringValue());
    }
 
    @Override

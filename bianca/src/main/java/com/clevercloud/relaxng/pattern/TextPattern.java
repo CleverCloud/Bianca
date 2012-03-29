@@ -37,44 +37,39 @@ import com.clevercloud.relaxng.program.TextItem;
  * Relax empty pattern
  */
 public class TextPattern extends Pattern {
-  /**
-   * Creates a new empty pattern.
-   */
-  public TextPattern()
-  {
-  }
+   /**
+    * Creates a new empty pattern.
+    */
+   public TextPattern() {
+   }
 
-  /**
-   * Creates the program (somewhat bogus)
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    return TextItem.TEXT;
-  }
+   /**
+    * Creates the program (somewhat bogus)
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      return TextItem.TEXT;
+   }
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return "text";
-  }
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return "text";
+   }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    return o instanceof TextPattern;
-  }
+      return o instanceof TextPattern;
+   }
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "TextPattern[]";
-  }
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "TextPattern[]";
+   }
 }
 

@@ -37,210 +37,189 @@ import java.util.logging.Logger;
 /**
  * Facade to HttpStream to properly handle the close.
  */
-public class HttpStreamWrapper extends StreamImpl
-{
-  private static final Logger log
-    = Logger.getLogger(HttpStream.class.getName());
-  
-  private HttpStream _stream;
+public class HttpStreamWrapper extends StreamImpl {
+   private static final Logger log
+      = Logger.getLogger(HttpStream.class.getName());
 
-  /**
-   * Create a new HTTP stream.
-   */
-  HttpStreamWrapper(HttpStream stream)
-    throws IOException
-  {
-    _stream = stream;
-  }
+   private HttpStream _stream;
 
-  /**
-   * Set if this should be an SSL connection.
-   */
-  public void setSSL(boolean isSSL)
-  {
-    _stream.setSSL(isSSL);
-  }
+   /**
+    * Create a new HTTP stream.
+    */
+   HttpStreamWrapper(HttpStream stream)
+      throws IOException {
+      _stream = stream;
+   }
 
-  /**
-   * Set if this should be an SSL connection.
-   */
-  public boolean isSSL()
-  {
-    return _stream.isSSL();
-  }
+   /**
+    * Set if this should be an SSL connection.
+    */
+   public void setSSL(boolean isSSL) {
+      _stream.setSSL(isSSL);
+   }
 
-  /**
-   * Sets the method
-   */
-  public void setMethod(String method)
-  {
-    _stream.setMethod(method);
-  }
+   /**
+    * Set if this should be an SSL connection.
+    */
+   public boolean isSSL() {
+      return _stream.isSSL();
+   }
 
-  /**
-   * Sets true if we're only interested in the head.
-   */
-  public void setHead(boolean isHead)
-  {
-    _stream.setHead(isHead);
-  }
+   /**
+    * Sets the method
+    */
+   public void setMethod(String method) {
+      _stream.setMethod(method);
+   }
 
-  /**
-   * Returns the stream's host.
-   */
-  public String getHost()
-  {
-    return _stream.getHost();
-  }
+   /**
+    * Sets true if we're only interested in the head.
+    */
+   public void setHead(boolean isHead) {
+      _stream.setHead(isHead);
+   }
 
-  /**
-   * Returns the stream's port.
-   */
-  public int getPort()
-  {
-    return _stream.getPort();
-  }
-  
-  /**
-   * Sets the http version.
-   */
-  public void setHttp10()
-  {
-    _stream.setHttp10();
-  }
-  
-  /**
-   * Sets the http version.
-   */
-  public void setHttp11()
-  {
-    _stream.setHttp11();
-  }
-  
-  /**
-   * Returns a header from the response returned from the HTTP server.
-   *
-   * @param name name of the header
-   * @return the header value.
-   */
-  public Object getAttribute(String name)
-    throws IOException
-  {
-    if (_stream != null)
-      return _stream.getAttribute(name);
-    else
-      return null;
-  }
+   /**
+    * Returns the stream's host.
+    */
+   public String getHost() {
+      return _stream.getHost();
+   }
 
-  /**
-   * Returns an iterator of the returned header names.
-   */
-  public Iterator getAttributeNames()
-    throws IOException
-  {
-    if (_stream != null)
-      return _stream.getAttributeNames();
-    else
-      return null;
-  }
+   /**
+    * Returns the stream's port.
+    */
+   public int getPort() {
+      return _stream.getPort();
+   }
 
-  /**
-   * Sets a header for the request.
-   */
-  public void setAttribute(String name, Object value)
-  {
-    if (_stream != null)
-      _stream.setAttribute(name, value);
-  }
+   /**
+    * Sets the http version.
+    */
+   public void setHttp10() {
+      _stream.setHttp10();
+   }
 
-  /**
-   * Remove a header for the request.
-   */
-  public void removeAttribute(String name)
-  {
-    if (_stream != null)
-      _stream.removeAttribute(name);
-  }
+   /**
+    * Sets the http version.
+    */
+   public void setHttp11() {
+      _stream.setHttp11();
+   }
 
-  /**
-   * Sets the timeout.
-   */
-  public void setSocketTimeout(long timeout)
-    throws SocketException
-  {
-    if (_stream != null)
-      _stream.setSocketTimeout(timeout);
-  }
+   /**
+    * Returns a header from the response returned from the HTTP server.
+    *
+    * @param name name of the header
+    * @return the header value.
+    */
+   public Object getAttribute(String name)
+      throws IOException {
+      if (_stream != null)
+         return _stream.getAttribute(name);
+      else
+         return null;
+   }
 
-  /**
-   * The stream is always writable (?)
-   */
-  public boolean canWrite()
-  {
-    if (_stream != null)
-      return _stream.canWrite();
-    else
-      return false;
-  }
+   /**
+    * Returns an iterator of the returned header names.
+    */
+   public Iterator getAttributeNames()
+      throws IOException {
+      if (_stream != null)
+         return _stream.getAttributeNames();
+      else
+         return null;
+   }
 
-  /**
-   * Writes a buffer to the underlying stream.
-   *
-   * @param buffer the byte array to write.
-   * @param offset the offset into the byte array.
-   * @param length the number of bytes to write.
-   * @param isEnd true when the write is flushing a close.
-   */
-  public void write(byte []buf, int offset, int length, boolean isEnd)
-    throws IOException
-  {
-    if (_stream != null)
-      _stream.write(buf, offset, length, isEnd);
-  }
+   /**
+    * Sets a header for the request.
+    */
+   public void setAttribute(String name, Object value) {
+      if (_stream != null)
+         _stream.setAttribute(name, value);
+   }
 
-  /**
-   * The stream is readable.
-   */
-  public boolean canRead()
-  {
-    if (_stream != null)
-      return _stream.canRead();
-    else
-      return false;
-  }
+   /**
+    * Remove a header for the request.
+    */
+   public void removeAttribute(String name) {
+      if (_stream != null)
+         _stream.removeAttribute(name);
+   }
 
-  /**
-   * Read data from the connection.  If the request hasn't yet been sent
-   * to the server, send it.
-   */
-  public int read(byte []buf, int offset, int length) throws IOException
-  {
-    if (_stream != null)
-      return _stream.read(buf, offset, length);
-    else
-      return -1;
-  }
+   /**
+    * Sets the timeout.
+    */
+   public void setSocketTimeout(long timeout)
+      throws SocketException {
+      if (_stream != null)
+         _stream.setSocketTimeout(timeout);
+   }
 
-  /**
-   * Returns the bytes still available.
-   */
-  public int getAvailable() throws IOException
-  {
-    if (_stream != null)
-      return _stream.getAvailable();
-    else
-      return -1;
-  }
+   /**
+    * The stream is always writable (?)
+    */
+   public boolean canWrite() {
+      if (_stream != null)
+         return _stream.canWrite();
+      else
+         return false;
+   }
 
-  /**
-   * Close the connection.
-   */
-  public void close() throws IOException
-  {
-    HttpStream stream = _stream;
-    _stream = null;
+   /**
+    * Writes a buffer to the underlying stream.
+    *
+    * @param buffer the byte array to write.
+    * @param offset the offset into the byte array.
+    * @param length the number of bytes to write.
+    * @param isEnd  true when the write is flushing a close.
+    */
+   public void write(byte[] buf, int offset, int length, boolean isEnd)
+      throws IOException {
+      if (_stream != null)
+         _stream.write(buf, offset, length, isEnd);
+   }
 
-    if (stream != null)
-      stream.close();
-  }
+   /**
+    * The stream is readable.
+    */
+   public boolean canRead() {
+      if (_stream != null)
+         return _stream.canRead();
+      else
+         return false;
+   }
+
+   /**
+    * Read data from the connection.  If the request hasn't yet been sent
+    * to the server, send it.
+    */
+   public int read(byte[] buf, int offset, int length) throws IOException {
+      if (_stream != null)
+         return _stream.read(buf, offset, length);
+      else
+         return -1;
+   }
+
+   /**
+    * Returns the bytes still available.
+    */
+   public int getAvailable() throws IOException {
+      if (_stream != null)
+         return _stream.getAvailable();
+      else
+         return -1;
+   }
+
+   /**
+    * Close the connection.
+    */
+   public void close() throws IOException {
+      HttpStream stream = _stream;
+      _stream = null;
+
+      if (stream != null)
+         stream.close();
+   }
 }

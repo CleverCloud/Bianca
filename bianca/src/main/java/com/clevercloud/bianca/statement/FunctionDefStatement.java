@@ -58,7 +58,7 @@ public class FunctionDefStatement extends Statement {
             env.addFunction(name, _fun);
          } else {
             env.error(getLocation(),
-                    L.l("function {0}() is already defined.", name));
+               L.l("function {0}() is already defined.", name));
          }
       } catch (RuntimeException e) {
          rethrow(e, RuntimeException.class);

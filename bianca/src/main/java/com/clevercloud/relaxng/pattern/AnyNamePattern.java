@@ -38,81 +38,74 @@ import com.clevercloud.relaxng.program.NameClassItem;
  * Relax name pattern
  */
 public class AnyNamePattern extends NameClassPattern {
-  private NameClassPattern _except;
+   private NameClassPattern _except;
 
-  private AnyNameItem _item;
-  
-  /**
-   * Creates a new element pattern.
-   */
-  public AnyNamePattern()
-  {
-  }
+   private AnyNameItem _item;
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "anyName";
-  }
+   /**
+    * Creates a new element pattern.
+    */
+   public AnyNamePattern() {
+   }
 
-  /**
-   * Sets the exclude name pattern.
-   */
-  public void setExcept(NameClassPattern pattern)
-  {
-    _except = pattern;
-  }
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "anyName";
+   }
 
-  /**
-   * Creates the program.
-   */
-  public NameClassItem createNameItem()
-    throws RelaxException
-  {
-    if (_item == null) {
-      AnyNameItem item = new AnyNameItem();
+   /**
+    * Sets the exclude name pattern.
+    */
+   public void setExcept(NameClassPattern pattern) {
+      _except = pattern;
+   }
 
-      if (_except != null)
-        item.setExcept(_except.createNameItem());
+   /**
+    * Creates the program.
+    */
+   public NameClassItem createNameItem()
+      throws RelaxException {
+      if (_item == null) {
+         AnyNameItem item = new AnyNameItem();
 
-      _item = item;
-    }
-    
-    return _item;
-  }
+         if (_except != null)
+            item.setExcept(_except.createNameItem());
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return "*";
-  }
+         _item = item;
+      }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+      return _item;
+   }
 
-    if (! (o instanceof AnyNamePattern))
-      return false;
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return "*";
+   }
 
-    AnyNamePattern pattern = (AnyNamePattern) o;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    if (_except == null)
-      return pattern._except == null;
-    else
-      return _except.equals(pattern._except);
-  }
+      if (!(o instanceof AnyNamePattern))
+         return false;
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "AnyNamePattern[]";
-  }
+      AnyNamePattern pattern = (AnyNamePattern) o;
+
+      if (_except == null)
+         return pattern._except == null;
+      else
+         return _except.equals(pattern._except);
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "AnyNamePattern[]";
+   }
 }
 

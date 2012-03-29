@@ -77,6 +77,7 @@ abstract public class ArrayValue extends Value {
    //
    // marshal costs
    //
+
    /**
     * Cost to convert to a character
     */
@@ -171,6 +172,7 @@ abstract public class ArrayValue extends Value {
    //
    // Conversions
    //
+
    /**
     * Converts to an object.
     */
@@ -280,7 +282,7 @@ abstract public class ArrayValue extends Value {
             log.log(Level.FINE, e.toString(), e);
 
             env.warning(L.l("Can't assign array to {0}",
-                    type.getName()));
+               type.getName()));
 
             return null;
          }
@@ -288,7 +290,7 @@ abstract public class ArrayValue extends Value {
 
       for (Entry entry = getHead(); entry != null; entry = entry._next) {
          map.put(entry.getKey().toJavaObject(),
-                 entry.getValue().toJavaObject());
+            entry.getValue().toJavaObject());
       }
 
       return map;
@@ -342,7 +344,7 @@ abstract public class ArrayValue extends Value {
 
       if (!nameV.isString()) {
          env.warning(L.l("'{0}' ({1}) is an unknown callback name",
-                 nameV, nameV.getClass().getSimpleName()));
+            nameV, nameV.getClass().getSimpleName()));
 
          return super.toCallable(env);
       }
@@ -363,8 +365,8 @@ abstract public class ArrayValue extends Value {
 
             if (cls == null) {
                env.warning(L.l(
-                       "Callback: '{0}' is not a valid callback class for {1}",
-                       clsName, name));
+                  "Callback: '{0}' is not a valid callback class for {1}",
+                  clsName, name));
 
                return super.toCallable(env);
             }
@@ -378,8 +380,8 @@ abstract public class ArrayValue extends Value {
 
          if (cl == null) {
             env.warning(
-                    L.l("Callback: '{0}' is not a valid callback string for {1}",
-                    obj.toString(), obj));
+               L.l("Callback: '{0}' is not a valid callback string for {1}",
+                  obj.toString(), obj));
 
             return super.toCallable(env);
          }
@@ -412,7 +414,7 @@ abstract public class ArrayValue extends Value {
    }
 
    public final Value callCallback(Env env, Callable callback, Value key,
-           Value a2) {
+                                   Value a2) {
       Value result;
       Value value = getRaw(key);
 
@@ -436,7 +438,7 @@ abstract public class ArrayValue extends Value {
    }
 
    public final Value callCallback(Env env, Callable callback, Value key,
-           Value a2, Value a3) {
+                                   Value a2, Value a3) {
       Value result;
       Value value = getRaw(key);
 
@@ -722,7 +724,7 @@ abstract public class ArrayValue extends Value {
     * Returns a union of this array and the rValue as array.
     * If the rValue is not an array, the returned union contains the elements
     * of this array only.
-    *
+    * <p/>
     * To append a value to this ArrayValue use the {@link #put(Value)} method.
     */
    @Override
@@ -888,7 +890,7 @@ abstract public class ArrayValue extends Value {
    public void put(String key, boolean value) {
       // TODO: this needs an Env arg because of i18n
       put(StringValue.create(key),
-              value ? BooleanValue.TRUE : BooleanValue.FALSE);
+         value ? BooleanValue.TRUE : BooleanValue.FALSE);
    }
 
    /**
@@ -896,7 +898,7 @@ abstract public class ArrayValue extends Value {
     */
    public void put(Env env, String key, boolean value) {
       put(env.createString(key),
-              value ? BooleanValue.TRUE : BooleanValue.FALSE);
+         value ? BooleanValue.TRUE : BooleanValue.FALSE);
    }
 
    /**
@@ -916,7 +918,7 @@ abstract public class ArrayValue extends Value {
 
    /**
     * Appends as an argument - only called from compiled code
-    *
+    * <p/>
     * XXX: change name to appendArg
     */
    @Override
@@ -924,7 +926,7 @@ abstract public class ArrayValue extends Value {
 
    /**
     * Appends as an argument - only called from compiled code
-    *
+    * <p/>
     * XXX: change name to appendArg
     */
    public ArrayValue append(Value value) {
@@ -957,6 +959,7 @@ abstract public class ArrayValue extends Value {
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    @Override
@@ -1087,7 +1090,6 @@ abstract public class ArrayValue extends Value {
     * Returns the corresponding key if this array contains the given value
     *
     * @param value to search for in the array
-    *
     * @return the key if it is found in the array, NULL otherwise
     */
    abstract public Value contains(Value value);
@@ -1096,7 +1098,6 @@ abstract public class ArrayValue extends Value {
     * Returns the corresponding key if this array contains the given value
     *
     * @param value to search for in the array
-    *
     * @return the key if it is found in the array, NULL otherwise
     */
    abstract public Value containsStrict(Value value);
@@ -1105,7 +1106,6 @@ abstract public class ArrayValue extends Value {
     * Returns the corresponding value if this array contains the given key
     *
     * @param key to search for in the array
-    *
     * @return the value if it is found in the array, NULL otherwise
     */
    @Override
@@ -1134,10 +1134,10 @@ abstract public class ArrayValue extends Value {
     *
     * @param comparator the comparator for sorting the array
     * @param resetKeys  true if the keys should not be preserved
-    * @param strict  true if alphabetic keys should not be preserved
+    * @param strict     true if alphabetic keys should not be preserved
     */
    public void sort(Comparator<Map.Entry<Value, Value>> comparator,
-           boolean resetKeys, boolean strict) {
+                    boolean resetKeys, boolean strict) {
       Entry[] entries;
 
       entries = new Entry[getSize()];
@@ -1269,8 +1269,8 @@ abstract public class ArrayValue extends Value {
    /**
     * Resets all numerical keys with the first index as base
     *
-    * @param base  the initial index
-    * @param strict  if true, string keys are also reset
+    * @param base   the initial index
+    * @param strict if true, string keys are also reset
     */
    public boolean keyReset(long base, boolean strict) {
       Entry[] entries;
@@ -1301,7 +1301,6 @@ abstract public class ArrayValue extends Value {
     * Test for equality
     *
     * @param rValue rhs ArrayValue to compare to
-    *
     * @return true if this is equal to rValue, false otherwise
     */
    @Override
@@ -1318,7 +1317,7 @@ abstract public class ArrayValue extends Value {
          Value rEntryValue = rValue.get(entryKey);
 
          if ((rEntryValue instanceof ArrayValue)
-                 && !entryValue.eq((ArrayValue) rEntryValue)) {
+            && !entryValue.eq((ArrayValue) rEntryValue)) {
             return false;
          }
 
@@ -1334,7 +1333,6 @@ abstract public class ArrayValue extends Value {
     * Test for ===
     *
     * @param rValue rhs ArrayValue to compare to
-    *
     * @return true if this is equal to rValue, false otherwise
     */
    @Override
@@ -1390,10 +1388,10 @@ abstract public class ArrayValue extends Value {
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.println("array(" + getSize() + ") {");
 
       for (Map.Entry<Value, Value> mapEntry : entrySet()) {
@@ -1408,11 +1406,11 @@ abstract public class ArrayValue extends Value {
    }
 
    protected void varDumpEntry(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet,
-           Map.Entry<Value, Value> mapEntry)
-           throws IOException {
+                               WriteStream out,
+                               int depth,
+                               IdentityHashMap<Value, String> valueSet,
+                               Map.Entry<Value, Value> mapEntry)
+      throws IOException {
       ArrayValue.Entry entry = (ArrayValue.Entry) mapEntry;
 
       entry.varDumpImpl(env, out, depth, valueSet);
@@ -1420,10 +1418,10 @@ abstract public class ArrayValue extends Value {
 
    @Override
    protected void printRImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.println("Array");
       printDepth(out, 8 * depth);
       out.println("(");
@@ -1439,18 +1437,18 @@ abstract public class ArrayValue extends Value {
    }
 
    protected void printREntry(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet,
-           Map.Entry<Value, Value> mapEntry)
-           throws IOException {
+                              WriteStream out,
+                              int depth,
+                              IdentityHashMap<Value, String> valueSet,
+                              Map.Entry<Value, Value> mapEntry)
+      throws IOException {
       ArrayValue.Entry entry = (ArrayValue.Entry) mapEntry;
 
       entry.printRImpl(env, out, depth, valueSet);
    }
 
    public static final class Entry
-           implements Map.Entry<Value, Value>, Serializable {
+      implements Map.Entry<Value, Value>, Serializable {
 
       private final Value _key;
       private Value _value;
@@ -1581,14 +1579,14 @@ abstract public class ArrayValue extends Value {
          Value oldValue = _value;
 
          // TODO: make OO
-      /*
-         if (value instanceof Var)
-         _var = (Var) value;
-         else if (_var != null)
-         _var.set(value);
-         else
-         _value = value;
-          */
+         /*
+        if (value instanceof Var)
+        _var = (Var) value;
+        else if (_var != null)
+        _var.set(value);
+        else
+        _value = value;
+         */
 
          if (value instanceof Var) {
             _value = (Var) value;
@@ -1654,10 +1652,10 @@ abstract public class ArrayValue extends Value {
       }
 
       public void varDumpImpl(Env env,
-              WriteStream out,
-              int depth,
-              IdentityHashMap<Value, String> valueSet)
-              throws IOException {
+                              WriteStream out,
+                              int depth,
+                              IdentityHashMap<Value, String> valueSet)
+         throws IOException {
          printDepth(out, 2 * depth);
          out.print("[");
 
@@ -1675,10 +1673,10 @@ abstract public class ArrayValue extends Value {
       }
 
       protected void printRImpl(Env env,
-              WriteStream out,
-              int depth,
-              IdentityHashMap<Value, String> valueSet)
-              throws IOException {
+                                WriteStream out,
+                                int depth,
+                                IdentityHashMap<Value, String> valueSet)
+         throws IOException {
          printDepth(out, 8 * depth);
          out.print("    [");
          out.print(_key);
@@ -1690,7 +1688,7 @@ abstract public class ArrayValue extends Value {
       }
 
       private void printDepth(WriteStream out, int depth)
-              throws java.io.IOException {
+         throws java.io.IOException {
          for (int i = depth; i > 0; i--) {
             out.print(' ');
          }
@@ -1793,8 +1791,8 @@ abstract public class ArrayValue extends Value {
 
       for (Entry ptr = getHead(); ptr != null; ptr = ptr.getNext()) {
          Array.set(array, i++, elementMarshal.marshal(env,
-                 ptr.getValue(),
-                 elementType));
+            ptr.getValue(),
+            elementType));
       }
 
       return array;
@@ -1849,7 +1847,7 @@ abstract public class ArrayValue extends Value {
    }
 
    public static class EntryIterator
-           implements Iterator<Map.Entry<Value, Value>> {
+      implements Iterator<Map.Entry<Value, Value>> {
 
       private Entry _current;
 
@@ -1881,7 +1879,7 @@ abstract public class ArrayValue extends Value {
    }
 
    public static class KeyIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private Entry _current;
 
@@ -1913,7 +1911,7 @@ abstract public class ArrayValue extends Value {
    }
 
    public static class ValueIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private Entry _current;
 
@@ -1945,7 +1943,7 @@ abstract public class ArrayValue extends Value {
    }
 
    public static class ValueComparator
-           implements Comparator<Map.Entry<Value, Value>> {
+      implements Comparator<Map.Entry<Value, Value>> {
 
       public static final ValueComparator CMP = new ValueComparator();
 
@@ -1954,7 +1952,7 @@ abstract public class ArrayValue extends Value {
 
       @Override
       public int compare(Map.Entry<Value, Value> aEntry,
-              Map.Entry<Value, Value> bEntry) {
+                         Map.Entry<Value, Value> bEntry) {
          try {
             Value aValue = aEntry.getValue();
             Value bValue = bEntry.getValue();
@@ -1973,7 +1971,7 @@ abstract public class ArrayValue extends Value {
    }
 
    public static class KeyComparator
-           implements Comparator<Map.Entry<Value, Value>> {
+      implements Comparator<Map.Entry<Value, Value>> {
 
       public static final KeyComparator CMP = new KeyComparator();
 
@@ -1982,7 +1980,7 @@ abstract public class ArrayValue extends Value {
 
       @Override
       public int compare(Map.Entry<Value, Value> aEntry,
-              Map.Entry<Value, Value> bEntry) {
+                         Map.Entry<Value, Value> bEntry) {
          try {
             Value aKey = aEntry.getKey();
             Value bKey = bEntry.getKey();

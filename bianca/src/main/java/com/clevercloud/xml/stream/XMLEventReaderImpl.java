@@ -31,119 +31,98 @@
 package com.clevercloud.xml.stream;
 
 import com.clevercloud.util.L10N;
-import com.clevercloud.xml.stream.events.*;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
-import static javax.xml.stream.XMLStreamConstants.*;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.events.*;
+import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.XMLEventAllocator;
 
-import java.util.HashMap;
-
 public class XMLEventReaderImpl implements XMLEventReader {
-  public static final L10N L = new L10N(XMLEventReaderImpl.class);
+   public static final L10N L = new L10N(XMLEventReaderImpl.class);
 
-  private final XMLEventAllocator _allocator;
-  private final XMLStreamReader _in;
-  private XMLEvent _current = null;
-  private XMLEvent _next = null;
+   private final XMLEventAllocator _allocator;
+   private final XMLStreamReader _in;
+   private XMLEvent _current = null;
+   private XMLEvent _next = null;
 
-  public XMLEventReaderImpl(XMLEventAllocator allocator, XMLStreamReader in)
-    throws XMLStreamException
-  {
-    _in = in;
-    _allocator = allocator;
-    _next = _allocator.allocate(_in);
-  }
-
-  public XMLStreamReader getXMLStreamReader()
-  {
-    return _in;
-  }
-
-  public void close() 
-    throws XMLStreamException
-  {
-    _in.close();
-  }
-
-  public String getElementText() 
-    throws XMLStreamException
-  {
-    return _in.getElementText();
-  }
-
-  public Object getProperty(String name) 
-    throws IllegalArgumentException
-  {
-    throw new IllegalArgumentException(name);
-  }
-
-  public boolean hasNext()
-  {
-    try {
-      return _next != null || _in.hasNext();
-    } 
-    catch (XMLStreamException e) {
-      return false;
-    }
-  }
-
-  public XMLEvent nextEvent() throws XMLStreamException
-  {
-    if (_next != null) {
-      _current = _next;
-      _next = null;
-    }
-    else {
-      _in.next();
-      _current = _allocator.allocate(_in);
-    }
-
-    return _current;
-  }
-
-  public XMLEvent nextTag() throws XMLStreamException
-  {
-    if (_next != null) {
-      _current = _next;
-      _next = null;
-    }
-    else {
-      _in.nextTag();
-      _current = _allocator.allocate(_in);
-    }
-
-    return _current;
-  }
-
-  public XMLEvent peek() throws XMLStreamException
-  {
-    if (_next == null) {
-      _in.next();
+   public XMLEventReaderImpl(XMLEventAllocator allocator, XMLStreamReader in)
+      throws XMLStreamException {
+      _in = in;
+      _allocator = allocator;
       _next = _allocator.allocate(_in);
-    }
+   }
 
-    return _next;
-  }
+   public XMLStreamReader getXMLStreamReader() {
+      return _in;
+   }
 
-  public void remove()
-  {
-    throw new UnsupportedOperationException();
-  }
+   public void close()
+      throws XMLStreamException {
+      _in.close();
+   }
 
-  public XMLEvent next()
-  {
-    try {
-      return nextEvent();
-    }
-    catch (XMLStreamException e) {
-      return null;
-    }
-  }
+   public String getElementText()
+      throws XMLStreamException {
+      return _in.getElementText();
+   }
+
+   public Object getProperty(String name)
+      throws IllegalArgumentException {
+      throw new IllegalArgumentException(name);
+   }
+
+   public boolean hasNext() {
+      try {
+         return _next != null || _in.hasNext();
+      } catch (XMLStreamException e) {
+         return false;
+      }
+   }
+
+   public XMLEvent nextEvent() throws XMLStreamException {
+      if (_next != null) {
+         _current = _next;
+         _next = null;
+      } else {
+         _in.next();
+         _current = _allocator.allocate(_in);
+      }
+
+      return _current;
+   }
+
+   public XMLEvent nextTag() throws XMLStreamException {
+      if (_next != null) {
+         _current = _next;
+         _next = null;
+      } else {
+         _in.nextTag();
+         _current = _allocator.allocate(_in);
+      }
+
+      return _current;
+   }
+
+   public XMLEvent peek() throws XMLStreamException {
+      if (_next == null) {
+         _in.next();
+         _next = _allocator.allocate(_in);
+      }
+
+      return _next;
+   }
+
+   public void remove() {
+      throw new UnsupportedOperationException();
+   }
+
+   public XMLEvent next() {
+      try {
+         return nextEvent();
+      } catch (XMLStreamException e) {
+         return null;
+      }
+   }
 }
 

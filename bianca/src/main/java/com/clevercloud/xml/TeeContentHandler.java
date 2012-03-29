@@ -29,10 +29,8 @@
 
 package com.clevercloud.xml;
 
-import org.xml.sax.AttributeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.DocumentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
@@ -40,89 +38,77 @@ import org.xml.sax.SAXException;
  * Dual content handler adapter.
  */
 class TeeContentHandler implements ContentHandler {
-  private ContentHandler _handler1;
-  private ContentHandler _handler2;
+   private ContentHandler _handler1;
+   private ContentHandler _handler2;
 
-  TeeContentHandler(ContentHandler handler1, ContentHandler handler2)
-  {
-    _handler1 = handler1;
-    _handler2 = handler2;
-  }
-  
-  public void setDocumentLocator(Locator locator)
-  {
-    _handler1.setDocumentLocator(locator);
-    _handler2.setDocumentLocator(locator);
-  }
-  
-  public void startDocument()
-    throws SAXException
-  {
-    _handler1.startDocument();
-    _handler2.startDocument();
-  }
-  
-  public void endDocument()
-    throws SAXException
-  {
-    _handler1.endDocument();
-    _handler2.endDocument();
-  }
-  
-  public void startPrefixMapping(String prefix, String uri)
-    throws SAXException
-  {
-    _handler1.startPrefixMapping(prefix, uri);
-    _handler2.startPrefixMapping(prefix, uri);
-  }
-  
-  public void endPrefixMapping(String prefix)
-    throws SAXException
-  {
-    _handler1.endPrefixMapping(prefix);
-    _handler2.endPrefixMapping(prefix);
-  }
-  
-  public void startElement(String namespaceURI, String localName,
-                           String qName, Attributes attrs)
-    throws SAXException
-  {
-    _handler1.startElement(namespaceURI, localName, qName, attrs);
-    _handler2.startElement(namespaceURI, localName, qName, attrs);
-  }
-  
-  public void endElement (String namespaceURI, String localName, String qName)
-    throws SAXException
-  {
-    _handler1.endElement(namespaceURI, localName, qName);
-    _handler2.endElement(namespaceURI, localName, qName);
-  }
-  
-  public void characters(char ch[], int start, int length)
-    throws SAXException
-  {
-    _handler1.characters(ch, start, length);
-    _handler2.characters(ch, start, length);
-  }
-  
-  public void ignorableWhitespace(char ch[], int start, int length)
-    throws SAXException
-  {
-    _handler1.ignorableWhitespace(ch, start, length);
-    _handler2.ignorableWhitespace(ch, start, length);
-  }
-  
-  public void processingInstruction (String target, String data)
-    throws SAXException
-  {
-    _handler1.processingInstruction(target, data);
-    _handler2.processingInstruction(target, data);
-  }
-  
-  public void skippedEntity(String name)
-    throws SAXException
-  {
-    _handler1.skippedEntity(name);
-    _handler2.skippedEntity(name);
-  }
+   TeeContentHandler(ContentHandler handler1, ContentHandler handler2) {
+      _handler1 = handler1;
+      _handler2 = handler2;
+   }
+
+   public void setDocumentLocator(Locator locator) {
+      _handler1.setDocumentLocator(locator);
+      _handler2.setDocumentLocator(locator);
+   }
+
+   public void startDocument()
+      throws SAXException {
+      _handler1.startDocument();
+      _handler2.startDocument();
+   }
+
+   public void endDocument()
+      throws SAXException {
+      _handler1.endDocument();
+      _handler2.endDocument();
+   }
+
+   public void startPrefixMapping(String prefix, String uri)
+      throws SAXException {
+      _handler1.startPrefixMapping(prefix, uri);
+      _handler2.startPrefixMapping(prefix, uri);
+   }
+
+   public void endPrefixMapping(String prefix)
+      throws SAXException {
+      _handler1.endPrefixMapping(prefix);
+      _handler2.endPrefixMapping(prefix);
+   }
+
+   public void startElement(String namespaceURI, String localName,
+                            String qName, Attributes attrs)
+      throws SAXException {
+      _handler1.startElement(namespaceURI, localName, qName, attrs);
+      _handler2.startElement(namespaceURI, localName, qName, attrs);
+   }
+
+   public void endElement(String namespaceURI, String localName, String qName)
+      throws SAXException {
+      _handler1.endElement(namespaceURI, localName, qName);
+      _handler2.endElement(namespaceURI, localName, qName);
+   }
+
+   public void characters(char ch[], int start, int length)
+      throws SAXException {
+      _handler1.characters(ch, start, length);
+      _handler2.characters(ch, start, length);
+   }
+
+   public void ignorableWhitespace(char ch[], int start, int length)
+      throws SAXException {
+      _handler1.ignorableWhitespace(ch, start, length);
+      _handler2.ignorableWhitespace(ch, start, length);
+   }
+
+   public void processingInstruction(String target, String data)
+      throws SAXException {
+      _handler1.processingInstruction(target, data);
+      _handler2.processingInstruction(target, data);
+   }
+
+   public void skippedEntity(String name)
+      throws SAXException {
+      _handler1.skippedEntity(name);
+      _handler2.skippedEntity(name);
+   }
 }

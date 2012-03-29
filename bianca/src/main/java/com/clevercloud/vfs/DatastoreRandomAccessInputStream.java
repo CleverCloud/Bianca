@@ -34,58 +34,49 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class DatastoreRandomAccessInputStream
-  extends InputStream
-{
-  private DatastoreRandomAccessFile _file;
-  
-  public DatastoreRandomAccessInputStream(DatastoreRandomAccessFile file)
-  {
-    _file = file;
-  }
-  
-  public int read()
-    throws IOException
-  {
-    byte []buffer = new byte[1];
-    
-    if (read(buffer, 0, 1) < 0)
-      return -1;
-    
-    return buffer[0];
-  }
-  
-  public int read(byte []buffer)
-    throws IOException
-  {
-    return read(buffer, 0, buffer.length);
-  }
-  
-  public int read(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    return _file.read(buffer, offset, length);
-  }
-  
-  public void close()
-    throws IOException
-  {
-    
-  }
-  
-  public int available()
-    throws IOException
-  {
-    throw new UnsupportedOperationException();
-  }
-  
-  public long skip(long n)
-    throws IOException
-  {
-    throw new UnsupportedOperationException();
-  }
-  
-  public boolean setPosition(long offset)
-  {
-    return false;
-  }
+   extends InputStream {
+   private DatastoreRandomAccessFile _file;
+
+   public DatastoreRandomAccessInputStream(DatastoreRandomAccessFile file) {
+      _file = file;
+   }
+
+   public int read()
+      throws IOException {
+      byte[] buffer = new byte[1];
+
+      if (read(buffer, 0, 1) < 0)
+         return -1;
+
+      return buffer[0];
+   }
+
+   public int read(byte[] buffer)
+      throws IOException {
+      return read(buffer, 0, buffer.length);
+   }
+
+   public int read(byte[] buffer, int offset, int length)
+      throws IOException {
+      return _file.read(buffer, offset, length);
+   }
+
+   public void close()
+      throws IOException {
+
+   }
+
+   public int available()
+      throws IOException {
+      throw new UnsupportedOperationException();
+   }
+
+   public long skip(long n)
+      throws IOException {
+      throw new UnsupportedOperationException();
+   }
+
+   public boolean setPosition(long offset) {
+      return false;
+   }
 }

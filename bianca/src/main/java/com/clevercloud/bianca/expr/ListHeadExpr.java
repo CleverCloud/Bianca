@@ -29,11 +29,7 @@
  */
 package com.clevercloud.bianca.expr;
 
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -67,7 +63,6 @@ public class ListHeadExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -79,7 +74,6 @@ public class ListHeadExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

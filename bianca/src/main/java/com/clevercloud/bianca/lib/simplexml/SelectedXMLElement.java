@@ -29,9 +29,11 @@
  */
 package com.clevercloud.bianca.lib.simplexml;
 
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.BiancaClass;
+import com.clevercloud.bianca.env.Env;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * SimpleXMLElement object oriented API facade.
@@ -42,7 +44,7 @@ public class SelectedXMLElement extends SimpleXMLElement {
    private SimpleXMLElement _owner;
 
    protected SelectedXMLElement(Env env, BiancaClass cls,
-           SimpleXMLElement owner) {
+                                SimpleXMLElement owner) {
       super(env, cls, owner._parent, owner._name);
 
       _owner = owner;
@@ -73,7 +75,7 @@ public class SelectedXMLElement extends SimpleXMLElement {
     * the loop <code>foreach($a as $b)</code>, this method
     * should return an iterator that contains Java objects
     * that will be wrapped in a Value.
-    *
+    * <p/>
     * When a 'foreach' loop with name/value pairs
     * i.e. <code>foreach($a as $b=>$c)</code>
     * invokes this method, it expects an iterator that

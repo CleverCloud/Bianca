@@ -29,15 +29,15 @@
  */
 package com.clevercloud.bianca.expr;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.Var;
 import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.util.L10N;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Represents a PHP field reference.
@@ -64,14 +64,15 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
    //
    // function call creation
    //
+
    /**
     * Creates a function call expression
     */
    @Override
    public Expr createCall(BiancaParser parser,
-           Location location,
-           ArrayList<Expr> args)
-           throws IOException {
+                          Location location,
+                          ArrayList<Expr> args)
+      throws IOException {
       ExprFactory factory = parser.getExprFactory();
 
       return factory.createMethodCall(location, _objExpr, _nameExpr, args);
@@ -81,7 +82,6 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -97,7 +97,6 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -112,7 +111,6 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -126,7 +124,6 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -142,7 +139,6 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -158,7 +154,6 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression, creating an array if the field is unset.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -172,7 +167,6 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression, creating an object if the field is unset.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -186,7 +180,6 @@ public class ObjectFieldVarExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

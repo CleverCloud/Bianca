@@ -30,7 +30,7 @@
 package com.clevercloud.bianca.lib.dom;
 
 public class DOMStringList
-        extends DOMWrapper<org.w3c.dom.DOMStringList> {
+   extends DOMWrapper<org.w3c.dom.DOMStringList> {
 
    DOMStringList(DOMImplementation impl, org.w3c.dom.DOMStringList delegate) {
       super(impl, delegate);

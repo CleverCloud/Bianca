@@ -29,13 +29,13 @@
  */
 package com.clevercloud.bianca.env;
 
-import java.util.*;
-
 import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.bianca.function.FunSpecialCall;
 import com.clevercloud.bianca.program.ClassDef;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.Primes;
+
+import java.util.Iterator;
 
 /**
  * Case-insensitive method mapping
@@ -90,8 +90,8 @@ public final class MethodMap<V> {
       final int bucket = (hash & 0x7fffffff) % _prime;
 
       for (Entry<V> entry = _entries[bucket];
-              entry != null;
-              entry = entry.getNext()) {
+           entry != null;
+           entry = entry.getNext()) {
          final StringValue entryKey = entry.getKey();
 
          if (key == entryKey || key.equalsIgnoreCase(entryKey)) {
@@ -106,8 +106,8 @@ public final class MethodMap<V> {
       final int bucket = (hash & 0x7fffffff) % _prime;
 
       for (Entry<V> entry = _entries[bucket];
-              entry != null;
-              entry = entry.getNext()) {
+           entry != null;
+           entry = entry.getNext()) {
          final StringValue entryKey = entry.getKey();
 
          if (key == entryKey || key.equalsIgnoreCase(entryKey)) {
@@ -131,10 +131,10 @@ public final class MethodMap<V> {
 
       if (_biancaClass != null) {
          env.error(L.l("Call to undefined method {0}::{1}",
-                 _biancaClass.getName(), key));
+            _biancaClass.getName(), key));
       } else {
          env.error(L.l("Call to undefined function {0}",
-                 key));
+            key));
       }
 
       throw new IllegalStateException();
@@ -146,8 +146,8 @@ public final class MethodMap<V> {
       int bucket = (hash & 0x7fffffff) % _prime;
 
       for (Entry<V> entry = _entries[bucket];
-              entry != null;
-              entry = entry.getNext()) {
+           entry != null;
+           entry = entry.getNext()) {
          StringValue entryKey = entry.getKey();
 
          if (key == entryKey || key.equalsIgnoreCase(entryKey)) {
@@ -269,8 +269,8 @@ public final class MethodMap<V> {
          Entry<V> entry = _next == null ? null : _next._next;
 
          while (entry == null
-                 && _index < _entries.length
-                 && (entry = _entries[_index++]) == null) {
+            && _index < _entries.length
+            && (entry = _entries[_index++]) == null) {
          }
 
          _next = entry;

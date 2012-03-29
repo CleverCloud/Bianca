@@ -35,7 +35,7 @@ import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.expr.Expr;
 
 public class DoubleValueMarshal
-        extends Marshal {
+   extends Marshal {
 
    public static final Marshal MARSHAL = new DoubleValueMarshal();
 

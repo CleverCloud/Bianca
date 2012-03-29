@@ -34,46 +34,39 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class DatastoreOutputStream
-  extends OutputStream
-{
-  private DatastoreFile _file;
-  
-  public DatastoreOutputStream(DatastoreFile file)
-  {
-    _file = file;
-  }
-  
-  public void write(int b)
-    throws IOException
-  {
-    byte []buffer = new byte[1];
-    buffer[0] = (byte)(b & 0xff);
-    
-    _file.write(buffer, 0, 1);
-  }
-  
-  public void write(byte []buffer)
-    throws IOException
-  {
-    write(buffer, 0, buffer.length);
-  }
-  
-  public void write(byte []buffer, int off, int length)
-    throws IOException
-  {
-    _file.write(buffer, off, length);
-  }
-  
-  public void flush()
-    throws IOException
-  {
-    
-  }
-  
-  public void close()
-    throws IOException
-  {
-    
-  }
-  
+   extends OutputStream {
+   private DatastoreFile _file;
+
+   public DatastoreOutputStream(DatastoreFile file) {
+      _file = file;
+   }
+
+   public void write(int b)
+      throws IOException {
+      byte[] buffer = new byte[1];
+      buffer[0] = (byte) (b & 0xff);
+
+      _file.write(buffer, 0, 1);
+   }
+
+   public void write(byte[] buffer)
+      throws IOException {
+      write(buffer, 0, buffer.length);
+   }
+
+   public void write(byte[] buffer, int off, int length)
+      throws IOException {
+      _file.write(buffer, off, length);
+   }
+
+   public void flush()
+      throws IOException {
+
+   }
+
+   public void close()
+      throws IOException {
+
+   }
+
 }

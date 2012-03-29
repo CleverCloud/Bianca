@@ -35,46 +35,42 @@ package com.clevercloud.util;
  */
 public class Html {
 
-  /**
-   * Escapes special symbols in a string.  For example '<' becomes '&lt;'
-   */
-  public static String escapeHtml(String s)
-  {
-    if (s == null)
-      return null;
+   /**
+    * Escapes special symbols in a string.  For example '<' becomes '&lt;'
+    */
+   public static String escapeHtml(String s) {
+      if (s == null)
+         return null;
 
-    StringBuilder cb = new StringBuilder();
-    int lineCharacter = 0;
-    boolean startsWithSpace = false;
-    
-    for (int i = 0; i < s.length(); i++) {
-      char ch = s.charAt(i);
+      StringBuilder cb = new StringBuilder();
+      int lineCharacter = 0;
+      boolean startsWithSpace = false;
 
-      lineCharacter++;
-      
-      if (ch == '<')
-        cb.append("&lt;");
-      else if (ch == '&')
-        cb.append("&amp;");
-      else if (ch == '\n' || ch == '\r') {
-        lineCharacter = 0;
-        cb.append(ch);
-        startsWithSpace = false;
-      }
-      else if (lineCharacter > 70 && ch == ' ' && ! startsWithSpace) {
-        lineCharacter = 0;
-        cb.append('\n');
-        for (; i + 1 < s.length() && s.charAt(i + 1) == ' '; i++) {
-        }
-      }
-      else if (lineCharacter == 1 && (ch == ' ' || ch == '\t')) {
-        cb.append((char) ch);
-        startsWithSpace = true;
-      }
-      else
-        cb.append(ch);
-    }
+      for (int i = 0; i < s.length(); i++) {
+         char ch = s.charAt(i);
 
-    return cb.toString();
-  }
+         lineCharacter++;
+
+         if (ch == '<')
+            cb.append("&lt;");
+         else if (ch == '&')
+            cb.append("&amp;");
+         else if (ch == '\n' || ch == '\r') {
+            lineCharacter = 0;
+            cb.append(ch);
+            startsWithSpace = false;
+         } else if (lineCharacter > 70 && ch == ' ' && !startsWithSpace) {
+            lineCharacter = 0;
+            cb.append('\n');
+            for (; i + 1 < s.length() && s.charAt(i + 1) == ' '; i++) {
+            }
+         } else if (lineCharacter == 1 && (ch == ' ' || ch == '\t')) {
+            cb.append((char) ch);
+            startsWithSpace = true;
+         } else
+            cb.append(ch);
+      }
+
+      return cb.toString();
+   }
 }

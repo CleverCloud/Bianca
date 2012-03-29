@@ -33,7 +33,7 @@ import com.clevercloud.bianca.annotation.Delegates;
 
 @Delegates(IteratorAggregateDelegate.class)
 public interface IteratorAggregate
-        extends Traversable {
+   extends Traversable {
 
    /**
     * Returns the iterator.

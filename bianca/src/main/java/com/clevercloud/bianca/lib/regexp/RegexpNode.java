@@ -30,10 +30,12 @@
  */
 package com.clevercloud.bianca.lib.regexp;
 
-import java.util.*;
-
-import com.clevercloud.util.*;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.util.CharBuffer;
+import com.clevercloud.util.IntSet;
+
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 class RegexpNode {
 
@@ -320,6 +322,7 @@ class RegexpNode {
          }
       }
    }
+
    static final AnchorBegin ANCHOR_BEGIN = new AnchorBegin();
    static final AnchorBeginOrNewline ANCHOR_BEGIN_OR_NEWLINE = new AnchorBeginOrNewline();
    static final AnchorBeginRelative ANCHOR_BEGIN_RELATIVE = new AnchorBeginRelative();
@@ -373,7 +376,7 @@ class RegexpNode {
       @Override
       int match(StringValue string, int strlen, int offset, RegexpState state) {
          if (offset == strlen
-                 || offset + 1 == strlen && string.charAt(offset) == '\n') {
+            || offset + 1 == strlen && string.charAt(offset) == '\n') {
             return offset;
          } else {
             return -1;
@@ -404,6 +407,7 @@ class RegexpNode {
          }
       }
    }
+
    static final RegexpNode DIGIT = RegexpSet.DIGIT.createNode();
    static final RegexpNode NOT_DIGIT = RegexpSet.DIGIT.createNotNode();
    static final RegexpNode DOT = RegexpSet.DOT.createNotNode();
@@ -715,7 +719,7 @@ class RegexpNode {
       @Override
       public String toString() {
          return "CharUngreedyLoop[" + _min + ", "
-                 + _max + ", " + _node + ", " + _next + "]";
+            + _max + ", " + _node + ", " + _next + "]";
       }
    }
 
@@ -876,10 +880,10 @@ class RegexpNode {
       @Override
       public String toString() {
          return (getClass().getSimpleName()
-                 + "[" + _group
-                 + "," + _first
-                 + "," + _tail
-                 + "]");
+            + "[" + _group
+            + "," + _first
+            + "," + _tail
+            + "]");
       }
    }
 
@@ -943,6 +947,7 @@ class RegexpNode {
          return _next.match(string, length, offset, state);
       }
    }
+
    final static EmptyNode EMPTY = new EmptyNode();
 
    /**
@@ -1149,15 +1154,15 @@ class RegexpNode {
        * Create an or expression
        */
       // php/4e6b
-    /*
-      @Override
-      RegexpNode createOr(RegexpNode node)
-      {
-      _next = _next.createOr(node);
+      /*
+     @Override
+     RegexpNode createOr(RegexpNode node)
+     {
+     _next = _next.createOr(node);
 
-      return getHead();
-      }
-       */
+     return getHead();
+     }
+      */
       @Override
       int minLength() {
          return _next.minLength();
@@ -1863,9 +1868,10 @@ class RegexpNode {
       @Override
       public String toString() {
          return "PossessiveLoop[" + _min + ", "
-                 + _max + ", " + _node + ", " + _next + "]";
+            + _max + ", " + _node + ", " + _next + "]";
       }
    }
+
    static final PropC PROP_C = new PropC();
    static final PropNotC PROP_NOT_C = new PropNotC();
    static final Prop PROP_Cc = new Prop(Character.CONTROL);
@@ -1995,10 +2001,10 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (value == Character.CONTROL
-                    || value == Character.FORMAT
-                    || value == Character.UNASSIGNED
-                    || value == Character.PRIVATE_USE
-                    || value == Character.SURROGATE) {
+               || value == Character.FORMAT
+               || value == Character.UNASSIGNED
+               || value == Character.PRIVATE_USE
+               || value == Character.SURROGATE) {
                return offset + 1;
             }
          }
@@ -2017,10 +2023,10 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (!(value == Character.CONTROL
-                    || value == Character.FORMAT
-                    || value == Character.UNASSIGNED
-                    || value == Character.PRIVATE_USE
-                    || value == Character.SURROGATE)) {
+               || value == Character.FORMAT
+               || value == Character.UNASSIGNED
+               || value == Character.PRIVATE_USE
+               || value == Character.SURROGATE)) {
                return offset + 1;
             }
          }
@@ -2039,10 +2045,10 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (value == Character.LOWERCASE_LETTER
-                    || value == Character.MODIFIER_LETTER
-                    || value == Character.OTHER_LETTER
-                    || value == Character.TITLECASE_LETTER
-                    || value == Character.UPPERCASE_LETTER) {
+               || value == Character.MODIFIER_LETTER
+               || value == Character.OTHER_LETTER
+               || value == Character.TITLECASE_LETTER
+               || value == Character.UPPERCASE_LETTER) {
                return offset + 1;
             }
          }
@@ -2061,10 +2067,10 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (!(value == Character.LOWERCASE_LETTER
-                    || value == Character.MODIFIER_LETTER
-                    || value == Character.OTHER_LETTER
-                    || value == Character.TITLECASE_LETTER
-                    || value == Character.UPPERCASE_LETTER)) {
+               || value == Character.MODIFIER_LETTER
+               || value == Character.OTHER_LETTER
+               || value == Character.TITLECASE_LETTER
+               || value == Character.UPPERCASE_LETTER)) {
                return offset + 1;
             }
          }
@@ -2083,8 +2089,8 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (value == Character.COMBINING_SPACING_MARK
-                    || value == Character.ENCLOSING_MARK
-                    || value == Character.NON_SPACING_MARK) {
+               || value == Character.ENCLOSING_MARK
+               || value == Character.NON_SPACING_MARK) {
                return offset + 1;
             }
          }
@@ -2103,8 +2109,8 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (!(value == Character.COMBINING_SPACING_MARK
-                    || value == Character.ENCLOSING_MARK
-                    || value == Character.NON_SPACING_MARK)) {
+               || value == Character.ENCLOSING_MARK
+               || value == Character.NON_SPACING_MARK)) {
                return offset + 1;
             }
          }
@@ -2123,8 +2129,8 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (value == Character.DECIMAL_DIGIT_NUMBER
-                    || value == Character.LETTER_NUMBER
-                    || value == Character.OTHER_NUMBER) {
+               || value == Character.LETTER_NUMBER
+               || value == Character.OTHER_NUMBER) {
                return offset + 1;
             }
          }
@@ -2144,8 +2150,8 @@ class RegexpNode {
 
 
             if (!(value == Character.DECIMAL_DIGIT_NUMBER
-                    || value == Character.LETTER_NUMBER
-                    || value == Character.OTHER_NUMBER)) {
+               || value == Character.LETTER_NUMBER
+               || value == Character.OTHER_NUMBER)) {
                return offset + 1;
             }
          }
@@ -2164,12 +2170,12 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (value == Character.CONNECTOR_PUNCTUATION
-                    || value == Character.DASH_PUNCTUATION
-                    || value == Character.END_PUNCTUATION
-                    || value == Character.FINAL_QUOTE_PUNCTUATION
-                    || value == Character.INITIAL_QUOTE_PUNCTUATION
-                    || value == Character.OTHER_PUNCTUATION
-                    || value == Character.START_PUNCTUATION) {
+               || value == Character.DASH_PUNCTUATION
+               || value == Character.END_PUNCTUATION
+               || value == Character.FINAL_QUOTE_PUNCTUATION
+               || value == Character.INITIAL_QUOTE_PUNCTUATION
+               || value == Character.OTHER_PUNCTUATION
+               || value == Character.START_PUNCTUATION) {
                return offset + 1;
             }
          }
@@ -2189,12 +2195,12 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (!(value == Character.CONNECTOR_PUNCTUATION
-                    || value == Character.DASH_PUNCTUATION
-                    || value == Character.END_PUNCTUATION
-                    || value == Character.FINAL_QUOTE_PUNCTUATION
-                    || value == Character.INITIAL_QUOTE_PUNCTUATION
-                    || value == Character.OTHER_PUNCTUATION
-                    || value == Character.START_PUNCTUATION)) {
+               || value == Character.DASH_PUNCTUATION
+               || value == Character.END_PUNCTUATION
+               || value == Character.FINAL_QUOTE_PUNCTUATION
+               || value == Character.INITIAL_QUOTE_PUNCTUATION
+               || value == Character.OTHER_PUNCTUATION
+               || value == Character.START_PUNCTUATION)) {
                return offset + 1;
             }
          }
@@ -2213,9 +2219,9 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (value == Character.CURRENCY_SYMBOL
-                    || value == Character.MODIFIER_SYMBOL
-                    || value == Character.MATH_SYMBOL
-                    || value == Character.OTHER_SYMBOL) {
+               || value == Character.MODIFIER_SYMBOL
+               || value == Character.MATH_SYMBOL
+               || value == Character.OTHER_SYMBOL) {
                return offset + 1;
             }
          }
@@ -2234,9 +2240,9 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (!(value == Character.CURRENCY_SYMBOL
-                    || value == Character.MODIFIER_SYMBOL
-                    || value == Character.MATH_SYMBOL
-                    || value == Character.OTHER_SYMBOL)) {
+               || value == Character.MODIFIER_SYMBOL
+               || value == Character.MATH_SYMBOL
+               || value == Character.OTHER_SYMBOL)) {
                return offset + 1;
             }
          }
@@ -2255,8 +2261,8 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (value == Character.LINE_SEPARATOR
-                    || value == Character.PARAGRAPH_SEPARATOR
-                    || value == Character.SPACE_SEPARATOR) {
+               || value == Character.PARAGRAPH_SEPARATOR
+               || value == Character.SPACE_SEPARATOR) {
                return offset + 1;
             }
          }
@@ -2275,8 +2281,8 @@ class RegexpNode {
             int value = Character.getType(ch);
 
             if (!(value == Character.LINE_SEPARATOR
-                    || value == Character.PARAGRAPH_SEPARATOR
-                    || value == Character.SPACE_SEPARATOR)) {
+               || value == Character.PARAGRAPH_SEPARATOR
+               || value == Character.SPACE_SEPARATOR)) {
                return offset + 1;
             }
          }
@@ -2411,7 +2417,7 @@ class RegexpNode {
             RegexpNode head = new StringNode(_buffer, _buffer.length() - 1);
 
             return head.concat(
-                    new CharNode(ch).createLoopUngreedy(parser, min, max));
+               new CharNode(ch).createLoopUngreedy(parser, min, max));
          }
       }
 
@@ -2466,9 +2472,9 @@ class RegexpNode {
       //
       @Override
       final int match(StringValue string,
-              int strlen,
-              int offset,
-              RegexpState state) {
+                      int strlen,
+                      int offset,
+                      RegexpState state) {
          if (string.regionMatches(offset, _buffer, 0)) {
             return offset + _buffer.length();
          } else {
@@ -2562,8 +2568,8 @@ class RegexpNode {
       @Override
       int firstChar() {
          if (_buffer.length() > 0
-                 && (Character.toLowerCase(_buffer.charAt(0))
-                 == Character.toUpperCase(_buffer.charAt(0)))) {
+            && (Character.toLowerCase(_buffer.charAt(0))
+            == Character.toUpperCase(_buffer.charAt(0)))) {
             return _buffer.charAt(0);
          } else {
             return -1;
@@ -2612,6 +2618,7 @@ class RegexpNode {
          sb.append("]");
       }
    }
+
    static final StringBegin STRING_BEGIN = new StringBegin();
    static final StringEnd STRING_END = new StringEnd();
    static final StringFirst STRING_FIRST = new StringFirst();
@@ -2658,13 +2665,14 @@ class RegexpNode {
       @Override
       int match(StringValue string, int strlen, int offset, RegexpState state) {
          if (offset == strlen
-                 || string.charAt(offset) == '\n' && offset + 1 == string.length()) {
+            || string.charAt(offset) == '\n' && offset + 1 == string.length()) {
             return offset;
          } else {
             return -1;
          }
       }
    }
+
    static final Word WORD = new Word();
    static final NotWord NOT_WORD = new NotWord();
 
@@ -2673,9 +2681,9 @@ class RegexpNode {
       @Override
       int match(StringValue string, int strlen, int offset, RegexpState state) {
          if ((state._start < offset
-                 && RegexpSet.WORD.match(string.charAt(offset - 1)))
-                 != (offset < strlen
-                 && RegexpSet.WORD.match(string.charAt(offset)))) {
+            && RegexpSet.WORD.match(string.charAt(offset - 1)))
+            != (offset < strlen
+            && RegexpSet.WORD.match(string.charAt(offset)))) {
             return offset;
          } else {
             return -1;
@@ -2688,9 +2696,9 @@ class RegexpNode {
       @Override
       int match(StringValue string, int strlen, int offset, RegexpState state) {
          if ((state._start < offset
-                 && RegexpSet.WORD.match(string.charAt(offset - 1)))
-                 == (offset < strlen
-                 && RegexpSet.WORD.match(string.charAt(offset)))) {
+            && RegexpSet.WORD.match(string.charAt(offset - 1)))
+            == (offset < strlen
+            && RegexpSet.WORD.match(string.charAt(offset)))) {
             return offset;
          } else {
             return -1;

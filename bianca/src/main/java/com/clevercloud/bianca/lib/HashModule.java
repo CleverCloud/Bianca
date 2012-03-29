@@ -32,22 +32,28 @@ package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.module.*;
-import com.clevercloud.util.*;
-import com.clevercloud.vfs.*;
+import com.clevercloud.bianca.module.AbstractBiancaModule;
+import com.clevercloud.util.L10N;
+import com.clevercloud.vfs.Path;
+import com.clevercloud.vfs.ReadStream;
+import com.clevercloud.vfs.TempBuffer;
 
-import java.io.*;
-import java.security.*;
-import java.util.*;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.crypto.*;
-import javax.crypto.spec.*;
-
 /**
  * Hash functions.
- *
+ * <p/>
  * This module uses the {@link MessageDigest} class to calculate
  * digests. Typical java installations support MD2, MD5, SHA1, SHA256, SHA384,
  * and SHA512.
@@ -71,9 +77,9 @@ public class HashModule extends AbstractBiancaModule {
     * Hashes a string
     */
    public Value hash(Env env,
-           String algorithm,
-           StringValue string,
-           @Optional boolean isBinary) {
+                     String algorithm,
+                     StringValue string,
+                     @Optional boolean isBinary) {
       try {
          algorithm = getAlgorithm(algorithm);
 
@@ -131,9 +137,9 @@ public class HashModule extends AbstractBiancaModule {
     * Hashes a file
     */
    public Value hash_file(Env env,
-           String algorithm,
-           Path path,
-           @Optional boolean isBinary) {
+                          String algorithm,
+                          Path path,
+                          @Optional boolean isBinary) {
       try {
          algorithm = getAlgorithm(algorithm);
 
@@ -173,8 +179,8 @@ public class HashModule extends AbstractBiancaModule {
     * Returns the final hash value
     */
    public Value hash_final(Env env,
-           HashContext context,
-           @Optional boolean isBinary) {
+                           HashContext context,
+                           @Optional boolean isBinary) {
       if (context == null) {
          return BooleanValue.FALSE;
       }
@@ -186,10 +192,10 @@ public class HashModule extends AbstractBiancaModule {
     * Hashes a string with the algorithm.
     */
    public Value hash_hmac(Env env,
-           String algorithm,
-           StringValue data,
-           StringValue key,
-           @Optional boolean isBinary) {
+                          String algorithm,
+                          StringValue data,
+                          StringValue key,
+                          @Optional boolean isBinary) {
       algorithm = getAlgorithm(algorithm);
 
       HashContext context = hash_init(env, algorithm, HASH_HMAC, key);
@@ -203,10 +209,10 @@ public class HashModule extends AbstractBiancaModule {
     * Hashes a file with the algorithm.
     */
    public Value hash_hmac_file(Env env,
-           String algorithm,
-           Path path,
-           StringValue key,
-           @Optional boolean isBinary) {
+                               String algorithm,
+                               Path path,
+                               StringValue key,
+                               @Optional boolean isBinary) {
       algorithm = getAlgorithm(algorithm);
 
       HashContext context = hash_init(env, algorithm, HASH_HMAC, key);
@@ -220,9 +226,9 @@ public class HashModule extends AbstractBiancaModule {
     * Initialize a hash context.
     */
    public HashContext hash_init(Env env,
-           String algorithm,
-           @Optional int options,
-           @Optional StringValue keyString) {
+                                String algorithm,
+                                @Optional int options,
+                                @Optional StringValue keyString) {
       try {
          algorithm = getAlgorithm(algorithm);
 
@@ -255,7 +261,7 @@ public class HashModule extends AbstractBiancaModule {
          }
       } catch (Exception e) {
          env.error(L.l("hash_init: '{0}' is an unknown algorithm",
-                 algorithm));
+            algorithm));
 
          return null;
       }
@@ -265,8 +271,8 @@ public class HashModule extends AbstractBiancaModule {
     * Updates the hash with more data
     */
    public Value hash_update(Env env,
-           HashContext context,
-           StringValue value) {
+                            HashContext context,
+                            StringValue value) {
       if (context == null) {
          return BooleanValue.FALSE;
       }
@@ -280,8 +286,8 @@ public class HashModule extends AbstractBiancaModule {
     * Updates the hash with more data
     */
    public Value hash_update_file(Env env,
-           HashContext context,
-           Path path) {
+                                 HashContext context,
+                                 Path path) {
       if (context == null) {
          return BooleanValue.FALSE;
       }
@@ -315,9 +321,9 @@ public class HashModule extends AbstractBiancaModule {
     * Updates the hash with more data
     */
    public int hash_update_stream(Env env,
-           HashContext context,
-           InputStream is,
-           @Optional("-1") int length) {
+                                 HashContext context,
+                                 InputStream is,
+                                 @Optional("-1") int length) {
       if (context == null) {
          return -1;
       }

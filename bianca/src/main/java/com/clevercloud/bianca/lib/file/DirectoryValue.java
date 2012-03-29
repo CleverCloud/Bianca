@@ -29,14 +29,10 @@
  */
 package com.clevercloud.bianca.lib.file;
 
-import java.io.IOException;
-
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.ResourceValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.vfs.Path;
+
+import java.io.IOException;
 
 /**
  * Represents a PHP directory listing
@@ -53,7 +49,7 @@ public class DirectoryValue extends ResourceValue {
    }
 
    public DirectoryValue(Env env, Path path)
-           throws IOException {
+      throws IOException {
       _env = env;
       _path = path;
 
@@ -102,6 +98,7 @@ public class DirectoryValue extends ResourceValue {
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override

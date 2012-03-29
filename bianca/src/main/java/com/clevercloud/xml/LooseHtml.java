@@ -31,21 +31,21 @@ package com.clevercloud.xml;
 
 /**
  * A forgiving HTML parser interface.
- *
+ * <p/>
  * <p>The forgiving HTML parser is useful for extracting information from
  * the web since many sites have not-quite-standard HTML.
- *
+ * <p/>
  * <p>To parse a file into a DOM Document use
  * <pre><code>
  * Document doc = new Html().parseDocument("foo.html");
  * </code></pre>
- *
+ * <p/>
  * <p>To parse a string into a DOM Document use
  * <pre><code>
  * String html = "&lt;h1>small test&lt;/h1>";
  * Document doc = new Html().parseDocumentString(html);
  * </code></pre>
- *
+ * <p/>
  * <p>To parse a file using the SAX API use
  * <pre><code>
  * Html html = new Html();
@@ -54,15 +54,14 @@ package com.clevercloud.xml;
  * </code></pre>
  */
 public class LooseHtml extends XmlParser {
-  /**
-   * Create a new forgiving HTML parser
-   */
-  public LooseHtml()
-  {
-    super(new HtmlPolicy(), null);
+   /**
+    * Create a new forgiving HTML parser
+    */
+   public LooseHtml() {
+      super(new HtmlPolicy(), null);
 
-    _policy.forgiving = true;
-    _forgiving = true;
-    _extraForgiving = true;
-  }
+      _policy.forgiving = true;
+      _forgiving = true;
+      _extraForgiving = true;
+   }
 }

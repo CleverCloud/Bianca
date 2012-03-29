@@ -36,7 +36,6 @@ import com.clevercloud.bianca.env.ConnectionEntry;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.LongValue;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.util.L10N;
 
 import java.lang.reflect.Method;
@@ -64,17 +63,17 @@ public class Postgres extends JdbcConnectionResource {
    Object _serverErrorMessage;
 
    public Postgres(Env env,
-           @Optional("localhost") String host,
-           @Optional String user,
-           @Optional String password,
-           @Optional String db,
-           @Optional("5432") int port,
-           @Optional String driver,
-           @Optional String url) {
+                   @Optional("localhost") String host,
+                   @Optional String user,
+                   @Optional String password,
+                   @Optional String db,
+                   @Optional("5432") int port,
+                   @Optional String driver,
+                   @Optional String url) {
       super(env);
 
       connectInternal(env, host, user, password, db, port, "", 0,
-              driver, url, false);
+         driver, url, false);
    }
 
    /**
@@ -82,16 +81,16 @@ public class Postgres extends JdbcConnectionResource {
     */
    @Override
    protected ConnectionEntry connectImpl(Env env,
-           String host,
-           String userName,
-           String password,
-           String dbname,
-           int port,
-           String socket,
-           int flags,
-           String driver,
-           String url,
-           boolean isNewLink) {
+                                         String host,
+                                         String userName,
+                                         String password,
+                                         String dbname,
+                                         int port,
+                                         String socket,
+                                         int flags,
+                                         String driver,
+                                         String url,
+                                         boolean isNewLink) {
       if (isConnected()) {
          env.warning(L.l("Connection is already opened to '{0}'", this));
          return null;
@@ -118,20 +117,20 @@ public class Postgres extends JdbcConnectionResource {
          return jConn;
       } catch (SQLException e) {
          env.warning(
-                 "A link to the server could not be established. " + e.toString());
+            "A link to the server could not be established. " + e.toString());
          env.setSpecialValue(
-                 "postgres.connectErrno", LongValue.create(e.getErrorCode()));
+            "postgres.connectErrno", LongValue.create(e.getErrorCode()));
          env.setSpecialValue(
-                 "postgres.connectError", env.createString(e.getMessage()));
+            "postgres.connectError", env.createString(e.getMessage()));
 
          log.log(Level.FINE, e.toString(), e);
 
          return null;
       } catch (Exception e) {
          env.warning(
-                 "A link to the server could not be established. " + e.toString());
+            "A link to the server could not be established. " + e.toString());
          env.setSpecialValue(
-                 "postgres.connectError", env.createString(e.getMessage()));
+            "postgres.connectError", env.createString(e.getMessage()));
 
          log.log(Level.FINE, e.toString(), e);
          return null;
@@ -143,7 +142,7 @@ public class Postgres extends JdbcConnectionResource {
     */
    public PostgresStatement prepare(Env env, StringValue query) {
       PostgresStatement stmt = new PostgresStatement(
-              (Postgres) validateConnection());
+         (Postgres) validateConnection());
 
       stmt.prepare(env, query);
 
@@ -154,16 +153,15 @@ public class Postgres extends JdbcConnectionResource {
     * Executes a query.
     *
     * @param sql the escaped query string
-    * (can contain escape sequences like `\n' and `\Z')
-    *
+    *            (can contain escape sequences like `\n' and `\Z')
     * @return a {@link JdbcResultResource}, or null for failure
     */
    public PostgresResult query(Env env, String sql) {
       SqlParseToken tok = parseSqlToken(sql, null);
 
       if (tok != null
-              && tok.matchesFirstChar('S', 's')
-              && tok.matchesToken("SET")) {
+         && tok.matchesFirstChar('S', 's')
+         && tok.matchesToken("SET")) {
          // Check for "SET CLIENT_ENCODING TO ..."
 
          tok = parseSqlToken(sql, tok);
@@ -196,8 +194,8 @@ public class Postgres extends JdbcConnectionResource {
     */
    @Override
    protected JdbcResultResource createResult(Env env,
-           Statement stmt,
-           ResultSet rs) {
+                                             Statement stmt,
+                                             ResultSet rs) {
       return new PostgresResult(env, stmt, rs, this);
    }
 
@@ -218,7 +216,7 @@ public class Postgres extends JdbcConnectionResource {
    }
 
    public void putStatement(String name,
-           PostgresStatement stmt) {
+                            PostgresStatement stmt) {
       _stmtTable.put(name, stmt);
    }
 

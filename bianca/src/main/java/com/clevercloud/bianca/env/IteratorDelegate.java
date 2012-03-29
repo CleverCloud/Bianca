@@ -63,7 +63,7 @@ public class IteratorDelegate implements TraversableDelegate {
    }
 
    public static class EntryIterator<T>
-           extends AbstractIteratorImpl<Map.Entry<Value, Value>> {
+      extends AbstractIteratorImpl<Map.Entry<Value, Value>> {
 
       public EntryIterator(Env env, ObjectValue obj) {
          super(env, obj);
@@ -80,7 +80,7 @@ public class IteratorDelegate implements TraversableDelegate {
    }
 
    public static class EntryImpl
-           implements Map.Entry<Value, Value> {
+      implements Map.Entry<Value, Value> {
 
       private final Value _key;
       private final Value _value;
@@ -107,7 +107,7 @@ public class IteratorDelegate implements TraversableDelegate {
    }
 
    public static class KeyIterator<T>
-           extends AbstractIteratorImpl<Value> {
+      extends AbstractIteratorImpl<Value> {
 
       public KeyIterator(Env env, ObjectValue obj) {
          super(env, obj);
@@ -120,7 +120,7 @@ public class IteratorDelegate implements TraversableDelegate {
    }
 
    public static class ValueIterator<T>
-           extends AbstractIteratorImpl<Value> {
+      extends AbstractIteratorImpl<Value> {
 
       public ValueIterator(Env env, ObjectValue obj) {
          super(env, obj);

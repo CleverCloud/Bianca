@@ -30,5 +30,5 @@
 package com.clevercloud.xml;
 
 interface QNodePredicate {
-  public boolean isMatch(QAbstractNode node);
+   public boolean isMatch(QAbstractNode node);
 }

@@ -33,7 +33,6 @@ package com.clevercloud.bianca.expr;
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Value;
 
 /**
@@ -84,7 +83,6 @@ public class LiteralUnicodeExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

@@ -29,12 +29,12 @@
  */
 package com.clevercloud.bianca.lib.curl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
+import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.annotation.Optional;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 abstract public class PostBody {
 

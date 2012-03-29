@@ -31,7 +31,6 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -40,121 +39,112 @@ import org.w3c.dom.Node;
  * Uses the axis to select new nodes.
  */
 public class AttributeListIterator extends NodeIterator {
-  protected NodeIterator _parentIter;
+   protected NodeIterator _parentIter;
 
-  protected NamedNodeMap _attributeMap;
-  protected Node _node;
-  protected int _index;
-  protected AbstractPattern _match;
-  
-  protected AttributeListIterator(ExprEnvironment env)
-  {
-    super(env);
-  }
-  
-  /**
-   * Creates the new AxisIterator.
-   *
-   * @param parentIter the parent iterator
-   * @param env the variable environment
-   * @param match the node matching pattern
-   */
-  public AttributeListIterator(NodeIterator parentIter, 
-                               ExprEnvironment env,
-                               AbstractPattern match)
-    throws XPathException
-  {
-    super(env);
-    
-    _parentIter = parentIter;
-    _match = match;
+   protected NamedNodeMap _attributeMap;
+   protected Node _node;
+   protected int _index;
+   protected AbstractPattern _match;
 
-    _node = findFirstMatchingNode();
-  }
-  
-  /**
-   * True if there's more data.
-   */
-  public boolean hasNext()
-  {
-    return _node != null;
-  }
-  
-  /**
-   * Returns the next selected node.
-   */
-  public Node nextNode()
-    throws XPathException
-  {
-    Node node = _node;
+   protected AttributeListIterator(ExprEnvironment env) {
+      super(env);
+   }
 
-    _node = findFirstMatchingNode();
+   /**
+    * Creates the new AxisIterator.
+    *
+    * @param parentIter the parent iterator
+    * @param env        the variable environment
+    * @param match      the node matching pattern
+    */
+   public AttributeListIterator(NodeIterator parentIter,
+                                ExprEnvironment env,
+                                AbstractPattern match)
+      throws XPathException {
+      super(env);
 
-    return node;
-  }
+      _parentIter = parentIter;
+      _match = match;
 
-  /**
-   * Finds the next matching node.
-   */
-  private Node findFirstMatchingNode()
-    throws XPathException
-  {
-    Node node = null;
-    
-    while (true) {
-      Node parent = null;
-      
+      _node = findFirstMatchingNode();
+   }
 
-      if (node != null && (_match == null || _match.match(node, _env))) {
-        _position++;
-        return node;
+   /**
+    * True if there's more data.
+    */
+   public boolean hasNext() {
+      return _node != null;
+   }
+
+   /**
+    * Returns the next selected node.
+    */
+   public Node nextNode()
+      throws XPathException {
+      Node node = _node;
+
+      _node = findFirstMatchingNode();
+
+      return node;
+   }
+
+   /**
+    * Finds the next matching node.
+    */
+   private Node findFirstMatchingNode()
+      throws XPathException {
+      Node node = null;
+
+      while (true) {
+         Node parent = null;
+
+
+         if (node != null && (_match == null || _match.match(node, _env))) {
+            _position++;
+            return node;
+         }
+
+         if (_attributeMap != null && _index < _attributeMap.getLength())
+            node = _attributeMap.item(_index++);
+         else if (_parentIter == null
+            || (parent = _parentIter.nextNode()) == null) {
+            return null;
+         } else if (parent instanceof Element) {
+            _position = 0;
+            _size = 0;
+            _index = 0;
+            _attributeMap = ((Element) parent).getAttributes();
+         }
       }
-          
-      if (_attributeMap != null && _index < _attributeMap.getLength())
-        node = _attributeMap.item(_index++);
-      else if (_parentIter == null 
-               || (parent = _parentIter.nextNode()) == null) {
-        return null;
-      }
-      else if (parent instanceof Element) {
-        _position = 0;
-        _size = 0;
-        _index = 0;
-        _attributeMap = ((Element) parent).getAttributes();
-      }
-    }
-  }
-  
-  /**
-   * Returns the number of nodes in the context list.
-   */
-  public int getContextSize()
-  {
-    if (_attributeMap == null)
-      return 0;
-    else
-      return _attributeMap.getLength();
-  }
+   }
+
+   /**
+    * Returns the number of nodes in the context list.
+    */
+   public int getContextSize() {
+      if (_attributeMap == null)
+         return 0;
+      else
+         return _attributeMap.getLength();
+   }
 
 
-  public Object clone()
-  {
-    AttributeListIterator iter = new AttributeListIterator(_env);
+   public Object clone() {
+      AttributeListIterator iter = new AttributeListIterator(_env);
 
-    iter.copy(this);
+      iter.copy(this);
 
-    if (_parentIter != null)
-      iter._parentIter = (NodeIterator) _parentIter.clone();
-    iter._node = _node;
-    iter._index = _index;
-    iter._attributeMap = _attributeMap;
-    iter._match = _match;
+      if (_parentIter != null)
+         iter._parentIter = (NodeIterator) _parentIter.clone();
+      iter._node = _node;
+      iter._index = _index;
+      iter._attributeMap = _attributeMap;
+      iter._match = _match;
 
-    return iter;
-  }
+      return iter;
+   }
 
-  public String toString()
-  {
-    return "AttributeListIterator[" + _match + "]";
-  }
+   public String toString() {
+      return "AttributeListIterator[" + _match + "]";
+   }
 }

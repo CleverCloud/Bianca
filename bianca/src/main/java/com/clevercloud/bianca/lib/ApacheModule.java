@@ -49,7 +49,7 @@ public class ApacheModule extends AbstractBiancaModule {
 
    private static final L10N L = new L10N(ApacheModule.class);
    private static final Logger log =
-           Logger.getLogger(ApacheModule.class.getName());
+      Logger.getLogger(ApacheModule.class.getName());
 
    /**
     * Stub for insisting the apache process should terminate.
@@ -62,12 +62,13 @@ public class ApacheModule extends AbstractBiancaModule {
    // TODO: apache_get_version
    // TODO: apache_getenv
    // TODO: apache_lookup_uri
+
    /**
     * Gets and sets apache notes
     */
    public String apache_note(Env env,
-           String name,
-           @Optional Value value) {
+                             String name,
+                             @Optional Value value) {
       HttpServletRequest req = env.getRequest();
 
       Object oldValue = req.getAttribute(name);
@@ -103,6 +104,7 @@ public class ApacheModule extends AbstractBiancaModule {
    }
 
    // TODO: apache_response_headers
+
    /**
     * Stub for resetting the output timeout.
     */
@@ -113,6 +115,7 @@ public class ApacheModule extends AbstractBiancaModule {
    // TODO: apache_setenv
    // TODO: ascii2ebcdic
    // TODO: ebcdic2ascii
+
    /**
     * Returns all the request headers
     */

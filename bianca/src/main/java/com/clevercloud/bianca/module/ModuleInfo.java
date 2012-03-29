@@ -30,10 +30,10 @@
  */
 package com.clevercloud.bianca.module;
 
-import com.clevercloud.config.ConfigException;
 import com.clevercloud.bianca.annotation.Hide;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.function.AbstractFunction;
+import com.clevercloud.config.ConfigException;
 import com.clevercloud.util.L10N;
 
 import java.lang.reflect.Field;
@@ -66,7 +66,7 @@ public class ModuleInfo {
     * Constructor.
     */
    public ModuleInfo(ModuleContext context, String name, BiancaModule module)
-           throws ConfigException {
+      throws ConfigException {
       _context = context;
 
       _name = name;
@@ -119,7 +119,7 @@ public class ModuleInfo {
     * @param cl the class to introspect.
     */
    private void introspectPhpModuleClass(Class cl)
-           throws IllegalAccessException, InstantiationException {
+      throws IllegalAccessException, InstantiationException {
       _extensionSet.addAll(Arrays.asList(_module.getLoadedExtensions()));
 
       Map<StringValue, Value> map = _module.getConstMap();
@@ -147,7 +147,7 @@ public class ModuleInfo {
 
          if (value != null) {
             _unicodeConstMap.put(new StringValue(field.getName()),
-                    value);
+               value);
          }
       }
 
@@ -176,10 +176,10 @@ public class ModuleInfo {
 
          // TODO: removed for php/0c2o.qa
          /**
-         Class retType = method.getReturnType();
+          Class retType = method.getReturnType();
 
-         if (void.class.isAssignableFrom(retType))
-         continue;
+          if (void.class.isAssignableFrom(retType))
+          continue;
           */
          Class[] params = method.getParameterTypes();
 
@@ -190,16 +190,16 @@ public class ModuleInfo {
 
          if (hasCheckedException(method)) {
             log.warning(L.l(
-                    "Module method '{0}.{1}' may not throw checked exceptions",
-                    method.getDeclaringClass().getName(),
-                    method.getName()));
+               "Module method '{0}.{1}' may not throw checked exceptions",
+               method.getDeclaringClass().getName(),
+               method.getName()));
             continue;
          }
 
          try {
             if (method.getName().startsWith("bianca_")) {
                throw new UnsupportedOperationException(L.l("{0}: use @Name instead",
-                       method));
+                  method));
             }
 
             StaticFunction function = _context.createStaticFunction(_module, method);
@@ -233,12 +233,12 @@ public class ModuleInfo {
       if (obj == null) {
          return NullValue.NULL;
       } else if (Byte.class.equals(obj.getClass())
-              || Short.class.equals(obj.getClass())
-              || Integer.class.equals(obj.getClass())
-              || Long.class.equals(obj.getClass())) {
+         || Short.class.equals(obj.getClass())
+         || Integer.class.equals(obj.getClass())
+         || Long.class.equals(obj.getClass())) {
          return LongValue.create(((Number) obj).longValue());
       } else if (Float.class.equals(obj.getClass())
-              || Double.class.equals(obj.getClass())) {
+         || Double.class.equals(obj.getClass())) {
          return DoubleValue.create(((Number) obj).doubleValue());
       } else if (String.class.equals(obj.getClass())) {
          return new StringValue((String) obj);

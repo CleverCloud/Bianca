@@ -34,8 +34,8 @@ import com.clevercloud.bianca.BiancaContext;
 import com.clevercloud.bianca.BiancaExitException;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.page.InterpretedPage;
 import com.clevercloud.bianca.page.BiancaPage;
+import com.clevercloud.bianca.page.InterpretedPage;
 import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.bianca.program.BiancaProgram;
 import com.clevercloud.vfs.*;
@@ -49,8 +49,8 @@ import java.io.Writer;
  * Script engine
  */
 public class BiancaScriptEngine
-        extends AbstractScriptEngine
-        implements Compilable {
+   extends AbstractScriptEngine
+   implements Compilable {
 
    private BiancaScriptEngineFactory _factory;
    private final BiancaContext _bianca;
@@ -60,7 +60,7 @@ public class BiancaScriptEngine
    }
 
    public BiancaScriptEngine(BiancaScriptEngineFactory factory,
-           BiancaContext bianca) {
+                             BiancaContext bianca) {
       _factory = factory;
       _bianca = bianca;
    }
@@ -86,7 +86,7 @@ public class BiancaScriptEngine
     */
    @Override
    public Object eval(Reader script, ScriptContext cxt)
-           throws ScriptException {
+      throws ScriptException {
       Env env = null;
 
       try {
@@ -172,7 +172,7 @@ public class BiancaScriptEngine
     */
    @Override
    public Object eval(String script, ScriptContext cxt)
-           throws ScriptException {
+      throws ScriptException {
       return eval(new StringReader(script), cxt);
    }
 
@@ -181,7 +181,7 @@ public class BiancaScriptEngine
     */
    @Override
    public CompiledScript compile(Reader script)
-           throws ScriptException {
+      throws ScriptException {
       try {
          ReadStream reader = ReaderStream.open(script);
 
@@ -202,7 +202,7 @@ public class BiancaScriptEngine
     */
    @Override
    public CompiledScript compile(String script)
-           throws ScriptException {
+      throws ScriptException {
       return compile(new StringReader(script));
    }
 

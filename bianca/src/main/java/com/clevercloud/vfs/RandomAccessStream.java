@@ -38,97 +38,93 @@ import java.io.OutputStream;
  * Reads from a file in a random-access fashion.
  */
 abstract public class RandomAccessStream
-  implements LockableStream
-{
-  /**
-   * Returns the length.
-   */
-  abstract public long getLength()
-    throws IOException;
-  
-  /**
-   * Reads a block starting from the current file pointer.
-   */
-  abstract public int read(byte []buffer, int offset, int length)
-    throws IOException;
+   implements LockableStream {
+   /**
+    * Returns the length.
+    */
+   abstract public long getLength()
+      throws IOException;
 
-  /**
-   * Reads a block starting from the current file pointer.
-   */
-  abstract public int read(char []buffer, int offset, int length)
-    throws IOException;
+   /**
+    * Reads a block starting from the current file pointer.
+    */
+   abstract public int read(byte[] buffer, int offset, int length)
+      throws IOException;
 
-  /**
-   * Reads a block from a given location.
-   */
-  abstract public int read(long fileOffset,
-                           byte []buffer, int offset, int length)
-    throws IOException;
+   /**
+    * Reads a block starting from the current file pointer.
+    */
+   abstract public int read(char[] buffer, int offset, int length)
+      throws IOException;
 
-  /**
-   * Writes a block starting from the current file pointer.
-   */
-  abstract public void write(byte []buffer, int offset, int length)
-    throws IOException;
+   /**
+    * Reads a block from a given location.
+    */
+   abstract public int read(long fileOffset,
+                            byte[] buffer, int offset, int length)
+      throws IOException;
 
-  /**
-   * Writes a block to a given location.
-   */
-  abstract public void write(long fileOffset,
-                             byte []buffer, int offset, int length)
-    throws IOException;
+   /**
+    * Writes a block starting from the current file pointer.
+    */
+   abstract public void write(byte[] buffer, int offset, int length)
+      throws IOException;
 
-  /**
-   * Seeks to the given position in the file.
-   */
-  abstract public boolean seek(long position);
+   /**
+    * Writes a block to a given location.
+    */
+   abstract public void write(long fileOffset,
+                              byte[] buffer, int offset, int length)
+      throws IOException;
 
-  /**
-   * Returns an OutputStream for this stream.
-   */
-  abstract public OutputStream getOutputStream()
-    throws IOException;
+   /**
+    * Seeks to the given position in the file.
+    */
+   abstract public boolean seek(long position);
 
-  /**
-   * Returns an InputStream for this stream.
-   */
-  abstract public InputStream getInputStream()
-    throws IOException;
+   /**
+    * Returns an OutputStream for this stream.
+    */
+   abstract public OutputStream getOutputStream()
+      throws IOException;
 
-  /**
-   * Read a byte from the file, advancing the pointer.
-   */
-  abstract public int read()
-    throws IOException;
+   /**
+    * Returns an InputStream for this stream.
+    */
+   abstract public InputStream getInputStream()
+      throws IOException;
 
-  /**
-   * Write a byte to the file, advancing the pointer.
-   */
-  abstract public void write(int b)
-    throws IOException;
+   /**
+    * Read a byte from the file, advancing the pointer.
+    */
+   abstract public int read()
+      throws IOException;
 
-  /**
-   * Returns the current position of the file pointer.
-   */
-  abstract public long getFilePointer()
-    throws IOException;
+   /**
+    * Write a byte to the file, advancing the pointer.
+    */
+   abstract public void write(int b)
+      throws IOException;
 
-  /**
-   * Closes the stream.
-   */
-  public void close() throws IOException
-  {
-  }
+   /**
+    * Returns the current position of the file pointer.
+    */
+   abstract public long getFilePointer()
+      throws IOException;
 
-  // Placeholder for LockableStream implementation
+   /**
+    * Closes the stream.
+    */
+   public void close() throws IOException {
+   }
 
-  public boolean lock(boolean shared, boolean block)
-  {
-    return true;
-  }
+   // Placeholder for LockableStream implementation
 
-  public boolean unlock()
-  {
-    return true;
-  }
+   public boolean lock(boolean shared, boolean block) {
+      return true;
+   }
+
+   public boolean unlock() {
+      return true;
+   }
 }

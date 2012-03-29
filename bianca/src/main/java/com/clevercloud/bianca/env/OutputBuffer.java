@@ -31,12 +31,14 @@
 package com.clevercloud.bianca.env;
 
 import com.clevercloud.bianca.lib.OutputModule;
-import com.clevercloud.vfs.*;
+import com.clevercloud.vfs.TempBuffer;
+import com.clevercloud.vfs.TempStream;
+import com.clevercloud.vfs.WriteStream;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a PHP output buffer
@@ -56,7 +58,7 @@ public class OutputBuffer {
    private final Env _env;
 
    OutputBuffer(OutputBuffer next, Env env, Callable callback,
-           int chunkSize, boolean erase) {
+                int chunkSize, boolean erase) {
       _next = next;
 
       if (_next != null) {
@@ -123,8 +125,8 @@ public class OutputBuffer {
          StringValue bb = new StringValue();
 
          for (TempBuffer ptr = _tempStream.getHead();
-                 ptr != null;
-                 ptr = ptr.getNext()) {
+              ptr != null;
+              ptr = ptr.getNext()) {
             bb.append(new String(ptr.getBuffer()), 0, ptr.getLength());
          }
 
@@ -262,7 +264,7 @@ public class OutputBuffer {
       }
 
       Value result =
-              _callback.call(_env, getContents(), LongValue.create(_state));
+         _callback.call(_env, getContents(), LongValue.create(_state));
 
       // special code to do nothing to the buffer
       if (result.toValue() != BooleanValue.FALSE) {

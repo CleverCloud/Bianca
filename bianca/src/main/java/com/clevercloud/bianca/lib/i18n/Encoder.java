@@ -42,10 +42,10 @@ abstract public class Encoder {
 
    public static Encoder create(String charset) {
       if (charset.equalsIgnoreCase("utf-8")
-              || charset.equalsIgnoreCase("utf-8")) {
+         || charset.equalsIgnoreCase("utf-8")) {
          return new Utf8Encoder();
       } else if (charset.equalsIgnoreCase("big5")
-              || charset.equalsIgnoreCase("big-5")) {
+         || charset.equalsIgnoreCase("big-5")) {
          return new Big5Encoder(charset);
       } else {
          return new GenericEncoder(charset);

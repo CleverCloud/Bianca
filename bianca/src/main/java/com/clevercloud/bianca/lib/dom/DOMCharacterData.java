@@ -32,19 +32,19 @@ package com.clevercloud.bianca.lib.dom;
 import org.w3c.dom.CharacterData;
 
 public class DOMCharacterData<T extends CharacterData>
-        extends DOMNode<T> {
+   extends DOMNode<T> {
 
    protected DOMCharacterData(DOMImplementation impl, T delegate) {
       super(impl, delegate);
    }
 
    public void appendData(String arg)
-           throws DOMException {
+      throws DOMException {
       _delegate.appendData(arg);
    }
 
    public void deleteData(int offset, int count)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.deleteData(offset, count);
       } catch (org.w3c.dom.DOMException ex) {
@@ -53,7 +53,7 @@ public class DOMCharacterData<T extends CharacterData>
    }
 
    public String getData()
-           throws DOMException {
+      throws DOMException {
       try {
          return _delegate.getData();
       } catch (org.w3c.dom.DOMException ex) {
@@ -66,7 +66,7 @@ public class DOMCharacterData<T extends CharacterData>
    }
 
    public void insertData(int offset, String arg)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.insertData(offset, arg);
       } catch (org.w3c.dom.DOMException ex) {
@@ -75,7 +75,7 @@ public class DOMCharacterData<T extends CharacterData>
    }
 
    public void replaceData(int offset, int count, String arg)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.replaceData(offset, count, arg);
       } catch (org.w3c.dom.DOMException ex) {
@@ -84,7 +84,7 @@ public class DOMCharacterData<T extends CharacterData>
    }
 
    public void setData(String data)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setData(data);
       } catch (org.w3c.dom.DOMException ex) {
@@ -93,7 +93,7 @@ public class DOMCharacterData<T extends CharacterData>
    }
 
    public String substringData(int offset, int count)
-           throws DOMException {
+      throws DOMException {
       try {
          return _delegate.substringData(offset, count);
       } catch (org.w3c.dom.DOMException ex) {

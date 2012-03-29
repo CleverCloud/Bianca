@@ -33,7 +33,7 @@ import com.clevercloud.bianca.env.IteratorClass;
 import com.clevercloud.bianca.env.Value;
 
 public interface OuterIterator
-        extends IteratorClass {
+   extends IteratorClass {
 
    public Value getInnerIterator();
 }

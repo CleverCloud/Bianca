@@ -31,14 +31,10 @@
 package com.clevercloud.bianca.marshal;
 
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.module.ModuleContext;
 import com.clevercloud.bianca.lib.file.BinaryInput;
 import com.clevercloud.bianca.lib.file.BinaryOutput;
-import com.clevercloud.bianca.lib.regexp.Ereg;
-import com.clevercloud.bianca.lib.regexp.Eregi;
-import com.clevercloud.bianca.lib.regexp.Regexp;
-import com.clevercloud.bianca.lib.regexp.UnicodeEreg;
-import com.clevercloud.bianca.lib.regexp.UnicodeEregi;
+import com.clevercloud.bianca.lib.regexp.*;
+import com.clevercloud.bianca.module.ModuleContext;
 import com.clevercloud.bianca.program.JavaClassDef;
 import com.clevercloud.vfs.Path;
 
@@ -46,12 +42,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Code for marshaling (PHP to Java) and unmarshaling (Java to PHP) arguments.
@@ -70,13 +61,13 @@ public class MarshalFactory {
    }
 
    public Marshal create(Class<?> argType,
-           boolean isNotNull) {
+                         boolean isNotNull) {
       return create(argType, isNotNull, false);
    }
 
    public Marshal create(Class<?> argType,
-           boolean isNotNull,
-           boolean isNullAsFalse) {
+                         boolean isNotNull,
+                         boolean isNullAsFalse) {
       Marshal marshal;
 
       marshal = _marshalMap.get(argType);
@@ -199,19 +190,19 @@ public class MarshalFactory {
          return marshal;
       } else {
          if (Value.class.equals(argType)
-                 || Boolean.class.equals(argType)
-                 || Byte.class.equals(argType)
-                 || Short.class.equals(argType)
-                 || Integer.class.equals(argType)
-                 || Long.class.equals(argType)
-                 || Float.class.equals(argType)
-                 || Double.class.equals(argType)
-                 || Character.class.equals(argType)) {
+            || Boolean.class.equals(argType)
+            || Byte.class.equals(argType)
+            || Short.class.equals(argType)
+            || Integer.class.equals(argType)
+            || Long.class.equals(argType)
+            || Float.class.equals(argType)
+            || Double.class.equals(argType)
+            || Character.class.equals(argType)) {
 
             String shortName = argType.getSimpleName();
             throw new UnsupportedOperationException(
-                    "@ReturnNullAsFalse cannot be used with return type `"
-                    + shortName + "'");
+               "@ReturnNullAsFalse cannot be used with return type `"
+                  + shortName + "'");
          }
 
          return new NullAsFalseMarshal(marshal);

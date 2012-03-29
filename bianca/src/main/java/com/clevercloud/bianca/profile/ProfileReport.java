@@ -32,13 +32,9 @@ package com.clevercloud.bianca.profile;
 import com.clevercloud.vfs.Vfs;
 import com.clevercloud.vfs.WriteStream;
 
-import java.io.OutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * Report of profile entries
@@ -169,7 +165,7 @@ public class ProfileReport {
     * Printable flat report
     */
    public void printHotSpotReport(OutputStream os)
-           throws IOException {
+      throws IOException {
       WriteStream out = Vfs.openWrite(os);
 
       ArrayList<ProfileMethod> methodList = new ArrayList<ProfileMethod>(_methodMap.values());
@@ -220,7 +216,7 @@ public class ProfileReport {
     * Printable hierarchy report
     */
    public void printHierarchyReport(OutputStream os)
-           throws IOException {
+      throws IOException {
       WriteStream out = Vfs.openWrite(os);
 
       ArrayList<ProfileMethod> methodList = new ArrayList<ProfileMethod>(_methodMap.values());
@@ -257,17 +253,17 @@ public class ProfileReport {
 
             out.print(String.format("     %-19s", item.getParent()));
             out.print(String.format("%6.2f%%",
-                    100.0 * item.getMicros() / ownTotalMicros));
+               100.0 * item.getMicros() / ownTotalMicros));
             out.println();
          }
 
          out.print(String.format(" %6.2f%%",
-                 100.0 * ownTotalMicros / totalMicros));
+            100.0 * ownTotalMicros / totalMicros));
          out.print(String.format(" %7dus", method.getTotalMicros()));
          out.print(String.format(" %6d", method.getCount()));
          out.print(String.format("  %-22s", name));
          out.print(String.format("%6.2f%%",
-                 100.0 * selfMicros / ownTotalMicros));
+            100.0 * selfMicros / ownTotalMicros));
          out.print(String.format(" %7dus", method.getSelfMicros()));
          out.println();
 
@@ -282,7 +278,7 @@ public class ProfileReport {
 
             out.print(String.format("     %-19s", item.getName()));
             out.print(String.format("%6.2f%%",
-                    100.0 * item.getMicros() / ownTotalMicros));
+               100.0 * item.getMicros() / ownTotalMicros));
             out.println();
          }
       }

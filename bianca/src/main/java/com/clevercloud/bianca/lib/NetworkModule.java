@@ -37,9 +37,9 @@ import com.clevercloud.bianca.annotation.Reference;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.lib.file.SocketInputOutput;
+import com.clevercloud.bianca.lib.file.SocketInputOutput.Domain;
 import com.clevercloud.bianca.lib.file.TcpInputOutput;
 import com.clevercloud.bianca.lib.file.UdpInputOutput;
-import com.clevercloud.bianca.lib.file.SocketInputOutput.Domain;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 
@@ -119,11 +119,11 @@ public class NetworkModule extends AbstractBiancaModule {
     * Opens a socket
     */
    public static SocketInputOutput fsockopen(Env env,
-           String host,
-           @Optional int port,
-           @Optional @Reference Value errno,
-           @Optional @Reference Value errstr,
-           @Optional double timeout) {
+                                             String host,
+                                             @Optional int port,
+                                             @Optional @Reference Value errno,
+                                             @Optional @Reference Value errstr,
+                                             @Optional double timeout) {
       try {
          if (host == null) {
             return null;
@@ -246,8 +246,7 @@ public class NetworkModule extends AbstractBiancaModule {
     * Returns the IP address of the given host name.  If the IP address cannot
     * be obtained, then the provided host name is returned instead.
     *
-    * @param hostname  the host name who's IP to search for
-    *
+    * @param hostname the host name who's IP to search for
     * @return the IP for the given host name or, if the IP cannot be obtained,
     *         the provided host name
     */
@@ -275,8 +274,7 @@ public class NetworkModule extends AbstractBiancaModule {
     * Returns the IP addresses of the given host name.  If the IP addresses
     * cannot be obtained, then the provided host name is returned instead.
     *
-    * @param hostname  the host name who's IP to search for
-    *
+    * @param hostname the host name who's IP to search for
     * @return the IPs for the given host name or, if the IPs cannot be obtained,
     *         the provided host name
     */
@@ -324,9 +322,9 @@ public class NetworkModule extends AbstractBiancaModule {
       }
 
       String formIPv4 = "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-              + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-              + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-              + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
+         + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+         + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
+         + "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
 
       CharSequence ipToCS = ip.subSequence(0, ip.length());
 
@@ -372,8 +370,7 @@ public class NetworkModule extends AbstractBiancaModule {
    /**
     * Returns the protocol number associated with the given protocol name.
     *
-    * @param protoName  the name of the protocol
-    *
+    * @param protoName the name of the protocol
     * @return the number associated with the given protocol name
     */
    public static Value getprotobyname(String protoName) {
@@ -407,8 +404,7 @@ public class NetworkModule extends AbstractBiancaModule {
     * name.
     *
     * @param service  the service name
-    * @param protocol  the protocol, either udp or tcp
-    *
+    * @param protocol the protocol, either udp or tcp
     * @return the number associated with the given protocol and service name
     */
    public static Value getservbyname(String service, String protocol) {
@@ -431,9 +427,8 @@ public class NetworkModule extends AbstractBiancaModule {
     * Returns the service name associated it the given protocol name and
     * service port.
     *
-    * @param port  the service port number
-    * @param protocol  the protocol, either udp or tcp
-    *
+    * @param port     the service port number
+    * @param protocol the protocol, either udp or tcp
     * @return the service name
     */
    @ReturnNullAsFalse
@@ -444,7 +439,7 @@ public class NetworkModule extends AbstractBiancaModule {
          ServiceNode node = entry.getValue();
 
          if (node.getPort().toLong() == port
-                 && node.protocolCheck(protocol)) {
+            && node.protocolCheck(protocol)) {
             return entry.getKey();
          }
       }
@@ -453,17 +448,17 @@ public class NetworkModule extends AbstractBiancaModule {
    }
 
    public static boolean getmxrr(Env env,
-           @NotNull String hostname,
-           @Reference Value mxhosts,
-           @Optional @Reference Value weight) {
+                                 @NotNull String hostname,
+                                 @Reference Value mxhosts,
+                                 @Optional @Reference Value weight) {
       return dns_get(env, hostname, "MX", mxhosts, weight);
    }
 
    private static boolean dns_get(Env env,
-           String hostname,
-           String type,
-           Value hostsRef,
-           Value weightRef) {
+                                  String hostname,
+                                  String type,
+                                  Value hostsRef,
+                                  Value weightRef) {
       try {
          // php/1m08
 
@@ -478,7 +473,7 @@ public class NetworkModule extends AbstractBiancaModule {
             attributes = ictx.getAttributes("dns:/" + hostname);
          } else {
             attributes = ictx.getAttributes(
-                    "dns:/" + hostname, new String[]{type});
+               "dns:/" + hostname, new String[]{type});
          }
 
 
@@ -552,23 +547,22 @@ public class NetworkModule extends AbstractBiancaModule {
     * their corresponding weights in weight, if provided.  Returns true if any
     * hosts were found.  False otherwise.
     *
-    * @param hostname  the hostname to find records for
+    * @param hostname the hostname to find records for
     * @param mxhosts  an array to add the mx hosts to
-    * @param weight  an array to add the weights to
-    *
+    * @param weight   an array to add the weights to
     * @return true if records are found, false otherwise
     */
    public static boolean dns_get_mx(Env env,
-           @NotNull String hostname,
-           @Reference Value mxhosts,
-           @Optional @Reference Value weight) {
+                                    @NotNull String hostname,
+                                    @Reference Value mxhosts,
+                                    @Optional @Reference Value weight) {
       return dns_get(env, hostname, "MX", mxhosts, weight);
 
    }
 
    public static boolean checkdnsrr(Env env,
-           @NotNull String hostname,
-           @Optional("MX") String type) {
+                                    @NotNull String hostname,
+                                    @Optional("MX") String type) {
       return dns_get(env, hostname, type, null, null);
    }
 
@@ -577,21 +571,20 @@ public class NetworkModule extends AbstractBiancaModule {
     * their corresponding weights in weight, if provided.  Returns true if any
     * hosts were found.  False otherwise.
     *
-    * @param hostname  the hostname to find records for
-    *
+    * @param hostname the hostname to find records for
     * @return true if records are found, false otherwise
     */
    public static boolean dns_check_record(Env env,
-           @NotNull String hostname,
-           @Optional("MX") String type) {
+                                          @NotNull String hostname,
+                                          @Optional("MX") String type) {
       return dns_get(env, hostname, type, null, null);
    }
 
    public ArrayValue dns_get_record(Env env,
-           @NotNull String hostname,
-           @Optional("-1") int type,
-           @Optional @Reference Value authnsRef,
-           @Optional @Reference Value addtlRef) {
+                                    @NotNull String hostname,
+                                    @Optional("-1") int type,
+                                    @Optional @Reference Value authnsRef,
+                                    @Optional @Reference Value addtlRef) {
       ArrayValue result = new ArrayValueImpl();
 
       ArrayValueImpl authns = null;
@@ -669,7 +662,7 @@ public class NetworkModule extends AbstractBiancaModule {
             attributes = ictx.getAttributes("dns:/" + hostname);
          } else {
             attributes = ictx.getAttributes(
-                    "dns:/" + hostname, new String[]{typeName});
+               "dns:/" + hostname, new String[]{typeName});
          }
 
          NamingEnumeration list = attributes.getAll();
@@ -743,7 +736,7 @@ public class NetworkModule extends AbstractBiancaModule {
 
    /**
     * Opens syslog.
-    *
+    * <p/>
     * XXX: stubbed for now
     */
    public static boolean openlog(Env env, String ident, int option, int facility) {

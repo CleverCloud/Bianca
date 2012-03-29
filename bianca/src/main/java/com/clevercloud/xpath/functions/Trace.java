@@ -37,7 +37,6 @@ import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.XPathParseException;
 import com.clevercloud.xpath.expr.AbstractStringExpr;
 import com.clevercloud.xpath.pattern.NodeIterator;
-
 import org.w3c.dom.Node;
 
 import java.io.IOException;
@@ -46,66 +45,60 @@ import java.io.IOException;
  * Traces an object.
  */
 public class Trace extends AbstractStringExpr {
-  private static final L10N L = new L10N(ResolveURI.class);
-  
-  private Expr _expr;
-  private Expr _labelExpr;
+   private static final L10N L = new L10N(ResolveURI.class);
 
-  public Trace(Expr expr, Expr labelExpr)
-    throws XPathParseException
-  {
-    _expr = expr;
-    _labelExpr = labelExpr;
+   private Expr _expr;
+   private Expr _labelExpr;
 
-    if (expr == null)
-      throw new XPathParseException(L.l("fn:trace(value,[label])"));
-  }
+   public Trace(Expr expr, Expr labelExpr)
+      throws XPathParseException {
+      _expr = expr;
+      _labelExpr = labelExpr;
 
-  /**
-   * Evaluates the expression as an string.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the string representation of the expression.
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    Object value = _expr.evalObject(node, env);
+      if (expr == null)
+         throw new XPathParseException(L.l("fn:trace(value,[label])"));
+   }
 
-    if (value instanceof NodeIterator) {
-      NodeIterator iter = (NodeIterator) value;
+   /**
+    * Evaluates the expression as an string.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the string representation of the expression.
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      Object value = _expr.evalObject(node, env);
 
-      while (iter.hasNext()) {
-        Node subnode = iter.next();
+      if (value instanceof NodeIterator) {
+         NodeIterator iter = (NodeIterator) value;
 
-        XmlPrinter printer = new XmlPrinter(System.out);
+         while (iter.hasNext()) {
+            Node subnode = iter.next();
 
-        try {
-          printer.printPrettyXml(subnode);
-        } catch (IOException e) {
-        }
-      }
-    }
-    else if (value instanceof Node) {
-        Node subnode = (Node) value;
+            XmlPrinter printer = new XmlPrinter(System.out);
 
-        XmlPrinter printer = new XmlPrinter(System.out);
+            try {
+               printer.printPrettyXml(subnode);
+            } catch (IOException e) {
+            }
+         }
+      } else if (value instanceof Node) {
+         Node subnode = (Node) value;
 
-        try {
-          printer.printPrettyXml(subnode);
-        } catch (IOException e) {
-        }
-    }
-    else
-      System.out.println(value);
+         XmlPrinter printer = new XmlPrinter(System.out);
 
-    return "";
-  }
+         try {
+            printer.printPrettyXml(subnode);
+         } catch (IOException e) {
+         }
+      } else
+         System.out.println(value);
 
-  public String toString()
-  {
-    return "fn:trace(" + _expr + ")";
-  }
+      return "";
+   }
+
+   public String toString() {
+      return "fn:trace(" + _expr + ")";
+   }
 }

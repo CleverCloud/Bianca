@@ -31,7 +31,6 @@
 package com.clevercloud.relaxng;
 
 import com.clevercloud.xml.Xml;
-
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -41,169 +40,150 @@ import java.io.IOException;
  * JARV verifier implementation
  */
 public class VerifierFilter extends DefaultHandler {
-  private Xml _xml;
-  
-  private Verifier _verifier;
-  private VerifierHandler _verifierHandler;
-  
-  private ContentHandler _contentHandler;
-  private ErrorHandler _errorHandler;
+   private Xml _xml;
 
-  public VerifierFilter(Verifier verifier)
-  {
-    _verifier = verifier;
-    _verifierHandler = verifier.getVerifierHandler();
-  }
+   private Verifier _verifier;
+   private VerifierHandler _verifierHandler;
 
-  public void setParent(Xml xml)
-  {
-    _xml = xml;
-  }
+   private ContentHandler _contentHandler;
+   private ErrorHandler _errorHandler;
 
-  public void setContentHandler(ContentHandler handler)
-  {
-    _contentHandler = handler;
-  }
+   public VerifierFilter(Verifier verifier) {
+      _verifier = verifier;
+      _verifierHandler = verifier.getVerifierHandler();
+   }
 
-  public void setErrorHandler(ErrorHandler handler)
-  {
-    _errorHandler = handler;
+   public void setParent(Xml xml) {
+      _xml = xml;
+   }
 
-    _verifier.setErrorHandler(handler);
-  }
+   public void setContentHandler(ContentHandler handler) {
+      _contentHandler = handler;
+   }
+
+   public void setErrorHandler(ErrorHandler handler) {
+      _errorHandler = handler;
+
+      _verifier.setErrorHandler(handler);
+   }
 
 
-  public void parse(InputSource in)
-    throws IOException, SAXException
-  {
-    _xml.setContentHandler(this);
-    _xml.setErrorHandler(this);
-    _xml.parse(in);
-  }
+   public void parse(InputSource in)
+      throws IOException, SAXException {
+      _xml.setContentHandler(this);
+      _xml.setErrorHandler(this);
+      _xml.parse(in);
+   }
 
-  public void setDocumentLocator(Locator locator)
-  {
-    _verifierHandler.setDocumentLocator(locator);
+   public void setDocumentLocator(Locator locator) {
+      _verifierHandler.setDocumentLocator(locator);
 
-    if (_contentHandler != null)
-      _contentHandler.setDocumentLocator(locator);
-  }
+      if (_contentHandler != null)
+         _contentHandler.setDocumentLocator(locator);
+   }
 
-  public void startDocument()
-    throws SAXException
-  {
-    _verifierHandler.startDocument();
+   public void startDocument()
+      throws SAXException {
+      _verifierHandler.startDocument();
 
-    if (_contentHandler != null)
-      _contentHandler.startDocument();
-  }
+      if (_contentHandler != null)
+         _contentHandler.startDocument();
+   }
 
-  public void endDocument()
-    throws SAXException
-  {
-    _verifierHandler.endDocument();
+   public void endDocument()
+      throws SAXException {
+      _verifierHandler.endDocument();
 
-    if (_contentHandler != null)
-      _contentHandler.endDocument();
-  }
+      if (_contentHandler != null)
+         _contentHandler.endDocument();
+   }
 
-  public void startPrefixMapping(String prefix, String uri)
-    throws SAXException
-  {
-    _verifierHandler.startPrefixMapping(prefix, uri);
+   public void startPrefixMapping(String prefix, String uri)
+      throws SAXException {
+      _verifierHandler.startPrefixMapping(prefix, uri);
 
-    if (_contentHandler != null)
-      _contentHandler.startPrefixMapping(prefix, uri);
-  }
+      if (_contentHandler != null)
+         _contentHandler.startPrefixMapping(prefix, uri);
+   }
 
-  public void endPrefixMapping(String prefix)
-    throws SAXException
-  {
-    _verifierHandler.endPrefixMapping(prefix);
+   public void endPrefixMapping(String prefix)
+      throws SAXException {
+      _verifierHandler.endPrefixMapping(prefix);
 
-    if (_contentHandler != null)
-      _contentHandler.endPrefixMapping(prefix);
-  }
+      if (_contentHandler != null)
+         _contentHandler.endPrefixMapping(prefix);
+   }
 
-  public void startElement(String uri, String localName, String qName,
-                           Attributes atts)
-    throws SAXException
-  {
-    _verifierHandler.startElement(uri, localName, qName, atts);
+   public void startElement(String uri, String localName, String qName,
+                            Attributes atts)
+      throws SAXException {
+      _verifierHandler.startElement(uri, localName, qName, atts);
 
-    if (_contentHandler != null)
-      _contentHandler.startElement(uri, localName, qName, atts);
-  }
+      if (_contentHandler != null)
+         _contentHandler.startElement(uri, localName, qName, atts);
+   }
 
-  public void endElement(String uri, String localName, String qName)
-    throws SAXException
-  {
-    _verifierHandler.endElement(uri, localName, qName);
+   public void endElement(String uri, String localName, String qName)
+      throws SAXException {
+      _verifierHandler.endElement(uri, localName, qName);
 
-    if (_contentHandler != null)
-      _contentHandler.endElement(uri, localName, qName);
-  }
+      if (_contentHandler != null)
+         _contentHandler.endElement(uri, localName, qName);
+   }
 
-  public void characters(char []ch, int start, int length)
-    throws SAXException
-  {
-    _verifierHandler.characters(ch, start, length);
+   public void characters(char[] ch, int start, int length)
+      throws SAXException {
+      _verifierHandler.characters(ch, start, length);
 
-    if (_contentHandler != null)
-      _contentHandler.characters(ch, start, length);
-  }
+      if (_contentHandler != null)
+         _contentHandler.characters(ch, start, length);
+   }
 
-  public void ignorableWhitespace(char []ch, int start, int length)
-    throws SAXException
-  {
-    _verifierHandler.ignorableWhitespace(ch, start, length);
+   public void ignorableWhitespace(char[] ch, int start, int length)
+      throws SAXException {
+      _verifierHandler.ignorableWhitespace(ch, start, length);
 
-    if (_contentHandler != null)
-      _contentHandler.ignorableWhitespace(ch, start, length);
-  }
+      if (_contentHandler != null)
+         _contentHandler.ignorableWhitespace(ch, start, length);
+   }
 
-  public void processingInstruction(String target, String data)
-    throws SAXException
-  {
-    _verifierHandler.processingInstruction(target, data);
+   public void processingInstruction(String target, String data)
+      throws SAXException {
+      _verifierHandler.processingInstruction(target, data);
 
-    if (_contentHandler != null)
-      _contentHandler.processingInstruction(target, data);
-  }
+      if (_contentHandler != null)
+         _contentHandler.processingInstruction(target, data);
+   }
 
-  public void skippedEntity(String name)
-    throws SAXException
-  {
-    _verifierHandler.skippedEntity(name);
+   public void skippedEntity(String name)
+      throws SAXException {
+      _verifierHandler.skippedEntity(name);
 
-    if (_contentHandler != null)
-      _contentHandler.skippedEntity(name);
-  }
+      if (_contentHandler != null)
+         _contentHandler.skippedEntity(name);
+   }
 
-  public void error(SAXParseException e)
-    throws SAXException
-  {
-    if (_errorHandler != null)
-      _errorHandler.error(e);
-    else
-      _verifierHandler.error(e);
-  }
+   public void error(SAXParseException e)
+      throws SAXException {
+      if (_errorHandler != null)
+         _errorHandler.error(e);
+      else
+         _verifierHandler.error(e);
+   }
 
-  public void fatalError(SAXParseException e)
-    throws SAXException
-  {
-    if (_errorHandler != null)
-      _errorHandler.fatalError(e);
-    else
-      _verifierHandler.fatalError(e);
-  }
+   public void fatalError(SAXParseException e)
+      throws SAXException {
+      if (_errorHandler != null)
+         _errorHandler.fatalError(e);
+      else
+         _verifierHandler.fatalError(e);
+   }
 
-  public void warning(SAXParseException e)
-    throws SAXException
-  {
-    if (_errorHandler != null)
-      _errorHandler.warning(e);
-    else
-      _verifierHandler.warning(e);
-  }
+   public void warning(SAXParseException e)
+      throws SAXException {
+      if (_errorHandler != null)
+         _errorHandler.warning(e);
+      else
+         _verifierHandler.warning(e);
+   }
 }

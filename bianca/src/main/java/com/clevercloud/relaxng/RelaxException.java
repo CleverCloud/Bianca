@@ -35,22 +35,18 @@ import com.clevercloud.util.CompileException;
  * A relax exception.
  */
 public class RelaxException extends Exception implements CompileException {
-  public RelaxException()
-  {
-  }
-  
-  public RelaxException(String message)
-  {
-    super(message);
-  }
-  
-  public RelaxException(String message, Throwable e)
-  {
-    super(message, e);
-  }
-  
-  public RelaxException(Throwable e)
-  {
-    super(e);
-  }
+   public RelaxException() {
+   }
+
+   public RelaxException(String message) {
+      super(message);
+   }
+
+   public RelaxException(String message, Throwable e) {
+      super(message, e);
+   }
+
+   public RelaxException(Throwable e) {
+      super(e);
+   }
 }

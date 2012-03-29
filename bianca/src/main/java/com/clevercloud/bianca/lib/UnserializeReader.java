@@ -51,21 +51,21 @@ public final class UnserializeReader {
    private boolean _useReference;
 
    public UnserializeReader(StringValue s)
-           throws IOException {
+      throws IOException {
       _buffer = s.toString();
 
       if (s.indexOf("R:") >= 0
-              || s.indexOf("r:") >= 0) {
+         || s.indexOf("r:") >= 0) {
          initReferenceList();
       }
    }
 
    public UnserializeReader(String s)
-           throws IOException {
+      throws IOException {
       _buffer = s;
 
       if (s.indexOf("R:") >= 0
-              || s.indexOf("r:") >= 0) {
+         || s.indexOf("r:") >= 0) {
          initReferenceList();
       }
    }
@@ -75,7 +75,7 @@ public final class UnserializeReader {
    }
 
    public Value unserialize(Env env)
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       switch (ch) {
@@ -96,7 +96,7 @@ public final class UnserializeReader {
          case 's':
          case 'S':
          case 'u':
-         case 'U':{
+         case 'U': {
             expect(':');
             int len = (int) readInt();
             expect(':');
@@ -205,7 +205,7 @@ public final class UnserializeReader {
                obj = qClass.createObject(env);
             } else {
                log.fine(L.l("{0} is an undefined class in unserialize",
-                       className));
+                  className));
 
                obj = env.createIncompleteObject(className);
             }
@@ -231,14 +231,14 @@ public final class UnserializeReader {
                         break;
                      default:
                         throw new IOException(
-                                L.l("field visibility modifier is not valid: 0x{0}",
-                                Integer.toHexString(key.charAt(2))));
+                           L.l("field visibility modifier is not valid: 0x{0}",
+                              Integer.toHexString(key.charAt(2))));
                   }
 
                   if (key.charAt(2) != 0) {
                      throw new IOException(
-                             L.l("end of field visibility modifier is not valid: 0x{0}",
-                             Integer.toHexString(key.charAt(2))));
+                        L.l("end of field visibility modifier is not valid: 0x{0}",
+                           Integer.toHexString(key.charAt(2))));
                   }
 
                   key = key.substring(3);
@@ -278,8 +278,8 @@ public final class UnserializeReader {
 
             if (index - 1 >= _valueList.size()) {
                throw new IOException(
-                       L.l("reference out of range: {0}, size {1}, index {2}",
-                       index - 1, _valueList.size(), _index));
+                  L.l("reference out of range: {0}, size {1}, index {2}",
+                     index - 1, _valueList.size(), _index));
                //return BooleanValue.FALSE;
             }
 
@@ -296,8 +296,8 @@ public final class UnserializeReader {
 
             if (index - 1 >= _valueList.size()) {
                throw new IOException(
-                       L.l("reference out of range: {0}, size {1}, index {2}",
-                       index - 1, _valueList.size(), _index));
+                  L.l("reference out of range: {0}, size {1}, index {2}",
+                     index - 1, _valueList.size(), _index));
                //return BooleanValue.FALSE;
             }
 
@@ -313,12 +313,12 @@ public final class UnserializeReader {
 
          default:
             throw new IOException(
-                    L.l("option not recognized '{0}' (0x{1}) at index {2}",
-                    String.valueOf((char) ch),
-                    Integer.toHexString(ch),
-                    _index));
+               L.l("option not recognized '{0}' (0x{1}) at index {2}",
+                  String.valueOf((char) ch),
+                  Integer.toHexString(ch),
+                  _index));
 
-         //return BooleanValue.FALSE;
+            //return BooleanValue.FALSE;
       }
    }
 
@@ -336,14 +336,14 @@ public final class UnserializeReader {
    }
 
    private void initReferenceList()
-           throws IOException {
+      throws IOException {
       populateReferenceList();
 
       _index = 0;
    }
 
    private void populateReferenceList()
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       switch (ch) {
@@ -548,7 +548,7 @@ public final class UnserializeReader {
    }
 
    public Value unserializeKey(Env env)
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       switch (ch) {
@@ -601,13 +601,13 @@ public final class UnserializeReader {
    }
 
    private String unserializeString()
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       if (ch != 's' && ch != 'S') {
          throw new IOException(L.l("expected 's' at '{1}' (0x{2})",
-                 String.valueOf((char) ch),
-                 Integer.toHexString(ch)));
+            String.valueOf((char) ch),
+            Integer.toHexString(ch)));
       }
 
       expect(':');
@@ -624,10 +624,10 @@ public final class UnserializeReader {
    }
 
    public final void expect(int expectCh)
-           throws IOException {
+      throws IOException {
       if (_buffer.length() <= _index) {
          throw new IOException(L.l("expected '{0}' at end of string",
-                 String.valueOf((char) expectCh)));
+            String.valueOf((char) expectCh)));
       }
 
       int ch = _buffer.charAt(_index++);
@@ -643,12 +643,12 @@ public final class UnserializeReader {
          }
 
          throw new IOException(
-                 L.l("expected '{0}' at '{1}' (0x{2}) (context '{3}', index {4})",
-                 String.valueOf((char) expectCh),
-                 String.valueOf((char) ch),
-                 Integer.toHexString(ch),
-                 context,
-                 _index));
+            L.l("expected '{0}' at '{1}' (0x{2}) (context '{3}', index {4})",
+               String.valueOf((char) expectCh),
+               String.valueOf((char) ch),
+               Integer.toHexString(ch),
+               context,
+               _index));
       }
    }
 

@@ -35,76 +35,69 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * Generic implementation of a node list.
  */
 public class NodeListImpl implements NodeList {
-  private ArrayList<Node> _nodeList = new ArrayList<Node>();
+   private ArrayList<Node> _nodeList = new ArrayList<Node>();
 
-  /**
-   * Creates an empty node list.
+   /**
+    * Creates an empty node list.
+    */
+   public NodeListImpl() {
+   }
+
+   /**
+    * Creates a node list from a collection.
+    */
+   public NodeListImpl(Collection<Node> collection) {
+      _nodeList.addAll(collection);
+   }
+
+   /**
+    * Adds an item.
+    */
+   public void add(Node node) {
+      _nodeList.add(node);
+   }
+
+   /**
+    * Returns the item at the index.
+    */
+   public Node item(int index) {
+      if (index < 0 || _nodeList.size() <= index)
+         return null;
+
+      return _nodeList.get(index);
+   }
+
+   /**
+    * Returns the number of items in the list.
+    */
+   public int getLength() {
+      return _nodeList.size();
+   }
+
+   public String toString() {
+      CharBuffer cb = new CharBuffer();
+
+      cb.append("NodeListImpl[");
+      for (int i = 0; i < getLength(); i++) {
+         if (i != 0)
+            cb.append(", ");
+         cb.append(item(i));
+      }
+      cb.append("]");
+
+      return cb.toString();
+   }
+
+   /*
+   // for bianca
+   public Iterator<Node> iterator()
+   {
+     return new NodeListIterator(null, this);
+   }
    */
-  public NodeListImpl()
-  {
-  }
-
-  /**
-   * Creates a node list from a collection.
-   */
-  public NodeListImpl(Collection<Node> collection)
-  {
-    _nodeList.addAll(collection);
-  }
-
-  /**
-   * Adds an item.
-   */
-  public void add(Node node)
-  {
-    _nodeList.add(node);
-  }
-
-  /**
-   * Returns the item at the index.
-   */
-  public Node item(int index)
-  {
-    if (index < 0 || _nodeList.size() <= index)
-      return null;
-
-    return _nodeList.get(index);
-  }
-
-  /**
-   * Returns the number of items in the list.
-   */
-  public int getLength()
-  {
-    return _nodeList.size();
-  }
-
-  public String toString()
-  {
-    CharBuffer cb = new CharBuffer();
-
-    cb.append("NodeListImpl[");
-    for (int i = 0; i < getLength(); i++) {
-      if (i != 0)
-        cb.append(", ");
-      cb.append(item(i));
-    }
-    cb.append("]");
-
-    return cb.toString();
-  }
-
-  /*
-  // for bianca
-  public Iterator<Node> iterator()
-  {
-    return new NodeListIterator(null, this);
-  }
-  */
 }

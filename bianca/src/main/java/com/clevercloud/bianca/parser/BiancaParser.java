@@ -30,14 +30,16 @@
  */
 package com.clevercloud.bianca.parser;
 
-import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.BiancaContext;
 import com.clevercloud.bianca.BiancaRuntimeException;
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.*;
-import com.clevercloud.bianca.function.*;
+import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.bianca.program.*;
-import com.clevercloud.bianca.statement.*;
+import com.clevercloud.bianca.statement.BlockStatement;
+import com.clevercloud.bianca.statement.Statement;
+import com.clevercloud.bianca.statement.TryStatement;
 import com.clevercloud.util.CharBuffer;
 import com.clevercloud.util.IntMap;
 import com.clevercloud.util.L10N;
@@ -213,15 +215,15 @@ public class BiancaParser {
    }
 
    public BiancaParser(BiancaContext bianca,
-           Path sourceFile,
-           ReadStream is) {
+                       Path sourceFile,
+                       ReadStream is) {
       this(bianca);
 
       init(sourceFile, is, "utf-8");
    }
 
    private void init(Path sourceFile)
-           throws IOException {
+      throws IOException {
       init(sourceFile, sourceFile.openRead(), "utf-8");
    }
 
@@ -255,9 +257,9 @@ public class BiancaParser {
    }
 
    public static BiancaProgram parse(BiancaContext bianca,
-           Path path,
-           String encoding)
-           throws IOException {
+                                     Path path,
+                                     String encoding)
+      throws IOException {
       ReadStream is = path.openRead();
 
       try {
@@ -273,11 +275,11 @@ public class BiancaParser {
    }
 
    public static BiancaProgram parse(BiancaContext bianca,
-           Path path,
-           String encoding,
-           String fileName,
-           int line)
-           throws IOException {
+                                     Path path,
+                                     String encoding,
+                                     String fileName,
+                                     int line)
+      throws IOException {
       ReadStream is = path.openRead();
 
       try {
@@ -297,8 +299,8 @@ public class BiancaParser {
    }
 
    public static BiancaProgram parse(BiancaContext bianca,
-           ReadStream is)
-           throws IOException {
+                                     ReadStream is)
+      throws IOException {
       BiancaParser parser;
       parser = new BiancaParser(bianca, is.getPath(), is);
 
@@ -306,13 +308,13 @@ public class BiancaParser {
    }
 
    public static BiancaProgram parse(BiancaContext bianca,
-           Path path, ReadStream is)
-           throws IOException {
+                                     Path path, ReadStream is)
+      throws IOException {
       return new BiancaParser(bianca, path, is).parse();
    }
 
    public static BiancaProgram parseEval(BiancaContext bianca, String str)
-           throws IOException {
+      throws IOException {
       Path path = new StringPath(str);
 
       BiancaParser parser = new BiancaParser(bianca, path, path.openRead());
@@ -321,7 +323,7 @@ public class BiancaParser {
    }
 
    public static BiancaProgram parseEvalExpr(BiancaContext bianca, String str)
-           throws IOException {
+      throws IOException {
       Path path = new StringPath(str);
 
       BiancaParser parser = new BiancaParser(bianca, path, path.openRead());
@@ -330,10 +332,10 @@ public class BiancaParser {
    }
 
    public static AbstractFunction parseFunction(BiancaContext bianca,
-           String name,
-           String args,
-           String code)
-           throws IOException {
+                                                String name,
+                                                String args,
+                                                String code)
+      throws IOException {
       Path argPath = new StringPath(args);
       Path codePath = new StringPath(code);
 
@@ -347,7 +349,7 @@ public class BiancaParser {
    }
 
    public static Expr parse(BiancaContext bianca, String str)
-           throws IOException {
+      throws IOException {
       Path path = new StringPath(str);
 
       return new BiancaParser(bianca, path, path.openRead()).parseExpr();
@@ -415,7 +417,7 @@ public class BiancaParser {
    }
 
    public BiancaProgram parse()
-           throws IOException {
+      throws IOException {
       ClassDef globalClass = null;
 
       _function = getFactory().createFunctionInfo(_bianca, globalClass, "");
@@ -428,12 +430,12 @@ public class BiancaParser {
       Statement stmt = parseTop();
 
       BiancaProgram program = new BiancaProgram(_bianca, _sourceFile,
-              _globalScope.getFunctionMap(),
-              _globalScope.getFunctionList(),
-              _globalScope.getClassMap(),
-              _globalScope.getClassList(),
-              _function,
-              stmt);
+         _globalScope.getFunctionMap(),
+         _globalScope.getFunctionList(),
+         _globalScope.getClassMap(),
+         _globalScope.getClassList(),
+         _function,
+         stmt);
       return program;
 
       /*
@@ -445,7 +447,7 @@ public class BiancaParser {
    }
 
    BiancaProgram parseCode()
-           throws IOException {
+      throws IOException {
       ClassDef globalClass = null;
 
       _function = getFactory().createFunctionInfo(_bianca, globalClass, "eval");
@@ -457,16 +459,16 @@ public class BiancaParser {
       ArrayList<Statement> stmtList = parseStatementList();
 
       return new BiancaProgram(_bianca, _sourceFile,
-              _globalScope.getFunctionMap(),
-              _globalScope.getFunctionList(),
-              _globalScope.getClassMap(),
-              _globalScope.getClassList(),
-              _function,
-              _factory.createBlock(location, stmtList));
+         _globalScope.getFunctionMap(),
+         _globalScope.getFunctionList(),
+         _globalScope.getClassMap(),
+         _globalScope.getClassList(),
+         _function,
+         _factory.createBlock(location, stmtList));
    }
 
    public Function parseFunction(String name, Path argPath, Path codePath)
-           throws IOException {
+      throws IOException {
       ClassDef globalClass = null;
 
       _function = getFactory().createFunctionInfo(_bianca, globalClass, name);
@@ -484,10 +486,10 @@ public class BiancaParser {
       Statement[] statements = parseStatements();
 
       Function fun = _factory.createFunction(Location.UNKNOWN,
-              name,
-              _function,
-              args,
-              statements);
+         name,
+         _function,
+         args,
+         statements);
 
       close();
 
@@ -498,7 +500,7 @@ public class BiancaParser {
     * Parses the top page.
     */
    Statement parseTop()
-           throws IOException {
+      throws IOException {
       _isTop = true;
 
       ArrayList<Statement> statements = new ArrayList<Statement>();
@@ -530,7 +532,7 @@ public class BiancaParser {
     * Parses a statement list.
     */
    private Statement[] parseStatements()
-           throws IOException {
+      throws IOException {
       ArrayList<Statement> statementList = parseStatementList();
 
       Statement[] statements = new Statement[statementList.size()];
@@ -544,7 +546,7 @@ public class BiancaParser {
     * Parses a statement list.
     */
    private ArrayList<Statement> parseStatementList()
-           throws IOException {
+      throws IOException {
       ArrayList<Statement> statementList = new ArrayList<Statement>();
 
       while (true) {
@@ -591,7 +593,7 @@ public class BiancaParser {
                         break;
                      default:
                         throw error(L.l("expected 'class' at {0}",
-                                tokenName(token)));
+                           tokenName(token)));
                   }
                } while (token != CLASS);
             }
@@ -604,7 +606,7 @@ public class BiancaParser {
 
                if (!_isTop) {
                   statementList.add(
-                          _factory.createFunctionDef(functionLocation, fun));
+                     _factory.createFunctionDef(functionLocation, fun));
                }
             }
             break;
@@ -745,7 +747,7 @@ public class BiancaParser {
    }
 
    private Statement parseStatement()
-           throws IOException {
+      throws IOException {
       Location location = getLocation();
 
       int token = parseToken();
@@ -827,7 +829,7 @@ public class BiancaParser {
     * Parses statements that expect to be terminated by ';'.
     */
    private Statement parseStatementImpl(int token)
-           throws IOException {
+      throws IOException {
       switch (token) {
          case ECHO: {
             Location location = getLocation();
@@ -880,7 +882,7 @@ public class BiancaParser {
     * Parses the echo statement.
     */
    private void parseEcho(ArrayList<Statement> statements)
-           throws IOException {
+      throws IOException {
       Location location = getLocation();
 
       while (true) {
@@ -901,8 +903,8 @@ public class BiancaParser {
     * Creates echo statements from an expression.
     */
    private void createEchoStatements(Location location,
-           ArrayList<Statement> statements,
-           Expr expr) {
+                                     ArrayList<Statement> statements,
+                                     Expr expr) {
       if (expr == null) {
          // since AppendExpr.getNext() can be null.
       } else if (expr instanceof BinaryAppendExpr) {
@@ -929,7 +931,7 @@ public class BiancaParser {
     * Parses the print statement.
     */
    private Statement parsePrint()
-           throws IOException {
+      throws IOException {
       return _factory.createExpr(getLocation(), parsePrintExpr());
    }
 
@@ -937,7 +939,7 @@ public class BiancaParser {
     * Parses the print statement.
     */
    private Expr parsePrintExpr()
-           throws IOException {
+      throws IOException {
       ArrayList<Expr> args = new ArrayList<Expr>();
       args.add(parseTopExpr());
 
@@ -948,7 +950,7 @@ public class BiancaParser {
     * Parses the global statement.
     */
    private Statement parseGlobal()
-           throws IOException {
+      throws IOException {
       ArrayList<Statement> statementList = new ArrayList<Statement>();
 
       Location location = getLocation();
@@ -989,7 +991,7 @@ public class BiancaParser {
     * Parses the static statement.
     */
    private Statement parseStatic()
-           throws IOException {
+      throws IOException {
       ArrayList<Statement> statementList = new ArrayList<Statement>();
 
       Location location = getLocation();
@@ -1014,9 +1016,9 @@ public class BiancaParser {
 
          if (_classDef != null) {
             statementList.add(_factory.createClassStatic(location,
-                    _classDef.getName(),
-                    var,
-                    init));
+               _classDef.getName(),
+               var,
+               init));
          } else {
             statementList.add(_factory.createStatic(location, var, init));
          }
@@ -1032,7 +1034,7 @@ public class BiancaParser {
     * Parses the unset statement.
     */
    private Statement parseUnset()
-           throws IOException {
+      throws IOException {
       Location location = getLocation();
 
       ArrayList<Statement> statementList = new ArrayList<Statement>();
@@ -1045,7 +1047,7 @@ public class BiancaParser {
     * Parses the unset statement.
     */
    private void parseUnset(ArrayList<Statement> statementList)
-           throws IOException {
+      throws IOException {
       Location location = getLocation();
 
       int token = parseToken();
@@ -1075,7 +1077,7 @@ public class BiancaParser {
     * Parses the if statement
     */
    private Statement parseIf()
-           throws IOException {
+      throws IOException {
       boolean oldTop = _isTop;
       _isTop = false;
 
@@ -1125,7 +1127,7 @@ public class BiancaParser {
     * Parses the if statement
     */
    private Statement parseAlternateIf(Expr test, Location location)
-           throws IOException {
+      throws IOException {
       Statement trueBlock = null;
 
       trueBlock = _factory.createBlock(location, parseStatementList());
@@ -1159,7 +1161,7 @@ public class BiancaParser {
     * Parses the switch statement
     */
    private Statement parseSwitch()
-           throws IOException {
+      throws IOException {
       Location location = getLocation();
 
       boolean oldTop = _isTop;
@@ -1254,7 +1256,7 @@ public class BiancaParser {
             }
 
             if (blockList.size() > 0
-                    && !fallThroughList.contains(blockList.size() - 1)) {
+               && !fallThroughList.contains(blockList.size() - 1)) {
                fallThroughList.add(blockList.size() - 1);
             }
 
@@ -1272,8 +1274,8 @@ public class BiancaParser {
          }
 
          return _factory.createSwitch(location, test,
-                 caseList, blockList,
-                 defaultBlock, label);
+            caseList, blockList,
+            defaultBlock, label);
       } finally {
          _isTop = oldTop;
 
@@ -1285,7 +1287,7 @@ public class BiancaParser {
     * Parses the 'while' statement
     */
    private Statement parseWhile()
-           throws IOException {
+      throws IOException {
       boolean oldTop = _isTop;
       _isTop = false;
 
@@ -1328,7 +1330,7 @@ public class BiancaParser {
     * Parses the 'do' statement
     */
    private Statement parseDo()
-           throws IOException {
+      throws IOException {
       boolean oldTop = _isTop;
       _isTop = false;
 
@@ -1360,7 +1362,7 @@ public class BiancaParser {
     * Parses the 'for' statement
     */
    private Statement parseFor()
-           throws IOException {
+      throws IOException {
       boolean oldTop = _isTop;
       _isTop = false;
 
@@ -1428,7 +1430,7 @@ public class BiancaParser {
     * Parses the 'foreach' statement
     */
    private Statement parseForeach()
-           throws IOException {
+      throws IOException {
       boolean oldTop = _isTop;
       _isTop = false;
 
@@ -1500,7 +1502,7 @@ public class BiancaParser {
          }
 
          return _factory.createForeach(location, objExpr, keyVar,
-                 valueVar, isRef, block, label);
+            valueVar, isRef, block, label);
       } finally {
          _isTop = oldTop;
 
@@ -1512,7 +1514,7 @@ public class BiancaParser {
     * Parses the try statement
     */
    private Statement parseTry()
-           throws IOException {
+      throws IOException {
       boolean oldTop = _isTop;
       _isTop = false;
 
@@ -1559,7 +1561,7 @@ public class BiancaParser {
     * Parses a function definition
     */
    private Function parseFunctionDefinition(int modifiers)
-           throws IOException {
+      throws IOException {
       boolean oldTop = _isTop;
       _isTop = false;
 
@@ -1598,26 +1600,26 @@ public class BiancaParser {
          if (isAbstract && !_scope.isAbstract()) {
             if (_classDef != null) {
                throw error(L.l(
-                       "'{0}' may not be abstract because class {1} is not abstract.",
-                       name, _classDef.getName()));
+                  "'{0}' may not be abstract because class {1} is not abstract.",
+                  name, _classDef.getName()));
             } else {
                throw error(L.l(
-                       "'{0}' may not be abstract. Abstract functions are only "
-                       + "allowed in abstract classes.",
-                       name));
+                  "'{0}' may not be abstract. Abstract functions are only "
+                     + "allowed in abstract classes.",
+                  name));
             }
          }
 
          boolean isConstructor = false;
 
          if (_classDef != null
-                 && (name.equals(_classDef.getName())
-                 || name.equals("__constructor"))) {
+            && (name.equals(_classDef.getName())
+            || name.equals("__constructor"))) {
             if (isStatic) {
                throw error(L.l(
-                       "'{0}:{1}' may not be static because class constructors "
-                       + "may not be static",
-                       _classDef.getName(), name));
+                  "'{0}:{1}' may not be static because class constructors "
+                     + "may not be static",
+                  _classDef.getName(), name));
             }
 
             isConstructor = true;
@@ -1638,10 +1640,10 @@ public class BiancaParser {
          expect(')');
 
          if (_classDef != null
-                 && "__call".equals(name)
-                 && args.length != 2) {
+            && "__call".equals(name)
+            && args.length != 2) {
             throw error(L.l("{0}::{1} must have exactly two arguments defined",
-                    _classDef.getName(), name));
+               _classDef.getName(), name));
          }
 
          Function function;
@@ -1650,8 +1652,8 @@ public class BiancaParser {
             expect(';');
 
             function = _factory.createMethodDeclaration(location,
-                    _classDef, name,
-                    _function, args);
+               _classDef, name,
+               _function, args);
          } else {
             expect('{');
 
@@ -1669,13 +1671,13 @@ public class BiancaParser {
 
             if (_classDef != null) {
                function = _factory.createObjectMethod(location,
-                       _classDef,
-                       name, _function,
-                       args, statements);
+                  _classDef,
+                  name, _function,
+                  args, statements);
             } else {
                function = _factory.createFunction(location, name,
-                       _function, args,
-                       statements);
+                  _function, args,
+                  statements);
             }
          }
 
@@ -1713,7 +1715,7 @@ public class BiancaParser {
     * Parses a function definition
     */
    private Expr parseClosure()
-           throws IOException {
+      throws IOException {
       boolean oldTop = _isTop;
       _isTop = false;
 
@@ -1760,7 +1762,7 @@ public class BiancaParser {
 
             for (Arg arg : useArgs) {
                VarExpr var = _factory.createVar(
-                       oldFunction.createVar(arg.getName()));
+                  oldFunction.createVar(arg.getName()));
 
                useVars.add(var);
             }
@@ -1787,8 +1789,8 @@ public class BiancaParser {
          expect('}');
 
          Function function = _factory.createFunction(location, name,
-                 _function, args,
-                 statements);
+            _function, args,
+            statements);
 
          function.setParseIndex(_functionsParsed++);
          function.setComment(comment);
@@ -1806,7 +1808,7 @@ public class BiancaParser {
    }
 
    private Arg[] parseFunctionArgDefinition()
-           throws IOException {
+      throws IOException {
       LinkedHashMap<String, Arg> argMap = new LinkedHashMap<String, Arg>();
 
       while (true) {
@@ -1817,9 +1819,9 @@ public class BiancaParser {
          // TODO: save arg type for type checking upon function call
          String expectedClass = null;
          if (token != ')'
-                 && token != '&'
-                 && token != '$'
-                 && token != -1) {
+            && token != '&'
+            && token != '$'
+            && token != -1) {
             _peekToken = token;
             expectedClass = parseIdentifier();
             token = parseToken();
@@ -1873,7 +1875,7 @@ public class BiancaParser {
     * Parses the 'return' statement
     */
    private Statement parseBreak()
-           throws IOException {
+      throws IOException {
       // commented out for adodb (used by Moodle and others)
       // TODO: should only throw fatal error if break statement is reached
       //      during execution
@@ -1891,8 +1893,8 @@ public class BiancaParser {
             _peekToken = token;
 
             return _factory.createBreak(location,
-                    null,
-                    (ArrayList<String>) _loopLabelList.clone());
+               null,
+               (ArrayList<String>) _loopLabelList.clone());
 
          default:
             _peekToken = token;
@@ -1900,8 +1902,8 @@ public class BiancaParser {
             Expr expr = parseTopExpr();
 
             return _factory.createBreak(location,
-                    expr,
-                    (ArrayList<String>) _loopLabelList.clone());
+               expr,
+               (ArrayList<String>) _loopLabelList.clone());
       }
    }
 
@@ -1909,7 +1911,7 @@ public class BiancaParser {
     * Parses the 'return' statement
     */
    private Statement parseContinue()
-           throws IOException {
+      throws IOException {
       if (!_isTop && _loopLabelList.isEmpty() && !_bianca.isLooseParse()) {
          throw error(L.l("cannot 'continue' inside a function"));
       }
@@ -1924,8 +1926,8 @@ public class BiancaParser {
             _peekToken = token;
 
             return _factory.createContinue(location,
-                    null,
-                    (ArrayList<String>) _loopLabelList.clone());
+               null,
+               (ArrayList<String>) _loopLabelList.clone());
 
          default:
             _peekToken = token;
@@ -1933,8 +1935,8 @@ public class BiancaParser {
             Expr expr = parseTopExpr();
 
             return _factory.createContinue(location,
-                    expr,
-                    (ArrayList<String>) _loopLabelList.clone());
+               expr,
+               (ArrayList<String>) _loopLabelList.clone());
       }
    }
 
@@ -1942,7 +1944,7 @@ public class BiancaParser {
     * Parses the 'return' statement
     */
    private Statement parseReturn()
-           throws IOException {
+      throws IOException {
       Location location = getLocation();
 
       int token = parseToken();
@@ -1977,7 +1979,7 @@ public class BiancaParser {
     * Parses the 'throw' statement
     */
    private Statement parseThrow()
-           throws IOException {
+      throws IOException {
       Location location = getLocation();
 
       Expr expr = parseExpr();
@@ -1989,7 +1991,7 @@ public class BiancaParser {
     * Parses a class definition
     */
    private Statement parseClassDefinition(int modifiers)
-           throws IOException {
+      throws IOException {
       String name = parseIdentifier();
 
       name = resolveIdentifier(name);
@@ -2030,9 +2032,9 @@ public class BiancaParser {
 
       try {
          _classDef = oldScope.addClass(getLocation(),
-                 name, parentName, ifaceList,
-                 _classesParsed++,
-                 _isTop);
+            name, parentName, ifaceList,
+            _classesParsed++,
+            _isTop);
 
          _classDef.setComment(comment);
 
@@ -2065,7 +2067,7 @@ public class BiancaParser {
     * Parses a statement list.
     */
    private void parseClassContents()
-           throws IOException {
+      throws IOException {
       while (true) {
          _comment = null;
 
@@ -2138,7 +2140,7 @@ public class BiancaParser {
     * Parses a function definition
     */
    private void parseClassVarDefinition(int modifiers)
-           throws IOException {
+      throws IOException {
       int token;
 
       do {
@@ -2165,19 +2167,19 @@ public class BiancaParser {
             ((ClassScope) _scope).addStaticVar(nameV, expr, _comment);
          } else if ((modifiers & M_PRIVATE) != 0) {
             ((ClassScope) _scope).addVar(nameV,
-                    expr,
-                    FieldVisibility.PRIVATE,
-                    comment);
+               expr,
+               FieldVisibility.PRIVATE,
+               comment);
          } else if ((modifiers & M_PROTECTED) != 0) {
             ((ClassScope) _scope).addVar(nameV,
-                    expr,
-                    FieldVisibility.PROTECTED,
-                    comment);
+               expr,
+               FieldVisibility.PROTECTED,
+               comment);
          } else {
             ((ClassScope) _scope).addVar(nameV,
-                    expr,
-                    FieldVisibility.PUBLIC,
-                    comment);
+               expr,
+               FieldVisibility.PUBLIC,
+               comment);
          }
 
          token = parseToken();
@@ -2190,7 +2192,7 @@ public class BiancaParser {
     * Parses a const definition
     */
    private ArrayList<Statement> parseConstDefinition()
-           throws IOException {
+      throws IOException {
       ArrayList<Statement> constList = new ArrayList<Statement>();
 
       int token;
@@ -2223,7 +2225,7 @@ public class BiancaParser {
     * Parses a const definition
     */
    private void parseClassConstDefinition()
-           throws IOException {
+      throws IOException {
       int token;
 
       do {
@@ -2242,7 +2244,7 @@ public class BiancaParser {
    }
 
    private int parseModifiers()
-           throws IOException {
+      throws IOException {
       int token;
       int modifiers = 0;
 
@@ -2282,7 +2284,7 @@ public class BiancaParser {
    }
 
    private ArrayList<Statement> parseNamespace()
-           throws IOException {
+      throws IOException {
       int token = parseToken();
 
       String var = "";
@@ -2317,7 +2319,7 @@ public class BiancaParser {
    }
 
    private void parseUse()
-           throws IOException {
+      throws IOException {
       int token = parseNamespaceIdentifier(read());
 
       String name = _lexeme;
@@ -2357,7 +2359,7 @@ public class BiancaParser {
     * Parses an expression statement.
     */
    private Statement parseExprStatement()
-           throws IOException {
+      throws IOException {
       Location location = getLocation();
 
       Expr expr = parseTopExpr();
@@ -2389,7 +2391,7 @@ public class BiancaParser {
     * Parses a top expression.
     */
    private Expr parseTopExpr()
-           throws IOException {
+      throws IOException {
       return parseExpr();
    }
 
@@ -2397,7 +2399,7 @@ public class BiancaParser {
     * Parses a top expression.
     */
    private Expr parseTopCommaExpr()
-           throws IOException {
+      throws IOException {
       return parseCommaExpr();
    }
 
@@ -2405,7 +2407,7 @@ public class BiancaParser {
     * Parses a comma expression.
     */
    private Expr parseCommaExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseExpr();
 
       while (true) {
@@ -2426,7 +2428,7 @@ public class BiancaParser {
     * Parses an expression with optional '&'.
     */
    private Expr parseRefExpr()
-           throws IOException {
+      throws IOException {
       int token = parseToken();
 
       boolean isRef = token == '&';
@@ -2448,7 +2450,7 @@ public class BiancaParser {
     * Parses an expression.
     */
    private Expr parseExpr()
-           throws IOException {
+      throws IOException {
       return parseWeakOrExpr();
    }
 
@@ -2456,7 +2458,7 @@ public class BiancaParser {
     * Parses a logical xor expression.
     */
    private Expr parseWeakOrExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseWeakXorExpr();
 
       while (true) {
@@ -2477,7 +2479,7 @@ public class BiancaParser {
     * Parses a logical xor expression.
     */
    private Expr parseWeakXorExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseWeakAndExpr();
 
       while (true) {
@@ -2498,7 +2500,7 @@ public class BiancaParser {
     * Parses a logical and expression.
     */
    private Expr parseWeakAndExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseConditionalExpr();
 
       while (true) {
@@ -2519,7 +2521,7 @@ public class BiancaParser {
     * Parses a conditional expression.
     */
    private Expr parseConditionalExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseOrExpr();
 
       while (true) {
@@ -2551,7 +2553,7 @@ public class BiancaParser {
     * Parses a logical or expression.
     */
    private Expr parseOrExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseAndExpr();
 
       while (true) {
@@ -2572,7 +2574,7 @@ public class BiancaParser {
     * Parses a logical and expression.
     */
    private Expr parseAndExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseBitOrExpr();
 
       while (true) {
@@ -2593,7 +2595,7 @@ public class BiancaParser {
     * Parses a bit or expression.
     */
    private Expr parseBitOrExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseBitXorExpr();
 
       while (true) {
@@ -2614,7 +2616,7 @@ public class BiancaParser {
     * Parses a bit xor expression.
     */
    private Expr parseBitXorExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseBitAndExpr();
 
       while (true) {
@@ -2635,7 +2637,7 @@ public class BiancaParser {
     * Parses a bit and expression.
     */
    private Expr parseBitAndExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseEqExpr();
 
       while (true) {
@@ -2656,7 +2658,7 @@ public class BiancaParser {
     * Parses a comparison expression.
     */
    private Expr parseEqExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseCmpExpr();
 
       int token = parseToken();
@@ -2684,7 +2686,7 @@ public class BiancaParser {
     * Parses a comparison expression.
     */
    private Expr parseCmpExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseShiftExpr();
 
       int token = parseToken();
@@ -2723,7 +2725,7 @@ public class BiancaParser {
     * Parses a left/right shift expression.
     */
    private Expr parseShiftExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseAddExpr();
 
       while (true) {
@@ -2747,7 +2749,7 @@ public class BiancaParser {
     * Parses an add/substract expression.
     */
    private Expr parseAddExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseMulExpr();
 
       while (true) {
@@ -2774,7 +2776,7 @@ public class BiancaParser {
     * Parses a multiplication/division expression.
     */
    private Expr parseMulExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseAssignExpr();
 
       while (true) {
@@ -2801,7 +2803,7 @@ public class BiancaParser {
     * Parses an assignment expression.
     */
    private Expr parseAssignExpr()
-           throws IOException {
+      throws IOException {
       Expr expr = parseUnary();
 
       while (true) {
@@ -2820,9 +2822,9 @@ public class BiancaParser {
 
                      if (_isIfTest && _bianca.isStrict()) {
                         throw error(
-                                "assignment without parentheses inside If/While/For "
-                                + "test statement; please make sure whether equality "
-                                + "was intended instead");
+                           "assignment without parentheses inside If/While/For "
+                              + "test statement; please make sure whether equality "
+                              + "was intended instead");
                      }
 
                      expr = expr.createAssign(this, parseConditionalExpr());
@@ -2837,8 +2839,8 @@ public class BiancaParser {
             case PLUS_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createAdd(expr,
-                          parseConditionalExpr()));
+                     _factory.createAdd(expr,
+                        parseConditionalExpr()));
                } else // php/03d4
                {
                   expr = expr.createAssign(this, parseConditionalExpr());
@@ -2848,8 +2850,8 @@ public class BiancaParser {
             case MINUS_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createSub(expr,
-                          parseConditionalExpr()));
+                     _factory.createSub(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2858,8 +2860,8 @@ public class BiancaParser {
             case APPEND_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createAppend(expr,
-                          parseConditionalExpr()));
+                     _factory.createAppend(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2868,8 +2870,8 @@ public class BiancaParser {
             case MUL_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createMul(expr,
-                          parseConditionalExpr()));
+                     _factory.createMul(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2878,8 +2880,8 @@ public class BiancaParser {
             case DIV_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createDiv(getLocation(), expr,
-                          parseConditionalExpr()));
+                     _factory.createDiv(getLocation(), expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2888,8 +2890,8 @@ public class BiancaParser {
             case MOD_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createMod(expr,
-                          parseConditionalExpr()));
+                     _factory.createMod(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2898,8 +2900,8 @@ public class BiancaParser {
             case LSHIFT_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createLeftShift(expr,
-                          parseConditionalExpr()));
+                     _factory.createLeftShift(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2908,8 +2910,8 @@ public class BiancaParser {
             case RSHIFT_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createRightShift(expr,
-                          parseConditionalExpr()));
+                     _factory.createRightShift(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2918,8 +2920,8 @@ public class BiancaParser {
             case AND_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createBitAnd(expr,
-                          parseConditionalExpr()));
+                     _factory.createBitAnd(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2928,8 +2930,8 @@ public class BiancaParser {
             case OR_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createBitOr(expr,
-                          parseConditionalExpr()));
+                     _factory.createBitOr(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2938,8 +2940,8 @@ public class BiancaParser {
             case XOR_ASSIGN:
                if (expr.canRead()) {
                   expr = expr.createAssign(this,
-                          _factory.createBitXor(expr,
-                          parseConditionalExpr()));
+                     _factory.createBitXor(expr,
+                        parseConditionalExpr()));
                } else {
                   expr = expr.createAssign(this, parseConditionalExpr());
                }
@@ -2963,7 +2965,7 @@ public class BiancaParser {
 
    /**
     * Parses unary term.
-    *
+    * <p/>
     * <pre>
     * unary ::= term
     *       ::= '&' unary
@@ -2975,7 +2977,7 @@ public class BiancaParser {
     * </pre>
     */
    private Expr parseUnary()
-           throws IOException {
+      throws IOException {
       int token = parseToken();
 
       switch (token) {
@@ -3037,7 +3039,7 @@ public class BiancaParser {
 
    /**
     * Parses a basic term.
-    *
+    * <p/>
     * <pre>
     * term ::= termBase
     *      ::= term '[' index ']'
@@ -3048,7 +3050,7 @@ public class BiancaParser {
     * </pre>
     */
    private Expr parseTerm(boolean isParseCall)
-           throws IOException {
+      throws IOException {
       Expr term = parseTermBase();
 
       while (true) {
@@ -3119,7 +3121,7 @@ public class BiancaParser {
 
    /**
     * Parses a basic term.
-    *
+    * <p/>
     * <pre>
     * term ::= termBase
     *      ::= term '[' index ']'
@@ -3127,7 +3129,7 @@ public class BiancaParser {
     * </pre>
     */
    private Expr parseTermArray()
-           throws IOException {
+      throws IOException {
       Expr term = parseTermBase();
 
       while (true) {
@@ -3179,14 +3181,14 @@ public class BiancaParser {
 
    /**
     * Parses a deref
-    *
+    * <p/>
     * <pre>
     * deref ::= term -> IDENTIFIER
     *       ::= term -> IDENTIFIER '(' args ')'
     * </pre>
     */
    private Expr parseDeref(Expr term)
-           throws IOException {
+      throws IOException {
       String name = null;
       Expr nameExpr = null;
 
@@ -3213,7 +3215,7 @@ public class BiancaParser {
 
    /**
     * Parses a basic term.
-    *
+    * <p/>
     * <pre>
     * term ::= STRING
     *      ::= LONG
@@ -3221,7 +3223,7 @@ public class BiancaParser {
     * </pre>
     */
    private Expr parseTermBase()
-           throws IOException {
+      throws IOException {
       int token = parseToken();
 
       switch (token) {
@@ -3298,7 +3300,7 @@ public class BiancaParser {
          }
          case DOUBLE:
             return _factory.createLiteral(
-                    new DoubleValue(Double.parseDouble(_lexeme)));
+               new DoubleValue(Double.parseDouble(_lexeme)));
 
          case NULL:
             return _factory.createNull();
@@ -3324,10 +3326,10 @@ public class BiancaParser {
             return _factory.createRequire(getLocation(), _sourceFile, parseExpr());
          case INCLUDE_ONCE:
             return _factory.createIncludeOnce(getLocation(),
-                    _sourceFile, parseExpr());
+               _sourceFile, parseExpr());
          case REQUIRE_ONCE:
             return _factory.createRequireOnce(getLocation(),
-                    _sourceFile, parseExpr());
+               _sourceFile, parseExpr());
 
          case LIST:
             return parseList();
@@ -3377,18 +3379,18 @@ public class BiancaParser {
                }
 
                if ("bool".equalsIgnoreCase(type)
-                       || "boolean".equalsIgnoreCase(type)) {
+                  || "boolean".equalsIgnoreCase(type)) {
                   return _factory.createToBoolean(parseAssignExpr());
                } else if ("int".equalsIgnoreCase(type)
-                       || "integer".equalsIgnoreCase(type)) {
+                  || "integer".equalsIgnoreCase(type)) {
                   return _factory.createToLong(parseAssignExpr());
                } else if ("float".equalsIgnoreCase(type)
-                       || "double".equalsIgnoreCase(type)
-                       || "real".equalsIgnoreCase(type)) {
+                  || "double".equalsIgnoreCase(type)
+                  || "real".equalsIgnoreCase(type)) {
                   return _factory.createToDouble(parseAssignExpr());
                } else if ("string".equalsIgnoreCase(type)
-                       || "binary".equalsIgnoreCase(type)
-                       || "unicode".equalsIgnoreCase(type)) {
+                  || "binary".equalsIgnoreCase(type)
+                  || "unicode".equalsIgnoreCase(type)) {
                   return _factory.createToString(parseAssignExpr());
                } else if ("object".equalsIgnoreCase(type)) {
                   return _factory.createToObject(parseAssignExpr());
@@ -3418,13 +3420,13 @@ public class BiancaParser {
 
          default:
             throw error(L.l("{0} is an unexpected token, expected an expression.",
-                    tokenName(token)));
+               tokenName(token)));
       }
    }
 
    /**
     * Parses a basic term.
-    *
+    * <p/>
     * <pre>
     * lhs ::= VARIABLE
     *     ::= lhs '[' expr ']'
@@ -3432,7 +3434,7 @@ public class BiancaParser {
     * </pre>
     */
    private AbstractVarExpr parseLeftHandSide()
-           throws IOException {
+      throws IOException {
       int token = parseToken();
       AbstractVarExpr lhs = null;
 
@@ -3440,7 +3442,7 @@ public class BiancaParser {
          lhs = parseVariable();
       } else {
          throw error(L.l("expected variable at {0} as left-hand-side",
-                 tokenName(token)));
+            tokenName(token)));
       }
 
       while (true) {
@@ -3487,7 +3489,7 @@ public class BiancaParser {
    }
 
    private Expr parseScope(Expr classNameExpr)
-           throws IOException {
+      throws IOException {
       int token = parseToken();
 
       if (isIdentifier(token)) {
@@ -3511,7 +3513,7 @@ public class BiancaParser {
       }
 
       throw error(L.l("unexpected token '{0}' in class scope expression",
-              tokenName(token)));
+         tokenName(token)));
    }
 
    private boolean isIdentifier(int token) {
@@ -3522,7 +3524,7 @@ public class BiancaParser {
     * Parses the next variable
     */
    private AbstractVarExpr parseVariable()
-           throws IOException {
+      throws IOException {
       int token = parseToken();
 
       if (token == THIS) {
@@ -3557,7 +3559,7 @@ public class BiancaParser {
     * Parses the next function
     */
    private Expr parseCall(String name)
-           throws IOException {
+      throws IOException {
       if (name.equalsIgnoreCase("array")) {
          return parseArrayFunction();
       }
@@ -3623,12 +3625,12 @@ public class BiancaParser {
     * Parses the next function
     */
    private Expr parseCall(Expr name)
-           throws IOException {
+      throws IOException {
       return name.createCall(this, getLocation(), parseArgs());
    }
 
    private ArrayList<Expr> parseArgs()
-           throws IOException {
+      throws IOException {
       expect('(');
 
       ArrayList<Expr> args = new ArrayList<Expr>();
@@ -3674,7 +3676,7 @@ public class BiancaParser {
    public String getParentClassName() {
       if (_classDef == null) {
          throw error(L.l(
-                 "'parent' is not valid because there is no active class."));
+            "'parent' is not valid because there is no active class."));
       }
 
       return _classDef.getParentName();
@@ -3684,7 +3686,7 @@ public class BiancaParser {
     * Parses the new expression
     */
    private Expr parseNew()
-           throws IOException {
+      throws IOException {
       String name = null;
       Expr nameExpr = null;
 
@@ -3746,7 +3748,7 @@ public class BiancaParser {
     * Parses the include expression
     */
    private Expr parseInclude()
-           throws IOException {
+      throws IOException {
       Expr name = parseExpr();
 
       return _factory.createInclude(getLocation(), _sourceFile, name);
@@ -3756,7 +3758,7 @@ public class BiancaParser {
     * Parses the list(...) = value expression
     */
    private Expr parseList()
-           throws IOException {
+      throws IOException {
       ListHeadExpr leftVars = parseListHead();
 
       expect('=');
@@ -3770,7 +3772,7 @@ public class BiancaParser {
     * Parses the list(...) expression
     */
    private ListHeadExpr parseListHead()
-           throws IOException {
+      throws IOException {
       expect('(');
 
       int peek = parseToken();
@@ -3814,7 +3816,7 @@ public class BiancaParser {
     * Parses the exit/die expression
     */
    private Expr parseExit()
-           throws IOException {
+      throws IOException {
       int token = parseToken();
       _peekToken = token;
 
@@ -3835,7 +3837,7 @@ public class BiancaParser {
     * Parses the exit/die expression
     */
    private Expr parseDie()
-           throws IOException {
+      throws IOException {
       int token = parseToken();
       _peekToken = token;
 
@@ -3856,7 +3858,7 @@ public class BiancaParser {
     * Parses the array() expression
     */
    private Expr parseArrayFunction()
-           throws IOException {
+      throws IOException {
       String name = _lexeme;
 
       int token = parseToken();
@@ -3903,7 +3905,7 @@ public class BiancaParser {
     * Parses a Bianca import.
     */
    private Expr parseImport()
-           throws IOException {
+      throws IOException {
       boolean isWildcard = false;
       boolean isIdentifierStart = true;
 
@@ -3932,7 +3934,7 @@ public class BiancaParser {
             break;
          } else {
             throw error(L.l("'{0}' is an unexpected token in import",
-                    tokenName(token)));
+               tokenName(token)));
          }
       }
 
@@ -3945,7 +3947,7 @@ public class BiancaParser {
     * Parses the next token.
     */
    private int parseToken()
-           throws IOException {
+      throws IOException {
       int peekToken = _peekToken;
       if (peekToken > 0) {
          _peekToken = 0;
@@ -4323,7 +4325,7 @@ public class BiancaParser {
    }
 
    private String parseIdentifier()
-           throws IOException {
+      throws IOException {
       int token = _peekToken;
       _peekToken = -1;
 
@@ -4337,14 +4339,14 @@ public class BiancaParser {
 
       if (_peek == '\\') {
          throw error(L.l("namespace identifier is not allowed at '{0}\\'",
-                 _lexeme));
+            _lexeme));
       }
 
       return _lexeme;
    }
 
    private String parseNamespaceIdentifier()
-           throws IOException {
+      throws IOException {
       int token = _peekToken;
       _peekToken = -1;
 
@@ -4410,7 +4412,7 @@ public class BiancaParser {
    }
 
    private int parseIdentifier(int ch)
-           throws IOException {
+      throws IOException {
       ch = ignoreWhiteSpace(ch);
 
       if (isIdentifierStart(ch)) {
@@ -4430,7 +4432,7 @@ public class BiancaParser {
    }
 
    private int parseNamespaceIdentifier(int ch)
-           throws IOException {
+      throws IOException {
       ch = ignoreWhiteSpace(ch);
 
       long pos = _is.getPosition();
@@ -4485,7 +4487,7 @@ public class BiancaParser {
    }
 
    private int lexemeToToken()
-           throws IOException {
+      throws IOException {
       _lexeme = _sb.toString();
 
       // the 'static' reserved keyword vs late static binding (static::$a)
@@ -4511,7 +4513,7 @@ public class BiancaParser {
     * Parses a multiline comment.
     */
    private void parseMultilineComment()
-           throws IOException {
+      throws IOException {
       int ch = readByte();
 
       if (ch == '*') {
@@ -4552,7 +4554,7 @@ public class BiancaParser {
     * Parses bianca text
     */
    private int parsePhpText()
-           throws IOException {
+      throws IOException {
       StringBuilder sb = new StringBuilder();
 
       int ch = read();
@@ -4610,7 +4612,7 @@ public class BiancaParser {
     * Parses the <script language="bianca"> opening
     */
    private boolean parseScriptBegin(StringBuilder sb)
-           throws IOException {
+      throws IOException {
       int begin = sb.length();
 
       sb.append('<');
@@ -4655,7 +4657,7 @@ public class BiancaParser {
    }
 
    private boolean parseTextMatch(StringBuilder sb, String text)
-           throws IOException {
+      throws IOException {
       int len = text.length();
 
       for (int i = 0; i < len; i++) {
@@ -4677,7 +4679,7 @@ public class BiancaParser {
    }
 
    private void parseWhitespace(StringBuilder sb)
-           throws IOException {
+      throws IOException {
       int ch;
 
       while (Character.isWhitespace((ch = read()))) {
@@ -4691,7 +4693,7 @@ public class BiancaParser {
     * Parses the next string token.
     */
    private void parseStringToken(int end)
-           throws IOException {
+      throws IOException {
       _sb.setLength(0);
 
       int ch;
@@ -4754,7 +4756,7 @@ public class BiancaParser {
     * Parses the next heredoc token.
     */
    private int parseHeredocToken()
-           throws IOException {
+      throws IOException {
       _sb.setLength(0);
 
       int ch;
@@ -4787,21 +4789,21 @@ public class BiancaParser {
     * Parses the next string
     */
    private Expr parseEscapedString(String prefix,
-           int token,
-           boolean isSystem)
-           throws IOException {
+                                   int token,
+                                   boolean isSystem)
+      throws IOException {
       Expr expr = createString(prefix);
 
       while (true) {
          Expr tail;
 
          if (token == COMPLEX_STRING_ESCAPE
-                 || token == COMPLEX_BINARY_ESCAPE) {
+            || token == COMPLEX_BINARY_ESCAPE) {
             tail = parseExpr();
 
             expect('}');
          } else if (token == SIMPLE_STRING_ESCAPE
-                 || token == SIMPLE_BINARY_ESCAPE) {
+            || token == SIMPLE_BINARY_ESCAPE) {
             int ch = read();
 
             _sb.setLength(0);
@@ -4836,7 +4838,7 @@ public class BiancaParser {
                      }
 
                      tail = tail.createFieldGet(_factory,
-                             new StringValue(_sb.toString()));
+                        new StringValue(_sb.toString()));
                   } else {
                      tail = _factory.createAppend(tail, createString("->"));
                   }
@@ -4876,7 +4878,7 @@ public class BiancaParser {
     * Parses the next string
     */
    private Expr parseSimpleArrayTail(Expr tail)
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       _sb.clear();
@@ -4893,13 +4895,13 @@ public class BiancaParser {
          long index = ch - '0';
 
          for (ch = read();
-                 '0' <= ch && ch <= '9';
-                 ch = read()) {
+              '0' <= ch && ch <= '9';
+              ch = read()) {
             index = 10 * index + ch - '0';
          }
 
          tail = _factory.createArrayGet(getLocation(),
-                 tail, _factory.createLong(index));
+            tail, _factory.createLong(index));
       } else if (isIdentifierPart(ch)) {
          for (; isIdentifierPart(ch); ch = read()) {
             _sb.append((char) ch);
@@ -4910,12 +4912,12 @@ public class BiancaParser {
          tail = _factory.createArrayGet(getLocation(), tail, constExpr);
       } else {
          throw error(L.l("Unexpected character at {0}",
-                 String.valueOf((char) ch)));
+            String.valueOf((char) ch)));
       }
 
       if (ch != ']') {
          throw error(L.l("Expected ']' at {0}",
-                 String.valueOf((char) ch)));
+            String.valueOf((char) ch)));
       }
 
       return tail;
@@ -4927,7 +4929,7 @@ public class BiancaParser {
    }
 
    private Expr createBinary(String bytes)
-           throws IOException {
+      throws IOException {
       // TODO: see BiancaParser.parseDefault for _bianca == null
       // php/0ch1, php/0350
       // return _factory.createBinary(bytes);
@@ -4939,7 +4941,7 @@ public class BiancaParser {
     * Parses the next string
     */
    private int parseEscapedString(char end)
-           throws IOException {
+      throws IOException {
       _sb.setLength(0);
 
       int ch;
@@ -5060,8 +5062,8 @@ public class BiancaParser {
 
             if (_heredocEnd == null || !_sb.endsWith(_heredocEnd)) {
             } else if (_sb.length() == _heredocEnd.length()
-                    || _sb.charAt(_sb.length() - _heredocEnd.length() - 1) == '\n'
-                    || _sb.charAt(_sb.length() - _heredocEnd.length() - 1) == '\r') {
+               || _sb.charAt(_sb.length() - _heredocEnd.length() - 1) == '\n'
+               || _sb.charAt(_sb.length() - _heredocEnd.length() - 1) == '\r') {
                _sb.setLength(_sb.length() - _heredocEnd.length());
 
                if (_sb.length() > 0 && _sb.charAt(_sb.length() - 1) == '\n') {
@@ -5092,9 +5094,9 @@ public class BiancaParser {
          return false;
       } else {
          return (ch >= 'a' && ch <= 'z'
-                 || ch >= 'A' && ch <= 'Z'
-                 || ch == '_'
-                 || Character.isLetter(ch));
+            || ch >= 'A' && ch <= 'Z'
+            || ch == '_'
+            || Character.isLetter(ch));
       }
    }
 
@@ -5107,22 +5109,22 @@ public class BiancaParser {
          return false;
       } else {
          return (ch >= 'a' && ch <= 'z'
-                 || ch >= 'A' && ch <= 'Z'
-                 || ch >= '0' && ch <= '9'
-                 || ch == '_'
-                 || Character.isLetterOrDigit(ch));
+            || ch >= 'A' && ch <= 'Z'
+            || ch >= '0' && ch <= '9'
+            || ch == '_'
+            || Character.isLetterOrDigit(ch));
       }
    }
 
    private int ignoreWhiteSpace(int ch)
-           throws IOException {
+      throws IOException {
       for (; Character.isWhitespace(ch); ch = read()) {
       }
       return ch;
    }
 
    private int ignoreMultiLineComment(int ch)
-           throws IOException {
+      throws IOException {
       do {
          if (ch == '*') {
             if ((ch = read()) == '/') {
@@ -5135,7 +5137,7 @@ public class BiancaParser {
    }
 
    private int ignoreSingleLineComment(int ch)
-           throws IOException {
+      throws IOException {
       do {
          if (ch == '\r' || ch == '\n') {
             return ch;
@@ -5146,7 +5148,7 @@ public class BiancaParser {
    }
 
    private int parseOctalEscape(int ch)
-           throws IOException {
+      throws IOException {
       int value = ch - '0';
 
       ch = read();
@@ -5169,7 +5171,7 @@ public class BiancaParser {
    }
 
    private int parseHexEscape()
-           throws IOException {
+      throws IOException {
       int value = 0;
 
       int ch = read();
@@ -5202,7 +5204,7 @@ public class BiancaParser {
    }
 
    private int parseUnicodeEscape(boolean isLongForm)
-           throws IOException {
+      throws IOException {
       int codePoint = parseHexEscape();
 
       if (codePoint < 0) {
@@ -5234,7 +5236,7 @@ public class BiancaParser {
     * Parses the next number.
     */
    private int parseNumberToken(int ch)
-           throws IOException {
+      throws IOException {
       int ch0 = ch;
 
       if (ch == '0') {
@@ -5314,7 +5316,7 @@ public class BiancaParser {
     * Parses the next as hex
     */
    private int parseHex()
-           throws IOException {
+      throws IOException {
       long value = 0;
       double dValue = 0;
 
@@ -5350,7 +5352,7 @@ public class BiancaParser {
     * Parses the next as octal
     */
    private int parseOctal(int ch)
-           throws IOException {
+      throws IOException {
       long value = 0;
       double dValue = 0;
 
@@ -5382,13 +5384,13 @@ public class BiancaParser {
    }
 
    private void expect(int expect)
-           throws IOException {
+      throws IOException {
       int token = parseToken();
 
       if (token != expect) {
          throw error(L.l("expected {0} at {1}",
-                 tokenName(expect),
-                 tokenName(token)));
+            tokenName(expect),
+            tokenName(token)));
       }
    }
 
@@ -5396,7 +5398,7 @@ public class BiancaParser {
     * Reads the next character.
     */
    private int read()
-           throws IOException {
+      throws IOException {
       int peek = _peek;
 
       if (peek >= 0) {
@@ -5419,12 +5421,12 @@ public class BiancaParser {
          return ch;
       } catch (CharConversionException e) {
          throw new BiancaParseException(getFileName() + ":" + getLine()
-                 + ": " + e
-                 + "\nCheck that the script-encoding setting matches the "
-                 + "source file's encoding", e);
+            + ": " + e
+            + "\nCheck that the script-encoding setting matches the "
+            + "source file's encoding", e);
       } catch (IOException e) {
          throw new IOExceptionWrapper(
-                 getFileName() + ":" + getLine() + ":" + e, e);
+            getFileName() + ":" + getLine() + ":" + e, e);
       }
    }
 
@@ -5432,7 +5434,7 @@ public class BiancaParser {
     * Reads the next byte.
     */
    private int readByte()
-           throws IOException {
+      throws IOException {
       int peek = _peek;
 
       if (peek >= 0) {
@@ -5463,7 +5465,7 @@ public class BiancaParser {
          return ch;
       } catch (IOException e) {
          throw new IOExceptionWrapper(
-                 getFileName() + ":" + getLine() + ":" + e, e);
+            getFileName() + ":" + getLine() + ":" + e, e);
       }
    }
 
@@ -5483,11 +5485,11 @@ public class BiancaParser {
       int first = lines / 2;
 
       String[] sourceLines = Env.getSourceLine(_sourceFile,
-              lineNumber - first + _sourceOffset,
-              lines);
+         lineNumber - first + _sourceOffset,
+         lines);
 
       if (sourceLines != null
-              && sourceLines.length > 0) {
+         && sourceLines.length > 0) {
          StringBuilder sb = new StringBuilder();
 
          String shortFile = _parserLocation.getFileName();
@@ -5687,6 +5689,7 @@ public class BiancaParser {
 
    /**
     * The location from which the last token was read.
+    *
     * @return
     */
    public Location getLocation() {
@@ -5812,8 +5815,8 @@ public class BiancaParser {
 
       public Location getLocation() {
          String currentFunctionName = (_function == null || _function.isPageMain()
-                 ? null
-                 : _function.getName());
+            ? null
+            : _function.getName());
 
          String currentClassName = _classDef == null ? null : _classDef.getName();
 
@@ -5827,7 +5830,7 @@ public class BiancaParser {
 
          if (_location == null) {
             _location = new Location(_fileName, _lineNumber,
-                    currentClassName, currentFunctionName);
+               currentClassName, currentFunctionName);
          }
 
          _lastFunctionName = currentFunctionName;

@@ -35,84 +35,80 @@ import org.w3c.dom.Node;
  * Represents a selected node.
  */
 public class SelectedNode {
-  protected Node _node;
-  
-  protected int _depth;
-  protected int _level;
+   protected Node _node;
 
-  /**
-   * Creates new selected node, calculating the index.
-   *
-   * @param node the underlying DOM node.
-   */
-  public SelectedNode(Node node)
-  {
-    _node = node;
+   protected int _depth;
+   protected int _level;
 
-    _depth = 0;
-    for (Node ptr = node; ptr != null; ptr = ptr.getParentNode()) {
-      _depth++;
-    }
+   /**
+    * Creates new selected node, calculating the index.
+    *
+    * @param node the underlying DOM node.
+    */
+   public SelectedNode(Node node) {
+      _node = node;
 
-    _level = 0;
-    for (Node ptr = node; ptr != null; ptr = ptr.getPreviousSibling()) {
-      _level++;
-    }
-  }
+      _depth = 0;
+      for (Node ptr = node; ptr != null; ptr = ptr.getParentNode()) {
+         _depth++;
+      }
 
-  /**
-   * Returns the underlying DOM node.
-   */
-  public Node getNode()
-  {
-    return _node;
-  }
+      _level = 0;
+      for (Node ptr = node; ptr != null; ptr = ptr.getPreviousSibling()) {
+         _level++;
+      }
+   }
 
-  /**
-   * Returns the node's index
-   */
-  public int compareTo(SelectedNode b)
-  {
-    int aDepth = _depth;
-    int bDepth = b._depth;
+   /**
+    * Returns the underlying DOM node.
+    */
+   public Node getNode() {
+      return _node;
+   }
 
-    Node aPtr = getNode();
-    Node bPtr = b.getNode();
+   /**
+    * Returns the node's index
+    */
+   public int compareTo(SelectedNode b) {
+      int aDepth = _depth;
+      int bDepth = b._depth;
 
-    if (aDepth == bDepth && aPtr.getParentNode() == bPtr.getParentNode())
-      return _level - b._level;
+      Node aPtr = getNode();
+      Node bPtr = b.getNode();
 
-    return compareTo(aPtr, aDepth, bPtr, bDepth);
-  }
+      if (aDepth == bDepth && aPtr.getParentNode() == bPtr.getParentNode())
+         return _level - b._level;
 
-  /**
-   * Returns the node's index
-   */
-  static int compareTo(Node aPtr, int aDepth, Node bPtr, int bDepth)
-  {
-    for (int depth = aDepth; bDepth < depth; depth--)
-      aPtr = aPtr.getParentNode();
-    
-    for (int depth = bDepth; aDepth < depth; depth--)
-      bPtr = bPtr.getParentNode();
+      return compareTo(aPtr, aDepth, bPtr, bDepth);
+   }
 
-    Node aParent;
-    Node bParent;
-    while ((aParent = aPtr.getParentNode()) !=
-           (bParent = bPtr.getParentNode())) {
-      aPtr = aParent;
-      bPtr = bParent;
-    }
+   /**
+    * Returns the node's index
+    */
+   static int compareTo(Node aPtr, int aDepth, Node bPtr, int bDepth) {
+      for (int depth = aDepth; bDepth < depth; depth--)
+         aPtr = aPtr.getParentNode();
 
-    if (aPtr == bPtr)
-      return aDepth - bDepth;
+      for (int depth = bDepth; aDepth < depth; depth--)
+         bPtr = bPtr.getParentNode();
 
-    for (; aPtr != null; aPtr = aPtr.getPreviousSibling()) {
+      Node aParent;
+      Node bParent;
+      while ((aParent = aPtr.getParentNode()) !=
+         (bParent = bPtr.getParentNode())) {
+         aPtr = aParent;
+         bPtr = bParent;
+      }
+
       if (aPtr == bPtr)
-        return 1;
-    }
+         return aDepth - bDepth;
 
-    return -1;
-  }
+      for (; aPtr != null; aPtr = aPtr.getPreviousSibling()) {
+         if (aPtr == bPtr)
+            return 1;
+      }
+
+      return -1;
+   }
 }
 

@@ -32,53 +32,44 @@ package com.clevercloud.vfs;
 import java.util.Map;
 
 public class StringPath extends Path {
-  private String _string;
+   private String _string;
 
-  public StringPath(String string)
-  {
-    super(SchemeMap.getNullSchemeMap());
+   public StringPath(String string) {
+      super(SchemeMap.getNullSchemeMap());
 
-    _string = string;
-  }
+      _string = string;
+   }
 
-  public Path schemeWalk(String userPath, Map<String,Object> attributes,
-                         String path, int offset)
-  {
-    return this;
-  }
+   public Path schemeWalk(String userPath, Map<String, Object> attributes,
+                          String path, int offset) {
+      return this;
+   }
 
-  public String getURL()
-  {
-    return "string:";
-  }
+   public String getURL() {
+      return "string:";
+   }
 
-  public String getScheme()
-  {
-    return "string";
-  }
+   public String getScheme() {
+      return "string";
+   }
 
-  public String getPath()
-  {
-    return "string:";
-  }
+   public String getPath() {
+      return "string:";
+   }
 
-  public Path lookupImpl(String userPath, Map<String,Object> newAttributes)
-  {
-    return this;
-  }
+   public Path lookupImpl(String userPath, Map<String, Object> newAttributes) {
+      return this;
+   }
 
-  public boolean exists()
-  {
-    return true;
-  }
+   public boolean exists() {
+      return true;
+   }
 
-  public boolean canRead()
-  {
-    return true;
-  }
+   public boolean canRead() {
+      return true;
+   }
 
-  public StreamImpl openReadImpl()
-  {
-    return new StringStream(_string);
-  }
+   public StreamImpl openReadImpl() {
+      return new StringStream(_string);
+   }
 }

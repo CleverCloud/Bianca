@@ -30,7 +30,6 @@
 package com.clevercloud.xml;
 
 import com.clevercloud.util.CharBuffer;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -38,84 +37,79 @@ import org.w3c.dom.Node;
 import java.io.IOException;
 
 public class QDocumentFragment extends QNode implements DocumentFragment {
-  protected Document _masterDoc;
+   protected Document _masterDoc;
 
-  QDocumentFragment()
-  {
-  }
+   QDocumentFragment() {
+   }
 
-  protected QDocumentFragment(QDocument owner)
-  {
-    super(owner);
-  }
+   protected QDocumentFragment(QDocument owner) {
+      super(owner);
+   }
 
-  public short getNodeType() { return DOCUMENT_FRAGMENT_NODE; }
+   public short getNodeType() {
+      return DOCUMENT_FRAGMENT_NODE;
+   }
 
-  public Document getMasterDoc()
-  {
-    return _masterDoc;
-  }
+   public Document getMasterDoc() {
+      return _masterDoc;
+   }
 
-  public String getNodeName() { return "#document"; }
+   public String getNodeName() {
+      return "#document";
+   }
 
-  /**
-   * Clones the fragment into the new document.
-   *
-   * @param doc the new document
-   * @param deep if true, return a recursive copy.
-   *
-   * @return the imported node.
-   */
-  Node importNode(QDocument owner, boolean deep)
-  {
-    QDocumentFragment frag = new QDocumentFragment();
-    frag._owner = owner;
+   /**
+    * Clones the fragment into the new document.
+    *
+    * @param doc  the new document
+    * @param deep if true, return a recursive copy.
+    * @return the imported node.
+    */
+   Node importNode(QDocument owner, boolean deep) {
+      QDocumentFragment frag = new QDocumentFragment();
+      frag._owner = owner;
 
-    if (! deep)
+      if (!deep)
+         return frag;
+
+      for (Node node = getFirstChild();
+           node != null;
+           node = node.getNextSibling()) {
+         frag.appendChild(node.cloneNode(true));
+      }
+
       return frag;
+   }
 
-    for (Node node = getFirstChild();
-         node != null;
-         node = node.getNextSibling()) {
-      frag.appendChild(node.cloneNode(true));
-    }
+   public String getTextValue() {
+      CharBuffer cb = new CharBuffer();
 
-    return frag;
-  }
+      for (QAbstractNode node = _firstChild; node != null; node = node._next) {
+         cb.append(node.getTextValue());
+      }
 
-  public String getTextValue()
-  {
-    CharBuffer cb = new CharBuffer();
+      return cb.toString();
+   }
 
-    for (QAbstractNode node = _firstChild; node != null; node = node._next) {
-      cb.append(node.getTextValue());
-    }
+   void print(XmlPrinter out) throws IOException {
+      out.print("<#fragment>");
+      for (QAbstractNode node = _firstChild; node != null; node = node._next) {
+         node.print(out);
+      }
+      out.print("</#fragment>");
+   }
 
-    return cb.toString();
-  }
+   private Object writeReplace() {
+      return new SerializedXml(this);
+   }
 
-  void print(XmlPrinter out) throws IOException
-  {
-    out.print("<#fragment>");
-    for (QAbstractNode node = _firstChild; node != null; node = node._next) {
-      node.print(out);
-    }
-    out.print("</#fragment>");
-  }
-
-  private Object writeReplace()
-  {
-    return new SerializedXml(this);
-  }
-
-  public String toString()
-  {
-    if (_firstChild == null)
-      return "DocumentFragment[]";
-    else if (_firstChild == _lastChild)
-      return "DocumentFragment[" + _firstChild.getNodeName() + "]";
-    else
-      return ("DocumentFragment[" + _firstChild.getNodeName() +
-              " " + _lastChild.getNodeName() + "]");
-  }
+   public String toString() {
+      if (_firstChild == null)
+         return "DocumentFragment[]";
+      else if (_firstChild == _lastChild)
+         return "DocumentFragment[" + _firstChild.getNodeName() + "]";
+      else
+         return ("DocumentFragment[" + _firstChild.getNodeName() +
+            " " + _lastChild.getNodeName() + "]");
+   }
 }

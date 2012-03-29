@@ -54,7 +54,6 @@ public class BinaryDivExpr extends AbstractBinaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -62,7 +61,7 @@ public class BinaryDivExpr extends AbstractBinaryExpr {
       Value lValue = _left.eval(env);
       Value rValue = _right.eval(env);
 
-      env.pushCall(this, env.getThis(), new Value[] {lValue, rValue});
+      env.pushCall(this, env.getThis(), new Value[]{lValue, rValue});
 
       try {
          return lValue.div(env, rValue);

@@ -38,22 +38,20 @@ import java.util.ArrayList;
  * Parse state.
  */
 public class ParseState {
-  protected static final L10N L = new L10N(ParseState.class);
+   protected static final L10N L = new L10N(ParseState.class);
 
-  private ArrayList<Item> _stack = new ArrayList<Item>();
-  private ArrayList<int[]> _interleaveStack = new ArrayList<int[]>();
+   private ArrayList<Item> _stack = new ArrayList<Item>();
+   private ArrayList<int[]> _interleaveStack = new ArrayList<int[]>();
 
-  public void push(Item next)
-  {
-    _stack.add(next);
-  }
+   public void push(Item next) {
+      _stack.add(next);
+   }
 
-  public Item pop()
-  {
-    if (_stack.size() == 0)
-      return null;
-    else
-      return _stack.remove(_stack.size() - 1);
-  }
+   public Item pop() {
+      if (_stack.size() == 0)
+         return null;
+      else
+         return _stack.remove(_stack.size() - 1);
+   }
 }
 

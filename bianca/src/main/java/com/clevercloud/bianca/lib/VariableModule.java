@@ -30,12 +30,7 @@
 package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.annotation.PassThru;
-import com.clevercloud.bianca.annotation.ReadOnly;
-import com.clevercloud.bianca.annotation.Reference;
-import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.annotation.UsesSymbolTable;
+import com.clevercloud.bianca.annotation.*;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
@@ -45,7 +40,7 @@ import com.clevercloud.vfs.StringWriter;
 import com.clevercloud.vfs.WriteStream;
 
 import java.io.IOException;
-import java.lang.ref.*;
+import java.lang.ref.SoftReference;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -63,7 +58,7 @@ public class VariableModule extends AbstractBiancaModule {
    /**
     * Returns a constant
     *
-    * @param env the bianca calling environment
+    * @param env  the bianca calling environment
     * @param name the constant name
     */
    public static Value constant(Env env, String name) {
@@ -96,7 +91,7 @@ public class VariableModule extends AbstractBiancaModule {
     * Prints a debug version of the variable
     *
     * @param env the bianca calling environment
-    * @param v the variable to print
+    * @param v   the variable to print
     * @return the escaped stringPhp
     */
    public static Value debug_zval_dump(Env env, @ReadOnly Value v) {
@@ -112,21 +107,21 @@ public class VariableModule extends AbstractBiancaModule {
    /**
     * Defines a constant
     *
-    * @param env the bianca calling environment
-    * @param name the constant name
+    * @param env   the bianca calling environment
+    * @param name  the constant name
     * @param value the constant value
     */
    public static Value define(Env env,
-           StringValue name,
-           Value value,
-           @Optional boolean isCaseInsensitive) {
+                              StringValue name,
+                              Value value,
+                              @Optional boolean isCaseInsensitive) {
       return env.addConstant(name, value, isCaseInsensitive);
    }
 
    /**
     * Returns true if the constant is defined.
     *
-    * @param env the bianca calling environment
+    * @param env  the bianca calling environment
     * @param name the constant name
     */
    public static boolean defined(Env env, String name) {
@@ -162,7 +157,6 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for an empty variable.
     *
     * @param v the value to test
-    *
     * @return true if the value is empty
     */
    public static boolean empty(@ReadOnly Value v) {
@@ -190,14 +184,14 @@ public class VariableModule extends AbstractBiancaModule {
 
       for (Map.Entry<StringValue, EnvVar> entry : map.entrySet()) {
          result.append(entry.getKey(),
-                 entry.getValue().get());
+            entry.getValue().get());
       }
 
       Map<StringValue, EnvVar> globalMap = env.getGlobalEnv();
       if (map != globalMap) {
          for (Map.Entry<StringValue, EnvVar> entry : globalMap.entrySet()) {
             result.append(entry.getKey(),
-                    entry.getValue().get());
+               entry.getValue().get());
          }
       }
 
@@ -222,12 +216,12 @@ public class VariableModule extends AbstractBiancaModule {
    /**
     * Imports request variables
     *
-    * @param types the variables to import
+    * @param types  the variables to import
     * @param prefix the prefix
     */
    public static boolean import_request_variables(Env env,
-           String types,
-           @Optional String prefix) {
+                                                  String types,
+                                                  @Optional String prefix) {
       if ("".equals(prefix)) {
          env.notice(L.l("import_request_variables should use a prefix argument"));
       }
@@ -255,7 +249,7 @@ public class VariableModule extends AbstractBiancaModule {
             String key = entry.getKey().toString();
 
             env.setGlobalValue(prefix + key,
-                    array.getVar(entry.getKey()));
+               array.getVar(entry.getKey()));
          }
       }
 
@@ -313,7 +307,6 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for an array.
     *
     * @param v the value to test
-    *
     * @return true for an array
     */
    public static boolean is_array(@ReadOnly Value v) {
@@ -321,27 +314,28 @@ public class VariableModule extends AbstractBiancaModule {
    }
 
    // TODO: is_binary
+
    /**
     * Returns true for a boolean
     *
     * @param v the value to test
-    *
     * @return true for a boolean
     */
    public static Value is_bool(@ReadOnly Value v) {
       return (v.toValue() instanceof BooleanValue
-              ? BooleanValue.TRUE
-              : BooleanValue.FALSE);
+         ? BooleanValue.TRUE
+         : BooleanValue.FALSE);
    }
 
    // TODO: is_buffer
+
    /**
     * Returns the type string for the variable
     */
    public static boolean is_callable(Env env,
-           Value v,
-           @Optional boolean isSyntaxOnly,
-           @Optional @Reference Value nameRef) {
+                                     Value v,
+                                     @Optional boolean isSyntaxOnly,
+                                     @Optional @Reference Value nameRef) {
       if (v.isCallable(env)) {
          return true;
       }
@@ -403,7 +397,6 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for a double
     *
     * @param v the value to test
-    *
     * @return true for a double
     */
    public static boolean is_double(@ReadOnly Value v) {
@@ -414,7 +407,6 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for a double
     *
     * @param v the value to test
-    *
     * @return true for a double
     */
    public static boolean is_float(@ReadOnly Value v) {
@@ -425,20 +417,18 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for an integer
     *
     * @param v the value to test
-    *
     * @return true for a double
     */
    public static Value is_int(@ReadOnly Value v) {
       return (v.toValue() instanceof LongValue
-              ? BooleanValue.TRUE
-              : BooleanValue.FALSE);
+         ? BooleanValue.TRUE
+         : BooleanValue.FALSE);
    }
 
    /**
     * Returns true for an integer
     *
     * @param v the value to test
-    *
     * @return true for a double
     */
    public static Value is_integer(@ReadOnly Value v) {
@@ -449,7 +439,6 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for an integer
     *
     * @param v the value to test
-    *
     * @return true for a double
     */
    public static Value is_long(@ReadOnly Value v) {
@@ -460,7 +449,6 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for null
     *
     * @param v the value to test
-    *
     * @return true for null
     */
    public static boolean is_null(@ReadOnly Value v) {
@@ -471,8 +459,7 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for numeric
     *
     * @param env the calling environment
-    * @param v the value to test
-    *
+    * @param v   the value to test
     * @return true for numeric
     */
    public static boolean is_numeric(Env env, @ReadOnly Value v) {
@@ -483,8 +470,7 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for an object
     *
     * @param env the calling environment
-    * @param v the value to test
-    *
+    * @param v   the value to test
     * @return true for object
     */
    public static boolean is_object(Env env, @ReadOnly Value v) {
@@ -495,7 +481,6 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for a real
     *
     * @param v the value to test
-    *
     * @return true for a real
     */
    public static boolean is_real(@ReadOnly Value v) {
@@ -513,7 +498,6 @@ public class VariableModule extends AbstractBiancaModule {
     * Returns true for a scalar
     *
     * @param v the value to test
-    *
     * @return true for a scalar
     */
    public static boolean is_scalar(@ReadOnly Value v) {
@@ -524,9 +508,9 @@ public class VariableModule extends AbstractBiancaModule {
       Value value = v.toValue();
 
       return (value instanceof DoubleValue
-              || value instanceof StringValue
-              || value instanceof LongValue
-              || value instanceof BooleanValue);
+         || value instanceof StringValue
+         || value instanceof LongValue
+         || value instanceof BooleanValue);
    }
 
    /**
@@ -537,6 +521,7 @@ public class VariableModule extends AbstractBiancaModule {
    }
 
    // TODO: is_unicode
+
    /**
     * Returns the type string for the variable
     */
@@ -554,14 +539,14 @@ public class VariableModule extends AbstractBiancaModule {
     * Prints a value.  If isReturn is true, then returns what was supposed
     * to be printed as a string instead.
     *
-    * @param env the bianca calling environment
-    * @param v the variable to print
+    * @param env      the bianca calling environment
+    * @param v        the variable to print
     * @param isReturn set to true if returning instead of printing value
     * @return the string that was supposed to be printed, or true
     */
    public static Value print_r(Env env,
-           @ReadOnly Value v,
-           @Optional boolean isReturn) {
+                               @ReadOnly Value v,
+                               @Optional boolean isReturn) {
       try {
          WriteStream out;
 
@@ -587,7 +572,7 @@ public class VariableModule extends AbstractBiancaModule {
    }
 
    private static void printDepth(WriteStream out, int depth)
-           throws IOException {
+      throws IOException {
       for (int i = 0; i < depth; i++) {
          out.print(' ');
       }
@@ -597,7 +582,7 @@ public class VariableModule extends AbstractBiancaModule {
     * Serializes the value to a string.
     */
    public static String serialize(Env env,
-           @PassThru @ReadOnly Value v) {
+                                  @PassThru @ReadOnly Value v) {
       StringBuilder sb = new StringBuilder();
 
       v.serialize(env, sb, new SerializeMap());
@@ -609,8 +594,8 @@ public class VariableModule extends AbstractBiancaModule {
     * Converts the variable to a specified tyep.
     */
    public static boolean settype(Env env,
-           @Reference Value var,
-           String type) {
+                                 @Reference Value var,
+                                 String type) {
       Value value = var.toValue();
 
       if ("null".equals(type)) {
@@ -653,7 +638,7 @@ public class VariableModule extends AbstractBiancaModule {
     * Converts to a string
     *
     * @param env the bianca calling environment
-    * @param v the variable to convert
+    * @param v   the variable to convert
     * @return the double value
     */
    public static Value strval(Env env, @ReadOnly Value v) {
@@ -708,16 +693,17 @@ public class VariableModule extends AbstractBiancaModule {
    }
 
    // TODO: unset
+
    /**
     * Prints a debug version of the variable
     *
     * @param env the bianca calling environment
-    * @param v the variable to print
+    * @param v   the variable to print
     * @return the escaped stringPhp
     */
    public static Value var_dump(Env env,
-           @PassThru @ReadOnly Value v,
-           Value[] args) {
+                                @PassThru @ReadOnly Value v,
+                                Value[] args) {
       try {
          if (v == null) {
             env.getOut().print("NULL#java");
@@ -733,7 +719,7 @@ public class VariableModule extends AbstractBiancaModule {
                   env.getOut().print("NULL#java");
                } else {
                   value.varDump(env, env.getOut(), 0,
-                          new IdentityHashMap<Value, String>());
+                     new IdentityHashMap<Value, String>());
 
                   env.getOut().println();
                }
@@ -750,8 +736,8 @@ public class VariableModule extends AbstractBiancaModule {
     * Serializes the value to a string.
     */
    public static Value var_export(Env env,
-           @ReadOnly Value v,
-           @Optional boolean isReturn) {
+                                  @ReadOnly Value v,
+                                  @Optional boolean isReturn) {
       StringBuilder sb = new StringBuilder();
 
       v.varExport(sb);
@@ -766,7 +752,7 @@ public class VariableModule extends AbstractBiancaModule {
    }
 
    private static void debug_impl(Env env, Value v, int depth)
-           throws IOException {
+      throws IOException {
       WriteStream out = env.getOut();
 
       if (v instanceof Var) {

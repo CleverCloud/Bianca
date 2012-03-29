@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  */
 @ResourceType("process")
 public class ProcOpenResource
-        implements EnvCleanup {
+   implements EnvCleanup {
 
    private static final Logger log = Logger.getLogger(ProcOpenResource.class.getName());
    private Env _env;
@@ -54,11 +54,11 @@ public class ProcOpenResource
    private int _exitCode = -1;
 
    public ProcOpenResource(Env env,
-           Process process,
-           ProcOpenOutput in,
-           ProcOpenInput out,
-           ProcOpenInput err,
-           String command) {
+                           Process process,
+                           ProcOpenOutput in,
+                           ProcOpenInput out,
+                           ProcOpenInput err,
+                           String command) {
       _env = env;
       _process = process;
 

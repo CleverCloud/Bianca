@@ -151,7 +151,7 @@ class PDOError {
 
    /**
     * Set's the error mode.
-    *
+    * <p/>
     * <dl>
     * <dt>{@link ERRMODE_SILENT}
     * <dt>{@link ERRMODE_WARNING}

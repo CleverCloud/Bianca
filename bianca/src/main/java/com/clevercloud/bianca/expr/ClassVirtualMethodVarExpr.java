@@ -30,13 +30,9 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.parser.BiancaParser;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.function.AbstractFunction;
+import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -54,8 +50,8 @@ public class ClassVirtualMethodVarExpr extends Expr {
    protected boolean _isMethod;
 
    public ClassVirtualMethodVarExpr(Location location,
-           Expr methodName,
-           ArrayList<Expr> args) {
+                                    Expr methodName,
+                                    ArrayList<Expr> args) {
       super(location);
 
       _methodName = methodName;
@@ -65,8 +61,8 @@ public class ClassVirtualMethodVarExpr extends Expr {
    }
 
    public ClassVirtualMethodVarExpr(Location location,
-           Expr methodName,
-           Expr[] args) {
+                                    Expr methodName,
+                                    Expr[] args) {
       super(location);
 
       _methodName = methodName;
@@ -75,7 +71,7 @@ public class ClassVirtualMethodVarExpr extends Expr {
    }
 
    public ClassVirtualMethodVarExpr(Expr nameExpr,
-           ArrayList<Expr> args) {
+                                    ArrayList<Expr> args) {
       this(Location.UNKNOWN, nameExpr, args);
    }
 
@@ -85,6 +81,7 @@ public class ClassVirtualMethodVarExpr extends Expr {
 
    /**
     * Returns the reference of the value.
+    *
     * @param location
     */
    @Override
@@ -94,6 +91,7 @@ public class ClassVirtualMethodVarExpr extends Expr {
 
    /**
     * Returns the copy of the value.
+    *
     * @param location
     */
    @Override
@@ -105,7 +103,6 @@ public class ClassVirtualMethodVarExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

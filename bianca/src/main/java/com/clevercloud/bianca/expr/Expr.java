@@ -31,7 +31,10 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.Var;
 import com.clevercloud.bianca.parser.BiancaParser;
 import com.clevercloud.bianca.statement.Statement;
 import com.clevercloud.util.L10N;
@@ -201,9 +204,9 @@ abstract public class Expr {
    // expression creation functions
    //
    public Expr createAssign(BiancaParser parser, Expr value)
-           throws IOException {
+      throws IOException {
       String msg = (L.l("{0} is an invalid left-hand side of an assignment.",
-              this));
+         this));
 
       if (parser != null) {
          throw parser.error(msg);
@@ -216,7 +219,7 @@ abstract public class Expr {
     * Creates an assignment using this value as the right hand side.
     */
    public Expr createAssignFrom(BiancaParser parser,
-           AbstractVarExpr leftHandSide) {
+                                AbstractVarExpr leftHandSide) {
       ExprFactory factory = parser.getExprFactory();
 
       return factory.createAssign(leftHandSide, this);
@@ -226,9 +229,9 @@ abstract public class Expr {
     * Mark as an assignment for a list()
     */
    public void assign(BiancaParser parser)
-           throws IOException {
+      throws IOException {
       String msg = L.l("{0} is an invalid left-hand side of an assignment.",
-              this);
+         this);
 
       if (parser != null) {
          throw parser.error(msg);
@@ -238,10 +241,10 @@ abstract public class Expr {
    }
 
    public Expr createAssignRef(BiancaParser parser, Expr value)
-           throws IOException {
+      throws IOException {
       // TODO: need real exception
       String msg = L.l("{0} is an invalid left-hand side of an assignment.",
-              this);
+         this);
 
       if (parser != null) {
          throw parser.error(msg);
@@ -252,20 +255,22 @@ abstract public class Expr {
 
    /**
     * Creates a reference.
+    *
     * @param location
     */
    public Expr createRef(BiancaParser parser)
-           throws IOException {
+      throws IOException {
       return this;
    }
 
    public Expr createDeref(ExprFactory factory)
-           throws IOException {
+      throws IOException {
       return this;
    }
 
    /**
     * Creates a assignment
+    *
     * @param location
     */
    public Expr createCopy(ExprFactory factory) {
@@ -282,11 +287,12 @@ abstract public class Expr {
    return this;
    }
     */
+
    /**
     * Creates a field ref
     */
    public Expr createFieldGet(ExprFactory factory,
-           StringValue name) {
+                              StringValue name) {
       return factory.createFieldGet(this, name);
    }
 
@@ -294,13 +300,14 @@ abstract public class Expr {
     * Creates a field ref
     */
    public Expr createFieldGet(ExprFactory factory,
-           Expr name) {
+                              Expr name) {
       return factory.createFieldVarGet(this, name);
    }
 
    //
    // class field refs $class::$bar
    //
+
    /**
     * Creates a class field $class::foo
     */
@@ -331,34 +338,36 @@ abstract public class Expr {
    //
    // unary operations
    //
+
    /**
     * Creates a assignment
     */
    public Statement createUnset(ExprFactory factory, Location location)
-           throws IOException {
+      throws IOException {
       throw new IOException(L.l("{0} is an illegal value to unset",
-              this));
+         this));
    }
 
    /**
     * Creates an isset expression
     */
    public Expr createIsset(ExprFactory factory)
-           throws IOException {
+      throws IOException {
       throw new IOException(L.l("{0} is an illegal value to isset",
-              this));
+         this));
    }
 
    //
    // function call creation
    //
+
    /**
     * Creates a function call expression
     */
    public Expr createCall(BiancaParser parser,
-           Location location,
-           ArrayList<Expr> args)
-           throws IOException {
+                          Location location,
+                          ArrayList<Expr> args)
+      throws IOException {
       ExprFactory factory = parser.getExprFactory();
 
       return factory.createVarFunction(location, this, args);
@@ -367,6 +376,7 @@ abstract public class Expr {
    //
    // evaluation
    //
+
    /**
     * Evaluates the expression as a constant.
     *
@@ -398,7 +408,6 @@ abstract public class Expr {
     * Evaluates the expression, returning a Value, never a Var.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    abstract public Value eval(Env env);
@@ -407,7 +416,6 @@ abstract public class Expr {
     * Evaluates the expression, always returning a variable.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Var evalVar(Env env) {
@@ -418,7 +426,6 @@ abstract public class Expr {
     * Evaluates the expression, returning a Value.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Value evalValue(Env env) {
@@ -430,7 +437,6 @@ abstract public class Expr {
     * for values.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Value evalRef(Env env) {
@@ -439,12 +445,11 @@ abstract public class Expr {
 
    /**
     * Evaluates the expression as a copy.
-    *
+    * <p/>
     * The default is not to copy because the absence of copying is more
     * testable.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Value evalCopy(Env env) {
@@ -455,9 +460,8 @@ abstract public class Expr {
     * Evaluates the expression as a function argument where it is unknown
     * if the value will be used as a reference.
     *
-    * @param env the calling environment.
+    * @param env    the calling environment.
     * @param isTail true for the top expression
-    *
     * @return the expression value.
     */
    public Value evalArg(Env env, boolean isTop) {
@@ -468,7 +472,6 @@ abstract public class Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Value evalTop(Env env) {
@@ -480,7 +483,6 @@ abstract public class Expr {
     * e.g. from an unset.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Value evalDirty(Env env) {
@@ -491,7 +493,6 @@ abstract public class Expr {
     * Evaluates the expression, creating an array for unassigned values.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Value evalArray(Env env) {
@@ -502,7 +503,6 @@ abstract public class Expr {
     * Evaluates the expression, creating an object for unassigned values.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public Value evalObject(Env env) {
@@ -514,8 +514,8 @@ abstract public class Expr {
     */
    public Value evalAssignValue(Env env, Value value) {
       throw new RuntimeException(L.l(
-              "{0} is an invalid left-hand side of an assignment.",
-              this));
+         "{0} is an invalid left-hand side of an assignment.",
+         this));
    }
 
    /**
@@ -524,12 +524,13 @@ abstract public class Expr {
     */
    public Value evalAssignRef(Env env, Value value) {
       throw new RuntimeException(L.l(
-              "{0} is an invalid left-hand side of an assignment.",
-              this));
+         "{0} is an invalid left-hand side of an assignment.",
+         this));
    }
 
    /**
     * Evaluates as an array index assign ($a[index] = value).
+    *
     * @return what was assigned
     */
    public Value evalArrayAssign(Env env, Value index, Value value) {
@@ -560,7 +561,6 @@ abstract public class Expr {
     * Evaluates the expression as a string
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public String evalString(Env env) {
@@ -577,7 +577,6 @@ abstract public class Expr {
     * Evaluates the expression as a string value
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public StringValue evalStringValue(Env env) {
@@ -588,7 +587,6 @@ abstract public class Expr {
     * Evaluates the expression as a string
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public char evalChar(Env env) {
@@ -599,7 +597,6 @@ abstract public class Expr {
     * Evaluates the expression as a boolean.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public boolean evalBoolean(Env env) {
@@ -610,7 +607,6 @@ abstract public class Expr {
     * Evaluates the expression as a long
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public long evalLong(Env env) {
@@ -621,7 +617,6 @@ abstract public class Expr {
     * Evaluates the expression as a double
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    public double evalDouble(Env env) {
@@ -661,7 +656,7 @@ abstract public class Expr {
     * Prints to the output as an echo.
     */
    public void print(Env env)
-           throws IOException {
+      throws IOException {
       eval(env).print(env);
    }
 

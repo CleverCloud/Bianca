@@ -36,63 +36,55 @@ import java.io.Writer;
 import java.util.List;
 
 public class DTDImpl extends XMLEventImpl implements DTD {
-  private final String _dtdTypeDecl;
-  private final List _entities = null; // XXX
-  private final List _notations = null; // XXX
-  private final Object _processedDTD = null; // XXX
+   private final String _dtdTypeDecl;
+   private final List _entities = null; // XXX
+   private final List _notations = null; // XXX
+   private final Object _processedDTD = null; // XXX
 
-  public DTDImpl(String dtdTypeDecl)
-  {
-    _dtdTypeDecl = dtdTypeDecl;
-  }
+   public DTDImpl(String dtdTypeDecl) {
+      _dtdTypeDecl = dtdTypeDecl;
+   }
 
-  public String getDocumentTypeDeclaration()
-  {
-    return _dtdTypeDecl;
-  }
+   public String getDocumentTypeDeclaration() {
+      return _dtdTypeDecl;
+   }
 
-  public List getEntities()
-  {
-    throw new UnsupportedOperationException();
-  }
+   public List getEntities() {
+      throw new UnsupportedOperationException();
+   }
 
-  public List getNotations()
-  {
-    throw new UnsupportedOperationException();
-  }
+   public List getNotations() {
+      throw new UnsupportedOperationException();
+   }
 
-  public Object getProcessedDTD()
-  {
-    throw new UnsupportedOperationException();
-  }
+   public Object getProcessedDTD() {
+      throw new UnsupportedOperationException();
+   }
 
-  public int getEventType()
-  {
-    return DTD;
-  }
+   public int getEventType() {
+      return DTD;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    // XXX
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      // XXX
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof DTD))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof DTD))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    DTD dtd = (DTD) o;
+      DTD dtd = (DTD) o;
 
-    return 
-      getDocumentTypeDeclaration().equals(dtd.getDocumentTypeDeclaration()) &&
-      getEntities().equals(dtd.getEntities()) &&
-      getNotations().equals(dtd.getNotations()) &&
-      getProcessedDTD().equals(dtd.getProcessedDTD());
-  }
+      return
+         getDocumentTypeDeclaration().equals(dtd.getDocumentTypeDeclaration()) &&
+            getEntities().equals(dtd.getEntities()) &&
+            getNotations().equals(dtd.getNotations()) &&
+            getProcessedDTD().equals(dtd.getProcessedDTD());
+   }
 }
 

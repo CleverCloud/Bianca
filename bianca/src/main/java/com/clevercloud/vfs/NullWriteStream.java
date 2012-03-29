@@ -36,40 +36,35 @@ import java.io.IOException;
  * A WriteStream that writes to nothing.
  */
 public class NullWriteStream extends WriteStream {
-  public boolean canWrite()
-  {
-    return true;
-  }
+   public boolean canWrite() {
+      return true;
+   }
 
-  /**
-   * Writes a byte.
-   */
-  public void write(int ch) 
-    throws IOException
-  {
-  }
+   /**
+    * Writes a byte.
+    */
+   public void write(int ch)
+      throws IOException {
+   }
 
-  /**
-   * Writes a byte array
-   */
-  public void write(byte []buf, int offset, int length) 
-    throws IOException
-  {
-  }
+   /**
+    * Writes a byte array
+    */
+   public void write(byte[] buf, int offset, int length)
+      throws IOException {
+   }
 
-  /**
-   * Writes a byte array.
-   */
-  public void write(byte []buf) 
-    throws IOException
-  {
-  }
+   /**
+    * Writes a byte array.
+    */
+   public void write(byte[] buf)
+      throws IOException {
+   }
 
-  /**
-   * Flushes the buffer to the source.
-   */
-  public void flush() 
-    throws IOException
-  {
-  }
+   /**
+    * Flushes the buffer to the source.
+    */
+   public void flush()
+      throws IOException {
+   }
 }

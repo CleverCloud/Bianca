@@ -30,9 +30,9 @@
 package com.clevercloud.bianca.function;
 
 import com.clevercloud.bianca.Location;
+import com.clevercloud.bianca.env.BiancaClass;
 import com.clevercloud.bianca.env.Callback;
 import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.BiancaClass;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.program.Arg;
@@ -341,6 +341,7 @@ abstract public class AbstractFunction extends Callback {
    //
    // Value predicates
    //
+
    /**
     * Returns true for an object
     */
@@ -469,20 +470,21 @@ abstract public class AbstractFunction extends Callback {
     */
    @Override
    public Value callRef(Env env,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                        Value a1, Value a2, Value a3, Value a4, Value a5) {
       return callRef(env, new Value[]{a1, a2, a3, a4, a5});
    }
 
    //
    // method calls
    //
+
    /**
     * Evaluates the method call.
     */
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value[] args) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value[] args) {
       throw new IllegalStateException(getClass().getName());
 
       /*
@@ -502,9 +504,9 @@ abstract public class AbstractFunction extends Callback {
     * Evaluates the method call, returning a reference.
     */
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value[] args) {
+                              BiancaClass qClass,
+                              Value qThis,
+                              Value[] args) {
       throw new IllegalStateException(getClass().getName());
 
       /*
@@ -524,8 +526,8 @@ abstract public class AbstractFunction extends Callback {
     * Evaluates the function as a method call.
     */
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis) {
+                           BiancaClass qClass,
+                           Value qThis) {
       return callMethod(env, qClass, qThis, NULL_ARG_VALUES);
    }
 
@@ -533,8 +535,8 @@ abstract public class AbstractFunction extends Callback {
     * Evaluates the function as a method call.
     */
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis) {
+                              BiancaClass qClass,
+                              Value qThis) {
       return callMethodRef(env, qClass, qThis, NULL_ARG_VALUES);
    }
 
@@ -542,119 +544,119 @@ abstract public class AbstractFunction extends Callback {
     * Evaluates the function as a method call.
     */
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value a1) {
       return callMethod(env, qClass, qThis,
-              new Value[]{a1});
+         new Value[]{a1});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1) {
+                              BiancaClass qClass,
+                              Value qThis,
+                              Value a1) {
       return callMethodRef(env, qClass, qThis,
-              new Value[]{a1});
+         new Value[]{a1});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1, Value a2) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value a1, Value a2) {
       return callMethod(env, qClass, qThis,
-              new Value[]{a1, a2});
+         new Value[]{a1, a2});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1, Value a2) {
+                              BiancaClass qClass,
+                              Value qThis,
+                              Value a1, Value a2) {
       return callMethodRef(env, qClass, qThis,
-              new Value[]{a1, a2});
+         new Value[]{a1, a2});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1, Value a2, Value a3) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value a1, Value a2, Value a3) {
       return callMethod(env, qClass, qThis,
-              new Value[]{a1, a2, a3});
+         new Value[]{a1, a2, a3});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1, Value a2, Value a3) {
+                              BiancaClass qClass,
+                              Value qThis,
+                              Value a1, Value a2, Value a3) {
       return callMethodRef(env, qClass, qThis,
-              new Value[]{a1, a2, a3});
+         new Value[]{a1, a2, a3});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1, Value a2, Value a3, Value a4) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value a1, Value a2, Value a3, Value a4) {
       return callMethod(env, qClass, qThis,
-              new Value[]{a1, a2, a3, a4});
+         new Value[]{a1, a2, a3, a4});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1, Value a2, Value a3, Value a4) {
+                              BiancaClass qClass,
+                              Value qThis,
+                              Value a1, Value a2, Value a3, Value a4) {
       return callMethodRef(env, qClass, qThis,
-              new Value[]{a1, a2, a3, a4});
+         new Value[]{a1, a2, a3, a4});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       return callMethod(env, qClass, qThis,
-              new Value[]{a1, a2, a3, a4, a5});
+         new Value[]{a1, a2, a3, a4, a5});
    }
 
    /**
     * Evaluates the function as a method call.
     */
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                              BiancaClass qClass,
+                              Value qThis,
+                              Value a1, Value a2, Value a3, Value a4, Value a5) {
       return callMethodRef(env, qClass, qThis,
-              new Value[]{a1, a2, a3, a4, a5});
+         new Value[]{a1, a2, a3, a4, a5});
    }
 
    /**
     * Evaluates the function.
     */
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Expr[] exprs) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Expr[] exprs) {
       Value[] argValues = new Value[exprs.length];
       Arg[] args = getArgs();
 
@@ -673,9 +675,9 @@ abstract public class AbstractFunction extends Callback {
     * Evaluates the function.
     */
    public Value callMethodRef(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Expr[] exprs) {
+                              BiancaClass qClass,
+                              Value qThis,
+                              Expr[] exprs) {
       Value[] argValues = new Value[exprs.length];
       Arg[] args = getArgs();
 
@@ -692,18 +694,18 @@ abstract public class AbstractFunction extends Callback {
 
    protected Value errorProtectedAccess(Env env, Value oldThis) {
       return env.error(L.l(
-              "Cannot call protected method {0}::{1}() from '{2}' context",
-              getDeclaringClassName(),
-              getName(),
-              oldThis != null ? oldThis.getClassName() : null));
+         "Cannot call protected method {0}::{1}() from '{2}' context",
+         getDeclaringClassName(),
+         getName(),
+         oldThis != null ? oldThis.getClassName() : null));
    }
 
    protected Value errorPrivateAccess(Env env, Value oldThis) {
       return env.error(L.l(
-              "Cannot call private method {0}::{1}() from '{2}' context",
-              getDeclaringClassName(),
-              getName(),
-              oldThis != null ? oldThis.getClassName() : null));
+         "Cannot call private method {0}::{1}() from '{2}' context",
+         getDeclaringClassName(),
+         getName(),
+         oldThis != null ? oldThis.getClassName() : null));
    }
 
    @Override

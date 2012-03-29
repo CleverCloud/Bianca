@@ -52,49 +52,50 @@ public class ExifModule extends AbstractBiancaModule {
    private static final L10N L = new L10N(ExifModule.class);
 
    /**
-    *  Reads the EXIF headers from JPEG or TIFF
+    * Reads the EXIF headers from JPEG or TIFF
     */
    public static Value exif_read_data(Env env, Path file,
-           @Optional String sections,
-           @Optional boolean arrays,
-           @Optional boolean thumbs) {
+                                      @Optional String sections,
+                                      @Optional boolean arrays,
+                                      @Optional boolean thumbs) {
       return BooleanValue.FALSE;
    }
 
    /**
-    *  Alias of exif_read_data()
+    * Alias of exif_read_data()
     */
    public static Value read_exif_data(Env env, Path file,
-           @Optional String sections,
-           @Optional boolean arrays,
-           @Optional boolean thumbs) {
+                                      @Optional String sections,
+                                      @Optional boolean arrays,
+                                      @Optional boolean thumbs) {
       return exif_read_data(env, file, sections, arrays, thumbs);
    }
 
    /**
-    *  Retrieve the embedded thumbnail of a TIFF or JPEG image
-    *  @param filename the name of the image file being read.
-    *  @param width the width of the returned thumbnail
-    *  @param height the height of the returned thumbnail
-    *  @param imagetype either TIFF or JPEG
-    *  @return either the thumbnail or FALSE
+    * Retrieve the embedded thumbnail of a TIFF or JPEG image
+    *
+    * @param filename  the name of the image file being read.
+    * @param width     the width of the returned thumbnail
+    * @param height    the height of the returned thumbnail
+    * @param imagetype either TIFF or JPEG
+    * @return either the thumbnail or FALSE
     */
    public static Value exif_thumbnail(Env env, Path file,
-           @Optional int width,
-           @Optional int height,
-           @Optional int imageType) {
+                                      @Optional int width,
+                                      @Optional int height,
+                                      @Optional int imageType) {
       return BooleanValue.FALSE;
    }
 
    /**
-    *  Get the header name for an index
+    * Get the header name for an index
     */
    public static String exif_tagname(String index) {
       return null;
    }
 
    /**
-    *  Determine the type of an image
+    * Determine the type of an image
     */
    public static Value exif_imagetype(Env env, Path file) {
       try {
@@ -105,7 +106,7 @@ public class ExifModule extends AbstractBiancaModule {
          ImageReader imageReader = (ImageReader) it.next();
          if (it.hasNext()) {
             throw new BiancaException("ImageIO returned two ImageReaders:\n  "
-                    + imageReader + "\n  " + it.next());
+               + imageReader + "\n  " + it.next());
          }
          String formatName = imageReader.getFormatName();
          if (formatName.equals("jpeg") || formatName.equals("jpg")) {

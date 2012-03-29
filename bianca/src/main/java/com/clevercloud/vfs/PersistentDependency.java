@@ -34,8 +34,8 @@ package com.clevercloud.vfs;
  * Interface representing a resource that might change.
  */
 public interface PersistentDependency extends Dependency {
-  /**
-   * Returns a string to recreate the dependency.
-   */
-  public String getJavaCreateString();
+   /**
+    * Returns a string to recreate the dependency.
+    */
+   public String getJavaCreateString();
 }

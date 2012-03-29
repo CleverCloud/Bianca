@@ -34,14 +34,13 @@ import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.lib.file.BinaryInput;
 import com.clevercloud.bianca.lib.file.ReadStreamInput;
-import com.clevercloud.vfs.*;
+import com.clevercloud.vfs.ReadStream;
+import com.clevercloud.vfs.VfsStream;
 
 import java.io.IOException;
 
 /**
  * Input from a compressed stream.
- *
- *
  */
 public class ZlibInputStream extends ReadStreamInput {
 
@@ -58,7 +57,7 @@ public class ZlibInputStream extends ReadStreamInput {
    }
 
    protected final void init(BinaryInput in)
-           throws IOException {
+      throws IOException {
       _in = in;
 
       _gzIn = new GZInputStream(in.getInputStream());
@@ -72,7 +71,7 @@ public class ZlibInputStream extends ReadStreamInput {
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       return new ZlibInputStream(_env, _in.openCopy());
    }
 

@@ -33,13 +33,12 @@ import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.EnvCleanup;
 import com.clevercloud.bianca.env.Value;
+import com.clevercloud.vfs.LockableStream;
 import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.WriteStream;
-import com.clevercloud.vfs.LockableStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +46,7 @@ import java.util.logging.Logger;
  * Represents a PHP open file
  */
 public class FileOutput extends AbstractBinaryOutput
-        implements LockableStream, EnvCleanup {
+   implements LockableStream, EnvCleanup {
 
    private static final Logger log = Logger.getLogger(FileOutput.class.getName());
    private Env _env;
@@ -56,12 +55,12 @@ public class FileOutput extends AbstractBinaryOutput
    private long _offset;
 
    public FileOutput(Env env, Path path)
-           throws IOException {
+      throws IOException {
       this(env, path, false);
    }
 
    public FileOutput(Env env, Path path, boolean isAppend)
-           throws IOException {
+      throws IOException {
       _env = env;
 
       env.addCleanup(this);
@@ -95,7 +94,7 @@ public class FileOutput extends AbstractBinaryOutput
     */
    @Override
    public void print(char v)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.print(v);
       }
@@ -106,7 +105,7 @@ public class FileOutput extends AbstractBinaryOutput
     */
    @Override
    public void print(String v)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.print(v);
       }
@@ -117,7 +116,7 @@ public class FileOutput extends AbstractBinaryOutput
     */
    @Override
    public void write(int ch)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.write(ch);
       }
@@ -128,7 +127,7 @@ public class FileOutput extends AbstractBinaryOutput
     */
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.write(buffer, offset, length);
       }
@@ -139,7 +138,7 @@ public class FileOutput extends AbstractBinaryOutput
     */
    @Override
    public void flush()
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.flush();
       }

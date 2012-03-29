@@ -31,6 +31,7 @@ package com.clevercloud.config;
 
 //import com.clevercloud.util.CompileException;
 //import com.clevercloud.util.DisplayableException;
+
 import com.clevercloud.util.Html;
 
 import java.io.PrintWriter;
@@ -39,49 +40,42 @@ import java.io.PrintWriter;
  * Thrown by the various Builders
  */
 public class ConfigRuntimeException
-  extends RuntimeException
-{
-  /**
-   * Create a null exception
-   */
-  public ConfigRuntimeException()
-  {
-  }
+   extends RuntimeException {
+   /**
+    * Create a null exception
+    */
+   public ConfigRuntimeException() {
+   }
 
-  /**
-   * Creates an exception with a message
-   */
-  public ConfigRuntimeException(String msg)
-  {
-    super(msg);
-  }
+   /**
+    * Creates an exception with a message
+    */
+   public ConfigRuntimeException(String msg) {
+      super(msg);
+   }
 
-  /**
-   * Creates an exception with a message and throwable
-   */
-  public ConfigRuntimeException(String msg, Throwable e)
-  {
-    super(msg, e);
-  }
+   /**
+    * Creates an exception with a message and throwable
+    */
+   public ConfigRuntimeException(String msg, Throwable e) {
+      super(msg, e);
+   }
 
-  /**
-   * Creates an exception with a throwable
-   */
-  public ConfigRuntimeException(Throwable e)
-  {
-    super(getMessage(e), e);
-  }
+   /**
+    * Creates an exception with a throwable
+    */
+   public ConfigRuntimeException(Throwable e) {
+      super(getMessage(e), e);
+   }
 
-  private static String getMessage(Throwable e)
-  {
-    //if (e instanceof DisplayableException || e instanceof CompileException)
-    //  return e.getMessage();
-    //else
+   private static String getMessage(Throwable e) {
+      //if (e instanceof DisplayableException || e instanceof CompileException)
+      //  return e.getMessage();
+      //else
       return e.toString();
-  }
+   }
 
-  public void print(PrintWriter out)
-  {
-    out.println(Html.escapeHtml(getMessage()));
-  }
+   public void print(PrintWriter out) {
+      out.println(Html.escapeHtml(getMessage()));
+   }
 }

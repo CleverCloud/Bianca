@@ -38,53 +38,48 @@ import java.io.OutputStream;
  * the VFS.
  */
 public class StreamImplOutputStream extends OutputStream {
-  private StreamImpl _stream;
-  private byte []_buf = new byte[1];
+   private StreamImpl _stream;
+   private byte[] _buf = new byte[1];
 
-  public StreamImplOutputStream(StreamImpl stream)
-  {
-    _stream = stream;
-  }
+   public StreamImplOutputStream(StreamImpl stream) {
+      _stream = stream;
+   }
 
-  /**
-   * Writes a byte to the underlying stream.
-   *
-   * @param v the value to write
-   */
-  public void write(int v)
-    throws IOException
-  {
-    _buf[0] = (byte) v;
-    
-    _stream.write(_buf, 0, 1, false);
-  }
-  
-  /**
-   * Writes a buffer to the underlying stream.
-   *
-   * @param buffer the byte array to write.
-   * @param offset the offset into the byte array.
-   * @param length the number of bytes to write.
-   */
-  public void write(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    _stream.write(buffer, offset, length, false);
-  }
+   /**
+    * Writes a byte to the underlying stream.
+    *
+    * @param v the value to write
+    */
+   public void write(int v)
+      throws IOException {
+      _buf[0] = (byte) v;
 
-  /**
-   * Flushes the write output.
-   */
-  public void flush() throws IOException
-  {
-    _stream.flush();
-  }
+      _stream.write(_buf, 0, 1, false);
+   }
 
-  /**
-   * Closes the stream.
-   */
-  public void close() throws IOException
-  {
-    _stream.close();
-  }
+   /**
+    * Writes a buffer to the underlying stream.
+    *
+    * @param buffer the byte array to write.
+    * @param offset the offset into the byte array.
+    * @param length the number of bytes to write.
+    */
+   public void write(byte[] buffer, int offset, int length)
+      throws IOException {
+      _stream.write(buffer, offset, length, false);
+   }
+
+   /**
+    * Flushes the write output.
+    */
+   public void flush() throws IOException {
+      _stream.flush();
+   }
+
+   /**
+    * Closes the stream.
+    */
+   public void close() throws IOException {
+      _stream.close();
+   }
 }

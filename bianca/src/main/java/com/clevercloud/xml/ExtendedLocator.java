@@ -32,5 +32,5 @@ package com.clevercloud.xml;
 import org.xml.sax.Locator;
 
 public interface ExtendedLocator extends Locator {
-  public String getFilename();
+   public String getFilename();
 }

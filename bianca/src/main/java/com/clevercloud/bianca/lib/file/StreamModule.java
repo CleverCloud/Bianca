@@ -99,11 +99,12 @@ public class StreamModule extends AbstractBiancaModule {
    return brigade.popTop();
    }
     */
+
    /**
     * Creates a stream context.
     */
    public static Value stream_context_create(Env env,
-           @Optional ArrayValue options) {
+                                             @Optional ArrayValue options) {
       return new StreamContextResource(options);
    }
 
@@ -124,7 +125,7 @@ public class StreamModule extends AbstractBiancaModule {
     * Returns the default stream context.
     */
    public static Value stream_context_get_default(Env env,
-           @Optional ArrayValue options) {
+                                                  @Optional ArrayValue options) {
       StreamContextResource context = env.getDefaultStreamContext();
 
       if (options != null) {
@@ -138,10 +139,10 @@ public class StreamModule extends AbstractBiancaModule {
     * Set an options for a stream context.
     */
    public static boolean stream_context_set_option(Env env,
-           Value resource,
-           StringValue wrapper,
-           StringValue option,
-           Value value) {
+                                                   Value resource,
+                                                   StringValue wrapper,
+                                                   StringValue option,
+                                                   Value value) {
       if (resource instanceof StreamContextResource) {
          StreamContextResource context = (StreamContextResource) resource;
 
@@ -159,8 +160,8 @@ public class StreamModule extends AbstractBiancaModule {
     * Sets parameters for the context
     */
    public static boolean stream_context_set_params(Env env,
-           Value resource,
-           ArrayValue value) {
+                                                   Value resource,
+                                                   ArrayValue value) {
       if (resource instanceof StreamContextResource) {
          StreamContextResource context = (StreamContextResource) resource;
 
@@ -178,10 +179,10 @@ public class StreamModule extends AbstractBiancaModule {
     * Copies from an input stream to an output stream
     */
    public static long stream_copy_to_stream(Env env,
-           @NotNull BinaryInput in,
-           @NotNull BinaryOutput out,
-           @Optional("-1") int length,
-           @Optional int offset) {
+                                            @NotNull BinaryInput in,
+                                            @NotNull BinaryOutput out,
+                                            @Optional("-1") int length,
+                                            @Optional int offset) {
       long bytesWritten = 0;
 
       try {
@@ -235,14 +236,14 @@ public class StreamModule extends AbstractBiancaModule {
    /**
     * Returns the rest of the file as a string
     *
-    * @param filename the file's name
+    * @param filename       the file's name
     * @param useIncludePath if true, use the include path
-    * @param context the resource context
+    * @param context        the resource context
     */
    public static Value stream_get_contents(Env env,
-           @NotNull BinaryInput in,
-           @Optional("-1") long maxLen,
-           @Optional long offset) {
+                                           @NotNull BinaryInput in,
+                                           @Optional("-1") long maxLen,
+                                           @Optional long offset) {
       try {
          if (in == null) {
             return BooleanValue.FALSE;
@@ -276,8 +277,8 @@ public class StreamModule extends AbstractBiancaModule {
     * Returns the next line
     */
    public static Value stream_get_line(Env env,
-           @NotNull BinaryInput file,
-           @Optional("-1") long length) {
+                                       @NotNull BinaryInput file,
+                                       @Optional("-1") long length) {
       try {
          if (file == null) {
             return BooleanValue.FALSE;
@@ -317,11 +318,11 @@ public class StreamModule extends AbstractBiancaModule {
 
    /**
     * Returns the metadata of this stream.
-    *
+    * <p/>
     * XXX: TODO
     */
    public static Value stream_get_meta_data(Env env,
-           BinaryStream stream) {
+                                            BinaryStream stream) {
       if (stream == null) {
          return BooleanValue.FALSE;
       }
@@ -363,7 +364,7 @@ public class StreamModule extends AbstractBiancaModule {
    }
 
    public static boolean stream_register_wrapper(Env env, StringValue protocol,
-           String className) {
+                                                 String className) {
       return stream_wrapper_register(env, protocol, className);
    }
 
@@ -372,8 +373,8 @@ public class StreamModule extends AbstractBiancaModule {
     * any stream (unless a non-web-server Bianca is developed.)
     */
    public static boolean stream_set_blocking(Env env,
-           @NotNull Value stream,
-           int mode) {
+                                             @NotNull Value stream,
+                                             int mode) {
       env.stub("stream_set_blocking()");
 
       if (stream == null) {
@@ -384,9 +385,9 @@ public class StreamModule extends AbstractBiancaModule {
    }
 
    public static boolean stream_set_timeout(Env env,
-           @NotNull Value stream,
-           int seconds,
-           @Optional("-1") int microseconds) {
+                                            @NotNull Value stream,
+                                            int seconds,
+                                            @Optional("-1") int microseconds) {
       if (stream == null) {
          return false;
       }
@@ -410,7 +411,7 @@ public class StreamModule extends AbstractBiancaModule {
     * Sets the write buffer.
     */
    public static int stream_set_write_buffer(Env env, BinaryOutput stream,
-           int bufferSize) {
+                                             int bufferSize) {
       return 0;
    }
 
@@ -419,12 +420,12 @@ public class StreamModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static SocketInputOutput stream_socket_client(Env env,
-           @NotNull String remoteSocket,
-           @Optional @Reference Value errorInt,
-           @Optional @Reference Value errorStr,
-           @Optional("120.0") double timeout,
-           @Optional("STREAM_CLIENT_CONNECT") int flags,
-           @Optional StreamContextResource context) {
+                                                        @NotNull String remoteSocket,
+                                                        @Optional @Reference Value errorInt,
+                                                        @Optional @Reference Value errorStr,
+                                                        @Optional("120.0") double timeout,
+                                                        @Optional("STREAM_CLIENT_CONNECT") int flags,
+                                                        @Optional StreamContextResource context) {
       try {
          if (remoteSocket == null) {
             env.warning("socket to connect to must not be null");
@@ -502,7 +503,7 @@ public class StreamModule extends AbstractBiancaModule {
    }
 
    public static void stream_wrapper_register(StringValue protocol,
-           ProtocolWrapper wrapper) {
+                                              ProtocolWrapper wrapper) {
       _wrapperMap.put(protocol.toString(), wrapper);
 
       _wrapperArray.append(protocol);
@@ -512,7 +513,7 @@ public class StreamModule extends AbstractBiancaModule {
     * Register a wrapper for a protocol.
     */
    public static boolean stream_wrapper_register(Env env, StringValue protocol,
-           String className) {
+                                                 String className) {
       if (_wrapperMap.containsKey(protocol.toString())) {
          return false;
       }
@@ -533,7 +534,7 @@ public class StreamModule extends AbstractBiancaModule {
       }
 
       ProtocolWrapper oldWrapper =
-              _unregisteredWrapperMap.remove(protocol.toString());
+         _unregisteredWrapperMap.remove(protocol.toString());
 
       stream_wrapper_register(protocol, oldWrapper);
 
@@ -549,7 +550,7 @@ public class StreamModule extends AbstractBiancaModule {
       }
 
       _unregisteredWrapperMap.put(protocol.toString(),
-              _wrapperMap.remove(protocol.toString()));
+         _wrapperMap.remove(protocol.toString()));
 
       _wrapperArray.remove(protocol);
 
@@ -583,15 +584,15 @@ public class StreamModule extends AbstractBiancaModule {
       addConstant(_constMap, "STREAM_REPORT_ERRORS", STREAM_REPORT_ERRORS);
 
       addConstant(_constMap, "STREAM_CLIENT_ASYNC_CONNECT",
-              STREAM_CLIENT_ASYNC_CONNECT);
+         STREAM_CLIENT_ASYNC_CONNECT);
       addConstant(_constMap, "STREAM_CLIENT_CONNECT",
-              STREAM_CLIENT_CONNECT);
+         STREAM_CLIENT_CONNECT);
       addConstant(_constMap, "STREAM_CLIENT_PERSISTENT",
-              STREAM_CLIENT_PERSISTENT);
+         STREAM_CLIENT_PERSISTENT);
 
       addConstant(_constMap, "STREAM_SERVER_BIND",
-              STREAM_SERVER_BIND);
+         STREAM_SERVER_BIND);
       addConstant(_constMap, "STREAM_SERVER_LISTEN",
-              STREAM_SERVER_LISTEN);
+         STREAM_SERVER_LISTEN);
    }
 }

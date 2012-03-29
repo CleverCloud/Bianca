@@ -32,346 +32,326 @@ package com.clevercloud.vfs;
 
 import com.clevercloud.util.FreeList;
 
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Pooled temporary byte buffer.
  */
 public class TempBuffer implements java.io.Serializable {
-  private static Logger _log;
-  
-  private static final FreeList<TempBuffer> _freeList
-    = new FreeList<TempBuffer>(32);
-  
-  private static final FreeList<TempBuffer> _smallFreeList
-    = new FreeList<TempBuffer>(32);
-  
-  private static final FreeList<TempBuffer> _largeFreeList
-    = new FreeList<TempBuffer>(32);
+   private static Logger _log;
 
-  private static final boolean _isSmallmem;
-  
-  public static final int SMALL_SIZE;
-  public static final int LARGE_SIZE;
-  public static final int SIZE;
-  
-  private static boolean _isFreeException;
-  
-  TempBuffer _next;
-  final byte []_buf;
-  int _offset;
-  int _length;
-  int _bufferCount;
+   private static final FreeList<TempBuffer> _freeList
+      = new FreeList<TempBuffer>(32);
 
-  // validation of allocate/free
-  private transient boolean _isFree;
-  private transient RuntimeException _freeException;
+   private static final FreeList<TempBuffer> _smallFreeList
+      = new FreeList<TempBuffer>(32);
 
-  /**
-   * Create a new TempBuffer.
-   */
-  public TempBuffer(int size)
-  {
-    _buf = new byte[size];
-  }
+   private static final FreeList<TempBuffer> _largeFreeList
+      = new FreeList<TempBuffer>(32);
 
-  /**
-   * Returns true for a smallmem configuration
-   */
-  public static boolean isSmallmem()
-  {
-    return _isSmallmem;
-  }
+   private static final boolean _isSmallmem;
 
-  /**
-   * Allocate a TempBuffer, reusing one if available.
-   */
-  public static TempBuffer allocate()
-  {
-    TempBuffer next = _freeList.allocate();
+   public static final int SMALL_SIZE;
+   public static final int LARGE_SIZE;
+   public static final int SIZE;
 
-    if (next == null)
-      return new TempBuffer(SIZE);
-    else if (! next._isFree) // XXX:
-      throw new IllegalStateException();
+   private static boolean _isFreeException;
 
-    next._isFree = false;
-    next._next = null;
+   TempBuffer _next;
+   final byte[] _buf;
+   int _offset;
+   int _length;
+   int _bufferCount;
 
-    next._offset = 0;
-    next._length = 0;
-    next._bufferCount = 0;
+   // validation of allocate/free
+   private transient boolean _isFree;
+   private transient RuntimeException _freeException;
 
-    return next;
-  }
+   /**
+    * Create a new TempBuffer.
+    */
+   public TempBuffer(int size) {
+      _buf = new byte[size];
+   }
 
-  /**
-   * Allocate a TempBuffer, reusing one if available.
-   */
-  public static TempBuffer allocateSmall()
-  {
-    TempBuffer next = _smallFreeList.allocate();
+   /**
+    * Returns true for a smallmem configuration
+    */
+   public static boolean isSmallmem() {
+      return _isSmallmem;
+   }
 
-    if (next == null)
-      return new TempBuffer(SMALL_SIZE);
+   /**
+    * Allocate a TempBuffer, reusing one if available.
+    */
+   public static TempBuffer allocate() {
+      TempBuffer next = _freeList.allocate();
 
-    next._isFree = false;
-    next._next = null;
+      if (next == null)
+         return new TempBuffer(SIZE);
+      else if (!next._isFree) // XXX:
+         throw new IllegalStateException();
 
-    next._offset = 0;
-    next._length = 0;
-    next._bufferCount = 0;
+      next._isFree = false;
+      next._next = null;
 
-    return next;
-  }
+      next._offset = 0;
+      next._length = 0;
+      next._bufferCount = 0;
 
-  /**
-   * Allocate a TempBuffer, reusing one if available.
-   */
-  public static TempBuffer allocateLarge()
-  {
-    TempBuffer next = _smallFreeList.allocate();
+      return next;
+   }
 
-    if (next == null)
-      return new TempBuffer(LARGE_SIZE);
+   /**
+    * Allocate a TempBuffer, reusing one if available.
+    */
+   public static TempBuffer allocateSmall() {
+      TempBuffer next = _smallFreeList.allocate();
 
-    next._isFree = false;
-    next._next = null;
+      if (next == null)
+         return new TempBuffer(SMALL_SIZE);
 
-    next._offset = 0;
-    next._length = 0;
-    next._bufferCount = 0;
+      next._isFree = false;
+      next._next = null;
 
-    return next;
-  }
+      next._offset = 0;
+      next._length = 0;
+      next._bufferCount = 0;
 
-  /**
-   * Clears the buffer.
-   */
-  public void clear()
-  {
-    _next = null;
+      return next;
+   }
 
-    _offset = 0;
-    _length = 0;
-    _bufferCount = 0;
-  }
+   /**
+    * Allocate a TempBuffer, reusing one if available.
+    */
+   public static TempBuffer allocateLarge() {
+      TempBuffer next = _smallFreeList.allocate();
 
-  /**
-   * Returns the buffer's underlying byte array.
-   */
-  public final byte []getBuffer()
-  {
-    return _buf;
-  }
+      if (next == null)
+         return new TempBuffer(LARGE_SIZE);
 
-  /**
-   * Returns the number of bytes in the buffer.
-   */
-  public final int getLength()
-  {
-    return _length;
-  }
+      next._isFree = false;
+      next._next = null;
 
-  /**
-   * Sets the number of bytes used in the buffer.
-   */
-  public final void setLength(int length)
-  {
-    _length = length;
-  }
+      next._offset = 0;
+      next._length = 0;
+      next._bufferCount = 0;
 
-  public final int getCapacity()
-  {
-    return _buf.length;
-  }
+      return next;
+   }
 
-  public int getAvailable()
-  {
-    return _buf.length - _length;
-  }
+   /**
+    * Clears the buffer.
+    */
+   public void clear() {
+      _next = null;
 
-  public final TempBuffer getNext()
-  {
-    return _next;
-  }
+      _offset = 0;
+      _length = 0;
+      _bufferCount = 0;
+   }
 
-  public final void setNext(TempBuffer next)
-  {
-    _next = next;
-  }
+   /**
+    * Returns the buffer's underlying byte array.
+    */
+   public final byte[] getBuffer() {
+      return _buf;
+   }
 
-  public int write(byte []buf, int offset, int length)
-  {
-    byte []thisBuf = _buf;
-    int thisLength = _length;
+   /**
+    * Returns the number of bytes in the buffer.
+    */
+   public final int getLength() {
+      return _length;
+   }
 
-    if (thisBuf.length - thisLength < length)
-      length = thisBuf.length - thisLength;
+   /**
+    * Sets the number of bytes used in the buffer.
+    */
+   public final void setLength(int length) {
+      _length = length;
+   }
 
-    System.arraycopy(buf, offset, thisBuf, thisLength, length);
+   public final int getCapacity() {
+      return _buf.length;
+   }
 
-    _length = thisLength + length;
+   public int getAvailable() {
+      return _buf.length - _length;
+   }
 
-    return length;
-  }
+   public final TempBuffer getNext() {
+      return _next;
+   }
 
-  /**
-   * Frees a single buffer.
-   */
-  public static void free(TempBuffer buf)
-  {
-    buf._next = null;
-    
-    if (buf._isFree) {
-      _isFreeException = true;
-      RuntimeException freeException = buf._freeException;
-      RuntimeException secondException = new IllegalStateException("duplicate free");
-      secondException.fillInStackTrace();
-      
-      log().log(Level.WARNING, "initial free location", freeException);
-      log().log(Level.WARNING, "secondary free location", secondException);
-      
-      throw new IllegalStateException();
-    }
-    
-    buf._isFree = true;
+   public final void setNext(TempBuffer next) {
+      _next = next;
+   }
 
-    if (buf._buf.length == SIZE) {
-      if (_isFreeException) {
-        buf._freeException = new IllegalStateException("initial free");
-        buf._freeException.fillInStackTrace();
-      }
-      _freeList.free(buf);
-    }
-  }
+   public int write(byte[] buf, int offset, int length) {
+      byte[] thisBuf = _buf;
+      int thisLength = _length;
 
-  public static void freeAll(TempBuffer buf)
-  {
-    while (buf != null) {
-      TempBuffer next = buf._next;
+      if (thisBuf.length - thisLength < length)
+         length = thisBuf.length - thisLength;
+
+      System.arraycopy(buf, offset, thisBuf, thisLength, length);
+
+      _length = thisLength + length;
+
+      return length;
+   }
+
+   /**
+    * Frees a single buffer.
+    */
+   public static void free(TempBuffer buf) {
       buf._next = null;
-      
-      free(buf);
-      
-      buf = next;
-    }
-  }
 
-  /**
-   * Frees a single buffer.
-   */
-  public static void freeSmall(TempBuffer buf)
-  {
-    buf._next = null;
-
-    if (buf._buf.length == SMALL_SIZE) {
       if (buf._isFree) {
-        RuntimeException e
-          = new IllegalStateException("illegal TempBuffer.free.  Please report at http://bugs.clevercloud.com");
-        log().log(Level.SEVERE, e.toString(), e);
-        throw e;
+         _isFreeException = true;
+         RuntimeException freeException = buf._freeException;
+         RuntimeException secondException = new IllegalStateException("duplicate free");
+         secondException.fillInStackTrace();
+
+         log().log(Level.WARNING, "initial free location", freeException);
+         log().log(Level.WARNING, "secondary free location", secondException);
+
+         throw new IllegalStateException();
       }
 
       buf._isFree = true;
-      
-      _smallFreeList.free(buf);
-    }
-  }
 
-  public static void freeAllSmall(TempBuffer buf)
-  {
-    while (buf != null) {
-      TempBuffer next = buf._next;
+      if (buf._buf.length == SIZE) {
+         if (_isFreeException) {
+            buf._freeException = new IllegalStateException("initial free");
+            buf._freeException.fillInStackTrace();
+         }
+         _freeList.free(buf);
+      }
+   }
+
+   public static void freeAll(TempBuffer buf) {
+      while (buf != null) {
+         TempBuffer next = buf._next;
+         buf._next = null;
+
+         free(buf);
+
+         buf = next;
+      }
+   }
+
+   /**
+    * Frees a single buffer.
+    */
+   public static void freeSmall(TempBuffer buf) {
       buf._next = null;
-      
+
       if (buf._buf.length == SMALL_SIZE) {
-        if (buf._isFree) {
-          RuntimeException e
-            = new IllegalStateException("illegal TempBuffer.free.  Please report at http://bugs.clevercloud.com");
+         if (buf._isFree) {
+            RuntimeException e
+               = new IllegalStateException("illegal TempBuffer.free.  Please report at http://bugs.clevercloud.com");
+            log().log(Level.SEVERE, e.toString(), e);
+            throw e;
+         }
 
-          log().log(Level.SEVERE, e.toString(), e);
-          throw e;
-        }
+         buf._isFree = true;
 
-        buf._isFree = true;
-      
-        _smallFreeList.free(buf);
+         _smallFreeList.free(buf);
       }
-      
-      buf = next;
-    }
-  }
+   }
 
-  /**
-   * Frees a single buffer.
-   */
-  public static void freeLarge(TempBuffer buf)
-  {
-    buf._next = null;
+   public static void freeAllSmall(TempBuffer buf) {
+      while (buf != null) {
+         TempBuffer next = buf._next;
+         buf._next = null;
 
-    if (buf._buf.length == LARGE_SIZE) {
-      if (buf._isFree) {
-        RuntimeException e
-          = new IllegalStateException("illegal TempBuffer.free.  Please report at http://bugs.clevercloud.com");
-        log().log(Level.SEVERE, e.toString(), e);
-        throw e;
+         if (buf._buf.length == SMALL_SIZE) {
+            if (buf._isFree) {
+               RuntimeException e
+                  = new IllegalStateException("illegal TempBuffer.free.  Please report at http://bugs.clevercloud.com");
+
+               log().log(Level.SEVERE, e.toString(), e);
+               throw e;
+            }
+
+            buf._isFree = true;
+
+            _smallFreeList.free(buf);
+         }
+
+         buf = next;
       }
+   }
 
-      buf._isFree = true;
-      
-      _largeFreeList.free(buf);
-    }
-  }
-
-  public static void freeAllLarge(TempBuffer buf)
-  {
-    while (buf != null) {
-      TempBuffer next = buf._next;
+   /**
+    * Frees a single buffer.
+    */
+   public static void freeLarge(TempBuffer buf) {
       buf._next = null;
-      
+
       if (buf._buf.length == LARGE_SIZE) {
-        if (buf._isFree) {
-          RuntimeException e
-            = new IllegalStateException("illegal TempBuffer.free.  Please report at http://bugs.clevercloud.com");
+         if (buf._isFree) {
+            RuntimeException e
+               = new IllegalStateException("illegal TempBuffer.free.  Please report at http://bugs.clevercloud.com");
+            log().log(Level.SEVERE, e.toString(), e);
+            throw e;
+         }
 
-          log().log(Level.SEVERE, e.toString(), e);
-          throw e;
-        }
+         buf._isFree = true;
 
-        buf._isFree = true;
-      
-        _largeFreeList.free(buf);
+         _largeFreeList.free(buf);
       }
-      
-      buf = next;
-    }
-  }
+   }
 
-  private static Logger log()
-  {
-    if (_log == null)
-      _log = Logger.getLogger(TempBuffer.class.getName());
+   public static void freeAllLarge(TempBuffer buf) {
+      while (buf != null) {
+         TempBuffer next = buf._next;
+         buf._next = null;
 
-    return _log;
-  }
+         if (buf._buf.length == LARGE_SIZE) {
+            if (buf._isFree) {
+               RuntimeException e
+                  = new IllegalStateException("illegal TempBuffer.free.  Please report at http://bugs.clevercloud.com");
 
-  static {
-    // the max size needs to be less than JNI code, currently max 16k
-    // the min size is 8k because of the JSP spec
-    int size = 8 * 1024;
-    boolean isSmallmem = false;
+               log().log(Level.SEVERE, e.toString(), e);
+               throw e;
+            }
 
-    String smallmem = System.getProperty("clevercloud.smallmem");
-    
-    if (smallmem != null && ! "false".equals(smallmem)) {
-      isSmallmem = true;
-      size = 512;
-    }
+            buf._isFree = true;
 
-    _isSmallmem = isSmallmem;
-    SIZE = size;
-    LARGE_SIZE = 8 * 1024;
-    SMALL_SIZE = 512;
-  }
+            _largeFreeList.free(buf);
+         }
+
+         buf = next;
+      }
+   }
+
+   private static Logger log() {
+      if (_log == null)
+         _log = Logger.getLogger(TempBuffer.class.getName());
+
+      return _log;
+   }
+
+   static {
+      // the max size needs to be less than JNI code, currently max 16k
+      // the min size is 8k because of the JSP spec
+      int size = 8 * 1024;
+      boolean isSmallmem = false;
+
+      String smallmem = System.getProperty("clevercloud.smallmem");
+
+      if (smallmem != null && !"false".equals(smallmem)) {
+         isSmallmem = true;
+         size = 512;
+      }
+
+      _isSmallmem = isSmallmem;
+      SIZE = size;
+      LARGE_SIZE = 8 * 1024;
+      SMALL_SIZE = 512;
+   }
 }

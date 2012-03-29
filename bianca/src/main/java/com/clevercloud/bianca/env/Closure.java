@@ -105,8 +105,8 @@ public class Closure extends Callback {
    //
    @Override
    public Value callMethod(Env env,
-           StringValue methodName, int hash,
-           Value[] args) {
+                           StringValue methodName, int hash,
+                           Value[] args) {
       if (methodName == INVOKE || INVOKE.equals(methodName)) {
          return call(env, args);
       } else {

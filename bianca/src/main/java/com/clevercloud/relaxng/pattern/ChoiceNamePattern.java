@@ -41,133 +41,123 @@ import java.util.ArrayList;
  * Relax element pattern
  */
 public class ChoiceNamePattern extends NameClassPattern {
-  private ArrayList<NameClassPattern> _patterns
-    = new ArrayList<NameClassPattern>();
+   private ArrayList<NameClassPattern> _patterns
+      = new ArrayList<NameClassPattern>();
 
-  private NameClassItem _item;
+   private NameClassItem _item;
 
-  /**
-   * Creates a new choice pattern.
-   */
-  public ChoiceNamePattern()
-  {
-  }
+   /**
+    * Creates a new choice pattern.
+    */
+   public ChoiceNamePattern() {
+   }
 
-  /**
-   * Returns the number of children.
-   */
-  public int getSize()
-  {
-    return _patterns.size();
-  }
+   /**
+    * Returns the number of children.
+    */
+   public int getSize() {
+      return _patterns.size();
+   }
 
-  /**
-   * Returns the n-th child.
-   */
-  public NameClassPattern getChild(int i)
-  {
-    return _patterns.get(i);
-  }
-  
-  /**
-   * Adds an element.
-   */
-  public void addNameChild(NameClassPattern child)
-    throws RelaxException
-  {
-    if (child instanceof ChoiceNamePattern) {
-      ChoiceNamePattern list = (ChoiceNamePattern) child;
+   /**
+    * Returns the n-th child.
+    */
+   public NameClassPattern getChild(int i) {
+      return _patterns.get(i);
+   }
 
-      for (int i = 0; i < list.getSize(); i++)
-        addChild(list.getChild(i));
-      
-      return;
-    }
+   /**
+    * Adds an element.
+    */
+   public void addNameChild(NameClassPattern child)
+      throws RelaxException {
+      if (child instanceof ChoiceNamePattern) {
+         ChoiceNamePattern list = (ChoiceNamePattern) child;
 
-    if (! _patterns.contains(child))
-      _patterns.add(child);
-  }
+         for (int i = 0; i < list.getSize(); i++)
+            addChild(list.getChild(i));
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "choice";
-  }
-
-  /**
-   * Creates the production item.
-   */
-  public NameClassItem createNameItem()
-    throws RelaxException
-  {
-    if (_item == null) {
-      ChoiceNameItem item = new ChoiceNameItem();
-
-      for (int i = 0; i < _patterns.size(); i++) {
-        item.addItem(_patterns.get(i).createNameItem());
+         return;
       }
 
-      _item = item.getMin();
-    }
+      if (!_patterns.contains(child))
+         _patterns.add(child);
+   }
 
-    return _item;
-  }
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "choice";
+   }
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    CharBuffer cb = new CharBuffer();
+   /**
+    * Creates the production item.
+    */
+   public NameClassItem createNameItem()
+      throws RelaxException {
+      if (_item == null) {
+         ChoiceNameItem item = new ChoiceNameItem();
 
-    for (int i = 0; i < _patterns.size(); i++) {
-      if (i != 0)
-        cb.append(" | ");
-      cb.append(_patterns.get(i).toProduction());
-    }
-    
-    return cb.toString();
-  }
+         for (int i = 0; i < _patterns.size(); i++) {
+            item.addItem(_patterns.get(i).createNameItem());
+         }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
+         _item = item.getMin();
+      }
+
+      return _item;
+   }
+
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      CharBuffer cb = new CharBuffer();
+
+      for (int i = 0; i < _patterns.size(); i++) {
+         if (i != 0)
+            cb.append(" | ");
+         cb.append(_patterns.get(i).toProduction());
+      }
+
+      return cb.toString();
+   }
+
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof ChoiceNamePattern))
+         return false;
+
+      ChoiceNamePattern choice = (ChoiceNamePattern) o;
+
+      if (_patterns.size() != choice._patterns.size())
+         return false;
+
+      return isSubset(choice) && choice.isSubset(this);
+   }
+
+   private boolean isSubset(ChoiceNamePattern item) {
+      if (_patterns.size() != item._patterns.size())
+         return false;
+
+      for (int i = 0; i < _patterns.size(); i++) {
+         Pattern subPattern = _patterns.get(i);
+
+         if (!item._patterns.contains(subPattern))
+            return false;
+      }
+
       return true;
+   }
 
-    if (! (o instanceof ChoiceNamePattern))
-      return false;
-
-    ChoiceNamePattern choice = (ChoiceNamePattern) o;
-
-    if (_patterns.size() != choice._patterns.size())
-      return false;
-
-    return isSubset(choice) && choice.isSubset(this);
-  }
-
-  private boolean isSubset(ChoiceNamePattern item)
-  {
-    if (_patterns.size() != item._patterns.size())
-      return false;
-
-    for (int i = 0; i < _patterns.size(); i++) {
-      Pattern subPattern = _patterns.get(i);
-
-      if (! item._patterns.contains(subPattern))
-        return false;
-    }
-
-    return true;
-  }
-
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "ChoiceNamePattern" + _patterns;
-  }
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "ChoiceNamePattern" + _patterns;
+   }
 }
 

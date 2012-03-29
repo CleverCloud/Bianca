@@ -34,8 +34,8 @@ import com.clevercloud.bianca.annotation.ReadOnly;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.Expr;
-import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.bianca.function.AbstractFunction;
+import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 
 import java.util.HashSet;
@@ -55,16 +55,16 @@ public class ClassesModule extends AbstractBiancaModule {
     * Calls an object method.
     */
    public static Value call_user_method(Env env,
-           StringValue name,
-           Value obj,
-           Value[] args) {
+                                        StringValue name,
+                                        Value obj,
+                                        Value[] args) {
       if (obj.isObject()) {
          return obj.callMethod(env, name, args);
       } else {
          BiancaClass cls = env.findClass(obj.toString());
 
          return cls.callMethod(
-                 env, env.getThis(), name, name.hashCode(), args).copyReturn();
+            env, env.getThis(), name, name.hashCode(), args).copyReturn();
       }
    }
 
@@ -72,9 +72,9 @@ public class ClassesModule extends AbstractBiancaModule {
     * Calls a object method with arguments in an array.
     */
    public static Value call_user_method_array(Env env,
-           StringValue methodName,
-           Value obj,
-           ArrayValue params) {
+                                              StringValue methodName,
+                                              Value obj,
+                                              ArrayValue params) {
       Value[] args = params.valuesToArray();
 
       return call_user_method(env, methodName, obj, args);
@@ -84,8 +84,8 @@ public class ClassesModule extends AbstractBiancaModule {
     * returns true if the class exists.
     */
    public boolean class_exists(Env env,
-           String className,
-           @Optional("true") boolean useAutoload) {
+                               String className,
+                               @Optional("true") boolean useAutoload) {
       if (className == null) {
          return false;
       }
@@ -132,7 +132,6 @@ public class ClassesModule extends AbstractBiancaModule {
     * Returns an array of method names
     *
     * @param clss the name of the class, or an instance of a class
-    *
     * @return an array of method names
     */
    public static Value get_class_methods(Env env, Value cls) {
@@ -172,7 +171,6 @@ public class ClassesModule extends AbstractBiancaModule {
     * Returns an array of member names and values
     *
     * @param clss the name of the class, or an instance of a class
-    *
     * @return an array of member names and values
     */
    public static Value get_class_vars(Env env, Value obj) {
@@ -216,6 +214,7 @@ public class ClassesModule extends AbstractBiancaModule {
    }
 
    // TODO: get_declared_interfaces
+
    /**
     * Returns the object's variables
     */
@@ -274,8 +273,8 @@ public class ClassesModule extends AbstractBiancaModule {
     * Returns true if the class exists.
     */
    public boolean interface_exists(Env env,
-           String interfaceName,
-           @Optional("true") boolean useAutoload) {
+                                   String interfaceName,
+                                   @Optional("true") boolean useAutoload) {
       BiancaClass cl = env.findClass(interfaceName, useAutoload, true);
 
       // php/[03]9m0
@@ -300,8 +299,8 @@ public class ClassesModule extends AbstractBiancaModule {
     * Returns true if the object implements the given class.
     */
    public static boolean is_subclass_of(Env env,
-           @ReadOnly Value value,
-           String name) {
+                                        @ReadOnly Value value,
+                                        String name) {
       if (value instanceof StringValue) {
          BiancaClass cl = env.findClass(value.toString());
 
@@ -314,12 +313,12 @@ public class ClassesModule extends AbstractBiancaModule {
    /**
     * Returns true if the named method exists on the object.
     *
-    * @param obj the object to test
+    * @param obj        the object to test
     * @param methodName the name of the method
     */
    public static boolean method_exists(Env env,
-           Value obj,
-           StringValue methodName) {
+                                       Value obj,
+                                       StringValue methodName) {
       BiancaClass qClass = obj.getBiancaClass();
 
       if (qClass == null) {
@@ -337,8 +336,8 @@ public class ClassesModule extends AbstractBiancaModule {
     * Returns true if the named property exists on the object.
     */
    public static Value property_exists(Env env,
-           Value obj,
-           StringValue name) {
+                                       Value obj,
+                                       StringValue name) {
       BiancaClass cls;
 
       if (obj.isString()) {

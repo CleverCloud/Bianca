@@ -32,8 +32,8 @@ package com.clevercloud.bianca.lib;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.bianca.module.IniDefinition;
+import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.util.L10N;
 
 import java.math.BigDecimal;
@@ -102,14 +102,14 @@ public class BcmathModule extends AbstractBiancaModule {
 
    /**
     * Add two arbitrary precision numbers.
-    *
+    * <p/>
     * The optional scale indicates the number of decimal digits to include in
     * the result, the default is the value of a previous call to {@link #bcscale}
     * or the value of the ini variable "bcmath.scale".
     */
    public static String bcadd(Env env,
-           Value value1,
-           Value value2, @Optional("-1") int scale) {
+                              Value value1,
+                              Value value2, @Optional("-1") int scale) {
       scale = getScale(env, scale);
 
       BigDecimal bd1 = toBigDecimal(value1);
@@ -125,14 +125,14 @@ public class BcmathModule extends AbstractBiancaModule {
    /**
     * Compare two arbitrary precision numbers, return -1 if value 1 < value2,
     * 0 if value1 == value2, 1 if value1 > value2.
-    *
+    * <p/>
     * The optional scale indicates the number of decimal digits to include in
     * comparing the values, the default is the value of a previous call to
     * {@link #bcscale} or the value of the ini variable "bcmath.scale".
     */
    public static int bccomp(Env env,
-           Value value1,
-           Value value2, @Optional("-1") int scale) {
+                            Value value1,
+                            Value value2, @Optional("-1") int scale) {
       scale = getScale(env, scale);
 
       BigDecimal bd1 = toBigDecimal(value1);
@@ -146,15 +146,15 @@ public class BcmathModule extends AbstractBiancaModule {
 
    /**
     * Divide one arbitrary precision number (value1) by another (value2).
-    *
+    * <p/>
     * A division by zero results in a warning message and a return value of null.
-    *
+    * <p/>
     * The optional scale indicates the number of decimal digits to include in
     * the result, the default is the value of a previous call to {@link #bcscale}
     * or the value of the ini variable "bcmath.scale".
     */
    public static String bcdiv(Env env, Value value1,
-           Value value2, @Optional("-1") int scale) {
+                              Value value2, @Optional("-1") int scale) {
       scale = getScale(env, scale);
 
       BigDecimal bd1 = toBigDecimal(value1);
@@ -181,7 +181,7 @@ public class BcmathModule extends AbstractBiancaModule {
    /**
     * Return the modulus of an aribtrary precison number.
     * The returned number is always a whole number.
-    *
+    * <p/>
     * A modulus of 0 results in a division by zero warning message and a
     * return value of null.
     */
@@ -206,13 +206,13 @@ public class BcmathModule extends AbstractBiancaModule {
 
    /**
     * Multiply two arbitrary precision numbers.
-    *
+    * <p/>
     * The optional scale indicates the number of decimal digits to include in
     * the result, the default is the value of a previous call to {@link #bcscale}
     * or the value of the ini variable "bcmath.scale".
     */
    public static String bcmul(Env env, Value value1,
-           Value value2, @Optional("-1") int scale) {
+                              Value value2, @Optional("-1") int scale) {
       scale = getScale(env, scale);
 
       BigDecimal bd1 = toBigDecimal(value1);
@@ -237,15 +237,15 @@ public class BcmathModule extends AbstractBiancaModule {
 
    /**
     * Raise one arbitrary precision number (base) to the power of another (exp).
-    *
+    * <p/>
     * exp must be a whole number. Negative exp is supported.
-    *
+    * <p/>
     * The optional scale indicates the number of decimal digits to include in
     * the result, the default is the value of a previous call to {@link #bcscale}
     * or the value of the ini variable "bcmath.scale".
     */
    public static String bcpow(Env env, Value base, Value exp,
-           @Optional("-1") int scale) {
+                              @Optional("-1") int scale) {
       scale = getScale(env, scale);
 
       BigDecimal baseD = toBigDecimal(base);
@@ -261,8 +261,8 @@ public class BcmathModule extends AbstractBiancaModule {
    }
 
    private static BigDecimal bcpowImpl(BigDecimal base,
-           BigInteger exp,
-           int scale) {
+                                       BigInteger exp,
+                                       int scale) {
       if (exp.compareTo(BigInteger.ZERO) == 0) {
          return BigDecimal.ONE;
       }
@@ -304,19 +304,19 @@ public class BcmathModule extends AbstractBiancaModule {
     * Raise one arbitrary precision number (base) to the power of another (exp),
     * and then return the modulus.
     * The returned number is always a whole number.
-    *
+    * <p/>
     * exp must be a whole number. Negative exp is supported.
-    *
+    * <p/>
     * The optional scale indicates the number of decimal digits
     * to include in the pow calculation, the default is the value
     * of a previous call to {@link #bcscale}
     * or the value of the ini variable "bcmath.scale".
     */
    public static String bcpowmod(Env env,
-           BigDecimal base,
-           BigDecimal exp,
-           BigDecimal modulus,
-           @Optional("-1") int scale) {
+                                 BigDecimal base,
+                                 BigDecimal exp,
+                                 BigDecimal modulus,
+                                 @Optional("-1") int scale) {
       scale = getScale(env, scale);
 
       if (base.scale() != 0) {
@@ -344,7 +344,7 @@ public class BcmathModule extends AbstractBiancaModule {
     * Set the default scale to use for subsequent calls to bcmath functions.
     * The scale is the number of decimal points to include in the string that
     * results from bcmath calculations.
-    *
+    * <p/>
     * A default scale set with this function overrides the value of the
     * "bcmath.scale" ini variable.
     */
@@ -356,9 +356,9 @@ public class BcmathModule extends AbstractBiancaModule {
 
    /**
     * Return the square root of an arbitrary precision number.
-    *
+    * <p/>
     * A negative operand results in a warning message and a return value of null.
-    *
+    * <p/>
     * The optional scale indicates the number of decimal digits to include in
     * the result, the default is the value of a previous call to {@link #bcscale}
     * or the value of the ini variable "bcmath.scale".
@@ -436,13 +436,13 @@ public class BcmathModule extends AbstractBiancaModule {
 
    /**
     * Subtract arbitrary precision number (value2) from another (value1).
-    *
+    * <p/>
     * The optional scale indicates the number of decimal digits to include in
     * the result, the default is the value of a previous call to {@link #bcscale}
     * or the value of the ini variable "bcmath.scale".
     */
    public static String bcsub(Env env, Value value1,
-           Value value2, @Optional("-1") int scale) {
+                              Value value2, @Optional("-1") int scale) {
       scale = getScale(env, scale);
 
       BigDecimal bd1 = toBigDecimal(value1);
@@ -454,6 +454,7 @@ public class BcmathModule extends AbstractBiancaModule {
 
       return bd.toPlainString();
    }
+
    public static final IniDefinition INI_BCMATH_SCALE = _iniDefinitions.add(
-           "bcmath.scale", 0, PHP_INI_ALL);
+      "bcmath.scale", 0, PHP_INI_ALL);
 }

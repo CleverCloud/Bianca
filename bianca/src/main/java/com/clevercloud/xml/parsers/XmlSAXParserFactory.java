@@ -32,7 +32,6 @@ package com.clevercloud.xml.parsers;
 
 import com.clevercloud.xml.Xml;
 import com.clevercloud.xml.XmlParser;
-
 import org.xml.sax.Parser;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.XMLReader;
@@ -44,140 +43,123 @@ import javax.xml.parsers.SAXParserFactory;
  * JAXP SAX parser factory for strict XML parsing.
  */
 public class XmlSAXParserFactory extends SAXParserFactory {
-  private int _namespaces = -1;
-  private int _namespacePrefixes = -1;
-  private int _validation = -1;
+   private int _namespaces = -1;
+   private int _namespacePrefixes = -1;
+   private int _validation = -1;
 
-  public XmlSAXParserFactory()
-  {
-  }
-  
-  /**
-   * Creates a new SAX Parser
-   */
-  public SAXParser newSAXParser()
-  {
-    return new XmlSAXParser(this);
-  }
+   public XmlSAXParserFactory() {
+   }
 
-  public Object getProperty(String key)
-  {
-    return null;
-  }
+   /**
+    * Creates a new SAX Parser
+    */
+   public SAXParser newSAXParser() {
+      return new XmlSAXParser(this);
+   }
 
-  public void setProperty(String key, Object value)
-  {
-  }
-
-  public boolean getFeature(String key)
-  {
-    if (key.equals("http://xml.org/sax/features/namespaces"))
-      return isNamespaceAware();
-    else if (key.equals("http://xml.org/sax/features/namespace-prefixes"))
-      return isNamespacePrefixes();
-    else if (key.equals("http://xml.org/sax/features/validation"))
-      return _validation != 0;
-    else
-      return false;
-  }
-
-  public void setFeature(String key, boolean value)
-    throws SAXNotRecognizedException
-  {
-    if (key.equals("http://xml.org/sax/features/namespaces"))
-      _namespaces = value ? 1 : 0;
-    else if (key.equals("http://xml.org/sax/features/namespace-prefixes"))
-      _namespacePrefixes = value ? 1 : 0;
-    else if (key.equals("http://xml.org/sax/features/validation"))
-      _validation = value ? 1 : 0;
-    else {
-      // throw new SAXNotRecognizedException(key);
-    }
-  }
-
-  public boolean isNamespacePrefixes()
-  {
-    if (_namespacePrefixes >= 0)
-      return _namespacePrefixes == 1;
-    else if (_namespaces >= 0)
-      return _namespaces == 1;
-    else
-      return false;
-  }
-
-  public boolean isNamespaceAware()
-  {
-    if (_namespacePrefixes >= 0)
-      return true;
-    else if (_namespaces >= 0)
-      return _namespaces == 1;
-    else
-      return super.isNamespaceAware();
-  }
-
-  public class XmlSAXParser extends SAXParser {
-    private XmlSAXParserFactory _factory;
-    private XmlParser _parser;
-
-    XmlSAXParser(XmlSAXParserFactory factory)
-    {
-      _factory = factory;
-      _parser = new Xml();
-      _parser.setNamespaceAware(_factory.isNamespaceAware());
-      _parser.setNamespacePrefixes(_factory.isNamespacePrefixes());
-      // _parser.setValidating(_factory.isValidating());
-      _parser.setValidating(true);
-    }
-
-    public Object getProperty(String key)
-    {
+   public Object getProperty(String key) {
       return null;
-    }
+   }
 
-    public void setProperty(String key, Object value)
-    {
-    }
+   public void setProperty(String key, Object value) {
+   }
 
-    public Parser getParser()
-    {
-      return _parser;
-    }
+   public boolean getFeature(String key) {
+      if (key.equals("http://xml.org/sax/features/namespaces"))
+         return isNamespaceAware();
+      else if (key.equals("http://xml.org/sax/features/namespace-prefixes"))
+         return isNamespacePrefixes();
+      else if (key.equals("http://xml.org/sax/features/validation"))
+         return _validation != 0;
+      else
+         return false;
+   }
 
-    public XMLReader getXMLReader()
-    {
-      return _parser;
-    }
+   public void setFeature(String key, boolean value)
+      throws SAXNotRecognizedException {
+      if (key.equals("http://xml.org/sax/features/namespaces"))
+         _namespaces = value ? 1 : 0;
+      else if (key.equals("http://xml.org/sax/features/namespace-prefixes"))
+         _namespacePrefixes = value ? 1 : 0;
+      else if (key.equals("http://xml.org/sax/features/validation"))
+         _validation = value ? 1 : 0;
+      else {
+         // throw new SAXNotRecognizedException(key);
+      }
+   }
 
-    /**
-     * Returns true if the factory is namespace aware.
-     */
-    public boolean isNamespaceAware()
-    {
-      return _factory.isNamespaceAware();
-    }
+   public boolean isNamespacePrefixes() {
+      if (_namespacePrefixes >= 0)
+         return _namespacePrefixes == 1;
+      else if (_namespaces >= 0)
+         return _namespaces == 1;
+      else
+         return false;
+   }
 
-    /**
-     * true if the factory is namespace aware.
-     */
-    public void setNamespaceAware(boolean isAware)
-    {
-      _factory.setNamespaceAware(isAware);
-    }
-    
-    /**
-     * True if the factory is validating
-     */
-    public boolean isValidating()
-    {
-      return _factory.isValidating();
-    }
-    
-    /**
-     * True if the factory is validating
-     */
-    public void setValidating(boolean isValidating)
-    {
-      _factory.setValidating(isValidating);
-    }
-  }
+   public boolean isNamespaceAware() {
+      if (_namespacePrefixes >= 0)
+         return true;
+      else if (_namespaces >= 0)
+         return _namespaces == 1;
+      else
+         return super.isNamespaceAware();
+   }
+
+   public class XmlSAXParser extends SAXParser {
+      private XmlSAXParserFactory _factory;
+      private XmlParser _parser;
+
+      XmlSAXParser(XmlSAXParserFactory factory) {
+         _factory = factory;
+         _parser = new Xml();
+         _parser.setNamespaceAware(_factory.isNamespaceAware());
+         _parser.setNamespacePrefixes(_factory.isNamespacePrefixes());
+         // _parser.setValidating(_factory.isValidating());
+         _parser.setValidating(true);
+      }
+
+      public Object getProperty(String key) {
+         return null;
+      }
+
+      public void setProperty(String key, Object value) {
+      }
+
+      public Parser getParser() {
+         return _parser;
+      }
+
+      public XMLReader getXMLReader() {
+         return _parser;
+      }
+
+      /**
+       * Returns true if the factory is namespace aware.
+       */
+      public boolean isNamespaceAware() {
+         return _factory.isNamespaceAware();
+      }
+
+      /**
+       * true if the factory is namespace aware.
+       */
+      public void setNamespaceAware(boolean isAware) {
+         _factory.setNamespaceAware(isAware);
+      }
+
+      /**
+       * True if the factory is validating
+       */
+      public boolean isValidating() {
+         return _factory.isValidating();
+      }
+
+      /**
+       * True if the factory is validating
+       */
+      public void setValidating(boolean isValidating) {
+         _factory.setValidating(isValidating);
+      }
+   }
 }

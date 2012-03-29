@@ -43,13 +43,13 @@ public class JavaMapMarshal extends JavaMarshal {
    private static final L10N L = new L10N(JavaMarshal.class);
 
    public JavaMapMarshal(JavaClassDef def,
-           boolean isNotNull) {
+                         boolean isNotNull) {
       this(def, isNotNull, false);
    }
 
    public JavaMapMarshal(JavaClassDef def,
-           boolean isNotNull,
-           boolean isUnmarshalNullAsFalse) {
+                         boolean isNotNull,
+                         boolean isUnmarshalNullAsFalse) {
       super(def, isNotNull, isUnmarshalNullAsFalse);
    }
 
@@ -58,7 +58,7 @@ public class JavaMapMarshal extends JavaMarshal {
       if (!value.isset()) {
          if (_isNotNull) {
             env.warning(L.l("null is an unexpected argument, expected {0}",
-                    shortName(argClass)));
+               shortName(argClass)));
          }
 
          return null;
@@ -69,16 +69,16 @@ public class JavaMapMarshal extends JavaMarshal {
       if (obj == null) {
          if (_isNotNull) {
             env.warning(L.l("null is an unexpected argument, expected {0}",
-                    shortName(argClass)));
+               shortName(argClass)));
          }
 
          return null;
       } else if (!argClass.isAssignableFrom(obj.getClass())) {
          env.warning(L.l(
-                 "'{0}' of type '{1}' is an unexpected argument, expected {2}",
-                 value,
-                 shortName(value.getClass()),
-                 shortName(argClass)));
+            "'{0}' of type '{1}' is an unexpected argument, expected {2}",
+            value,
+            shortName(value.getClass()),
+            shortName(argClass)));
          return null;
       }
 
@@ -88,7 +88,7 @@ public class JavaMapMarshal extends JavaMarshal {
    @Override
    protected int getMarshalingCostImpl(Value argValue) {
       if (argValue instanceof JavaMapAdapter
-              && getExpectedClass().isAssignableFrom(argValue.toJavaObject().getClass())) {
+         && getExpectedClass().isAssignableFrom(argValue.toJavaObject().getClass())) {
          return Marshal.ZERO;
       } else if (argValue.isArray()) {
          return Marshal.THREE;

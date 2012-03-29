@@ -43,355 +43,322 @@ import java.util.NoSuchElementException;
  * Generates programs from patterns.
  */
 public class GroupItem extends Item {
-  protected final static L10N L = new L10N(GroupItem.class);
+   protected final static L10N L = new L10N(GroupItem.class);
 
-  private Item _first;
-  private Item _second;
+   private Item _first;
+   private Item _second;
 
-  private GroupItem(Item first, Item second)
-  {
-    _first = first;
-    _second = second;
-  }
+   private GroupItem(Item first, Item second) {
+      _first = first;
+      _second = second;
+   }
 
-  public static Item create(Item first, Item second)
-  {
-    if (first == null || second == null)
-      return null;
-    else if (first instanceof EmptyItem)
-      return second;
-    else if (second instanceof EmptyItem)
-      return first;
-    else if (first instanceof GroupItem) {
-      GroupItem firstSeq = (GroupItem) first;
-      
-      return create(firstSeq.getFirst(), create(firstSeq.getSecond(), second));
-    }
-    else if (first instanceof InElementItem) {
-      InElementItem firstElt = (InElementItem) first;
+   public static Item create(Item first, Item second) {
+      if (first == null || second == null)
+         return null;
+      else if (first instanceof EmptyItem)
+         return second;
+      else if (second instanceof EmptyItem)
+         return first;
+      else if (first instanceof GroupItem) {
+         GroupItem firstSeq = (GroupItem) first;
 
-      return InElementItem.create(firstElt.getFirst(),
-                                  create(firstElt.getSecond(), second));
-    }
-    else
-      return new GroupItem(first, second);
-  }
+         return create(firstSeq.getFirst(), create(firstSeq.getSecond(), second));
+      } else if (first instanceof InElementItem) {
+         InElementItem firstElt = (InElementItem) first;
 
-  Item getFirst()
-  {
-    return _first;
-  }
+         return InElementItem.create(firstElt.getFirst(),
+            create(firstElt.getSecond(), second));
+      } else
+         return new GroupItem(first, second);
+   }
 
-  Item getSecond()
-  {
-    return _second;
-  }
+   Item getFirst() {
+      return _first;
+   }
 
-  /**
-   * Returns the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-    _first.firstSet(set);
-    if (_first.allowEmpty())
-      _second.firstSet(set);
-  }
+   Item getSecond() {
+      return _second;
+   }
 
-  /**
-   * Adds to the first set the set of element names required.
-   */
-  public void requiredFirstSet(HashSet<QName> set)
-  {
-    if (! _first.allowEmpty())
-      _first.requiredFirstSet(set);
-    else
-      _second.requiredFirstSet(set);
-  }
-  
-  /**
-   * Return all possible child items or null
-   */
-  public Iterator<Item> getItemsIterator()
-  {
-    if ( _first == null && _second == null )
-      return emptyItemIterator();
+   /**
+    * Returns the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+      _first.firstSet(set);
+      if (_first.allowEmpty())
+         _second.firstSet(set);
+   }
 
-    return new Iterator<Item>() {
-      private int _cnt;
-
-      public boolean hasNext()
-      {
-        if (_cnt == 0)
-          return _first != null || _second != null;
-        else if (_cnt == 1)
-          return _first != null && _second != null;
-        else
-          return false;
-      }
-
-      public Item next()
-      {
-        if (!hasNext())
-          throw new NoSuchElementException();
-
-        if (_cnt++ == 0)
-          return _first != null ? _first : _second;
-        else
-          return _second;
-      }
-
-      public void remove()
-      {
-        throw new UnsupportedOperationException();
-      }
-    };
-  }
-
-
-  /**
-   * Returns the next item when an element of the given name is returned
-   *
-   * @param name the name of the element
-   * @param contItem the continuation item
-   *
-   * @return the program for handling the element
-   */
-  public Item startElement(QName name)
-    throws RelaxException
-  {
-    Item nextHead = _first.startElement(name);
-
-    Item tail = GroupItem.create(nextHead, _second);
-
-    if (_first.allowEmpty())
-      return ChoiceItem.create(tail, _second.startElement(name));
-    else
-      return tail;
-  }
-  
-  /**
-   * Returns the next item when some text data is available.
-   *
-   * @param string the text data
-   *
-   * @return the program for handling the element
-   */
-  @Override
-  public Item text(CharSequence string)
-    throws RelaxException
-  {
-    Item nextHead = _first.text(string);
-
-    Item tail = GroupItem.create(nextHead, _second);
-
-    if (_first.allowEmpty())
-      return ChoiceItem.create(tail, _second.text(string));
-    else
-      return tail;
-  }
-
-  /**
-   * Returns the attribute set, the set of attribute names possible.
-   */
-  public void attributeSet(HashSet<QName> set)
-  {
-    _first.attributeSet(set);
-    _second.attributeSet(set);
-  }
-  
-  /**
-   * Returns true if the attribute is allowed.
-   *
-   * @param name the name of the attribute
-   * @param value the value of the attribute
-   *
-   * @return true if the attribute is allowed
-   */
-  public boolean allowAttribute(QName name, String value)
-    throws RelaxException
-  {
-    return (_first.allowAttribute(name, value) ||
-            _second.allowAttribute(name, value));
-  }
-  
-  /**
-   * Sets an attribute.
-   *
-   * @param name the name of the attribute
-   * @param value the value of the attribute
-   *
-   * @return the program for handling the element
-   */
-  public Item setAttribute(QName name, String value)
-    throws RelaxException
-  {
-    Item first = _first.setAttribute(name, value);
-    Item second = _second.setAttribute(name, value);
-
-    if (first == _first && second == _second)
-      return this;
-    else if (first == null)
-      return second;
-    else if (second == null)
-      return first;
-    else
-      return create(first, second);
-  }
-
-  /**
-   * Returns the next item after the attributes end.
-   */
-  public Item attributeEnd()
-  {
-    Item first = _first.attributeEnd();
-    Item second = _second.attributeEnd();
-
-    if (first == null || second == null)
-      return null;
-    else if (first == _first && second == _second)
-      return this;
-    else
-      return create(first, second);
-  }
-  
-  /**
-   * Allows empty if both allow empty.
-   */
-  public boolean allowEmpty()
-  {
-    return _first.allowEmpty() && _second.allowEmpty();
-  }
-  
-  /**
-   * Returns true if the element is allowed somewhere in the item.
-   * allowsElement is used for error messages to give more information
-   * in cases of order dependency.
-   *
-   * @param name the name of the element
-   *
-   * @return true if the element is allowed somewhere
-   */
-  public boolean allowsElement(QName name)
-  {
-    return _first.allowsElement(name) || _second.allowsElement(name);
-  }
-
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(int depth)
-  {
-    if (_second instanceof EmptyItem)
-      return _first.toSyntaxDescription(depth);
-
-    ArrayList<Item> items = new ArrayList<Item>();
-
-    Item item = this;
-    while (item instanceof GroupItem) {
-      GroupItem groupItem = (GroupItem) item;
-
-      items.add(groupItem._first);
-      
-      item = groupItem._second;
-    }
-
-    if (item != null && ! (item instanceof EmptyItem))
-      items.add(item);
-    
-    CharBuffer cb = CharBuffer.allocate();
-
-    cb.append('(');
-
-    boolean isSimple = true;
-    for (int i = 0; i < items.size(); i++) {
-      item = items.get(i);
-
-      if (i == 0) {
-        cb.append(item.toSyntaxDescription(depth + 1));
-        isSimple = item.isSimpleSyntax();
-      }
+   /**
+    * Adds to the first set the set of element names required.
+    */
+   public void requiredFirstSet(HashSet<QName> set) {
+      if (!_first.allowEmpty())
+         _first.requiredFirstSet(set);
       else
-        isSimple = addSyntaxItem(cb, item, depth, isSimple);
+         _second.requiredFirstSet(set);
+   }
 
-      if (i + 1 < items.size()) {
-        Item next = items.get(i + 1);
+   /**
+    * Return all possible child items or null
+    */
+   public Iterator<Item> getItemsIterator() {
+      if (_first == null && _second == null)
+         return emptyItemIterator();
 
-        if (next instanceof ZeroOrMoreItem) {
-          ZeroOrMoreItem starItem = (ZeroOrMoreItem) next;
+      return new Iterator<Item>() {
+         private int _cnt;
 
-          if (starItem.getItem().equals(item)) {
-            cb.append("+");
-            i++;
+         public boolean hasNext() {
+            if (_cnt == 0)
+               return _first != null || _second != null;
+            else if (_cnt == 1)
+               return _first != null && _second != null;
+            else
+               return false;
+         }
 
-            if (i == 1 && i == items.size() - 1) {
-              cb.delete(0, 1);
+         public Item next() {
+            if (!hasNext())
+               throw new NoSuchElementException();
 
-              return cb.close();
-            }
-          }
-        }
+            if (_cnt++ == 0)
+               return _first != null ? _first : _second;
+            else
+               return _second;
+         }
+
+         public void remove() {
+            throw new UnsupportedOperationException();
+         }
+      };
+   }
+
+
+   /**
+    * Returns the next item when an element of the given name is returned
+    *
+    * @param name     the name of the element
+    * @param contItem the continuation item
+    * @return the program for handling the element
+    */
+   public Item startElement(QName name)
+      throws RelaxException {
+      Item nextHead = _first.startElement(name);
+
+      Item tail = GroupItem.create(nextHead, _second);
+
+      if (_first.allowEmpty())
+         return ChoiceItem.create(tail, _second.startElement(name));
+      else
+         return tail;
+   }
+
+   /**
+    * Returns the next item when some text data is available.
+    *
+    * @param string the text data
+    * @return the program for handling the element
+    */
+   @Override
+   public Item text(CharSequence string)
+      throws RelaxException {
+      Item nextHead = _first.text(string);
+
+      Item tail = GroupItem.create(nextHead, _second);
+
+      if (_first.allowEmpty())
+         return ChoiceItem.create(tail, _second.text(string));
+      else
+         return tail;
+   }
+
+   /**
+    * Returns the attribute set, the set of attribute names possible.
+    */
+   public void attributeSet(HashSet<QName> set) {
+      _first.attributeSet(set);
+      _second.attributeSet(set);
+   }
+
+   /**
+    * Returns true if the attribute is allowed.
+    *
+    * @param name  the name of the attribute
+    * @param value the value of the attribute
+    * @return true if the attribute is allowed
+    */
+   public boolean allowAttribute(QName name, String value)
+      throws RelaxException {
+      return (_first.allowAttribute(name, value) ||
+         _second.allowAttribute(name, value));
+   }
+
+   /**
+    * Sets an attribute.
+    *
+    * @param name  the name of the attribute
+    * @param value the value of the attribute
+    * @return the program for handling the element
+    */
+   public Item setAttribute(QName name, String value)
+      throws RelaxException {
+      Item first = _first.setAttribute(name, value);
+      Item second = _second.setAttribute(name, value);
+
+      if (first == _first && second == _second)
+         return this;
+      else if (first == null)
+         return second;
+      else if (second == null)
+         return first;
+      else
+         return create(first, second);
+   }
+
+   /**
+    * Returns the next item after the attributes end.
+    */
+   public Item attributeEnd() {
+      Item first = _first.attributeEnd();
+      Item second = _second.attributeEnd();
+
+      if (first == null || second == null)
+         return null;
+      else if (first == _first && second == _second)
+         return this;
+      else
+         return create(first, second);
+   }
+
+   /**
+    * Allows empty if both allow empty.
+    */
+   public boolean allowEmpty() {
+      return _first.allowEmpty() && _second.allowEmpty();
+   }
+
+   /**
+    * Returns true if the element is allowed somewhere in the item.
+    * allowsElement is used for error messages to give more information
+    * in cases of order dependency.
+    *
+    * @param name the name of the element
+    * @return true if the element is allowed somewhere
+    */
+   public boolean allowsElement(QName name) {
+      return _first.allowsElement(name) || _second.allowsElement(name);
+   }
+
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(int depth) {
+      if (_second instanceof EmptyItem)
+         return _first.toSyntaxDescription(depth);
+
+      ArrayList<Item> items = new ArrayList<Item>();
+
+      Item item = this;
+      while (item instanceof GroupItem) {
+         GroupItem groupItem = (GroupItem) item;
+
+         items.add(groupItem._first);
+
+         item = groupItem._second;
       }
-    }
 
-    cb.append(')');
-    
-    return cb.close();
-  }
+      if (item != null && !(item instanceof EmptyItem))
+         items.add(item);
 
-  /**
-   * Adds an item to the description.
-   */
-  private boolean addSyntaxItem(CharBuffer cb, Item item,
-                                int depth, boolean isSimple)
-  {
-    if (! item.isSimpleSyntax())
-      isSimple = false;
+      CharBuffer cb = CharBuffer.allocate();
 
-    if (isSimple) {
-      cb.append(", ");
-    }
-    else {
-      cb.append(",");
-      addSyntaxNewline(cb, depth + 1);
-    }
-      
-    cb.append(item.toSyntaxDescription(depth + 1));
-    
-    return isSimple;
-  }
+      cb.append('(');
 
-  /**
-   * Returns true for an element with simple syntax.
-   */
-  protected boolean isSimpleSyntax()
-  {
-    return (_second instanceof EmptyItem) && _first.isSimpleSyntax();
-  }
+      boolean isSimple = true;
+      for (int i = 0; i < items.size(); i++) {
+         item = items.get(i);
 
-  /**
-   * Returns the hash code for the empty item.
-   */
-  public int hashCode()
-  {
-    return _first.hashCode() * 65521 + _second.hashCode();
-  }
+         if (i == 0) {
+            cb.append(item.toSyntaxDescription(depth + 1));
+            isSimple = item.isSimpleSyntax();
+         } else
+            isSimple = addSyntaxItem(cb, item, depth, isSimple);
 
-  /**
-   * Returns true if the object is an empty item.
-   */
-  public boolean equals(Object o)
-  {
-    if (! (o instanceof GroupItem))
-      return false;
+         if (i + 1 < items.size()) {
+            Item next = items.get(i + 1);
 
-    GroupItem seq = (GroupItem) o;
+            if (next instanceof ZeroOrMoreItem) {
+               ZeroOrMoreItem starItem = (ZeroOrMoreItem) next;
 
-    return _first.equals(seq._first) && _second.equals(seq._second);
-  }
+               if (starItem.getItem().equals(item)) {
+                  cb.append("+");
+                  i++;
 
-  public String toString()
-  {
-    return "GroupItem[" + _first + ", " + _second + "]";
-  }
+                  if (i == 1 && i == items.size() - 1) {
+                     cb.delete(0, 1);
+
+                     return cb.close();
+                  }
+               }
+            }
+         }
+      }
+
+      cb.append(')');
+
+      return cb.close();
+   }
+
+   /**
+    * Adds an item to the description.
+    */
+   private boolean addSyntaxItem(CharBuffer cb, Item item,
+                                 int depth, boolean isSimple) {
+      if (!item.isSimpleSyntax())
+         isSimple = false;
+
+      if (isSimple) {
+         cb.append(", ");
+      } else {
+         cb.append(",");
+         addSyntaxNewline(cb, depth + 1);
+      }
+
+      cb.append(item.toSyntaxDescription(depth + 1));
+
+      return isSimple;
+   }
+
+   /**
+    * Returns true for an element with simple syntax.
+    */
+   protected boolean isSimpleSyntax() {
+      return (_second instanceof EmptyItem) && _first.isSimpleSyntax();
+   }
+
+   /**
+    * Returns the hash code for the empty item.
+    */
+   public int hashCode() {
+      return _first.hashCode() * 65521 + _second.hashCode();
+   }
+
+   /**
+    * Returns true if the object is an empty item.
+    */
+   public boolean equals(Object o) {
+      if (!(o instanceof GroupItem))
+         return false;
+
+      GroupItem seq = (GroupItem) o;
+
+      return _first.equals(seq._first) && _second.equals(seq._second);
+   }
+
+   public String toString() {
+      return "GroupItem[" + _first + ", " + _second + "]";
+   }
 }
 

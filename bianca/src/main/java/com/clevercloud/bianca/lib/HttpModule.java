@@ -62,9 +62,9 @@ public class HttpModule extends AbstractBiancaModule {
     * Adds a header.
     */
    public static Value header(Env env,
-           StringValue headerStr,
-           @Optional("true") boolean replace,
-           @Optional long httpResponseCode) {
+                              StringValue headerStr,
+                              @Optional("true") boolean replace,
+                              @Optional long httpResponseCode) {
       HttpServletResponse res = env.getResponse();
 
       if (res == null) {
@@ -155,7 +155,7 @@ public class HttpModule extends AbstractBiancaModule {
          // colon separated "key: value" pairs.
 
          if (header.equals("Not Modified")
-                 || header.equals("No Content")) {
+            || header.equals("No Content")) {
             // php/1b0(j|k|l|m)
 
             if (httpResponseCode != 0) {
@@ -187,8 +187,8 @@ public class HttpModule extends AbstractBiancaModule {
     * Return true if the headers have been sent.
     */
    public static boolean headers_sent(Env env,
-           @Optional @Reference Value file,
-           @Optional @Reference Value line) {
+                                      @Optional @Reference Value file,
+                                      @Optional @Reference Value line) {
       HttpServletResponse res = env.getResponse();
 
       return res.isCommitted();
@@ -198,13 +198,13 @@ public class HttpModule extends AbstractBiancaModule {
     * Sets a cookie
     */
    public static boolean setcookie(Env env,
-           String name,
-           @Optional String value,
-           @Optional long expire,
-           @Optional String path,
-           @Optional String domain,
-           @Optional boolean secure,
-           @Optional boolean httpOnly) {
+                                   String name,
+                                   @Optional String value,
+                                   @Optional long expire,
+                                   @Optional String path,
+                                   @Optional String domain,
+                                   @Optional boolean secure,
+                                   @Optional boolean httpOnly) {
       long now = env.getCurrentTime();
 
       if (value == null || value.equals("")) {
@@ -218,11 +218,11 @@ public class HttpModule extends AbstractBiancaModule {
          char ch = value.charAt(i);
 
          if ('0' <= ch && ch <= '9'
-                 || 'a' <= ch && ch <= 'z'
-                 || 'A' <= ch && ch <= 'Z'
-                 || ch == '-'
-                 || ch == '.'
-                 || ch == '_') {
+            || 'a' <= ch && ch <= 'z'
+            || 'A' <= ch && ch <= 'Z'
+            || ch == '-'
+            || ch == '.'
+            || ch == '_') {
             sb.append(ch);
          } else if (ch == ' ') {
             sb.append('+');

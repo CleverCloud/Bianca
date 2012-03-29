@@ -40,156 +40,145 @@ import java.util.HashSet;
  * Generates programs from patterns.
  */
 public class ChoiceNameItem extends NameClassItem {
-  protected final static L10N L = new L10N(ChoiceNameItem.class);
+   protected final static L10N L = new L10N(ChoiceNameItem.class);
 
-  private ArrayList<NameClassItem> _items = new ArrayList<NameClassItem>();
+   private ArrayList<NameClassItem> _items = new ArrayList<NameClassItem>();
 
-  public ChoiceNameItem()
-  {
-  }
+   public ChoiceNameItem() {
+   }
 
-  public static NameClassItem create(NameClassItem left, NameClassItem right)
-  {
-    ChoiceNameItem choice = new ChoiceNameItem();
-    choice.addItem(left);
-    choice.addItem(right);
+   public static NameClassItem create(NameClassItem left, NameClassItem right) {
+      ChoiceNameItem choice = new ChoiceNameItem();
+      choice.addItem(left);
+      choice.addItem(right);
 
-    return choice.getMin();
-  }
+      return choice.getMin();
+   }
 
-  public void addItem(NameClassItem item)
-  {
-    if (item == null)
-      return;
-    else if (item instanceof ChoiceNameItem) {
-      ChoiceNameItem choice = (ChoiceNameItem) item;
+   public void addItem(NameClassItem item) {
+      if (item == null)
+         return;
+      else if (item instanceof ChoiceNameItem) {
+         ChoiceNameItem choice = (ChoiceNameItem) item;
 
-      for (int i = 0; i < choice._items.size(); i++)
-        addItem(choice._items.get(i));
+         for (int i = 0; i < choice._items.size(); i++)
+            addItem(choice._items.get(i));
 
-      return;
-    }
+         return;
+      }
 
-    for (int i = 0; i < _items.size(); i++) {
-      NameClassItem subItem = _items.get(i);
+      for (int i = 0; i < _items.size(); i++) {
+         NameClassItem subItem = _items.get(i);
 
-      if (item.equals(subItem))
-        return;
-    }
+         if (item.equals(subItem))
+            return;
+      }
 
-    _items.add(item);
-  }
+      _items.add(item);
+   }
 
-  public NameClassItem getMin()
-  {
-    if (_items.size() == 0)
-      return null;
-    else if (_items.size() == 1)
-      return _items.get(0);
-    else
-      return this;
-  }
+   public NameClassItem getMin() {
+      if (_items.size() == 0)
+         return null;
+      else if (_items.size() == 1)
+         return _items.get(0);
+      else
+         return this;
+   }
 
-  /**
-   * Returns the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-    for (int i = 0; i < _items.size(); i++)
-      _items.get(i).firstSet(set);
-  }
-  
-  /**
-   * Allows empty if both allow empty.
-   */
-  public boolean matches(QName name)
-  {
-    for (int i = 0; i < _items.size(); i++)
-      if (_items.get(i).matches(name))
-        return true;
+   /**
+    * Returns the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+      for (int i = 0; i < _items.size(); i++)
+         _items.get(i).firstSet(set);
+   }
 
-    return false;
-  }
+   /**
+    * Allows empty if both allow empty.
+    */
+   public boolean matches(QName name) {
+      for (int i = 0; i < _items.size(); i++)
+         if (_items.get(i).matches(name))
+            return true;
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(String prefix)
-  {
-    CharBuffer cb = new CharBuffer();
+      return false;
+   }
 
-    cb.append("(");
-    
-    for (int i = 0; i < _items.size(); i++) {
-      if (i != 0)
-        cb.append(" | ");
-      
-      cb.append(_items.get(i).toSyntaxDescription(prefix));
-    }
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(String prefix) {
+      CharBuffer cb = new CharBuffer();
 
-    cb.append(")");
+      cb.append("(");
 
-    return cb.toString();
-  }
+      for (int i = 0; i < _items.size(); i++) {
+         if (i != 0)
+            cb.append(" | ");
 
-  /**
-   * Returns the hash code for the empty item.
-   */
-  public int hashCode()
-  {
-    int hash = 37;
+         cb.append(_items.get(i).toSyntaxDescription(prefix));
+      }
 
-    for (int i = 0; i < _items.size(); i++)
-      hash += _items.get(i).hashCode();
+      cb.append(")");
 
-    return hash;
-  }
+      return cb.toString();
+   }
 
-  /**
-   * Returns true if the object is an empty item.
-   */
-  public boolean equals(Object o)
-  {
-    if (this == o)
+   /**
+    * Returns the hash code for the empty item.
+    */
+   public int hashCode() {
+      int hash = 37;
+
+      for (int i = 0; i < _items.size(); i++)
+         hash += _items.get(i).hashCode();
+
+      return hash;
+   }
+
+   /**
+    * Returns true if the object is an empty item.
+    */
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof ChoiceNameItem))
+         return false;
+
+      ChoiceNameItem choice = (ChoiceNameItem) o;
+
+      return isSubset(choice) && choice.isSubset(this);
+   }
+
+   private boolean isSubset(ChoiceNameItem item) {
+      if (_items.size() != item._items.size())
+         return false;
+
+      for (int i = 0; i < _items.size(); i++) {
+         NameClassItem subItem = _items.get(i);
+
+         if (!item._items.contains(subItem))
+            return false;
+      }
+
       return true;
-    
-    if (! (o instanceof ChoiceNameItem))
-      return false;
+   }
 
-    ChoiceNameItem choice = (ChoiceNameItem) o;
+   public String toString() {
+      StringBuffer sb = new StringBuffer();
 
-    return isSubset(choice) && choice.isSubset(this);
-  }
+      sb.append("ChoiceNameItem[");
+      for (int i = 0; i < _items.size(); i++) {
+         if (i != 0)
+            sb.append(", ");
+         sb.append(_items.get(i));
+      }
 
-  private boolean isSubset(ChoiceNameItem item)
-  {
-    if (_items.size() != item._items.size())
-      return false;
+      sb.append("]");
 
-    for (int i = 0; i < _items.size(); i++) {
-      NameClassItem subItem = _items.get(i);
-
-      if (! item._items.contains(subItem))
-        return false;
-    }
-
-    return true;
-  }
-
-  public String toString()
-  {
-    StringBuffer sb = new StringBuffer();
-
-    sb.append("ChoiceNameItem[");
-    for (int i = 0; i < _items.size(); i++) {
-      if (i != 0)
-        sb.append(", ");
-      sb.append(_items.get(i));
-    }
-
-    sb.append("]");
-
-    return sb.toString();
-  }
+      return sb.toString();
+   }
 }
 

@@ -36,7 +36,7 @@ import java.io.Serializable;
  * Represents a PHP null value, used for
  */
 public class NullThisValue extends NullValue
-        implements Serializable {
+   implements Serializable {
 
    public static final NullThisValue NULLTHIS = new NullThisValue();
 

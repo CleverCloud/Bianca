@@ -31,7 +31,6 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
@@ -39,109 +38,102 @@ import org.w3c.dom.Node;
  * maps to a namespace.
  */
 public class NSNamePattern extends AbstractPattern {
-  private NSNamePattern _match;
-  
-  private String _namespace;
-  private String _local;
-  private int _nodeType;
+   private NSNamePattern _match;
 
-  /**
-   * Creates the namespace pattern.
-   *
-   * @param parent the parent pattern.
-   * @param namespace the node's namespace URL.
-   * @param local the node's local name.
-   * @param nodeType the node type to match.
-   */
-  public NSNamePattern(AbstractPattern parent, String namespace, String local,
-                       int nodeType)
-  {
-    super(parent);
+   private String _namespace;
+   private String _local;
+   private int _nodeType;
 
-    _nodeType = nodeType;
+   /**
+    * Creates the namespace pattern.
+    *
+    * @param parent    the parent pattern.
+    * @param namespace the node's namespace URL.
+    * @param local     the node's local name.
+    * @param nodeType  the node type to match.
+    */
+   public NSNamePattern(AbstractPattern parent, String namespace, String local,
+                        int nodeType) {
+      super(parent);
 
-    if (namespace != null)
-      _namespace = namespace.intern();
-    else
-      _namespace = "";
-    
-    _local = local.intern();
-  }
+      _nodeType = nodeType;
 
-  /**
-   * Nodes have a higher default priority.
-   */
-  public double getPriority()
-  {
-    return 0;
-  }
+      if (namespace != null)
+         _namespace = namespace.intern();
+      else
+         _namespace = "";
 
-  /**
-   * Matches if the namespace matches and the local name matches.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true if the node matches
-   */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
-      return false;
+      _local = local.intern();
+   }
 
-    if (node.getNodeType() != _nodeType)
-      return false;
+   /**
+    * Nodes have a higher default priority.
+    */
+   public double getPriority() {
+      return 0;
+   }
 
-    String uri = node.getNamespaceURI();
-    if (uri == null || ! node.getNamespaceURI().equals(_namespace))
-      return false;
-    
-    else if (! node.getLocalName().equals(_local))
-      return false;
+   /**
+    * Matches if the namespace matches and the local name matches.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true if the node matches
+    */
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         return false;
 
-    else if (_parent != null && ! _parent.match(node, env))
-      return false;
+      if (node.getNodeType() != _nodeType)
+         return false;
 
-    return true;
-  }
+      String uri = node.getNamespaceURI();
+      if (uri == null || !node.getNamespaceURI().equals(_namespace))
+         return false;
 
-  /**
-   * Copies the position (non-axis) portion of the pattern.
-   */
-  public AbstractPattern copyPosition()
-  {
-    if (_match == null) {
-      AbstractPattern parent = null;
-      
-      if (_parent != null)
-        parent = _parent.copyPosition();
-      
-      _match = new NSNamePattern(parent, _namespace, _local, _nodeType);
-    }
-    
-    return _match;
-  }
+      else if (!node.getLocalName().equals(_local))
+         return false;
 
-  /**
-   * Returns true if the two patterns are equal.
-   */
-  public boolean equals(Object b)
-  {
-    if (! (b instanceof NSNamePattern))
-      return false;
+      else if (_parent != null && !_parent.match(node, env))
+         return false;
 
-    NSNamePattern bPattern = (NSNamePattern) b;
-    
-    return (_nodeType == bPattern._nodeType
-            && _local.equals(bPattern._local)
-            && _namespace.equals(bPattern._namespace)
-            && (_parent == bPattern._parent
-                || (_parent != null && _parent.equals(bPattern._parent))));
-  }
+      return true;
+   }
 
-  public String toString()
-  {
-    return _parent + "{" + _namespace + "}" + _local;
-  }
+   /**
+    * Copies the position (non-axis) portion of the pattern.
+    */
+   public AbstractPattern copyPosition() {
+      if (_match == null) {
+         AbstractPattern parent = null;
+
+         if (_parent != null)
+            parent = _parent.copyPosition();
+
+         _match = new NSNamePattern(parent, _namespace, _local, _nodeType);
+      }
+
+      return _match;
+   }
+
+   /**
+    * Returns true if the two patterns are equal.
+    */
+   public boolean equals(Object b) {
+      if (!(b instanceof NSNamePattern))
+         return false;
+
+      NSNamePattern bPattern = (NSNamePattern) b;
+
+      return (_nodeType == bPattern._nodeType
+         && _local.equals(bPattern._local)
+         && _namespace.equals(bPattern._namespace)
+         && (_parent == bPattern._parent
+         || (_parent != null && _parent.equals(bPattern._parent))));
+   }
+
+   public String toString() {
+      return _parent + "{" + _namespace + "}" + _local;
+   }
 }

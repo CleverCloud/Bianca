@@ -37,7 +37,7 @@ import java.io.Serializable;
  * Represents a Bianca java value representing a PHP resource value.
  */
 public class JavaResourceValue extends JavaValue
-        implements Serializable {
+   implements Serializable {
 
    public JavaResourceValue(Env env, Object object, JavaClassDef def) {
       super(env, object, def);

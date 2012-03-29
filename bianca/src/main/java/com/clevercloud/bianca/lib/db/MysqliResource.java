@@ -52,12 +52,12 @@ public class MysqliResource extends Mysqli {
     * It can be invoked by PHP or and by Java code.
     */
    public MysqliResource(Env env,
-           @Optional("localhost") StringValue host,
-           @Optional StringValue user,
-           @Optional StringValue password,
-           @Optional String db,
-           @Optional("3306") int port,
-           @Optional StringValue socket) {
+                         @Optional("localhost") StringValue host,
+                         @Optional StringValue user,
+                         @Optional StringValue password,
+                         @Optional String db,
+                         @Optional("3306") int port,
+                         @Optional StringValue socket) {
       super(env, host, user, password, db, port, socket);
    }
 
@@ -68,20 +68,20 @@ public class MysqliResource extends Mysqli {
     * arguments not available in the mysqli constructor.
     */
    MysqliResource(Env env,
-           String host,
-           String user,
-           String password,
-           String db,
-           int port,
-           String socket,
-           int flags,
-           String driver,
-           String url,
-           boolean isNewLink) {
+                  String host,
+                  String user,
+                  String password,
+                  String db,
+                  int port,
+                  String socket,
+                  int flags,
+                  String driver,
+                  String url,
+                  boolean isNewLink) {
       super(
-              env,
-              host, user, password,
-              db, port, socket, flags, driver, url, isNewLink);
+         env,
+         host, user, password,
+         db, port, socket, flags, driver, url, isNewLink);
    }
 
    protected MysqliResource(Env env) {

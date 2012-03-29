@@ -31,7 +31,6 @@ package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.EnvCleanup;
-
 import com.clevercloud.bianca.lib.file.AbstractBinaryOutput;
 import com.clevercloud.bianca.lib.file.PopenOutput;
 import com.clevercloud.vfs.VfsStream;
@@ -46,14 +45,14 @@ import java.util.logging.Logger;
  * Represents an output stream for a proc_open process.
  */
 public class ProcOpenOutput extends AbstractBinaryOutput
-        implements EnvCleanup {
+   implements EnvCleanup {
 
    private static final Logger log = Logger.getLogger(PopenOutput.class.getName());
    private Env _env;
    private WriteStream _os;
 
    public ProcOpenOutput(Env env, OutputStream out)
-           throws IOException {
+      throws IOException {
       _env = env;
 
       _env.addCleanup(this);
@@ -74,7 +73,7 @@ public class ProcOpenOutput extends AbstractBinaryOutput
     */
    @Override
    public void print(char v)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.print(v);
       }
@@ -85,7 +84,7 @@ public class ProcOpenOutput extends AbstractBinaryOutput
     */
    @Override
    public void print(String v)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.print(v);
       }
@@ -96,7 +95,7 @@ public class ProcOpenOutput extends AbstractBinaryOutput
     */
    @Override
    public void write(int ch)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.write(ch);
       }
@@ -107,7 +106,7 @@ public class ProcOpenOutput extends AbstractBinaryOutput
     */
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_os != null) {
          _os.write(buffer, offset, length);
       }
@@ -164,6 +163,7 @@ public class ProcOpenOutput extends AbstractBinaryOutput
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override

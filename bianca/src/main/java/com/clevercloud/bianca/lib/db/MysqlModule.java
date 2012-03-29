@@ -34,16 +34,11 @@ import com.clevercloud.bianca.annotation.NotNull;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.Log;
 
-import java.sql.Connection;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -111,10 +106,10 @@ public class MysqlModule extends AbstractBiancaModule {
     * This function is deprecated and was removed from PHP in PHP 3.0.14.
     */
    public static boolean mysql_change_user(Env env,
-           StringValue user,
-           StringValue pass,
-           @Optional StringValue database,
-           @Optional Mysqli conn) {
+                                           StringValue user,
+                                           StringValue pass,
+                                           @Optional StringValue database,
+                                           @Optional Mysqli conn) {
       return false;
    }
 
@@ -122,7 +117,7 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns the client encoding
     */
    public static StringValue mysql_client_encoding(
-           Env env, @Optional Mysqli conn) {
+      Env env, @Optional Mysqli conn) {
       if (conn == null) {
          conn = getConnection(env);
       }
@@ -159,7 +154,7 @@ public class MysqlModule extends AbstractBiancaModule {
          return true;
       } else {
          env.warning(
-                 L.l("connection is either not connected or is already closed"));
+            L.l("connection is either not connected or is already closed"));
 
          return false;
       }
@@ -169,8 +164,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Creates a database.
     */
    public static boolean mysql_create_db(Env env,
-           @NotNull StringValue name,
-           @Optional Mysqli conn) {
+                                         @NotNull StringValue name,
+                                         @Optional Mysqli conn) {
       if (name.length() == 0) {
          return false;
       }
@@ -211,8 +206,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * specified row number, 0 based.
     */
    public static boolean mysql_data_seek(Env env,
-           @NotNull MysqliResult result,
-           int rowNumber) {
+                                         @NotNull MysqliResult result,
+                                         int rowNumber) {
       if (result == null) {
          return false;
       }
@@ -221,9 +216,9 @@ public class MysqlModule extends AbstractBiancaModule {
          return true;
       } else {
          env.warning(
-                 L.l("Offset {0} is invalid for MySQL "
-                 + "(or the query data is unbuffered)",
-                 rowNumber));
+            L.l("Offset {0} is invalid for MySQL "
+               + "(or the query data is unbuffered)",
+               rowNumber));
          return false;
       }
    }
@@ -232,9 +227,9 @@ public class MysqlModule extends AbstractBiancaModule {
     * Retrieves the database name after a call to mysql_list_dbs()
     */
    public static Value mysql_db_name(Env env,
-           @NotNull MysqliResult result,
-           int row,
-           @Optional("0") Value field) {
+                                     @NotNull MysqliResult result,
+                                     int row,
+                                     @Optional("0") Value field) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -246,19 +241,19 @@ public class MysqlModule extends AbstractBiancaModule {
     * Deprecated alias for mysql_db_name
     */
    public static Value mysql_dbname(Env env,
-           @NotNull MysqliResult result,
-           int row) {
+                                    @NotNull MysqliResult result,
+                                    int row) {
       return mysql_db_name(env, result, row,
-              env.createString("0"));
+         env.createString("0"));
    }
 
    /**
     * Returns the value of one field in the result set. FALSE on failure.
     */
    public static Value mysql_result(Env env,
-           @NotNull MysqliResult result,
-           int row,
-           @Optional("0") Value field) {
+                                    @NotNull MysqliResult result,
+                                    int row,
+                                    @Optional("0") Value field) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -270,15 +265,15 @@ public class MysqlModule extends AbstractBiancaModule {
     * Drops a database.
     */
    public static boolean mysql_drop_db(Env env,
-           @NotNull StringValue databaseName,
-           @Optional Mysqli conn) {
+                                       @NotNull StringValue databaseName,
+                                       @Optional Mysqli conn) {
       if (databaseName.length() == 0) {
          return false;
       }
 
       Value value = mysql_query(env,
-              env.createString("DROP DATABASE " + databaseName),
-              conn);
+         env.createString("DROP DATABASE " + databaseName),
+         conn);
 
       return (value != null && value.toBoolean());
    }
@@ -287,8 +282,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Deprecated alias for mysql_drop_db.
     */
    public static boolean mysql_dropdb(Env env,
-           @NotNull StringValue databaseName,
-           @Optional Mysqli conn) {
+                                      @NotNull StringValue databaseName,
+                                      @Optional Mysqli conn) {
       return mysql_drop_db(env, databaseName, conn);
    }
 
@@ -327,9 +322,8 @@ public class MysqlModule extends AbstractBiancaModule {
    /**
     * Deprecated, mysql_real_escape_string() should be used instead.
     *
-    * @see StringValue MysqlModule.mysql_real_escape_string(String, Mysqli)
-    *
     * @return the escaped string
+    * @see StringValue MysqlModule.mysql_real_escape_string(String, Mysqli)
     */
    public static StringValue mysql_escape_string(Env env, Value val) {
       StringValue unescapedString = val.toStringValue();
@@ -381,14 +375,13 @@ public class MysqlModule extends AbstractBiancaModule {
    /**
     * Escapes special characters.
     *
-    * @see StringValue MysqliModule.mysqli_real_escape_string(
-    * JdbcConnectionResource, String)
-    *
     * @return the escaped string
+    * @see StringValue MysqliModule.mysqli_real_escape_string(
+    *      JdbcConnectionResource, String)
     */
    public static StringValue mysql_real_escape_string(Env env,
-           Value val,
-           @Optional Mysqli conn) {
+                                                      Value val,
+                                                      @Optional Mysqli conn) {
       StringValue unescapedString = val.toStringValue();
 
       if (conn == null) {
@@ -402,8 +395,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns a row from the connection
     */
    public static Value mysql_fetch_array(Env env,
-           @NotNull MysqliResult result,
-           @Optional("MYSQL_BOTH") int type) {
+                                         @NotNull MysqliResult result,
+                                         @Optional("MYSQL_BOTH") int type) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -422,7 +415,7 @@ public class MysqlModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue mysql_fetch_assoc(Env env,
-           @NotNull MysqliResult result) {
+                                              @NotNull MysqliResult result) {
       if (result == null) {
          return null;
       }
@@ -434,19 +427,18 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns an object containing field information.
     * On success, this method increments the field offset
     * (see {@link #mysql_field_seek}).
-    *
+    * <p/>
     * <h3>ERRATA</h3>
     * <ul>
-    *   <li>bianca returns "int" for BIT type, php returns "unknown"
-    *   <li>bianca always returns int(0) for unique_key
-    *   <li>bianca always returns int(0) for zerofill
-    *   <li>bianca always returns int(0) for multiple_key
+    * <li>bianca returns "int" for BIT type, php returns "unknown"
+    * <li>bianca always returns int(0) for unique_key
+    * <li>bianca always returns int(0) for zerofill
+    * <li>bianca always returns int(0) for multiple_key
     * </ul>
-    *
     */
    public static Value mysql_fetch_field(Env env,
-           @NotNull MysqliResult result,
-           @Optional("-1") int fieldOffset) {
+                                         @NotNull MysqliResult result,
+                                         @Optional("-1") int fieldOffset) {
       /**
        * ERRATA is also documented in php/142s.qa
        * There is probably a mysql specific query or API that would be better
@@ -492,7 +484,7 @@ public class MysqlModule extends AbstractBiancaModule {
          }
 
          if ((tableName == null || "".equals(tableName))
-                 && result.isLastSqlDescribe()) {
+            && result.isLastSqlDescribe()) {
             tableName = "COLUMNS";
          }
 
@@ -555,22 +547,22 @@ public class MysqlModule extends AbstractBiancaModule {
          fieldResult.putThisField(env, SV_TABLE, env.createString(tableName));
          fieldResult.putThisField(env, SV_DEF, StringValue.EMPTY);
          fieldResult.putThisField(env, SV_MAX_LENGTH,
-                 LongValue.create(maxLength));
+            LongValue.create(maxLength));
          fieldResult.putThisField(env, SV_NOT_NULL,
-                 LongValue.create(notNull));
+            LongValue.create(notNull));
          fieldResult.putThisField(env, SV_PRIMARY_KEY,
-                 LongValue.create(primaryKey));
+            LongValue.create(primaryKey));
          fieldResult.putThisField(env, SV_MULTIPLE_KEY,
-                 LongValue.create(multipleKey));
+            LongValue.create(multipleKey));
          fieldResult.putThisField(env, SV_UNIQUE_KEY,
-                 LongValue.create(uniqueKey));
+            LongValue.create(uniqueKey));
          fieldResult.putThisField(env, SV_NUMERIC,
-                 LongValue.create(numeric));
+            LongValue.create(numeric));
          fieldResult.putThisField(env, SV_BLOB,
-                 LongValue.create(blob));
+            LongValue.create(blob));
          fieldResult.putThisField(env, SV_TYPE, env.createString(type));
          fieldResult.putThisField(env, SV_UNSIGNED,
-                 LongValue.create(unsigned));
+            LongValue.create(unsigned));
          fieldResult.putThisField(env, SV_ZEROFILL, LongValue.create(zerofill));
 
          return fieldResult;
@@ -582,13 +574,13 @@ public class MysqlModule extends AbstractBiancaModule {
 
    /**
     * Executes a query and returns a result set.
-    *
+    * <p/>
     * Returns true on update success, false on failure, and a result set
     * for a successful select
     */
    public static Value mysql_query(Env env,
-           StringValue sql,
-           @Optional Mysqli conn) {
+                                   StringValue sql,
+                                   @Optional Mysqli conn) {
       if (conn == null) {
          conn = getConnection(env);
       }
@@ -632,7 +624,7 @@ public class MysqlModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue mysql_fetch_row(
-           Env env, @NotNull MysqliResult result) {
+      Env env, @NotNull MysqliResult result) {
       if (result == null) {
          return null;
       }
@@ -644,7 +636,7 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns the field flags of the specified field.  The flags
     * are reported as a space separated list of words, the returned
     * value can be split using explode().
-    *
+    * <p/>
     * The following flages are reported, older version of MySQL
     * may not report all flags:
     * <ul>
@@ -661,8 +653,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * </ul>
     */
    public static Value mysql_field_flags(Env env,
-           @NotNull MysqliResult result,
-           int fieldOffset) {
+                                         @NotNull MysqliResult result,
+                                         int fieldOffset) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -678,13 +670,13 @@ public class MysqlModule extends AbstractBiancaModule {
       String fieldMysqlType = result.getMysqlType(fieldOffset);
 
       if ((fieldTable == BooleanValue.FALSE)
-              || (fieldJdbcType == BooleanValue.FALSE)
-              || (fieldMysqlType == null)) {
+         || (fieldJdbcType == BooleanValue.FALSE)
+         || (fieldMysqlType == null)) {
          return BooleanValue.FALSE;
       }
 
       String sql = "SHOW FULL COLUMNS FROM "
-              + fieldTable.toString() + " LIKE \'" + fieldName.toString() + "\'";
+         + fieldTable.toString() + " LIKE \'" + fieldName.toString() + "\'";
 
       Mysqli conn = getConnection(env);
 
@@ -694,9 +686,9 @@ public class MysqlModule extends AbstractBiancaModule {
 
       if (metaResult instanceof MysqliResult) {
          return ((MysqliResult) metaResult).getFieldFlagsImproved(
-                 env,
-                 fieldJdbcType.toInt(),
-                 fieldMysqlType);
+            env,
+            fieldJdbcType.toInt(),
+            fieldMysqlType);
       }
 
       return BooleanValue.FALSE;
@@ -706,8 +698,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns field name at given offset.
     */
    public static Value mysql_field_name(Env env,
-           @NotNull MysqliResult result,
-           int fieldOffset) {
+                                        @NotNull MysqliResult result,
+                                        int fieldOffset) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -728,8 +720,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Deprecated alias for mysql_field_name.
     */
    public static Value mysql_fieldname(Env env,
-           @NotNull MysqliResult result,
-           int fieldOffset) {
+                                       @NotNull MysqliResult result,
+                                       int fieldOffset) {
       return mysql_field_name(env, result, fieldOffset);
    }
 
@@ -738,8 +730,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * is used as the default for the next call to {@link #mysql_fetch_field}.
     */
    public static boolean mysql_field_seek(Env env,
-           @NotNull MysqliResult result,
-           int fieldOffset) {
+                                          @NotNull MysqliResult result,
+                                          int fieldOffset) {
       if (result == null) {
          return false;
       }
@@ -751,8 +743,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns the table corresponding to the field.
     */
    public static Value mysql_field_table(Env env,
-           @NotNull MysqliResult result,
-           int fieldOffset) {
+                                         @NotNull MysqliResult result,
+                                         int fieldOffset) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -764,8 +756,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Deprecated alias for mysql_field_table.
     */
    public static Value mysql_fieldtable(Env env,
-           @NotNull MysqliResult result,
-           int fieldOffset) {
+                                        @NotNull MysqliResult result,
+                                        int fieldOffset) {
       return mysql_field_table(env, result, fieldOffset);
    }
 
@@ -773,8 +765,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns the field type.
     */
    public static Value mysql_field_type(Env env,
-           @NotNull MysqliResult result,
-           Value fieldOffset) {
+                                        @NotNull MysqliResult result,
+                                        Value fieldOffset) {
       if (result == null) {
          return NullValue.NULL;
       }
@@ -790,8 +782,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Deprecated alias for mysql_field_type.
     */
    public static Value mysql_fieldtype(Env env,
-           @NotNull MysqliResult result,
-           Value fieldOffset) {
+                                       @NotNull MysqliResult result,
+                                       Value fieldOffset) {
       return mysql_field_type(env, result, fieldOffset);
    }
 
@@ -799,8 +791,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns the length of the specified field
     */
    public static Value mysql_field_len(Env env,
-           @NotNull MysqliResult result,
-           @Optional("0") int fieldOffset) {
+                                       @NotNull MysqliResult result,
+                                       @Optional("0") int fieldOffset) {
       // gallery2 calls this function with 1 arg, so fieldOffset is optional
 
       if (result == null) {
@@ -895,7 +887,7 @@ public class MysqlModule extends AbstractBiancaModule {
     * databases available from the current mysql daemon.
     */
    public static Value mysql_list_dbs(Env env,
-           @Optional Mysqli conn) {
+                                      @Optional Mysqli conn) {
       if (conn == null) {
          conn = getConnection(env);
       }
@@ -906,10 +898,10 @@ public class MysqlModule extends AbstractBiancaModule {
       // MySQL Connector/J 5.x returns 'SCHEME_NAME' as the column name
       // for "SHOW DATABASES", while 3.x returns 'Database'
       return mysql_query(env,
-              env.createString(
-              "SELECT SCHEMA_NAME AS 'Database' "
-              + "FROM information_schema.SCHEMATA"),
-              conn);
+         env.createString(
+            "SELECT SCHEMA_NAME AS 'Database' "
+               + "FROM information_schema.SCHEMATA"),
+         conn);
    }
 
    /**
@@ -917,9 +909,9 @@ public class MysqlModule extends AbstractBiancaModule {
     * A Result on success, FALSE on failure.
     */
    public static Value mysql_list_fields(Env env,
-           String database,
-           StringValue tableName,
-           @Optional Mysqli conn) {
+                                         String database,
+                                         StringValue tableName,
+                                         @Optional Mysqli conn) {
       // php/141c
       // php gives warnings when the table doesn't exist or is an
       // empty string/null, but not when the database doesn't exist
@@ -943,9 +935,9 @@ public class MysqlModule extends AbstractBiancaModule {
       }
 
       Value result = conn.query(env,
-              env.createString(
-              "SELECT * FROM " + tableName + " WHERE NULL"),
-              1);
+         env.createString(
+            "SELECT * FROM " + tableName + " WHERE NULL"),
+         1);
 
       if (result == BooleanValue.FALSE) {
          env.warning(L.l("Table '{0}' does not exist", tableName));
@@ -958,9 +950,9 @@ public class MysqlModule extends AbstractBiancaModule {
     * Deprecated alias for mysql_list_fields
     */
    public static Value mysql_listfields(Env env,
-           String databaseName,
-           StringValue tableName,
-           @Optional Mysqli conn) {
+                                        String databaseName,
+                                        StringValue tableName,
+                                        @Optional Mysqli conn) {
       return mysql_list_fields(env, databaseName, tableName, conn);
    }
 
@@ -968,9 +960,9 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns result set or false on error
     */
    public static Value mysql_db_query(Env env,
-           String databaseName,
-           StringValue query,
-           @Optional Mysqli conn) {
+                                      String databaseName,
+                                      StringValue query,
+                                      @Optional Mysqli conn) {
       if (conn == null) {
          conn = getConnection(env);
       }
@@ -986,8 +978,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Selects the database
     */
    public static boolean mysql_select_db(Env env,
-           String dbName,
-           @Optional Mysqli conn) {
+                                         String dbName,
+                                         @Optional Mysqli conn) {
       if (dbName == null || dbName.length() == 0) {
          return false;
       }
@@ -1003,11 +995,11 @@ public class MysqlModule extends AbstractBiancaModule {
     * Retrieves a list of table names from a MySQL database.
     */
    public static Object mysql_list_tables(Env env,
-           StringValue databaseName,
-           @Optional Mysqli conn) {
+                                          StringValue databaseName,
+                                          @Optional Mysqli conn) {
       return mysql_query(env,
-              env.createString("SHOW TABLES FROM " + databaseName),
-              conn);
+         env.createString("SHOW TABLES FROM " + databaseName),
+         conn);
    }
 
    /**
@@ -1051,11 +1043,11 @@ public class MysqlModule extends AbstractBiancaModule {
     * so don't need to do anything different from regular mysql_connect().
     */
    public static Value mysql_pconnect(Env env,
-           @Optional StringValue server,
-           @Optional StringValue user,
-           @Optional StringValue password,
-           @Optional boolean newLink,
-           @Optional int flags) {
+                                      @Optional StringValue server,
+                                      @Optional StringValue user,
+                                      @Optional StringValue password,
+                                      @Optional boolean newLink,
+                                      @Optional int flags) {
       Value value = mysql_connect(env, server, user, password, newLink, flags);
 
       Mysqli conn = (Mysqli) env.getSpecialValue("clevercloud.mysql");
@@ -1071,12 +1063,12 @@ public class MysqlModule extends AbstractBiancaModule {
     * Returns a new mysql connection.
     */
    public static Value mysql_connect(
-           Env env,
-           @Optional StringValue host,
-           @Optional StringValue userName,
-           @Optional StringValue password,
-           @Optional boolean isNewLink,
-           @Optional int flags) {
+      Env env,
+      @Optional StringValue host,
+      @Optional StringValue userName,
+      @Optional StringValue password,
+      @Optional boolean isNewLink,
+      @Optional int flags) {
       int port = 3306;
       String socketStr = "";
       String hostStr = host.toString();
@@ -1144,9 +1136,9 @@ public class MysqlModule extends AbstractBiancaModule {
        */
 
       Mysqli mysqli = new MysqliResource(env, hostStr, userName.toString(),
-              password.toString(), "",
-              port, socketStr, flags,
-              null, null, isNewLink);
+         password.toString(), "",
+         port, socketStr, flags,
+         null, null, isNewLink);
 
       if (!mysqli.isConnected()) {
          return BooleanValue.FALSE;
@@ -1189,8 +1181,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * a result return by {@link #mysql_list_tables}.
     */
    public static Value mysql_tablename(Env env,
-           @NotNull MysqliResult result,
-           int i) {
+                                       @NotNull MysqliResult result,
+                                       int i) {
       if (result == null) {
          return BooleanValue.FALSE;
       }
@@ -1202,8 +1194,8 @@ public class MysqlModule extends AbstractBiancaModule {
     * Queries the database.
     */
    public static Object mysql_unbuffered_query(Env env,
-           @NotNull StringValue name,
-           @Optional Mysqli conn) {
+                                               @NotNull StringValue name,
+                                               @Optional Mysqli conn) {
       // An "unbuffered" query is a performance optimization
       // for large data sets. Mysql will lock the table in
       // question until all rows are read by the client.
@@ -1219,7 +1211,7 @@ public class MysqlModule extends AbstractBiancaModule {
     * thread, but it is really a connection identifier.
     */
    public static Value mysql_thread_id(Env env,
-           @Optional Mysqli conn) {
+                                       @Optional Mysqli conn) {
       if (conn == null) {
          conn = getConnection(env);
       }
@@ -1228,12 +1220,13 @@ public class MysqlModule extends AbstractBiancaModule {
    }
 
    //@todo mysql_list_processes()
+
    /**
     *
     */
    public static boolean mysql_set_charset(Env env,
-           String charset,
-           @Optional Mysqli conn) {
+                                           String charset,
+                                           @Optional Mysqli conn) {
 
       if (conn == null) {
          conn = (Mysqli) env.getSpecialValue("clevercloud.mysql");
@@ -1255,10 +1248,10 @@ public class MysqlModule extends AbstractBiancaModule {
       }
 
       conn = new MysqliResource(env,
-              StringValue.EMPTY,
-              StringValue.EMPTY, StringValue.EMPTY,
-              db, 3306,
-              StringValue.EMPTY);
+         StringValue.EMPTY,
+         StringValue.EMPTY, StringValue.EMPTY,
+         db, 3306,
+         StringValue.EMPTY);
 
       env.setSpecialValue("clevercloud.mysql", conn);
 

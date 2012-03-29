@@ -29,95 +29,85 @@
 
 package com.clevercloud.vfs;
 
+import com.clevercloud.util.L10N;
+
 import java.io.IOException;
 import java.io.Reader;
 
-import com.clevercloud.util.L10N;
-
 public class ReaderStream extends StreamImpl {
-  private static final L10N L = new L10N(ReaderStream.class);
-  
-  private Reader _reader;
-  private int _peek = -1;
+   private static final L10N L = new L10N(ReaderStream.class);
 
-  ReaderStream(Reader reader)
-  {
-    _reader = reader;
-  }
+   private Reader _reader;
+   private int _peek = -1;
 
-  public static ReadStream open(Reader reader)
-  {
-    ReaderStream ss = new ReaderStream(reader);
-    return new ReadStream(ss);
-  }
+   ReaderStream(Reader reader) {
+      _reader = reader;
+   }
 
-  public Path getPath()
-  {
-    throw new UnsupportedOperationException();
-  }
+   public static ReadStream open(Reader reader) {
+      ReaderStream ss = new ReaderStream(reader);
+      return new ReadStream(ss);
+   }
 
-  public boolean canRead()
-  {
-    return true;
-  }
+   public Path getPath() {
+      throw new UnsupportedOperationException();
+   }
 
-  // XXX: encoding issues
-  public int read(byte []buf, int offset, int length) throws IOException
-  {
-    int i = offset;
-    int end = i + length;
+   public boolean canRead() {
+      return true;
+   }
 
-    while (i < end) {
-      int ch;
+   // XXX: encoding issues
+   public int read(byte[] buf, int offset, int length) throws IOException {
+      int i = offset;
+      int end = i + length;
 
-      if (_peek >= 0) {
-        ch = _peek;
-        _peek = -1;
-      }
-      else
-        ch = _reader.read();
-      
-      if (ch < 0)
-        break;
+      while (i < end) {
+         int ch;
 
-      if (ch < 0x80)
+         if (_peek >= 0) {
+            ch = _peek;
+            _peek = -1;
+         } else
+            ch = _reader.read();
+
+         if (ch < 0)
+            break;
+
+         if (ch < 0x80)
             buf[i++] = (byte) ch;
-      else if (ch < 0x800) {
-        if (i + 1 < end) {
-        }
-        else if (i == offset)
-          throw new IllegalStateException(L.l("buffer is not large enough to accept UTF-8 encoding.  length={0}, 2-character utf-8",
-                                              length));
-        else {
-          _peek = ch;
-          return end - offset;
-        }
+         else if (ch < 0x800) {
+            if (i + 1 < end) {
+            } else if (i == offset)
+               throw new IllegalStateException(L.l("buffer is not large enough to accept UTF-8 encoding.  length={0}, 2-character utf-8",
+                  length));
+            else {
+               _peek = ch;
+               return end - offset;
+            }
 
-        buf[i++] = (byte) (0xc0 | (ch >> 6));
-        buf[i++] = (byte) (0x80 | (ch & 0x3f));
+            buf[i++] = (byte) (0xc0 | (ch >> 6));
+            buf[i++] = (byte) (0x80 | (ch & 0x3f));
+         } else if (ch < 0x8000) {
+            if (i + 2 < end) {
+            } else if (i == offset)
+               throw new IllegalStateException(L.l("buffer is not large enough to accept UTF-8 encoding.  length={0}, 3-character utf-8",
+                  length));
+            else {
+               _peek = ch;
+               return i - offset;
+            }
+
+            buf[i++] = (byte) (0xe0 | (ch >> 12));
+            buf[i++] = (byte) (0x80 | ((ch >> 6) & 0x3f));
+            buf[i++] = (byte) (0x80 | ((ch >> 6) & 0x3f));
+         }
       }
-      else if (ch < 0x8000) {
-        if (i + 2 < end) {
-        }
-        else if (i == offset)
-          throw new IllegalStateException(L.l("buffer is not large enough to accept UTF-8 encoding.  length={0}, 3-character utf-8",
-                                              length));
-        else {
-          _peek = ch;
-          return i - offset;
-        }
 
-        buf[i++] = (byte) (0xe0 | (ch >> 12));
-        buf[i++] = (byte) (0x80 | ((ch >> 6) & 0x3f));
-        buf[i++] = (byte) (0x80 | ((ch >> 6) & 0x3f));
-      }
-    }
+      return i - offset;
+   }
 
-    return i - offset;
-  }
-
-  public int getAvailable() throws IOException
-  {
-    throw new UnsupportedOperationException();
-  }
+   public int getAvailable() throws IOException {
+      throw new UnsupportedOperationException();
+   }
 }

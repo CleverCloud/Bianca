@@ -30,24 +30,23 @@
 package com.clevercloud.xml;
 
 import com.clevercloud.util.FreeList;
-
 import org.w3c.dom.DOMImplementation;
 
 /**
  * XML parser interface.  The parser can parse directly into the DOM or it
  * can be used as a SAX parser.
- *
+ * <p/>
  * <p>To parse a file into a DOM Document use
  * <pre><code>
  * Document doc = new Xml().parseDocument("foo.xml");
  * </code></pre>
- *
+ * <p/>
  * <p>To parse a string into a DOM Document use
  * <pre><code>
  * String xml = "&lt;top>small test&lt;/top>";
  * Document doc = new Xml().parseDocumentString(xml);
  * </code></pre>
- *
+ * <p/>
  * <p>To parse a file using the SAX API use
  * <pre><code>
  * Xml xml = new Xml();
@@ -56,74 +55,68 @@ import org.w3c.dom.DOMImplementation;
  * </code></pre>
  */
 public class Xml extends XmlParser {
-  private static FreeList<Xml> _freeList = new FreeList<Xml>(16);
-  
-  /**
-   * Create a new strict XML parser
-   */
-  public Xml()
-  {
-    super(new XmlPolicy(), null);
+   private static FreeList<Xml> _freeList = new FreeList<Xml>(16);
 
-    init();
-  }
+   /**
+    * Create a new strict XML parser
+    */
+   public Xml() {
+      super(new XmlPolicy(), null);
 
-  /**
-   * Initialize the parser.
-   */
-  public void init()
-  {
-    super.init();
-    
-    _strictComments = true;
-    _strictAttributes = true;
-    _strictCharacters = true;
-    _strictXml = true;
-    _singleTopElement = true;
-    _optionalTags = false;
-  }
+      init();
+   }
 
-  /**
-   * Creates an Xml parser.
-   */
-  public static Xml create()
-  {
-    Xml xml = _freeList.allocate();
-    if (xml == null)
-      xml = new Xml();
-    xml.init();
+   /**
+    * Initialize the parser.
+    */
+   public void init() {
+      super.init();
 
-    return xml;
-  }
+      _strictComments = true;
+      _strictAttributes = true;
+      _strictCharacters = true;
+      _strictXml = true;
+      _singleTopElement = true;
+      _optionalTags = false;
+   }
 
-  /**
-   * Frees an Xml parser.
-   */
-  public void free()
-  {
-    _owner = null;
-    _contentHandler = null;
-    _entityResolver = null;
-    _dtdHandler = null;
-    _errorHandler = null;
-    _dtd = null;
-  
-    _freeList.free(this);
-  }
+   /**
+    * Creates an Xml parser.
+    */
+   public static Xml create() {
+      Xml xml = _freeList.allocate();
+      if (xml == null)
+         xml = new Xml();
+      xml.init();
 
-  /**
-   * Create a new DOM document
-   */
-  static public CleverCloudDocument createDocument()
-  {
-    return new QDocument();
-  }
+      return xml;
+   }
 
-  /**
-   * Create a new DOM implementation
-   */
-  static public DOMImplementation createDOMImplementation()
-  {
-    return new QDOMImplementation();
-  }
+   /**
+    * Frees an Xml parser.
+    */
+   public void free() {
+      _owner = null;
+      _contentHandler = null;
+      _entityResolver = null;
+      _dtdHandler = null;
+      _errorHandler = null;
+      _dtd = null;
+
+      _freeList.free(this);
+   }
+
+   /**
+    * Create a new DOM document
+    */
+   static public CleverCloudDocument createDocument() {
+      return new QDocument();
+   }
+
+   /**
+    * Create a new DOM implementation
+    */
+   static public DOMImplementation createDOMImplementation() {
+      return new QDOMImplementation();
+   }
 }

@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 public class OracleOciCollection {
 
    private static final Logger log = Logger.getLogger(
-           OracleOciCollection.class.getName());
+      OracleOciCollection.class.getName());
    private static final L10N L = new L10N(OracleOciCollection.class);
    // The Oracle array descriptor
    private Object _arrayDescriptor;
@@ -75,7 +75,7 @@ public class OracleOciCollection {
     * Constructor for OracleOciCollection
     */
    OracleOciCollection(Connection jdbcConn,
-           Object arrayDescriptor) {
+                       Object arrayDescriptor) {
       _jdbcConn = jdbcConn;
 
       _arrayDescriptor = arrayDescriptor;
@@ -91,7 +91,7 @@ public class OracleOciCollection {
     * @param value can be a string or a number
     */
    public boolean append(Env env,
-           Value value) {
+                         Value value) {
       try {
 
          _javaCollection.add(value.toJavaObject());
@@ -108,7 +108,7 @@ public class OracleOciCollection {
     * Assigns a value to the collection from another existing collection
     */
    public boolean assign(Env env,
-           OracleOciCollection fromCollection) {
+                         OracleOciCollection fromCollection) {
       try {
 
          _javaCollection.addAll(fromCollection.getJavaCollection());
@@ -128,8 +128,8 @@ public class OracleOciCollection {
     * @param value can be a string or a number
     */
    public boolean assignElem(Env env,
-           int index,
-           Value value) {
+                             int index,
+                             Value value) {
       try {
 
          if ((index < 1) || (index > _javaCollection.size())) {
@@ -176,7 +176,7 @@ public class OracleOciCollection {
          Class clArrayDescriptor = Class.forName("oracle.sql.ArrayDescriptor");
 
          Constructor constructor = classOracleARRAY.getDeclaredConstructor(
-                 new Class[]{clArrayDescriptor, Connection.class, Object.class});
+            new Class[]{clArrayDescriptor, Connection.class, Object.class});
 
          Object[] elements = _javaCollection.toArray();
 
@@ -185,7 +185,7 @@ public class OracleOciCollection {
          if (_collection != null) {
             // Optimization
             Method setAutoBuffering = classOracleARRAY.getDeclaredMethod("setAutoBuffering",
-                    new Class[]{Boolean.TYPE});
+               new Class[]{Boolean.TYPE});
             setAutoBuffering.invoke(_collection, new Object[]{true});
          }
 
@@ -201,7 +201,7 @@ public class OracleOciCollection {
     * Returns value of the element by index (1-based)
     */
    public Value getElem(Env env,
-           int index) {
+                        int index) {
       try {
 
          if ((index < 1) || (index > _javaCollection.size())) {
@@ -259,7 +259,7 @@ public class OracleOciCollection {
     * Trims num elements from the end of the collection
     */
    public boolean trim(Env env,
-           int num) {
+                       int num) {
       try {
 
          if (num < 0) {

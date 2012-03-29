@@ -29,12 +29,12 @@
  */
 package com.clevercloud.bianca.parser;
 
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.FieldVisibility;
 import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.program.Function;
 import com.clevercloud.bianca.program.InterpretedClassDef;
-import com.clevercloud.bianca.Location;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -73,8 +73,8 @@ public class ClassScope extends Scope {
     */
    @Override
    public void addFunction(String name,
-           Function function,
-           boolean isTop) {
+                           Function function,
+                           boolean isTop) {
       _cl.addFunction(name, function);
    }
 
@@ -90,9 +90,9 @@ public class ClassScope extends Scope {
     * Adds a value
     */
    public void addVar(StringValue name,
-           Expr value,
-           FieldVisibility visibility,
-           String comment) {
+                      Expr value,
+                      FieldVisibility visibility,
+                      String comment) {
       _cl.addValue(name, value, visibility, comment);
    }
 
@@ -116,10 +116,10 @@ public class ClassScope extends Scope {
     */
    @Override
    public InterpretedClassDef addClass(Location location, String name,
-           String parentName,
-           ArrayList<String> ifaceList,
-           int index,
-           boolean isTop) {
+                                       String parentName,
+                                       ArrayList<String> ifaceList,
+                                       int index,
+                                       boolean isTop) {
       throw new UnsupportedOperationException();
    }
 

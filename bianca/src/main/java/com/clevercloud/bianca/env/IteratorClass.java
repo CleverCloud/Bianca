@@ -33,7 +33,7 @@ import com.clevercloud.bianca.annotation.Delegates;
 
 @Delegates(IteratorDelegate.class)
 public interface IteratorClass
-        extends Traversable {
+   extends Traversable {
 
    /**
     * Returns the current value.

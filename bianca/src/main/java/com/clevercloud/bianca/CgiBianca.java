@@ -30,11 +30,6 @@
  */
 package com.clevercloud.bianca;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.clevercloud.bianca.env.CgiEnv;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.page.BiancaPage;
@@ -42,19 +37,23 @@ import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.StdoutStream;
 import com.clevercloud.vfs.WriteStream;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 public class CgiBianca
-        extends CliBianca {
+   extends CliBianca {
 
    @Override
    public Env createEnv(BiancaPage page,
-           WriteStream out,
-           HttpServletRequest request,
-           HttpServletResponse response) {
+                        WriteStream out,
+                        HttpServletRequest request,
+                        HttpServletResponse response) {
       return new CgiEnv(this, page, out, request, response);
    }
 
    public static void main(String[] args)
-           throws IOException {
+      throws IOException {
       CgiBianca bianca = new CgiBianca();
 
       bianca.parseArgs(args);
@@ -78,7 +77,7 @@ public class CgiBianca
 
    @Override
    public void execute()
-           throws IOException {
+      throws IOException {
       Path path = getPwd().lookup(getFileName());
 
       BiancaPage page = parse(path);

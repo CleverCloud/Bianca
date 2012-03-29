@@ -37,84 +37,79 @@ import org.w3c.dom.Text;
  * Represents a text node.
  */
 public class QText extends QCharacterData implements Text {
-  /**
-   * Creates a new text node.
-   */
-  public QText()
-  {
-    super();
-  }
+   /**
+    * Creates a new text node.
+    */
+   public QText() {
+      super();
+   }
 
-  /**
-   * Creates a new text node with initial data.
-   */
-  public QText(String data)
-  {
-    super(data);
-  }
+   /**
+    * Creates a new text node with initial data.
+    */
+   public QText(String data) {
+      super(data);
+   }
 
-  public String getNodeName() { return "#text"; }
-  public short getNodeType() { return TEXT_NODE; }
+   public String getNodeName() {
+      return "#text";
+   }
 
-  Node importNode(QDocument owner, boolean deep)
-  {
-    QText text = new QText(_data);
-    text._owner = owner;
-    text._filename = _filename;
-    text._line = _line;
-    return text;
-  }
+   public short getNodeType() {
+      return TEXT_NODE;
+   }
 
-  public Text splitText(int offset)
-    throws DOMException
-  {
-    QText text = new QText(_data.substring(offset));
-    text._owner = _owner;
+   Node importNode(QDocument owner, boolean deep) {
+      QText text = new QText(_data);
+      text._owner = owner;
+      text._filename = _filename;
+      text._line = _line;
+      return text;
+   }
 
-    _data = _data.substring(0, offset);
+   public Text splitText(int offset)
+      throws DOMException {
+      QText text = new QText(_data.substring(offset));
+      text._owner = _owner;
 
-    text._parent = _parent;
-    if (_next != null)
-      _next._previous = text;
-    else if (_parent != null)
-      _parent._lastChild = text;
-    text._previous = this;
-    text._next = _next;
-    _next = text;
+      _data = _data.substring(0, offset);
 
-    return text;
-  }
+      text._parent = _parent;
+      if (_next != null)
+         _next._previous = text;
+      else if (_parent != null)
+         _parent._lastChild = text;
+      text._previous = this;
+      text._next = _next;
+      _next = text;
 
-  public Text joinText(Text node1, Text node2)
-    throws DOMException
-  {
-    return new QText(node1.getData() + node2.getData());
-  }
+      return text;
+   }
 
-  // DOM level 3
-  public boolean getIsWhitespaceInElementContent()
-  {
-    throw new UnsupportedOperationException();
-  }
+   public Text joinText(Text node1, Text node2)
+      throws DOMException {
+      return new QText(node1.getData() + node2.getData());
+   }
 
-  public String getWholeText()
-  {
-    throw new UnsupportedOperationException();
-  }
+   // DOM level 3
+   public boolean getIsWhitespaceInElementContent() {
+      throw new UnsupportedOperationException();
+   }
 
-  public Text replaceWholeText(String content)
-    throws DOMException
-  {
-    throw new UnsupportedOperationException();
-  }
+   public String getWholeText() {
+      throw new UnsupportedOperationException();
+   }
 
-  private Object writeReplace()
-  {
-    return new SerializedXml(this);
-  }
+   public Text replaceWholeText(String content)
+      throws DOMException {
+      throw new UnsupportedOperationException();
+   }
 
-  public String toString()
-  {
-    return "Text[" + getData() + "]";
-  }
+   private Object writeReplace() {
+      return new SerializedXml(this);
+   }
+
+   public String toString() {
+      return "Text[" + getData() + "]";
+   }
 }

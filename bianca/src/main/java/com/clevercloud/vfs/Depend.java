@@ -37,248 +37,229 @@ import java.util.logging.Logger;
  * Class for keeping track of modifications.
  */
 public class Depend implements PersistentDependency {
-  private static final Logger log
-    = Logger.getLogger(Depend.class.getName());
-  
-  Path _source;
-  long _lastModified;
-  long _length;
+   private static final Logger log
+      = Logger.getLogger(Depend.class.getName());
 
-  boolean _requireSource = true;
-  boolean _isDigestModified;
+   Path _source;
+   long _lastModified;
+   long _length;
 
-  /**
-   * Create a new dependency with an already known modified time and length.
-   *
-   * @param source the source file
-   */
-  public Depend(Path source, long lastModified, long length)
-  {
-    _source = source;
-    _lastModified = lastModified;
-    _length = length;
-  }
+   boolean _requireSource = true;
+   boolean _isDigestModified;
 
-  /**
-   * Create a new dependency.
-   *
-   * @param source the source file
-   */
-  public Depend(Path source)
-  {
-    /* XXX:
-    if (source instanceof JarPath)
-      source = ((JarPath) source).getContainer();
+   /**
+    * Create a new dependency with an already known modified time and length.
+    *
+    * @param source the source file
     */
+   public Depend(Path source, long lastModified, long length) {
+      _source = source;
+      _lastModified = lastModified;
+      _length = length;
+   }
 
-    _source = source;
-    _lastModified = source.getLastModified();
-    _length = source.getLength();
-  }
-
-  /**
-   * Create a new dependency with a given digest.
-   *
-   * @param source the source file
-   * @param digest the CRC64 digest
-   */
-  public Depend(Path source, long digest)
-  {
-    this(source, digest, true);
-  }
-
-  public Depend() {}
-
-  /**
-   * Create a new dependency with a given digest.
-   *
-   * @param source the source file
-   * @param digest the CRC64 digest
-   */
-  public Depend(Path source, long digest, boolean requireSource)
-  {
-    _source = source;
-
-    long newDigest = source.getCrc64();
-
-    _requireSource = requireSource;
-
-    if (newDigest == digest) {
-    }
-    else if (! requireSource && newDigest == -1) {
-    }
-    else if (newDigest == -1) {
-      if (log.isLoggable(Level.FINE))
-        log.fine(_source.getNativePath() + " source is deleted.");
-      
-      _isDigestModified = true;
-    }
-    else {
-      /*
-      if (log.isLoggable(Level.FINE))
-        log.fine(_source.getNativePath() + " digest is modified.");
+   /**
+    * Create a new dependency.
+    *
+    * @param source the source file
+    */
+   public Depend(Path source) {
+      /* XXX:
+      if (source instanceof JarPath)
+        source = ((JarPath) source).getContainer();
       */
 
-      _isDigestModified = true;
-    }
+      _source = source;
+      _lastModified = source.getLastModified();
+      _length = source.getLength();
+   }
 
-    _lastModified = _source.getLastModified();
-    _length = _source.getLength();
-  }
+   /**
+    * Create a new dependency with a given digest.
+    *
+    * @param source the source file
+    * @param digest the CRC64 digest
+    */
+   public Depend(Path source, long digest) {
+      this(source, digest, true);
+   }
 
-  /**
-   * Returns the underlying source path.
-   */
-  public Path getPath()
-  {
-    return _source;
-  }
+   public Depend() {
+   }
 
-  /**
-   * Returns the current last-modified time of the file.
-   */
-  public long getLastModified()
-  {
-    return _source.getLastModified();
-  }
+   /**
+    * Create a new dependency with a given digest.
+    *
+    * @param source the source file
+    * @param digest the CRC64 digest
+    */
+   public Depend(Path source, long digest, boolean requireSource) {
+      _source = source;
 
-  /**
-   * Returns the current length time of the file.
-   */
-  public long getLength()
-  {
-    return _source.getLength();
-  }
+      long newDigest = source.getCrc64();
 
-  /**
-   * If true, deleting the source counts as a change.
-   */
-  public boolean getRequireSource()
-  {
-    return _requireSource;
-  }
+      _requireSource = requireSource;
 
-  /**
-   * If true, deleting the source counts as a change.
-   */
-  public void setRequireSource(boolean requireSource)
-  {
-    _requireSource = requireSource;
-  }
+      if (newDigest == digest) {
+      } else if (!requireSource && newDigest == -1) {
+      } else if (newDigest == -1) {
+         if (log.isLoggable(Level.FINE))
+            log.fine(_source.getNativePath() + " source is deleted.");
 
-  /**
-   * If the source modified date changes at all, treat it as a modification.
-   * This protects against the case where multiple computers have
-   * misaligned dates and a '<' comparison may fail.
-   */
-  public boolean isModified()
-  {
-    if (_isDigestModified) {
-      if (log.isLoggable(Level.FINE))
-        log.fine(_source.getNativePath() + " digest is modified.");
+         _isDigestModified = true;
+      } else {
+         /*
+         if (log.isLoggable(Level.FINE))
+           log.fine(_source.getNativePath() + " digest is modified.");
+         */
 
-      return true;
-    }
+         _isDigestModified = true;
+      }
 
-    long sourceLastModified = _source.getLastModified();
-    long sourceLength = _source.getLength();
+      _lastModified = _source.getLastModified();
+      _length = _source.getLength();
+   }
 
-    // if the source was deleted and we need the source
-    if (! _requireSource && sourceLastModified == 0)
-      return false;
-    // if the length changed
-    else if (sourceLength != _length) {
-      if (log.isLoggable(Level.FINE))
-        log.fine(_source.getNativePath() + " length is modified (" +
-                 _length + " -> " + sourceLength + ")");
+   /**
+    * Returns the underlying source path.
+    */
+   public Path getPath() {
+      return _source;
+   }
 
-      return true;
-    }
-    // if the source is newer than the old value
-    else if (sourceLastModified != _lastModified) {
-      if (log.isLoggable(Level.FINE))
-        log.fine(_source.getNativePath() + " time is modified.");
-      
-      return true;
-    }
-    else
-      return false;
-  }
+   /**
+    * Returns the current last-modified time of the file.
+    */
+   public long getLastModified() {
+      return _source.getLastModified();
+   }
 
-  /**
-   * Log the reason for modification
-   */
-  public boolean logModified(Logger log)
-  {
-    if (_isDigestModified) {
-      log.info(_source.getNativePath() + " digest is modified.");
+   /**
+    * Returns the current length time of the file.
+    */
+   public long getLength() {
+      return _source.getLength();
+   }
 
-      return true;
-    }
+   /**
+    * If true, deleting the source counts as a change.
+    */
+   public boolean getRequireSource() {
+      return _requireSource;
+   }
 
-    long sourceLastModified = _source.getLastModified();
-    long sourceLength = _source.getLength();
+   /**
+    * If true, deleting the source counts as a change.
+    */
+   public void setRequireSource(boolean requireSource) {
+      _requireSource = requireSource;
+   }
 
-    // if the source was deleted and we need the source
-    if (! _requireSource && sourceLastModified == 0) {
-      return false;
-    }
-    // if the length changed
-    else if (sourceLength != _length) {
-      log.info(_source.getNativePath() + " length is modified (" +
+   /**
+    * If the source modified date changes at all, treat it as a modification.
+    * This protects against the case where multiple computers have
+    * misaligned dates and a '<' comparison may fail.
+    */
+   public boolean isModified() {
+      if (_isDigestModified) {
+         if (log.isLoggable(Level.FINE))
+            log.fine(_source.getNativePath() + " digest is modified.");
+
+         return true;
+      }
+
+      long sourceLastModified = _source.getLastModified();
+      long sourceLength = _source.getLength();
+
+      // if the source was deleted and we need the source
+      if (!_requireSource && sourceLastModified == 0)
+         return false;
+         // if the length changed
+      else if (sourceLength != _length) {
+         if (log.isLoggable(Level.FINE))
+            log.fine(_source.getNativePath() + " length is modified (" +
                _length + " -> " + sourceLength + ")");
 
-      return true;
-    }
-    // if the source is newer than the old value
-    else if (sourceLastModified != _lastModified) {
-      log.info(_source.getNativePath() + " time is modified.");
-      
-      return true;
-    }
-    else
-      return false;
-  }
+         return true;
+      }
+      // if the source is newer than the old value
+      else if (sourceLastModified != _lastModified) {
+         if (log.isLoggable(Level.FINE))
+            log.fine(_source.getNativePath() + " time is modified.");
 
-  /**
-   * Returns the digest.
-   */
-  public long getDigest()
-  {
-    return _source.getCrc64();
-  }
-  
-  /**
-   * Returns true if the test Dependency has the same source path as
-   * this dependency.
-   */
-  public boolean equals(Object obj)
-  {
-    if (! (obj instanceof Depend))
-      return false;
+         return true;
+      } else
+         return false;
+   }
 
-    Depend depend = (Depend) obj;
+   /**
+    * Log the reason for modification
+    */
+   public boolean logModified(Logger log) {
+      if (_isDigestModified) {
+         log.info(_source.getNativePath() + " digest is modified.");
 
-    return _source.equals(depend._source);
-  }
+         return true;
+      }
 
-  /**
-   * Returns the string to recreate the Dependency.
-   */
-  public String getJavaCreateString()
-  {
-    return ("new com.clevercloud.vfs.Depend(com.clevercloud.vfs.Vfs.lookup(\"" +
-            _source.getPath() + "\"), " + _source.getCrc64() + "L)");
-  }
+      long sourceLastModified = _source.getLastModified();
+      long sourceLength = _source.getLength();
 
-  /**
-   * Returns a printable version of the dependency.
-   */
-  public String toString()
-  {
-    return ("Depend[" + _source + ",time=" + _lastModified
-            + ",time-ch=" + (_source.getLastModified() - _lastModified)
-            + ",len-ch=" + (_source.getLength() - _length)
-            + "]");
-  }
+      // if the source was deleted and we need the source
+      if (!_requireSource && sourceLastModified == 0) {
+         return false;
+      }
+      // if the length changed
+      else if (sourceLength != _length) {
+         log.info(_source.getNativePath() + " length is modified (" +
+            _length + " -> " + sourceLength + ")");
+
+         return true;
+      }
+      // if the source is newer than the old value
+      else if (sourceLastModified != _lastModified) {
+         log.info(_source.getNativePath() + " time is modified.");
+
+         return true;
+      } else
+         return false;
+   }
+
+   /**
+    * Returns the digest.
+    */
+   public long getDigest() {
+      return _source.getCrc64();
+   }
+
+   /**
+    * Returns true if the test Dependency has the same source path as
+    * this dependency.
+    */
+   public boolean equals(Object obj) {
+      if (!(obj instanceof Depend))
+         return false;
+
+      Depend depend = (Depend) obj;
+
+      return _source.equals(depend._source);
+   }
+
+   /**
+    * Returns the string to recreate the Dependency.
+    */
+   public String getJavaCreateString() {
+      return ("new com.clevercloud.vfs.Depend(com.clevercloud.vfs.Vfs.lookup(\"" +
+         _source.getPath() + "\"), " + _source.getCrc64() + "L)");
+   }
+
+   /**
+    * Returns a printable version of the dependency.
+    */
+   public String toString() {
+      return ("Depend[" + _source + ",time=" + _lastModified
+         + ",time-ch=" + (_source.getLastModified() - _lastModified)
+         + ",len-ch=" + (_source.getLength() - _length)
+         + "]");
+   }
 }

@@ -44,7 +44,7 @@ import java.util.Set;
  * Represents a compiled object value.
  */
 public class CompiledObjectValue extends ObjectValue
-        implements Serializable {
+   implements Serializable {
 
    private static final Value[] NULL_FIELDS = new Value[0];
    public Value[] _fields;
@@ -441,6 +441,7 @@ public class CompiledObjectValue extends ObjectValue
    }
    }
     */
+
    /**
     * Returns the value for the variable, creating an object if the var
     * is unset.
@@ -555,8 +556,10 @@ public class CompiledObjectValue extends ObjectValue
    return new StringValue().append(_biancaClass.getName()).append("[]");
    }
     */
+
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override
@@ -611,21 +614,21 @@ public class CompiledObjectValue extends ObjectValue
    @Override
    public String toString() {
       return "CompiledObjectValue@" + System.identityHashCode(this)
-              + "[" + _biancaClass.getName() + "]";
+         + "[" + _biancaClass.getName() + "]";
    }
 
    //
    // Java Serialization
    //
    private void writeObject(ObjectOutputStream out)
-           throws IOException {
+      throws IOException {
       out.writeObject(_fields);
       out.writeObject(_object);
       out.writeObject(_biancaClass.getName());
    }
 
    private void readObject(ObjectInputStream in)
-           throws ClassNotFoundException, IOException {
+      throws ClassNotFoundException, IOException {
       _fields = (Value[]) in.readObject();
       _object = (ObjectExtValue) in.readObject();
 

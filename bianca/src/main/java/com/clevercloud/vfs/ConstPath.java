@@ -32,73 +32,60 @@ package com.clevercloud.vfs;
 import java.io.IOException;
 import java.util.Map;
 
-public class ConstPath extends Path
-{
-  private String _scheme = "const";
-  private String _path = "";
-  
-  StreamImpl _stream;
+public class ConstPath extends Path {
+   private String _scheme = "const";
+   private String _path = "";
 
-  public ConstPath(Path root, StreamImpl stream)
-  {
-    super(root);
-    _stream = stream;
-  }
+   StreamImpl _stream;
 
-  protected Path schemeWalk(String userPath, Map<String,Object> attributes,
-                            String path, int offset)
-  {
-    return this;
-  }
+   public ConstPath(Path root, StreamImpl stream) {
+      super(root);
+      _stream = stream;
+   }
 
-  public String getURL()
-  {
-    return getScheme() + ":" + getPath();
-  }
+   protected Path schemeWalk(String userPath, Map<String, Object> attributes,
+                             String path, int offset) {
+      return this;
+   }
 
-  public String getScheme()
-  {
-    return _scheme;
-  }
+   public String getURL() {
+      return getScheme() + ":" + getPath();
+   }
 
-  public void setScheme(String scheme)
-  {
-    _scheme = scheme;
-  }
+   public String getScheme() {
+      return _scheme;
+   }
 
-  public String getPath()
-  {
-    return _path;
-  }
+   public void setScheme(String scheme) {
+      _scheme = scheme;
+   }
 
-  public void setPath(String path)
-  {
-    _path = path;
-  }
+   public String getPath() {
+      return _path;
+   }
 
-  public boolean exists()
-  {
-    return true;
-  }
+   public void setPath(String path) {
+      _path = path;
+   }
 
-  public StreamImpl openReadImpl() throws IOException
-  {
-    return _stream;
-  }
+   public boolean exists() {
+      return true;
+   }
 
-  public StreamImpl openWriteImpl() throws IOException
-  {
-    return _stream;
-  }
+   public StreamImpl openReadImpl() throws IOException {
+      return _stream;
+   }
 
-  public StreamImpl openReadWriteImpl() throws IOException
-  {
-    return _stream;
-  }
+   public StreamImpl openWriteImpl() throws IOException {
+      return _stream;
+   }
 
-  public StreamImpl openAppendImpl() throws IOException
-  {
-    return _stream;
-  }
+   public StreamImpl openReadWriteImpl() throws IOException {
+      return _stream;
+   }
+
+   public StreamImpl openAppendImpl() throws IOException {
+      return _stream;
+   }
 }
 

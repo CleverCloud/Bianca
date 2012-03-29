@@ -48,8 +48,8 @@ public interface DOMFactory {
    DocumentType createDocumentType(String qualifiedName);
 
    DocumentType createDocumentType(String qualifiedName,
-           String publicId,
-           String systemId);
+                                   String publicId,
+                                   String systemId);
 
    Element createElement(String name);
 
@@ -64,8 +64,8 @@ public interface DOMFactory {
    org.w3c.dom.DOMImplementation getImplementation();
 
    void parseXMLDocument(Document document, InputStream is, String path)
-           throws IOException, SAXException;
+      throws IOException, SAXException;
 
    void parseHTMLDocument(Document document, InputStream is, String path)
-           throws IOException, SAXException;
+      throws IOException, SAXException;
 }

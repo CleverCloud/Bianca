@@ -32,12 +32,11 @@ package com.clevercloud.bianca.lib.session;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.lib.OutputModule;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.bianca.module.ModuleStartupListener;
-import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.bianca.module.IniDefinition;
+import com.clevercloud.bianca.module.IniDefinitions;
+import com.clevercloud.bianca.module.ModuleStartupListener;
 import com.clevercloud.util.L10N;
 
 import javax.servlet.http.Cookie;
@@ -48,7 +47,7 @@ import java.util.logging.Logger;
  * Bianca session handling
  */
 public class SessionModule extends AbstractBiancaModule
-        implements ModuleStartupListener {
+   implements ModuleStartupListener {
 
    private static final L10N L = new L10N(SessionModule.class);
    private static final Logger log = Logger.getLogger(SessionModule.class.getName());
@@ -78,12 +77,12 @@ public class SessionModule extends AbstractBiancaModule
     * Returns and/or sets the value of session.cache_limiter, affecting the
     * cache related headers that are sent as a result of a call to
     * {@link #session_start(Env)}.
-    *
+    * <p/>
     * If the optional parameter is not supplied, this function
     * simply returns the existing value.
     * If the optional parameter is supplied, the returned value
     * is the old value that was set before the new value is applied.
-    *
+    * <p/>
     * Valid values are "nocache" (the default), "private", "private_no_expire",
     * and "public". If a value other than these values is supplied,
     * then a warning is produced
@@ -237,7 +236,7 @@ public class SessionModule extends AbstractBiancaModule
 
    /**
     * Regenerates the session id.
-    *
+    * <p/>
     * This function first creates a new session id.  The old session
     * values are migrated to this new session.  Then a new session cookie
     * is sent (XXX: send only if URL rewriting is off?).  Changing the
@@ -245,7 +244,7 @@ public class SessionModule extends AbstractBiancaModule
     * Therefore, session callbacks should not be called.
     */
    public static boolean session_regenerate_id(Env env,
-           @Optional boolean deleteOld) {
+                                               @Optional boolean deleteOld) {
       // php/1k82, php/1k83
       if (env.getSession() == null) {
          return !deleteOld;
@@ -340,11 +339,11 @@ public class SessionModule extends AbstractBiancaModule
     * Sets the session cookie parameters
     */
    public Value session_set_cookie_params(Env env,
-           long lifetime,
-           @Optional Value path,
-           @Optional Value domain,
-           @Optional Value isSecure,
-           @Optional Value isHttpOnly) {
+                                          long lifetime,
+                                          @Optional Value path,
+                                          @Optional Value domain,
+                                          @Optional Value isSecure,
+                                          @Optional Value isHttpOnly) {
       env.setIni("session.cookie_lifetime", String.valueOf(lifetime));
 
       if (path.isset()) {
@@ -357,7 +356,7 @@ public class SessionModule extends AbstractBiancaModule
 
       if (isSecure.isset()) {
          env.setIni("session.cookie_secure",
-                 isSecure.toBoolean() ? "1" : "0");
+            isSecure.toBoolean() ? "1" : "0");
       }
 
       return NullValue.NULL;
@@ -367,12 +366,12 @@ public class SessionModule extends AbstractBiancaModule
     * Sets the session save handler
     */
    public boolean session_set_save_handler(Env env,
-           Callable open,
-           Callable close,
-           Callable read,
-           Callable write,
-           Callable directory,
-           Callable gc) {
+                                           Callable open,
+                                           Callable close,
+                                           Callable read,
+                                           Callable write,
+                                           Callable directory,
+                                           Callable gc) {
       SessionCallback cb = new SessionCallback(open, close, read, write, directory, gc);
 
       env.setSessionCallback(cb);
@@ -423,7 +422,7 @@ public class SessionModule extends AbstractBiancaModule
 
             for (int i = 0; cookies != null && i < cookies.length; i++) {
                if (cookies[i].getName().equals(cookieName)
-                       && !"".equals(cookies[i].getValue())) {
+                  && !"".equals(cookies[i].getValue())) {
                   sessionId = cookies[i].getValue();
                   generateCookie = false;
                }
@@ -440,7 +439,7 @@ public class SessionModule extends AbstractBiancaModule
       //
 
       if (env.getIniBoolean("session.use_trans_sid")
-              && !env.getIniBoolean("session.use_only_cookies")) {
+         && !env.getIniBoolean("session.use_only_cookies")) {
          if (sessionId == null) {
             if (sessionIdValue != null) {
                sessionId = sessionIdValue.toString();
@@ -457,7 +456,7 @@ public class SessionModule extends AbstractBiancaModule
          }
 
          env.addConstant("SID", env.createString(cookieName + '=' + sessionId),
-                 false);
+            false);
 
          OutputModule.pushUrlRewriter(env);
       }
@@ -472,8 +471,8 @@ public class SessionModule extends AbstractBiancaModule
       if (response == null) {
       } else if (response.isCommitted()) {
          env.warning(
-                 L.l("cannot send session cache limiter headers "
-                 + "because response is committed"));
+            L.l("cannot send session cache limiter headers "
+               + "because response is committed"));
       } else {
          Value cacheLimiterValue = env.getIni("session.cache_limiter");
          String cacheLimiter = String.valueOf(cacheLimiterValue);
@@ -489,19 +488,19 @@ public class SessionModule extends AbstractBiancaModule
          if ("nocache".equals(cacheLimiter)) {
             response.setHeader("Expires", "Thu, 19 Nov 1981 08:52:00 GMT");
             response.setHeader(
-                    "Cache-Control",
-                    "no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+               "Cache-Control",
+               "no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
             response.setHeader("Pragma", "no-cache");
          } else if ("private".equals(cacheLimiter)) {
             response.setHeader("Cache-Control", "private, max-age="
-                    + cacheExpire + ", pre-check=" + cacheExpire);
+               + cacheExpire + ", pre-check=" + cacheExpire);
          } else if ("private_no_expire".equals(cacheLimiter)) {
             response.setHeader("Cache-Control", "private, max-age="
-                    + cacheExpire + ", pre-check=" + cacheExpire);
+               + cacheExpire + ", pre-check=" + cacheExpire);
          } else if ("public".equals(cacheLimiter)) {
             response.setHeader(
-                    "Cache-Control", "public, max-age=" + cacheExpire
-                    + ", pre-check=" + cacheExpire);
+               "Cache-Control", "public, max-age=" + cacheExpire
+               + ", pre-check=" + cacheExpire);
          } else if ("none".equals(cacheLimiter)) {
          } else {
             // php/1k16
@@ -533,8 +532,8 @@ public class SessionModule extends AbstractBiancaModule
       StringValue cookieValue = env.createString(cookieName + '=' + sessionId);
 
       env.addConstant("SID",
-              cookieValue,
-              false);
+         cookieValue,
+         false);
 
       Cookie cookie = new Cookie(cookieName, sessionId);
       // #2649
@@ -545,7 +544,7 @@ public class SessionModule extends AbstractBiancaModule
 
       if (response.isCommitted()) {
          env.warning(
-                 L.l("cannot send session cookie because response is committed"));
+            L.l("cannot send session cookie because response is committed"));
       } else {
          Value path = env.getIni("session.cookie_path");
          cookie.setPath(path.toString());
@@ -628,6 +627,7 @@ public class SessionModule extends AbstractBiancaModule
          return '-';
       }
    }
+
    static final IniDefinition INI_SESSION_SAVE_PATH = _iniDefinitions.add("session.save_path", "", PHP_INI_ALL);
    static final IniDefinition INI_SESSION_NAME = _iniDefinitions.add("session.name", "PHPSESSID", PHP_INI_ALL);
    static final IniDefinition INI_SESSION_SAVE_HANDLER = _iniDefinitions.add("session.save_handler", "files", PHP_INI_ALL);
@@ -653,6 +653,6 @@ public class SessionModule extends AbstractBiancaModule
    static final IniDefinition INI_SESSION_HASH_FUNCTION = _iniDefinitions.add("session.hash_function", false, PHP_INI_ALL);
    static final IniDefinition INI_SESSION_HASH_BITS_PER_CHARACTER = _iniDefinitions.add("session.hash_bits_per_character", 4, PHP_INI_ALL);
    static final IniDefinition INI_URL_REWRITER_TAGS = _iniDefinitions.add(
-           "url_rewriter.tags",
-           "a=href,area=href,frame=src,form=,fieldset=", PHP_INI_ALL);
+      "url_rewriter.tags",
+      "a=href,area=href,frame=src,form=,fieldset=", PHP_INI_ALL);
 }

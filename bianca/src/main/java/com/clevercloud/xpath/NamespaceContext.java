@@ -30,39 +30,34 @@
 package com.clevercloud.xpath;
 
 public class NamespaceContext {
-  private NamespaceContext _prev;
-  private String _prefix;
-  private String _url;
+   private NamespaceContext _prev;
+   private String _prefix;
+   private String _url;
 
-  public NamespaceContext(NamespaceContext prev, String prefix, String url)
-  {
-    _prev = prev;
-    _prefix = prefix;
-    _url = url;
-  }
+   public NamespaceContext(NamespaceContext prev, String prefix, String url) {
+      _prev = prev;
+      _prefix = prefix;
+      _url = url;
+   }
 
-  public NamespaceContext getPrev()
-  {
-    return _prev;
-  }
+   public NamespaceContext getPrev() {
+      return _prev;
+   }
 
-  public String getPrefix()
-  {
-    return _prefix;
-  }
+   public String getPrefix() {
+      return _prefix;
+   }
 
-  public String getUrl()
-  {
-    return _url;
-  }
+   public String getUrl() {
+      return _url;
+   }
 
-  public static String find(NamespaceContext ns, String prefix)
-  {
-    for (; ns != null; ns = ns._prev) {
-      if (ns._prefix.equals(prefix))
-        return ns._url;
-    }
+   public static String find(NamespaceContext ns, String prefix) {
+      for (; ns != null; ns = ns._prev) {
+         if (ns._prefix.equals(prefix))
+            return ns._url;
+      }
 
-    return null;
-  }
+      return null;
+   }
 }

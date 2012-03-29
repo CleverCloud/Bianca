@@ -36,85 +36,77 @@ import java.io.IOException;
  * UTF-8.
  */
 public class StringReader extends StreamImpl {
-  private String string;
-  private int length;
-  private int index;
+   private String string;
+   private int length;
+   private int index;
 
-  private StringReader(String string)
-  {
-    // this.path = new NullPath("string");
-    this.string = string;
-    this.length = string.length();
-    this.index = 0;
-  }
+   private StringReader(String string) {
+      // this.path = new NullPath("string");
+      this.string = string;
+      this.length = string.length();
+      this.index = 0;
+   }
 
-  /**
-   * Creates a new ReadStream reading bytes from the given string.
-   *
-   * @param string the source string.
-   *
-   * @return a ReadStream reading from the string.
-   */
-  public static ReadStream open(String string)
-  {
-    StringReader ss = new StringReader(string);
-    ReadStream rs = new ReadStream(ss);
-    try {
-      rs.setEncoding("UTF-8");
-    } catch (Exception e) {
-    }
-    rs.setPath(new NullPath("string"));
-    return rs;
-  }
-
-  /**
-   * The string reader can always read.
-   */
-  public boolean canRead()
-  {
-    return true;
-  }
-
-  public int read(byte []buf, int offset, int length)
-    throws IOException
-  {
-    char ch;
-
-    int i = 0;
-    for (; index < this.length && i < length; index++) {
-      ch = string.charAt(index);
-
-      if (ch < 0x80) {
-        buf[offset + i] = (byte) ch;
-        i++;
+   /**
+    * Creates a new ReadStream reading bytes from the given string.
+    *
+    * @param string the source string.
+    * @return a ReadStream reading from the string.
+    */
+   public static ReadStream open(String string) {
+      StringReader ss = new StringReader(string);
+      ReadStream rs = new ReadStream(ss);
+      try {
+         rs.setEncoding("UTF-8");
+      } catch (Exception e) {
       }
-      else if (i + 1 >= length)
-        break;
-      else if (ch < 0x800) {
-        buf[offset + i] = (byte) (0xc0 + (ch >> 6));
-        buf[offset + i + 1] = (byte) (0x80 + (ch & 0x3f));
-        i += 2;
-      }
-      else if (i + 2 >= length)
-        break;
-      else {
-        buf[offset + i] = (byte) (0xe0 + (ch >> 12));
-        buf[offset + i + 1] = (byte) (0x80 + ((ch >> 6) & 0x3f));
-        buf[offset + i + 2] = (byte) (0x80 + (ch & 0x3f));
-        
-        i += 3;
-      }
-    }
+      rs.setPath(new NullPath("string"));
+      return rs;
+   }
 
-    return i > 0 ? i : -1;
-  }
+   /**
+    * The string reader can always read.
+    */
+   public boolean canRead() {
+      return true;
+   }
 
-  /**
-   * Returns the number of characters available as an approximation to
-   * the number of bytes ready.
-   */
-  public int getAvailable() throws IOException
-  {
-    return length - index;
-  }
+   public int read(byte[] buf, int offset, int length)
+      throws IOException {
+      char ch;
+
+      int i = 0;
+      for (; index < this.length && i < length; index++) {
+         ch = string.charAt(index);
+
+         if (ch < 0x80) {
+            buf[offset + i] = (byte) ch;
+            i++;
+         } else if (i + 1 >= length)
+            break;
+         else if (ch < 0x800) {
+            buf[offset + i] = (byte) (0xc0 + (ch >> 6));
+            buf[offset + i + 1] = (byte) (0x80 + (ch & 0x3f));
+            i += 2;
+         } else if (i + 2 >= length)
+            break;
+         else {
+            buf[offset + i] = (byte) (0xe0 + (ch >> 12));
+            buf[offset + i + 1] = (byte) (0x80 + ((ch >> 6) & 0x3f));
+            buf[offset + i + 2] = (byte) (0x80 + (ch & 0x3f));
+
+            i += 3;
+         }
+      }
+
+      return i > 0 ? i : -1;
+   }
+
+   /**
+    * Returns the number of characters available as an approximation to
+    * the number of bytes ready.
+    */
+   public int getAvailable() throws IOException {
+      return length - index;
+   }
 }

@@ -31,10 +31,12 @@ package com.clevercloud.bianca.script;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.page.InterpretedPage;
 import com.clevercloud.bianca.page.BiancaPage;
+import com.clevercloud.bianca.page.InterpretedPage;
 import com.clevercloud.bianca.program.BiancaProgram;
-import com.clevercloud.vfs.*;
+import com.clevercloud.vfs.NullWriteStream;
+import com.clevercloud.vfs.ReaderWriterStream;
+import com.clevercloud.vfs.WriteStream;
 
 import javax.script.CompiledScript;
 import javax.script.ScriptContext;
@@ -60,7 +62,7 @@ public class BiancaCompiledScript extends CompiledScript {
     */
    @Override
    public Object eval(ScriptContext cxt)
-           throws ScriptException {
+      throws ScriptException {
       Env env = null;
 
       try {

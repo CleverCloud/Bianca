@@ -49,7 +49,7 @@ public class FileReadValue extends FileValue {
    private long _offset;
 
    public FileReadValue(Path path)
-           throws IOException {
+      throws IOException {
       super(path);
 
       _is = path.openRead();
@@ -67,7 +67,7 @@ public class FileReadValue extends FileValue {
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          int v = _is.read();
 
@@ -88,7 +88,7 @@ public class FileReadValue extends FileValue {
     */
    @Override
    public int read(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          int len = _is.read(buffer, offset, length);
 
@@ -109,7 +109,7 @@ public class FileReadValue extends FileValue {
     */
    @Override
    public boolean readOptionalLinefeed()
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          int ch = _is.read();
 
@@ -127,7 +127,7 @@ public class FileReadValue extends FileValue {
 
    @Override
    public void writeToStream(OutputStream os, int length)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          _is.writeToStream(os, length);
       }
@@ -138,7 +138,7 @@ public class FileReadValue extends FileValue {
     */
    @Override
    public StringValue readLine(Env env)
-           throws IOException {
+      throws IOException {
       // TODO: offset messed up
       if (_is != null) {
          return env.createString(_is.readLineNoChop());
@@ -193,6 +193,7 @@ public class FileReadValue extends FileValue {
 
    /**
     * Converts to a string.
+    *
     * @param env
     */
    @Override

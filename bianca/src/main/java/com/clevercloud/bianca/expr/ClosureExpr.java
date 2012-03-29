@@ -29,7 +29,7 @@
  */
 package com.clevercloud.bianca.expr;
 
-import com.clevercloud.bianca.*;
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Closure;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
@@ -76,6 +76,7 @@ public class ClosureExpr extends Expr {
 
    /**
     * Returns the reference of the value.
+    *
     * @param location
     */
    @Override
@@ -85,6 +86,7 @@ public class ClosureExpr extends Expr {
 
    /**
     * Returns the copy of the value.
+    *
     * @param location
     */
    @Override
@@ -96,7 +98,6 @@ public class ClosureExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -108,7 +109,6 @@ public class ClosureExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -120,7 +120,6 @@ public class ClosureExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    private Value evalImpl(Env env) {

@@ -32,7 +32,7 @@ package com.clevercloud.bianca.lib.dom;
 import org.w3c.dom.CDATASection;
 
 public class DOMCDATASection
-        extends DOMCharacterData<CDATASection> {
+   extends DOMCharacterData<CDATASection> {
 
    DOMCDATASection(DOMImplementation impl, CDATASection delegate) {
       super(impl, delegate);
@@ -51,7 +51,7 @@ public class DOMCDATASection
    }
 
    public DOMText replaceWholeText(String content)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.replaceWholeText(content));
       } catch (org.w3c.dom.DOMException ex) {
@@ -60,7 +60,7 @@ public class DOMCDATASection
    }
 
    public DOMText splitText(int offset)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.splitText(offset));
       } catch (org.w3c.dom.DOMException ex) {

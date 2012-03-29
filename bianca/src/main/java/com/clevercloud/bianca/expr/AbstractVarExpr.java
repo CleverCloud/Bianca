@@ -77,12 +77,13 @@ abstract public class AbstractVarExpr extends Expr {
     */
    @Override
    public Expr createAssignRef(BiancaParser parser,
-           Expr value) {
+                               Expr value) {
       return parser.getExprFactory().createAssignRef(this, value);
    }
 
    /**
     * Creates the reference
+    *
     * @param location
     */
    @Override
@@ -92,6 +93,7 @@ abstract public class AbstractVarExpr extends Expr {
 
    /**
     * Creates the copy.
+    *
     * @param location
     */
    @Override
@@ -111,7 +113,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression, returning a Value.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -121,7 +122,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression as a reference (by RefExpr).
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -131,7 +131,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression as a reference when possible.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -143,7 +142,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression as an argument.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -155,7 +153,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression and copies the result for an assignment.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -167,7 +164,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression as an array.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -179,7 +175,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression as an object.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -191,7 +186,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression as an argument.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    abstract public void evalUnset(Env env);
@@ -200,7 +194,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -212,7 +205,6 @@ abstract public class AbstractVarExpr extends Expr {
     * Assign the variable with a new reference value.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

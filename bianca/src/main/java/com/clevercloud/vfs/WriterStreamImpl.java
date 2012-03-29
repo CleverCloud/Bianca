@@ -30,78 +30,70 @@
 package com.clevercloud.vfs;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Handles a stream which outputs to a writer.
  */
 public class WriterStreamImpl extends StreamImpl {
-  private static Logger log
-    = Logger.getLogger(WriterStreamImpl.class.getName());
-  
-  private Writer _writer;
-  private boolean _isClosed;
-  private String encoding;
+   private static Logger log
+      = Logger.getLogger(WriterStreamImpl.class.getName());
 
-  /**
-   * Sets the writer.
-   */
-  public void setWriter(Writer writer)
-  {
-    _writer = writer;
-    _isClosed = false;
+   private Writer _writer;
+   private boolean _isClosed;
+   private String encoding;
+
+   /**
+    * Sets the writer.
+    */
+   public void setWriter(Writer writer) {
+      _writer = writer;
+      _isClosed = false;
 
       encoding = null;
-  }
+   }
 
-  /**
-   * Returns true if this is a writable stream.
-   */
-  public boolean canWrite()
-  {
-    return true;
-  }
+   /**
+    * Returns true if this is a writable stream.
+    */
+   public boolean canWrite() {
+      return true;
+   }
 
-  /**
-   * Sets the write encoding.
-   */
-  public void setWriteEncoding(String encoding)
-  {
+   /**
+    * Sets the write encoding.
+    */
+   public void setWriteEncoding(String encoding) {
       this.encoding = encoding;
-  }
+   }
 
-  /**
-   * Writes a buffer to the underlying stream.
-   *
-   * @param buffer the byte array to write.
-   * @param offset the offset into the byte array.
-   * @param length the number of bytes to write.
-   * @param isEnd true when the write is flushing a close.
-   */
-  public void write(byte []buffer, int offset, int length, boolean isEnd)
-    throws IOException
-  {
-    if (_isClosed)
-        return;
+   /**
+    * Writes a buffer to the underlying stream.
+    *
+    * @param buffer the byte array to write.
+    * @param offset the offset into the byte array.
+    * @param length the number of bytes to write.
+    * @param isEnd  true when the write is flushing a close.
+    */
+   public void write(byte[] buffer, int offset, int length, boolean isEnd)
+      throws IOException {
+      if (_isClosed)
+         return;
 
-    _writer.write(new String (buffer, encoding), offset, length);
-  }
+      _writer.write(new String(buffer, encoding), offset, length);
+   }
 
-  /**
-   * Flushes the write output.
-   */
-  public void flush() throws IOException
-  {
-  }
+   /**
+    * Flushes the write output.
+    */
+   public void flush() throws IOException {
+   }
 
-  /**
-   * Closes the output.
-   */
-  public void close()
-  {
-    _isClosed = true;
-  }
+   /**
+    * Closes the output.
+    */
+   public void close() {
+      _isClosed = true;
+   }
 }

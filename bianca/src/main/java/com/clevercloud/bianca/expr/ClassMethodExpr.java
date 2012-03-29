@@ -29,15 +29,11 @@
  */
 package com.clevercloud.bianca.expr;
 
-import java.util.ArrayList;
-
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.MethodIntern;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
+
+import java.util.ArrayList;
 
 /**
  * A Foo::bar(...) method call expression.
@@ -52,8 +48,8 @@ public class ClassMethodExpr extends AbstractMethodExpr {
    protected boolean _isMethod;
 
    public ClassMethodExpr(Location location, String className,
-           String methodName,
-           ArrayList<Expr> args) {
+                          String methodName,
+                          ArrayList<Expr> args) {
       super(location);
       _className = className.intern();
 
@@ -65,7 +61,7 @@ public class ClassMethodExpr extends AbstractMethodExpr {
    }
 
    public ClassMethodExpr(Location location, String className,
-           String methodName, Expr[] args) {
+                          String methodName, Expr[] args) {
       super(location);
 
       _className = className.intern();
@@ -80,7 +76,6 @@ public class ClassMethodExpr extends AbstractMethodExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -89,7 +84,7 @@ public class ClassMethodExpr extends AbstractMethodExpr {
 
       if (cl == null) {
          throw env.createErrorException(L.l("{0} is an unknown class",
-                 _className));
+            _className));
       }
 
       Value[] values = evalArgs(env, _args);

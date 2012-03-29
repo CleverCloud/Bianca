@@ -29,7 +29,10 @@
  */
 package com.clevercloud.bianca.expr;
 
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.Var;
 import com.clevercloud.bianca.program.InterpretedClassDef;
 import com.clevercloud.util.L10N;
 
@@ -54,7 +57,7 @@ public class ThisExpr extends AbstractVarExpr {
     */
    @Override
    public Expr createFieldGet(ExprFactory factory,
-           StringValue name) {
+                              StringValue name) {
       return factory.createThisField(this, name);
    }
 
@@ -63,7 +66,7 @@ public class ThisExpr extends AbstractVarExpr {
     */
    @Override
    public Expr createFieldGet(ExprFactory factory,
-           Expr name) {
+                              Expr name) {
       return factory.createThisField(this, name);
    }
 
@@ -71,7 +74,6 @@ public class ThisExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -83,7 +85,6 @@ public class ThisExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -95,7 +96,6 @@ public class ThisExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -107,7 +107,6 @@ public class ThisExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -121,7 +120,6 @@ public class ThisExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -135,7 +133,6 @@ public class ThisExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

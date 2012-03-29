@@ -46,9 +46,9 @@ public class WhileStatement extends Statement {
    protected final String _label;
 
    public WhileStatement(Location location,
-           Expr test,
-           Statement block,
-           String label) {
+                         Expr test,
+                         Statement block,
+                         String label) {
       super(location);
 
       _test = test;

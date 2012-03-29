@@ -29,11 +29,10 @@
  */
 package com.clevercloud.bianca.program;
 
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.function.AbstractFunction;
-import com.clevercloud.bianca.program.ClassDef.FieldEntry;
-import com.clevercloud.bianca.Location;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -44,7 +43,7 @@ import java.util.Set;
  * Represents an interpreted PHP class definition.
  */
 public class InterpretedClassDef extends ClassDef
-        implements InstanceInitializer {
+   implements InstanceInitializer {
 
    protected boolean _isAbstract;
    protected boolean _isInterface;
@@ -69,18 +68,18 @@ public class InterpretedClassDef extends ClassDef
    protected String _comment;
 
    public InterpretedClassDef(Location location,
-           String name,
-           String parentName,
-           String[] ifaceList,
-           int index) {
+                              String name,
+                              String parentName,
+                              String[] ifaceList,
+                              int index) {
       super(location, name, parentName, ifaceList);
 
       _parseIndex = index;
    }
 
    public InterpretedClassDef(String name,
-           String parentName,
-           String[] ifaceList) {
+                              String parentName,
+                              String[] ifaceList) {
       this(null, name, parentName, ifaceList, 0);
    }
 
@@ -216,8 +215,8 @@ public class InterpretedClassDef extends ClassDef
          FieldEntry fieldEntry = entry.getValue();
 
          cl.addField(entry.getKey(),
-                 fieldEntry.getValue(),
-                 fieldEntry.getVisibility());
+            fieldEntry.getValue(),
+            fieldEntry.getVisibility());
       }
 
       String className = getName();
@@ -312,11 +311,11 @@ public class InterpretedClassDef extends ClassDef
     * Adds a value.
     */
    public void addValue(Value name,
-           Expr value,
-           FieldVisibility visibility,
-           String comment) {
+                        Expr value,
+                        FieldVisibility visibility,
+                        String comment) {
       _fieldMap.put(name.toStringValue(),
-              new FieldEntry(value, visibility, comment));
+         new FieldEntry(value, visibility, comment));
    }
 
    /**
@@ -365,8 +364,8 @@ public class InterpretedClassDef extends ClassDef
          FieldEntry fieldEntry = entry.getValue();
 
          object.initField(entry.getKey(),
-                 fieldEntry.getValue().eval(env).copy(),
-                 fieldEntry.getVisibility());
+            fieldEntry.getValue().eval(env).copy(),
+            fieldEntry.getVisibility());
       }
 
       if (_destructor != null && value instanceof ObjectExtValue) {

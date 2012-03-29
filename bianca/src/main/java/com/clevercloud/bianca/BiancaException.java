@@ -30,8 +30,8 @@
  */
 package com.clevercloud.bianca;
 
-import java.util.*;
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 /**
  * Parent of PHP exceptions
@@ -56,7 +56,7 @@ public class BiancaException extends RuntimeException {
    }
 
    public static BiancaException create(Throwable e,
-           ArrayList<String> stackTrace) {
+                                        ArrayList<String> stackTrace) {
       BiancaException qExn;
 
       if (e instanceof BiancaException) {

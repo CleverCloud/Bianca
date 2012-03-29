@@ -30,9 +30,9 @@
 package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.BiancaContext;
+import com.clevercloud.bianca.annotation.Name;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.bianca.annotation.Name;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;

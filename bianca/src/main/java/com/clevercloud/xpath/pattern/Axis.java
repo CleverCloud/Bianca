@@ -32,7 +32,6 @@ package com.clevercloud.xpath.pattern;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -41,107 +40,95 @@ import org.w3c.dom.Node;
  * select many nodes from a single node.
  */
 abstract class Axis extends AbstractPattern {
-  Axis(AbstractPattern parent)
-  {
-    super(parent);
-  }
+   Axis(AbstractPattern parent) {
+      super(parent);
+   }
 
-  /**
-   * Calculates the position of the node in its context.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   * @param pattern the position pattern
-   *
-   * @return the node's position.
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    return 1;
-  }
+   /**
+    * Calculates the position of the node in its context.
+    *
+    * @param node    the current node
+    * @param env     the variable environment
+    * @param pattern the position pattern
+    * @return the node's position.
+    */
+   public int position(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      return 1;
+   }
 
-  /**
-   * Counts the nodes within the axis matching the pattern.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   * @param pattern the position pattern
-   *
-   * @return the count of the node list.
-   */
-  public int count(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    return 1;
-  }
+   /**
+    * Counts the nodes within the axis matching the pattern.
+    *
+    * @param node    the current node
+    * @param env     the variable environment
+    * @param pattern the position pattern
+    * @return the count of the node list.
+    */
+   public int count(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      return 1;
+   }
 
-  /**
-   * Creates a new node iterator.
-   *
-   * @param node the starting node
-   * @param env the variable environment
-   * @param match the axis match pattern
-   *
-   * @return the node iterator
-   */
-  public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
-                                         AbstractPattern match)
-    throws XPathException
-  {
-    if (_parent == null)
-      return new AxisIterator(null, this, node, env, match);
-    else if (_parent instanceof FromRoot) {
-      if (node instanceof Document)
-        return new AxisIterator(null, this, node, env, match);
-      else if (node != null)
-        return new AxisIterator(null, this, node.getOwnerDocument(),
-                                env, match);
-    }
+   /**
+    * Creates a new node iterator.
+    *
+    * @param node  the starting node
+    * @param env   the variable environment
+    * @param match the axis match pattern
+    * @return the node iterator
+    */
+   public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
+                                          AbstractPattern match)
+      throws XPathException {
+      if (_parent == null)
+         return new AxisIterator(null, this, node, env, match);
+      else if (_parent instanceof FromRoot) {
+         if (node instanceof Document)
+            return new AxisIterator(null, this, node, env, match);
+         else if (node != null)
+            return new AxisIterator(null, this, node.getOwnerDocument(),
+               env, match);
+      }
 
-    NodeIterator parentIter;
-    parentIter = _parent.createNodeIterator(node, env, _parent.copyPosition());
+      NodeIterator parentIter;
+      parentIter = _parent.createNodeIterator(node, env, _parent.copyPosition());
 
-    return new AxisIterator(parentIter, this, null, env, match);
-  }
+      return new AxisIterator(parentIter, this, null, env, match);
+   }
 
-  /**
-   * Returns the node itself for the axis.
-   */
-  public AbstractPattern copyAxis()
-  {
-    return this;
-  }
+   /**
+    * Returns the node itself for the axis.
+    */
+   public AbstractPattern copyAxis() {
+      return this;
+   }
 
-  /**
-   * Returns null since the axis isn't part of the position pattern.
-   */
-  public AbstractPattern copyPosition()
-  {
-    return null;
-  }
-  
-  /**
-   * Returns true if the pattern selects a single node
-   */
-  boolean isSingleSelect()
-  {
-    return false;
-  }
-  
-  /**
-   * Returns true if the pattern is strictly ascending.
-   */
-  public boolean isStrictlyAscending()
-  {
-    return isSingleLevel();
-  }
-  
-  /**
-   * Returns true if the pattern's selector returns unique nodes.
-   */
-  public boolean isUnique()
-  {
-    return isStrictlyAscending();
-  }
+   /**
+    * Returns null since the axis isn't part of the position pattern.
+    */
+   public AbstractPattern copyPosition() {
+      return null;
+   }
+
+   /**
+    * Returns true if the pattern selects a single node
+    */
+   boolean isSingleSelect() {
+      return false;
+   }
+
+   /**
+    * Returns true if the pattern is strictly ascending.
+    */
+   public boolean isStrictlyAscending() {
+      return isSingleLevel();
+   }
+
+   /**
+    * Returns true if the pattern's selector returns unique nodes.
+    */
+   public boolean isUnique() {
+      return isStrictlyAscending();
+   }
 }

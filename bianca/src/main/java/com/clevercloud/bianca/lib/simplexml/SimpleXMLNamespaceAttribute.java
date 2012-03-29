@@ -29,7 +29,9 @@
  */
 package com.clevercloud.bianca.lib.simplexml;
 
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.BiancaClass;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
 
 /**
  * SimpleXMLElement object oriented API facade.
@@ -38,18 +40,18 @@ import com.clevercloud.bianca.env.*;
 public class SimpleXMLNamespaceAttribute extends SimpleXMLAttribute {
 
    protected SimpleXMLNamespaceAttribute(Env env,
-           BiancaClass cls,
-           SimpleXMLElement parent,
-           String name) {
+                                         BiancaClass cls,
+                                         SimpleXMLElement parent,
+                                         String name) {
       super(env, cls, parent, name);
    }
 
    protected SimpleXMLNamespaceAttribute(Env env,
-           BiancaClass cls,
-           SimpleXMLElement parent,
-           String name,
-           String namespace,
-           StringValue text) {
+                                         BiancaClass cls,
+                                         SimpleXMLElement parent,
+                                         String name,
+                                         String namespace,
+                                         StringValue text) {
       super(env, cls, parent, name, namespace, text);
    }
 

@@ -41,68 +41,60 @@ import java.util.Map;
  * @since Resin 1.2
  */
 public class NotFoundPath extends Path {
-  private String _url;
+   private String _url;
 
-  /**
-   * Creates new NotFoundPath
-   */
-  public NotFoundPath(SchemeMap schemeMap, String url)
-  {
-    super(schemeMap);
+   /**
+    * Creates new NotFoundPath
+    */
+   public NotFoundPath(SchemeMap schemeMap, String url) {
+      super(schemeMap);
 
-    _url = url;
-  }
+      _url = url;
+   }
 
-  /**
-   * Dummy return.
-   */
-  public Path schemeWalk(String userPath,
-                         Map<String,Object> attributes,
-                         String path, int offset)
-  {
-    return this;
-  }
+   /**
+    * Dummy return.
+    */
+   public Path schemeWalk(String userPath,
+                          Map<String, Object> attributes,
+                          String path, int offset) {
+      return this;
+   }
 
-  /**
-   * The URL is error
-   */
-  public String getURL()
-  {
-    return _url;
-  }
+   /**
+    * The URL is error
+    */
+   public String getURL() {
+      return _url;
+   }
 
-  public String getScheme()
-  {
-    return "error";
-  }
+   public String getScheme() {
+      return "error";
+   }
 
-  /**
-   * Returns the URL which can't be found.
-   */
-  public String getPath()
-  {
-    return _url;
-  }
+   /**
+    * Returns the URL which can't be found.
+    */
+   public String getPath() {
+      return _url;
+   }
 
-  /**
-   * Throws a FileNotFoundException for any read.
-   */
-  public StreamImpl openReadImpl()
-    throws IOException
-  {
-    throw new FileNotFoundException(getURL());
-  }
+   /**
+    * Throws a FileNotFoundException for any read.
+    */
+   public StreamImpl openReadImpl()
+      throws IOException {
+      throw new FileNotFoundException(getURL());
+   }
 
-  protected Path copyCache()
-  {
-    return null;
-  }
+   protected Path copyCache() {
+      return null;
+   }
 
-  /**
-   * Only identical is equals
-   */
-  public boolean equals(Object obj)
-  {
-    return false;
-  }
+   /**
+    * Only identical is equals
+    */
+   public boolean equals(Object obj) {
+      return false;
+   }
 }

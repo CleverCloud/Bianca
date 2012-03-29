@@ -137,6 +137,7 @@ public class LongValue extends NumberValue {
    //
    // marshal cost
    //
+
    /**
     * Cost to convert to a double
     */
@@ -258,6 +259,7 @@ public class LongValue extends NumberValue {
    return super.toAutoArray();
    }
     */
+
    /**
     * Negates the value.
     */
@@ -453,6 +455,7 @@ public class LongValue extends NumberValue {
 
    /**
     * Prints the value.
+    *
     * @param env
     */
    @Override
@@ -489,6 +492,7 @@ public class LongValue extends NumberValue {
    //
    // Java generator code
    //
+
    /**
     * Generates code to recreate the expression.
     *
@@ -496,7 +500,7 @@ public class LongValue extends NumberValue {
     */
    @Override
    public void generate(PrintWriter out)
-           throws IOException {
+      throws IOException {
       if (_value == 0) {
          out.print("LongValue.ZERO");
       } else if (_value == 1) {
@@ -538,10 +542,10 @@ public class LongValue extends NumberValue {
 
    @Override
    public void varDumpImpl(Env env,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                           WriteStream out,
+                           int depth,
+                           IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       out.print("int(" + toLong() + ")");
    }
 

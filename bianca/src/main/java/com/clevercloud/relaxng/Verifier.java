@@ -34,7 +34,6 @@ import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.vfs.Vfs;
 import com.clevercloud.xml.Xml;
-
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -47,59 +46,56 @@ import java.util.logging.Logger;
  * JARV verifier implementation
  */
 abstract public class Verifier {
-  private static final Logger log
-    = Logger.getLogger(Verifier.class.getName());
-  
-  /**
-   * Set the error handler.
-   */
-  abstract public void setErrorHandler(ErrorHandler handler);
+   private static final Logger log
+      = Logger.getLogger(Verifier.class.getName());
 
-  /**
-   * Creates a verifier handler from the verifier.
-   */
-  abstract public VerifierHandler getVerifierHandler();
-    
+   /**
+    * Set the error handler.
+    */
+   abstract public void setErrorHandler(ErrorHandler handler);
 
-  /**
-   * Returns a verifier filter.
-   */
-  public VerifierFilter getVerifierFilter()
-  {
-    return new VerifierFilter(this);
-  }
+   /**
+    * Creates a verifier handler from the verifier.
+    */
+   abstract public VerifierHandler getVerifierHandler();
 
-  /**
-   * Verifies a file.
-   */
-  public boolean verify(String url)
-    throws IOException, SAXException
-  {
-    Path path = Vfs.lookup(url);
 
-    ReadStream is = path.openRead();
-    
-    try {
-      Xml xml = new Xml();
+   /**
+    * Returns a verifier filter.
+    */
+   public VerifierFilter getVerifierFilter() {
+      return new VerifierFilter(this);
+   }
 
-      VerifierHandler handler = getVerifierHandler();
+   /**
+    * Verifies a file.
+    */
+   public boolean verify(String url)
+      throws IOException, SAXException {
+      Path path = Vfs.lookup(url);
 
-      xml.setContentHandler(handler);
+      ReadStream is = path.openRead();
 
-      xml.parse(is);
+      try {
+         Xml xml = new Xml();
 
-      return handler.isValid();
-    } finally {
-      is.close();
-    }
-  }
+         VerifierHandler handler = getVerifierHandler();
 
-  /**
-   * Sends an error.
-   */
-  public void error(SAXParseException e)
-    throws SAXException
-  {
-    log.log(Level.FINE, e.toString(), e);
-  }
+         xml.setContentHandler(handler);
+
+         xml.parse(is);
+
+         return handler.isValid();
+      } finally {
+         is.close();
+      }
+   }
+
+   /**
+    * Sends an error.
+    */
+   public void error(SAXParseException e)
+      throws SAXException {
+      log.log(Level.FINE, e.toString(), e);
+   }
 }

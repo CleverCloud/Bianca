@@ -32,18 +32,18 @@ package com.clevercloud.xml;
 /**
  * HTML parser interface.  The parser can parse directly into the DOM, or it
  * can be used as a SAX parser.
- *
+ * <p/>
  * <p>To parse a file into a DOM Document use
  * <pre><code>
  * Document doc = new Html().parseDocument("foo.html");
  * </code></pre>
- *
+ * <p/>
  * <p>To parse a string into a DOM Document use
  * <pre><code>
  * String html = "&lt;h1>small test&lt;/h1>";
  * Document doc = new Html().parseDocumentString(html);
  * </code></pre>
- *
+ * <p/>
  * <p>To parse a file using the SAX API use
  * <pre><code>
  * Html html = new Html();
@@ -52,14 +52,13 @@ package com.clevercloud.xml;
  * </code></pre>
  */
 public class Html extends XmlParser {
-  /**
-   * Create a new HTML parser
-   */
-  public Html()
-  {
-    super(new HtmlPolicy(), null);
-    _forgiving = true;
-    
-    init();
-  }
+   /**
+    * Create a new HTML parser
+    */
+   public Html() {
+      super(new HtmlPolicy(), null);
+      _forgiving = true;
+
+      init();
+   }
 }

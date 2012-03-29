@@ -35,14 +35,9 @@ import com.clevercloud.bianca.annotation.ResourceType;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
-import java.io.UnsupportedEncodingException;
 
 import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,13 +55,13 @@ public class MysqliResult extends JdbcResultResource {
     * Constructor for MysqliResult
     *
     * @param stmt the corresponding statement
-    * @param rs the corresponding result set
+    * @param rs   the corresponding result set
     * @param conn the corresponding connection
     */
    public MysqliResult(Env env,
-           Statement stmt,
-           ResultSet rs,
-           Mysqli conn) {
+                       Statement stmt,
+                       ResultSet rs,
+                       Mysqli conn) {
       super(env, stmt, rs, conn);
 
       // getNumRows() is efficient for MySQL
@@ -77,11 +72,11 @@ public class MysqliResult extends JdbcResultResource {
     * Constructor for MysqliResult
     *
     * @param metaData the corresponding result set meta data
-    * @param conn the corresponding connection
+    * @param conn     the corresponding connection
     */
    public MysqliResult(Env env,
-           ResultSetMetaData metaData,
-           Mysqli conn) {
+                       ResultSetMetaData metaData,
+                       Mysqli conn) {
       super(env, metaData, conn);
    }
 
@@ -97,7 +92,7 @@ public class MysqliResult extends JdbcResultResource {
     * Seeks to an arbitrary result pointer specified
     * by the offset in the result set represented by result.
     *
-    * @param env the PHP executing environment
+    * @param env       the PHP executing environment
     * @param rowNumber the row offset
     * @return true on success or false on failure
     */
@@ -113,21 +108,20 @@ public class MysqliResult extends JdbcResultResource {
     * Fetch a result row as an associative, a numeric array, or both.
     *
     * @param type one of MYSQLI_ASSOC, MYSQLI_NUM, or MYSQLI_BOTH (default)
-    * By using the MYSQLI_ASSOC constant this function will behave
-    * identically to the mysqli_fetch_assoc(), while MYSQLI_NUM will
-    * behave identically to the mysqli_fetch_row() function. The final
-    * option MYSQLI_BOTH will create a single array with the attributes
-    * of both.
-    *
+    *             By using the MYSQLI_ASSOC constant this function will behave
+    *             identically to the mysqli_fetch_assoc(), while MYSQLI_NUM will
+    *             behave identically to the mysqli_fetch_row() function. The final
+    *             option MYSQLI_BOTH will create a single array with the attributes
+    *             of both.
     * @return a result row as an associative, a numeric array, or both
-    * or null if there are no more rows in the result set
+    *         or null if there are no more rows in the result set
     */
    @ReturnNullAsFalse
    public ArrayValue fetch_array(Env env,
-           @Optional("MYSQLI_BOTH") int type) {
+                                 @Optional("MYSQLI_BOTH") int type) {
       if (type != MysqliModule.MYSQLI_ASSOC
-              && type != MysqliModule.MYSQLI_BOTH
-              && type != MysqliModule.MYSQLI_NUM) {
+         && type != MysqliModule.MYSQLI_BOTH
+         && type != MysqliModule.MYSQLI_NUM) {
          env.warning(L.l("invalid result_type"));
          return null;
       }
@@ -139,7 +133,7 @@ public class MysqliResult extends JdbcResultResource {
     * Returns an associative array representing the row.
     *
     * @return an associative array representing the row
-    * or null if there are no more rows in the result set
+    *         or null if there are no more rows in the result set
     */
    public ArrayValue fetch_assoc(Env env) {
       return fetchArray(env, JdbcResultResource.FETCH_ASSOC);
@@ -148,10 +142,10 @@ public class MysqliResult extends JdbcResultResource {
    /**
     * Returns field metadata for a single field.
     *
-    * @param env the PHP executing environment
+    * @param env    the PHP executing environment
     * @param offset the field number
     * @return the field metadata or false if no field
-    * information for specified offset is available
+    *         information for specified offset is available
     */
    public Value fetch_field_direct(Env env, int offset) {
       return fetchFieldDirect(env, offset);
@@ -162,7 +156,7 @@ public class MysqliResult extends JdbcResultResource {
     *
     * @param env the PHP executing environment
     * @return the next field in the result set or
-    * false if no information is available
+    *         false if no information is available
     */
    public Value fetch_field(Env env) {
       return fetchNextField(env);
@@ -173,8 +167,8 @@ public class MysqliResult extends JdbcResultResource {
     *
     * @param env the PHP executing environment
     * @return an array of objects which contains field
-    * definition information or FALSE if no field
-    * information is available
+    *         definition information or FALSE if no field
+    *         information is available
     */
    public Value fetch_fields(Env env) {
       return getFieldDirectArray(env);
@@ -185,10 +179,10 @@ public class MysqliResult extends JdbcResultResource {
     * current row in the result set.
     *
     * @return an array with the lengths of the
-    * columns of the current row in the result set
-    * or false if you call it before calling
-    * mysqli_fetch_row/array/object or after
-    * retrieving all rows in the result set
+    *         columns of the current row in the result set
+    *         or false if you call it before calling
+    *         mysqli_fetch_row/array/object or after
+    *         retrieving all rows in the result set
     */
    public Value fetch_lengths() {
       return getLengths();
@@ -199,8 +193,8 @@ public class MysqliResult extends JdbcResultResource {
     *
     * @param env the PHP executing environment
     * @return an object that corresponds to the
-    * fetched row or NULL if there are no more
-    * rows in resultset
+    *         fetched row or NULL if there are no more
+    *         rows in resultset
     */
    public Value fetch_object(Env env) {
       return fetchObject(env);
@@ -210,8 +204,8 @@ public class MysqliResult extends JdbcResultResource {
     * Returns a numerical array representing the current row.
     *
     * @return an array that corresponds to the
-    * fetched row or NULL if there are no more
-    * rows in result set
+    *         fetched row or NULL if there are no more
+    *         rows in result set
     */
    public ArrayValue fetch_row(Env env) {
       return fetchArray(env, JdbcResultResource.FETCH_NUM);
@@ -229,7 +223,7 @@ public class MysqliResult extends JdbcResultResource {
 
    /**
     * returns an object containing the following field information:
-    *
+    * <p/>
     * name: The name of the column
     * orgname: The original name if an alias was specified
     * table: The name of the table
@@ -240,12 +234,12 @@ public class MysqliResult extends JdbcResultResource {
     * type: The data type used for this field (an integer... also see _constMap)
     * decimals: The number of decimals used (for integer fields)
     *
-    * @param env the PHP executing environment
+    * @param env         the PHP executing environment
     * @param fieldOffset 0 <= fieldOffset < number of fields
     * @return an object or BooleanValue.FALSE
     */
    protected Value fetchFieldDirect(Env env,
-           int fieldOffset) {
+                                    int fieldOffset) {
       if (!isValidFieldOffset(fieldOffset)) {
          // php/1f77 : No warning printed for invalid index
 
@@ -280,26 +274,26 @@ public class MysqliResult extends JdbcResultResource {
          }
 
          String sql = "SHOW FULL COLUMNS FROM "
-                 + fieldTable + " LIKE \'" + fieldName + "\'";
+            + fieldTable + " LIKE \'" + fieldName + "\'";
 
          MysqliResult metaResult;
 
          metaResult = ((Mysqli) getConnection()).metaQuery(env,
-                 sql,
-                 catalogName);
+            sql,
+            catalogName);
 
          if (metaResult == null) {
             return fetchFieldImproved(env, md, offset);
          }
 
          return metaResult.fetchFieldImproved(env,
-                 fieldLength,
-                 fieldAlias,
-                 fieldName,
-                 fieldTable,
-                 jdbcType,
-                 fieldMysqlType,
-                 fieldScale);
+            fieldLength,
+            fieldAlias,
+            fieldName,
+            fieldTable,
+            jdbcType,
+            fieldMysqlType,
+            fieldScale);
       } catch (SQLException e) {
          log.log(Level.FINE, e.toString(), e);
 
@@ -308,8 +302,8 @@ public class MysqliResult extends JdbcResultResource {
    }
 
    protected Value fetchFieldImproved(Env env,
-           ResultSetMetaData md,
-           int offset) {
+                                      ResultSetMetaData md,
+                                      int offset) {
       Value result = env.createObject();
 
       try {
@@ -324,7 +318,7 @@ public class MysqliResult extends JdbcResultResource {
          int scale = md.getScale(offset);
 
          if ((fieldTable == null || "".equals(fieldTable))
-                 && ((Mysqli) getConnection()).isLastSqlDescribe()) {
+            && ((Mysqli) getConnection()).isLastSqlDescribe()) {
             fieldTable = "COLUMNS";
          }
 
@@ -449,7 +443,7 @@ public class MysqliResult extends JdbcResultResource {
 
    /**
     * Returns an object with the following fields:
-    *
+    * <p/>
     * name: The name of the column
     * orgname: The original name if an alias was specified
     * table: The name of the table
@@ -460,23 +454,23 @@ public class MysqliResult extends JdbcResultResource {
     * type: An integer respresenting the data type used for this field
     * decimals: The number of decimals used (for integer fields)
     *
-    * @param env the PHP executing environment
-    * @param fieldLength the field length as defined in the table declaration.
-    * @param name the field name
+    * @param env          the PHP executing environment
+    * @param fieldLength  the field length as defined in the table declaration.
+    * @param name         the field name
     * @param originalName the field original name
-    * @param table the field table name
-    * @param type the field type
-    * @param scale the field scale
+    * @param table        the field table name
+    * @param type         the field type
+    * @param scale        the field scale
     * @return an object containing field metadata
     */
    protected Value fetchFieldImproved(Env env,
-           int fieldLength,
-           String name,
-           String originalName,
-           String table,
-           int jdbcType,
-           String mysqlType,
-           int scale) {
+                                      int fieldLength,
+                                      String name,
+                                      String originalName,
+                                      String table,
+                                      int jdbcType,
+                                      String mysqlType,
+                                      int scale) {
       Value result = env.createObject();
 
       try {
@@ -522,8 +516,8 @@ public class MysqliResult extends JdbcResultResource {
          }
 
          if (isInResultString(2, "blob")
-                 || (jdbcType == Types.LONGVARCHAR)
-                 || (jdbcType == Types.LONGVARBINARY)) {
+            || (jdbcType == Types.LONGVARCHAR)
+            || (jdbcType == Types.LONGVARBINARY)) {
             flags += MysqliModule.BLOB_FLAG;
          }
 
@@ -537,9 +531,9 @@ public class MysqliResult extends JdbcResultResource {
 
          // php/1f73 - null check
          if (isInResultString(3, "bin")
-                 || (jdbcType == Types.LONGVARBINARY)
-                 || (jdbcType == Types.DATE)
-                 || (jdbcType == Types.TIMESTAMP)) {
+            || (jdbcType == Types.LONGVARBINARY)
+            || (jdbcType == Types.DATE)
+            || (jdbcType == Types.TIMESTAMP)) {
             flags += MysqliModule.BINARY_FLAG;
          }
 
@@ -556,13 +550,13 @@ public class MysqliResult extends JdbcResultResource {
          }
 
          if ((jdbcType == Types.BIGINT)
-                 || (jdbcType == Types.BIT)
-                 || (jdbcType == Types.BOOLEAN)
-                 || (jdbcType == Types.DECIMAL)
-                 || (jdbcType == Types.DOUBLE)
-                 || (jdbcType == Types.REAL)
-                 || (jdbcType == Types.INTEGER)
-                 || (jdbcType == Types.SMALLINT)) {
+            || (jdbcType == Types.BIT)
+            || (jdbcType == Types.BOOLEAN)
+            || (jdbcType == Types.DECIMAL)
+            || (jdbcType == Types.DOUBLE)
+            || (jdbcType == Types.REAL)
+            || (jdbcType == Types.INTEGER)
+            || (jdbcType == Types.SMALLINT)) {
             flags += MysqliModule.NUM_FLAG;
          }
 
@@ -703,10 +697,10 @@ public class MysqliResult extends JdbcResultResource {
          }
 
          final boolean isTimestamp = (jdbcType == Types.TIMESTAMP)
-                 && mysqlType.equals("TIMESTAMP");
+            && mysqlType.equals("TIMESTAMP");
 
          if (isInResultString(2, "blob")
-                 || (jdbcType == Types.LONGVARCHAR)) {
+            || (jdbcType == Types.LONGVARCHAR)) {
             if (flags.length() > 0) {
                flags.append(' ');
             }
@@ -714,8 +708,8 @@ public class MysqliResult extends JdbcResultResource {
          }
 
          if (isInResultString(2, "unsigned")
-                 || (jdbcType == Types.BIT && mysqlType.equals("BIT"))
-                 || isTimestamp) {
+            || (jdbcType == Types.BIT && mysqlType.equals("BIT"))
+            || isTimestamp) {
             if (flags.length() > 0) {
                flags.append(' ');
             }
@@ -723,7 +717,7 @@ public class MysqliResult extends JdbcResultResource {
          }
 
          if (isInResultString(2, "zerofill")
-                 || isTimestamp) {
+            || isTimestamp) {
             if (flags.length() > 0) {
                flags.append(' ');
             }
@@ -731,12 +725,12 @@ public class MysqliResult extends JdbcResultResource {
          }
 
          if (isInResultString(3, "bin")
-                 || (jdbcType == Types.BINARY)
-                 || (jdbcType == Types.LONGVARBINARY)
-                 || (jdbcType == Types.VARBINARY)
-                 || (jdbcType == Types.TIME)
-                 || isTimestamp
-                 || isInResultString(2, "date")) {
+            || (jdbcType == Types.BINARY)
+            || (jdbcType == Types.LONGVARBINARY)
+            || (jdbcType == Types.VARBINARY)
+            || (jdbcType == Types.TIME)
+            || isTimestamp
+            || isInResultString(2, "date")) {
             if (flags.length() > 0) {
                flags.append(' ');
             }
@@ -827,12 +821,11 @@ public class MysqliResult extends JdbcResultResource {
    }
 
    /**
-    * @see Value fetchFieldDirect
-    *
-    * increments the fieldOffset counter by one;
-    *
     * @param env the PHP executing environment
     * @return
+    * @see Value fetchFieldDirect
+    *      <p/>
+    *      increments the fieldOffset counter by one;
     */
    protected Value fetchNextField(Env env) {
       int fieldOffset = getFieldOffset();
@@ -889,7 +882,6 @@ public class MysqliResult extends JdbcResultResource {
    }
 
    /**
-    *
     * @param env the PHP executing environment
     * @return array of fieldDirect objects
     */
@@ -930,10 +922,10 @@ public class MysqliResult extends JdbcResultResource {
 
    @Override
    protected Value getColumnString(Env env,
-           ResultSet rs,
-           ResultSetMetaData md,
-           int column)
-           throws SQLException {
+                                   ResultSet rs,
+                                   ResultSetMetaData md,
+                                   int column)
+      throws SQLException {
       // php/1464, php/144f, php/144g, php/144b
 
       // The "SET NAMES 'latin1'" in Mysqli is important to make the default

@@ -30,11 +30,7 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import java.io.IOException;
@@ -48,7 +44,7 @@ public class FunEachExpr extends AbstractUnaryExpr {
    private boolean _isVar;
 
    public FunEachExpr(Location location, Expr expr)
-           throws IOException {
+      throws IOException {
       super(location, expr);
 
       _isVar = expr.isVar();
@@ -64,7 +60,6 @@ public class FunEachExpr extends AbstractUnaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -84,7 +79,7 @@ public class FunEachExpr extends AbstractUnaryExpr {
          return array.each();
       } else {
          env.warning(L.l("each() argument must be an array at '{0}'",
-                 value.getClass().getSimpleName()));
+            value.getClass().getSimpleName()));
 
          return BooleanValue.FALSE;
       }

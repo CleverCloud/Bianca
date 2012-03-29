@@ -36,17 +36,18 @@ import org.w3c.dom.Element;
  * CleverCloudElement extends the DOM, providing for ordered Attributes.
  */
 public interface CleverCloudElement extends Element, CleverCloudNode {
-  /**
-   * Returns the qname.
-   */
-  public QName getQName();
-  
-  /**
-   * Returns the first attribute of the element.
-   */
-  public Attr getFirstAttribute();
-  /**
-   * Returns the URL for a given namespace prefix.
-   */
-  public String getNamespace(String prefix);
+   /**
+    * Returns the qname.
+    */
+   public QName getQName();
+
+   /**
+    * Returns the first attribute of the element.
+    */
+   public Attr getFirstAttribute();
+
+   /**
+    * Returns the URL for a given namespace prefix.
+    */
+   public String getNamespace(String prefix);
 }

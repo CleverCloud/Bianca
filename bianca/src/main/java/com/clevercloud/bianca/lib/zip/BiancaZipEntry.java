@@ -31,20 +31,20 @@ package com.clevercloud.bianca.lib.zip;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.lib.file.BinaryInput;
 import com.clevercloud.util.L10N;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 public class BiancaZipEntry {
 
    private static final Logger log =
-           Logger.getLogger(BiancaZipEntry.class.getName());
+      Logger.getLogger(BiancaZipEntry.class.getName());
    private static final L10N L = new L10N(BiancaZipEntry.class);
    private final ZipEntry _entry;
    private final BinaryInput _binaryInput;
@@ -52,8 +52,8 @@ public class BiancaZipEntry {
    private ZipEntryInputStream _in;
 
    public BiancaZipEntry(ZipEntry zipEntry,
-           BinaryInput binaryInput,
-           long position) {
+                         BinaryInput binaryInput,
+                         long position) {
       _entry = zipEntry;
       _binaryInput = binaryInput;
       _position = position;
@@ -98,7 +98,7 @@ public class BiancaZipEntry {
     * Closes the zip entry.
     */
    public boolean zip_entry_close()
-           throws IOException {
+      throws IOException {
       if (_in == null) {
          return false;
       }
@@ -118,7 +118,7 @@ public class BiancaZipEntry {
     */
    @ReturnNullAsFalse
    public StringValue zip_entry_read(Env env,
-           @Optional("1024") int length) {
+                                     @Optional("1024") int length) {
       if (_in == null) {
          return null;
       }

@@ -30,10 +30,6 @@
  */
 package com.clevercloud.bianca;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.*;
-
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.page.BiancaPage;
 import com.clevercloud.vfs.Path;
@@ -41,8 +37,13 @@ import com.clevercloud.vfs.StdoutStream;
 import com.clevercloud.vfs.StringPath;
 import com.clevercloud.vfs.WriteStream;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Bianca
-        extends BiancaContext {
+   extends BiancaContext {
 
    private static final Logger log = Logger.getLogger(Bianca.class.getName());
    private String _fileName;
@@ -58,7 +59,7 @@ public class Bianca
    // command-line main
    //
    public static void main(String[] args)
-           throws IOException {
+      throws IOException {
       Bianca bianca = new Bianca();
 
       if (!bianca.parseArgs(args)) {
@@ -149,21 +150,21 @@ public class Bianca
    }
 
    public void execute()
-           throws IOException {
+      throws IOException {
       Path path = getPwd().lookup(_fileName);
 
       execute(path);
    }
 
    public void execute(String code)
-           throws IOException {
+      throws IOException {
       Path path = new StringPath(code);
 
       execute(path);
    }
 
    public void execute(Path path)
-           throws IOException {
+      throws IOException {
       BiancaPage page = parse(path);
 
       WriteStream os = new WriteStream(StdoutStream.create());

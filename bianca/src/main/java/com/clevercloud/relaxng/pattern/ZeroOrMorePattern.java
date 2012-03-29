@@ -37,91 +37,81 @@ import com.clevercloud.relaxng.program.ZeroOrMoreItem;
  * Relax one or more pattern
  */
 public class ZeroOrMorePattern extends Pattern {
-  private GroupPattern _patterns = new GroupPattern();
+   private GroupPattern _patterns = new GroupPattern();
 
-  
-  /**
-   * Creates a new zero-or-more pattern.
-   */
-  public ZeroOrMorePattern()
-  {
-  }
 
-  /**
-   * Creates a new zero-or-more pattern.
-   */
-  public ZeroOrMorePattern(Pattern pattern)
-    throws RelaxException
-  {
-    _patterns.addChild(pattern);
-  }
+   /**
+    * Creates a new zero-or-more pattern.
+    */
+   public ZeroOrMorePattern() {
+   }
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "zeroOrMore";
-  }
+   /**
+    * Creates a new zero-or-more pattern.
+    */
+   public ZeroOrMorePattern(Pattern pattern)
+      throws RelaxException {
+      _patterns.addChild(pattern);
+   }
 
-  /**
-   * Adds an element.
-   */
-  public void addChild(Pattern child)
-    throws RelaxException
-  {
-    _patterns.addChild(child);
-  }
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "zeroOrMore";
+   }
 
-  /**
-   * returns the group.
-   */
-  public Pattern getPatterns()
-  {
-    return _patterns;
-  }
+   /**
+    * Adds an element.
+    */
+   public void addChild(Pattern child)
+      throws RelaxException {
+      _patterns.addChild(child);
+   }
 
-  /**
-   * Creates the production item.
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    return new ZeroOrMoreItem(_patterns.createItem(grammar));
-  }
+   /**
+    * returns the group.
+    */
+   public Pattern getPatterns() {
+      return _patterns;
+   }
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return "(" + _patterns.toProduction() + ")*";
-  }
+   /**
+    * Creates the production item.
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      return new ZeroOrMoreItem(_patterns.createItem(grammar));
+   }
 
-  public int hashCode()
-  {
-    return 91 + _patterns.hashCode();
-  }
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return "(" + _patterns.toProduction() + ")*";
+   }
 
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+   public int hashCode() {
+      return 91 + _patterns.hashCode();
+   }
 
-    if (! (o instanceof ZeroOrMorePattern))
-      return false;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    ZeroOrMorePattern pattern = (ZeroOrMorePattern) o;
+      if (!(o instanceof ZeroOrMorePattern))
+         return false;
 
-    return _patterns.equals(pattern._patterns);
-  }
+      ZeroOrMorePattern pattern = (ZeroOrMorePattern) o;
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "ZeroOrMorePattern" + _patterns;
-  }
+      return _patterns.equals(pattern._patterns);
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "ZeroOrMorePattern" + _patterns;
+   }
 }
 

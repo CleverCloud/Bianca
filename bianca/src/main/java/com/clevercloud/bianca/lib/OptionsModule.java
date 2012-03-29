@@ -32,11 +32,10 @@ package com.clevercloud.bianca.lib;
 
 import com.clevercloud.bianca.BiancaContext;
 import com.clevercloud.bianca.BiancaModuleException;
+import com.clevercloud.bianca.annotation.Name;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.UsesSymbolTable;
-import com.clevercloud.bianca.annotation.Name;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.lib.file.FileModule;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.bianca.module.IniDefinition;
@@ -47,12 +46,9 @@ import com.clevercloud.vfs.Path;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeSet;
-import java.util.logging.*;
-import java.util.Currency;
-import java.util.Locale;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * PHP options
@@ -148,8 +144,8 @@ public class OptionsModule extends AbstractBiancaModule {
     * Checks the assertion
     */
    public static Value assert_options(Env env,
-           int code,
-           @Optional("null") Value value) {
+                                      int code,
+                                      @Optional("null") Value value) {
       Value result;
 
       switch (code) {
@@ -275,8 +271,8 @@ public class OptionsModule extends AbstractBiancaModule {
     */
    public static LongValue get_magic_quotes_gpc(Env env) {
       return (env.getIniBoolean("magic_quotes_gpc")
-              ? LongValue.ONE
-              : LongValue.ZERO);
+         ? LongValue.ONE
+         : LongValue.ZERO);
    }
 
    /**
@@ -343,6 +339,7 @@ public class OptionsModule extends AbstractBiancaModule {
    }
 
    // TODO: getopt
+
    /**
     * Stub value for getrusage.
     */
@@ -350,29 +347,29 @@ public class OptionsModule extends AbstractBiancaModule {
       ArrayValue value = new ArrayValueImpl();
 
       value.put(env.createString("ru_inblock"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_outblock"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_msgsnd"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_msgrcv"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_maxrss"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_ixrss"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_idrss"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_minflt"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_majflt"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_nsignals"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_nvcsw"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_nswap"),
-              LongValue.create(0));
+         LongValue.create(0));
       value.put(env.createString("ru_utime.tv_sec"), LongValue.create(0));
       value.put(env.createString("ru_utime.tv_usec"), LongValue.create(0));
       value.put(env.createString("ru_stime.tv_sec"), LongValue.create(0));
@@ -408,7 +405,7 @@ public class OptionsModule extends AbstractBiancaModule {
     * @param extension assumes ini values are prefixed by extension names.
     */
    public static Value ini_get_all(Env env,
-           @Optional() String extension) {
+                                   @Optional() String extension) {
       if (extension.length() > 0) {
          if (!env.isExtensionLoaded(extension)) {
             env.warning(L.l("extension '" + extension + "' not loaded."));
@@ -505,6 +502,7 @@ public class OptionsModule extends AbstractBiancaModule {
    // TODO: php_ini_scanned_files
    // TODO: php_logo_guid
    // TODO: phpcredits
+
    /**
     * Returns the sapi type.
     */
@@ -548,10 +546,10 @@ public class OptionsModule extends AbstractBiancaModule {
          case 'a':
          default:
             return (php_uname("s") + " "
-                    + php_uname("n") + " "
-                    + php_uname("r") + " "
-                    + php_uname("v") + " "
-                    + php_uname("m"));
+               + php_uname("n") + " "
+               + php_uname("r") + " "
+               + php_uname("v") + " "
+               + php_uname("m"));
       }
    }
 
@@ -585,15 +583,15 @@ public class OptionsModule extends AbstractBiancaModule {
 
       env.println("PHP Version => " + phpversion(env, env.createString("std")));
       env.println("System => " + System.getProperty("os.name") + " "
-              + System.getProperty("os.version") + " "
-              + System.getProperty("os.arch"));
+         + System.getProperty("os.version") + " "
+         + System.getProperty("os.arch"));
       env.println("Build Date => " + env.getBianca().getVersionDate());
       env.println("Configure Command => n/a");
       env.println("Server API => CGI");
       env.println("Virtual Directory Support => disabled");
 
       env.println("Configuration File (php.ini) Path => "
-              + env.getBianca().getIniFile());
+         + env.getBianca().getIniFile());
 
       env.println("PHP API => 20031224");
       env.println("PHP Extension => 20041030");
@@ -754,9 +752,9 @@ public class OptionsModule extends AbstractBiancaModule {
     * Compares versions
     */
    public static Value version_compare(Env env,
-           StringValue version1,
-           StringValue version2,
-           @Optional("cmp") String op) {
+                                       StringValue version1,
+                                       StringValue version2,
+                                       @Optional("cmp") String op) {
       ArrayList<Value> expanded1 = expandVersion(env, version1);
       ArrayList<Value> expanded2 = expandVersion(env, version2);
 
@@ -805,7 +803,7 @@ public class OptionsModule extends AbstractBiancaModule {
    }
 
    public static Value gc_collect_cycles() {
-        return new LongValue (0);
+      return new LongValue(0);
    }
 
    private static ArrayList<Value> expandVersion(Env env, StringValue version) {
@@ -890,9 +888,9 @@ public class OptionsModule extends AbstractBiancaModule {
          return result;
       } else {
          return HtmlModule.htmlspecialchars(env,
-                 value.toStringValue(),
-                 HtmlModule.ENT_COMPAT,
-                 null);
+            value.toStringValue(),
+            HtmlModule.ENT_COMPAT,
+            null);
       }
    }
 
@@ -931,6 +929,7 @@ public class OptionsModule extends AbstractBiancaModule {
          return 1;
       }
    }
+
    static final IniDefinition INI_ASSERT_ACTIVE = _iniDefinitions.add("assert.active", true, PHP_INI_ALL);
    static final IniDefinition INI_ASSERT_BAIL = _iniDefinitions.add("assert.bail", false, PHP_INI_ALL);
    static final IniDefinition INI_ASSERT_WARNING = _iniDefinitions.add("assert.warning", true, PHP_INI_ALL);
@@ -953,12 +952,12 @@ public class OptionsModule extends AbstractBiancaModule {
    static final IniDefinition INI_DEFAULT_MIMETYPE = _iniDefinitions.add("default_mimetype", "text/html", PHP_INI_ALL);
    static final IniDefinition INI_DEFAULT_CHARSET = _iniDefinitions.add("default_charset", "", PHP_INI_ALL);
    static final IniDefinition INI_ALWAYS_POPULATE_RAW_POST_DATA =
-           _iniDefinitions.add("always_populate_raw_post_data", false, PHP_INI_ALL);
+      _iniDefinitions.add("always_populate_raw_post_data", false, PHP_INI_ALL);
    static final IniDefinition INI_ALLOW_WEBDAV_METHODS = _iniDefinitions.add("allow_webdav_methods", false, PHP_INI_ALL);
    static final IniDefinition INI_MEMORY_LIMIT = _iniDefinitions.add("memory_limit", "512M", PHP_INI_ALL);
    // unsupported
    static final IniDefinition MAGIC_QUOTES_RUNTIME = _iniDefinitions.addUnsupported(
-           "magic_quotes_runtime", false, PHP_INI_ALL);
+      "magic_quotes_runtime", false, PHP_INI_ALL);
    static final IniDefinition MAGIC_QUOTES_SYBASE = _iniDefinitions.addUnsupported("magic_quotes_sybase", false, PHP_INI_ALL);
    static final IniDefinition INI_REGISTER_GLOBALS = _iniDefinitions.addUnsupported("register_globals", false, PHP_INI_ALL);
 }

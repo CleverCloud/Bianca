@@ -35,56 +35,64 @@ import org.w3c.dom.ProcessingInstruction;
 import java.io.IOException;
 
 public class QProcessingInstruction extends QNode
-  implements ProcessingInstruction {
-  String _name;
-  String _data;
+   implements ProcessingInstruction {
+   String _name;
+   String _data;
 
-  public QProcessingInstruction(String name)
-  {
-    _name = name.intern();
-  }
+   public QProcessingInstruction(String name) {
+      _name = name.intern();
+   }
 
-  public QProcessingInstruction(String name, String data)
-  {
-    _name = name.intern();
-    _data = data;
-  }
+   public QProcessingInstruction(String name, String data) {
+      _name = name.intern();
+      _data = data;
+   }
 
-  public String getNodeName() { return _name; }
-  public String getNodeValue() { return _data; }
-  public short getNodeType() { return PROCESSING_INSTRUCTION_NODE; }
+   public String getNodeName() {
+      return _name;
+   }
 
-  public String getTarget() { return getNodeName(); }
+   public String getNodeValue() {
+      return _data;
+   }
 
-  public String getData() { return _data; }
-  public void setData(String arg) { _data = arg; }
+   public short getNodeType() {
+      return PROCESSING_INSTRUCTION_NODE;
+   }
 
-  Node importNode(QDocument owner, boolean deep) 
-  {
-    QProcessingInstruction pi = new QProcessingInstruction(_name, _data);
+   public String getTarget() {
+      return getNodeName();
+   }
 
-    pi._owner = owner;
+   public String getData() {
+      return _data;
+   }
 
-    return pi;
-  }
+   public void setData(String arg) {
+      _data = arg;
+   }
 
-  public String getNamespaceURI()
-  {
-    return null;
-  }
+   Node importNode(QDocument owner, boolean deep) {
+      QProcessingInstruction pi = new QProcessingInstruction(_name, _data);
 
-  public void print(XmlPrinter os) throws IOException
-  {
-    os.processingInstruction(getNodeName(), getData());
-  }
+      pi._owner = owner;
 
-  private Object writeReplace()
-  {
-    return new SerializedXml(this);
-  }
+      return pi;
+   }
 
-  public String toString()
-  {
-    return "PI[" + getNodeName() + " " + getData() + "]";
-  }
+   public String getNamespaceURI() {
+      return null;
+   }
+
+   public void print(XmlPrinter os) throws IOException {
+      os.processingInstruction(getNodeName(), getData());
+   }
+
+   private Object writeReplace() {
+      return new SerializedXml(this);
+   }
+
+   public String toString() {
+      return "PI[" + getNodeName() + " " + getData() + "]";
+   }
 }

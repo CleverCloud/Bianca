@@ -37,41 +37,36 @@ import com.clevercloud.relaxng.program.Item;
  * Relax empty pattern
  */
 public class EmptyPattern extends Pattern {
-  /**
-   * Creates a new empty pattern.
-   */
-  public EmptyPattern()
-  {
-  }
+   /**
+    * Creates a new empty pattern.
+    */
+   public EmptyPattern() {
+   }
 
-  /**
-   * Creates the program (somewhat bogus)
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    return EmptyItem.create();
-  }
+   /**
+    * Creates the program (somewhat bogus)
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      return EmptyItem.create();
+   }
 
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return "empty";
-  }
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return "empty";
+   }
 
-  public boolean equals(Object o)
-  {
-    return o instanceof EmptyPattern;
-  }
+   public boolean equals(Object o) {
+      return o instanceof EmptyPattern;
+   }
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return "EmptyPattern[]";
-  }
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return "EmptyPattern[]";
+   }
 }
 

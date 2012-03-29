@@ -32,102 +32,95 @@ package com.clevercloud.util;
 /**
  * A timed LRU cache.  Items remain valid until they expire.
  * TimedCache can simplify database caching.
- *
+ * <p/>
  * <pre><code>
  * TimedCache storyCache = new TimedCache(30, 60000);
- *
+ * <p/>
  * public Story getCurrentStory(String id)
  * {
  *   Story story = (Story) storyCache.get(id);
- *
+ * <p/>
  *   if (story == null) {
  *     story = DB.queryStoryDatabase(id);
  *     storyCache.put(id, story);
  *   }
- *
+ * <p/>
  *   return story;
  * }
  * </code></pre>
  */
-public class TimedCache<K,V> {
-  private LruCache<K,TimedCache.Entry<V>> _cache;
-  private long _expireInterval;
+public class TimedCache<K, V> {
+   private LruCache<K, TimedCache.Entry<V>> _cache;
+   private long _expireInterval;
 
-  /**
-   * Creates a new timed LRU cache.
-   *
-   * @param capacity the maximum size of the LRU cache
-   * @param expireInterval the time an entry remains valid
-   */
-  public TimedCache(int capacity, long expireInterval)
-  {
-    _cache = new LruCache<K,Entry<V>>(capacity);
-    _expireInterval = expireInterval;
-  }
-
-  /**
-   * Put a new item in the cache.
-   */
-  public V put(K key, V value)
-  {
-    Entry<V> oldValue = _cache.put(key, new Entry<V>(_expireInterval, value));
-
-    if (oldValue != null)
-      return oldValue.getValue();
-    else
-      return null;
-  }
-
-  /**
-   * Gets an item from the cache, returning null if expired.
-   */
-  public V get(K key)
-  {
-    Entry<V> entry = _cache.get(key);
-
-    if (entry == null)
-      return null;
-
-    if (entry.isValid())
-      return entry.getValue();
-    else {
-      _cache.remove(key);
-
-      return null;
-    }
-  }
-
-  /**
-   * Class representing a cached entry.
-   */
-  static class Entry<V> implements CacheListener {
-    private long _expireInterval;
-    private long _checkTime;
-    private V _value;
-
-    Entry(long expireInterval, V value)
-    {
+   /**
+    * Creates a new timed LRU cache.
+    *
+    * @param capacity       the maximum size of the LRU cache
+    * @param expireInterval the time an entry remains valid
+    */
+   public TimedCache(int capacity, long expireInterval) {
+      _cache = new LruCache<K, Entry<V>>(capacity);
       _expireInterval = expireInterval;
-      _value = value;
+   }
 
-      _checkTime = System.currentTimeMillis();
-    }
+   /**
+    * Put a new item in the cache.
+    */
+   public V put(K key, V value) {
+      Entry<V> oldValue = _cache.put(key, new Entry<V>(_expireInterval, value));
 
-    boolean isValid()
-    {
-      return System.currentTimeMillis() < _checkTime + _expireInterval;
-    }
+      if (oldValue != null)
+         return oldValue.getValue();
+      else
+         return null;
+   }
 
-    V getValue()
-    {
-      return _value;
-    }
+   /**
+    * Gets an item from the cache, returning null if expired.
+    */
+   public V get(K key) {
+      Entry<V> entry = _cache.get(key);
 
-    public void removeEvent()
-    {
-      if (_value instanceof CacheListener)
-        ((CacheListener) _value).removeEvent();
-    }
-  }
+      if (entry == null)
+         return null;
+
+      if (entry.isValid())
+         return entry.getValue();
+      else {
+         _cache.remove(key);
+
+         return null;
+      }
+   }
+
+   /**
+    * Class representing a cached entry.
+    */
+   static class Entry<V> implements CacheListener {
+      private long _expireInterval;
+      private long _checkTime;
+      private V _value;
+
+      Entry(long expireInterval, V value) {
+         _expireInterval = expireInterval;
+         _value = value;
+
+         _checkTime = System.currentTimeMillis();
+      }
+
+      boolean isValid() {
+         return System.currentTimeMillis() < _checkTime + _expireInterval;
+      }
+
+      V getValue() {
+         return _value;
+      }
+
+      public void removeEvent() {
+         if (_value instanceof CacheListener)
+            ((CacheListener) _value).removeEvent();
+      }
+   }
 }
 

@@ -35,9 +35,9 @@ import org.xml.sax.SAXException;
  * JARV Schema implementation
  */
 public interface Schema {
-  /**
-   * Creates a verifier from the schema.
-   */
-  public Verifier newVerifier()
-    throws SAXException;
+   /**
+    * Creates a verifier from the schema.
+    */
+   public Verifier newVerifier()
+      throws SAXException;
 }

@@ -30,47 +30,44 @@
 package com.clevercloud.xml;
 
 class XmlPolicy extends Policy {
-  /**
-   * Initialize the policy.
-   */
-  public void init()
-  {
-    super.init();
+   /**
+    * Initialize the policy.
+    */
+   public void init() {
+      super.init();
 
-  }
+   }
 
-  int openAction(XmlParser parser, QName node, QName next)
-    throws XmlParseException
-  {
-    return PUSH;
-  }
+   int openAction(XmlParser parser, QName node, QName next)
+      throws XmlParseException {
+      return PUSH;
+   }
 
-  /**
-   * Returns the close action for the current tag.  For XML, the only
-   * possible action is POP.
-   */
-  int elementCloseAction(XmlParser parser, QName name, String tagEnd)
-    throws XmlParseException
-  {
-    String qname = name.getName();
+   /**
+    * Returns the close action for the current tag.  For XML, the only
+    * possible action is POP.
+    */
+   int elementCloseAction(XmlParser parser, QName name, String tagEnd)
+      throws XmlParseException {
+      String qname = name.getName();
 
-    if (qname == "#document" && tagEnd.equals(""))
-      return POP;
-    else if (qname.equals(tagEnd))
-      return POP;
-    else {
-      if (qname.equals("#document"))
-        qname = L.l("end of document");
-      else
-        qname = "`</" + qname + ">'";
-      if (tagEnd.equals(""))
-        tagEnd = L.l("end of file");
-      else
-        tagEnd = "`</" + tagEnd + ">'";
+      if (qname == "#document" && tagEnd.equals(""))
+         return POP;
+      else if (qname.equals(tagEnd))
+         return POP;
+      else {
+         if (qname.equals("#document"))
+            qname = L.l("end of document");
+         else
+            qname = "`</" + qname + ">'";
+         if (tagEnd.equals(""))
+            tagEnd = L.l("end of file");
+         else
+            tagEnd = "`</" + tagEnd + ">'";
 
-      throw parser.error(L.l("expected {0} at {1} (open at {2})",
-                             qname, tagEnd,
-                             String.valueOf(parser.getNodeLine())));
-    }
-  }
+         throw parser.error(L.l("expected {0} at {1} (open at {2})",
+            qname, tagEnd,
+            String.valueOf(parser.getNodeLine())));
+      }
+   }
 }

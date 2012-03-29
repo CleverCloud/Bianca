@@ -30,7 +30,6 @@
 package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
-
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
@@ -39,68 +38,61 @@ import java.util.ArrayList;
  * Iterates through matching nodes.
  */
 public class NodeArrayListIterator extends NodeIterator {
-  protected ArrayList<Node> _list;
-  protected int _position;
+   protected ArrayList<Node> _list;
+   protected int _position;
 
-  public NodeArrayListIterator(ExprEnvironment env, ArrayList<Node> list)
-  {
-    super(env);
-    
-    _list = list;
-  }
-  
-  /**
-   * Returns the current position.
-   */
-  public int getContextPosition()
-  {
-    return _position;
-  }
-  
-  /**
-   * Returns the current position.
-   */
-  public int getContextSize()
-  {
-    return _list.size();
-  }
-  
-  /**
-   * True if there's more data.
-   */
-  public boolean hasNext()
-  {
-    return _position < _list.size();
-  }
-  
-  /**
-   * Returns the next node.
-   */
-  public Node next()
-  {
-    return nextNode();
-  }
-  
-  /**
-   * Returns the next node.
-   */
-  public Node nextNode()
-  {
-    if (_position < _list.size())
-      return _list.get(_position++);
-    else
-      return null;
-  }
+   public NodeArrayListIterator(ExprEnvironment env, ArrayList<Node> list) {
+      super(env);
 
-  /**
-   * clones the iterator
-   */
-  public Object clone()
-  {
-    NodeArrayListIterator clone = new NodeArrayListIterator(_env, _list);
-    
-    clone._position = _position;
+      _list = list;
+   }
 
-    return clone;
-  }
+   /**
+    * Returns the current position.
+    */
+   public int getContextPosition() {
+      return _position;
+   }
+
+   /**
+    * Returns the current position.
+    */
+   public int getContextSize() {
+      return _list.size();
+   }
+
+   /**
+    * True if there's more data.
+    */
+   public boolean hasNext() {
+      return _position < _list.size();
+   }
+
+   /**
+    * Returns the next node.
+    */
+   public Node next() {
+      return nextNode();
+   }
+
+   /**
+    * Returns the next node.
+    */
+   public Node nextNode() {
+      if (_position < _list.size())
+         return _list.get(_position++);
+      else
+         return null;
+   }
+
+   /**
+    * clones the iterator
+    */
+   public Object clone() {
+      NodeArrayListIterator clone = new NodeArrayListIterator(_env, _list);
+
+      clone._position = _position;
+
+      return clone;
+   }
 }

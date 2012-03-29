@@ -35,9 +35,9 @@ import java.io.IOException;
  * Interface if a writer supports the flushBuffer().
  */
 public interface FlushBuffer {
-  /**
-   * Flushes the buffer, but doesn't call flush().
-   */
-  public void flushBuffer()
-    throws IOException;
+   /**
+    * Flushes the buffer, but doesn't call flush().
+    */
+   public void flushBuffer()
+      throws IOException;
 }

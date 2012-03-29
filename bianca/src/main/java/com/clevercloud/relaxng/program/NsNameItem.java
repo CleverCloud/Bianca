@@ -37,80 +37,72 @@ import java.util.HashSet;
  * Matches names.
  */
 public class NsNameItem extends NameClassItem {
-  private String _ns;
+   private String _ns;
 
-  private NameClassItem _except;
+   private NameClassItem _except;
 
-  public NsNameItem(String ns)
-  {
-    _ns = ns;
-  }
+   public NsNameItem(String ns) {
+      _ns = ns;
+   }
 
-  public void setExcept(NameClassItem except)
-  {
-    _except = except;
-  }
-    
-  /**
-   * Adds to the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-    set.add(new QName("*", _ns));
-  }
+   public void setExcept(NameClassItem except) {
+      _except = except;
+   }
 
-  /**
-   * Returns true if the name matches.
-   */
-  public boolean matches(QName name)
-  {
-    if (! _ns.equals(name.getNamespaceURI()))
-      return false;
-    else if (_except != null && _except.matches(name))
-      return false;
-    else
-      return true;
-  }
+   /**
+    * Adds to the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+      set.add(new QName("*", _ns));
+   }
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(String prefix)
-  {
-    if (_except != null) {
-      if (prefix.equals(""))
-        return "<{" + _ns + "}:* -" + _except.toSyntaxDescription(" ") + ">";
+   /**
+    * Returns true if the name matches.
+    */
+   public boolean matches(QName name) {
+      if (!_ns.equals(name.getNamespaceURI()))
+         return false;
+      else if (_except != null && _except.matches(name))
+         return false;
       else
-        return prefix + "(" + "{" + _ns + "}:* -" + _except.toSyntaxDescription(" ") + ")";
-    }
-    else if (prefix.equals(""))
-      return "<{" + _ns + "}:*>";
-    else
-      return prefix + "{" + _ns + "}:*";
-  }
+         return true;
+   }
 
-  public int hashCode()
-  {
-    return _ns.hashCode();
-  }
-  
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(String prefix) {
+      if (_except != null) {
+         if (prefix.equals(""))
+            return "<{" + _ns + "}:* -" + _except.toSyntaxDescription(" ") + ">";
+         else
+            return prefix + "(" + "{" + _ns + "}:* -" + _except.toSyntaxDescription(" ") + ")";
+      } else if (prefix.equals(""))
+         return "<{" + _ns + "}:*>";
+      else
+         return prefix + "{" + _ns + "}:*";
+   }
 
-    if (! (o instanceof NsNameItem))
-      return false;
+   public int hashCode() {
+      return _ns.hashCode();
+   }
 
-    NsNameItem name = (NsNameItem) o;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    if (! _ns.equals(name._ns))
-      return false;
+      if (!(o instanceof NsNameItem))
+         return false;
 
-    if (_except == null)
-      return name._except == null;
-    else
-      return _except.equals(name._except);
-  }
+      NsNameItem name = (NsNameItem) o;
+
+      if (!_ns.equals(name._ns))
+         return false;
+
+      if (_except == null)
+         return name._except == null;
+      else
+         return _except.equals(name._except);
+   }
 }
 

@@ -32,33 +32,29 @@ package com.clevercloud.xml;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.Iterator;
-
 /**
  * QAbstractNode is an abstract implementation for any DOM node.
  */
 public class QEmptyNodeList implements NodeList {
-  /**
-   * Returns the child with the given index.
-   */
-  public Node item(int index)
-  {
-    return null;
-  }
+   /**
+    * Returns the child with the given index.
+    */
+   public Node item(int index) {
+      return null;
+   }
 
-  /**
-   * Returns the number of children.
-   */
-  public int getLength()
-  {
-    return 0;
-  }
+   /**
+    * Returns the number of children.
+    */
+   public int getLength() {
+      return 0;
+   }
 
-  /*
-  // for bianca
-  public Iterator<Node> iterator()
-  {
-    return new NodeListIterator(null, this);
-  }
-  */
+   /*
+   // for bianca
+   public Iterator<Node> iterator()
+   {
+     return new NodeListIterator(null, this);
+   }
+   */
 }

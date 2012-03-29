@@ -30,11 +30,7 @@
 package com.clevercloud.bianca.statement;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Var;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.expr.VarExpr;
 
@@ -42,7 +38,7 @@ import com.clevercloud.bianca.expr.VarExpr;
  * Represents a static statement in a PHP program.
  */
 public class ClassStaticStatement
-        extends Statement {
+   extends Statement {
 
    protected final String _className;
    protected final VarExpr _var;
@@ -53,9 +49,9 @@ public class ClassStaticStatement
     * Creates the echo statement.
     */
    public ClassStaticStatement(Location location,
-           String className,
-           VarExpr var,
-           Expr initValue) {
+                               String className,
+                               VarExpr var,
+                               Expr initValue) {
       super(location);
 
       _className = className;
@@ -82,7 +78,7 @@ public class ClassStaticStatement
          // Var var = qClass.getStaticFieldVar(env, env.createString(staticName));
          // Var var = qClass.getStaticFieldVar(env, staticName);
          Var var = env.getStaticVar(env.createString(className
-                 + "::" + staticName));
+            + "::" + staticName));
 
          env.setVar(_var.getName(), var);
 

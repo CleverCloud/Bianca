@@ -47,13 +47,13 @@ public class JavaMarshal extends Marshal {
    protected final boolean _isUnmarshalNullAsFalse;
 
    public JavaMarshal(JavaClassDef def,
-           boolean isNotNull) {
+                      boolean isNotNull) {
       this(def, isNotNull, false);
    }
 
    public JavaMarshal(JavaClassDef def,
-           boolean isNotNull,
-           boolean isUnmarshalNullAsFalse) {
+                      boolean isNotNull,
+                      boolean isUnmarshalNullAsFalse) {
       _def = def;
       _isNotNull = isNotNull;
       _isUnmarshalNullAsFalse = isUnmarshalNullAsFalse;
@@ -71,7 +71,7 @@ public class JavaMarshal extends Marshal {
       if (!value.isset()) {
          if (_isNotNull) {
             env.warning(L.l("null is an unexpected argument, expected {0}",
-                    shortName(argClass)));
+               shortName(argClass)));
          }
 
          return null;
@@ -82,17 +82,17 @@ public class JavaMarshal extends Marshal {
       if (obj == null) {
          if (_isNotNull) {
             env.warning(L.l("null is an unexpected argument, expected {0}",
-                    shortName(argClass)));
+               shortName(argClass)));
          }
 
          return null;
       } else if (!argClass.isAssignableFrom(obj.getClass())) {
          //env.error(L.l("Can't assign {0} to {1}", obj, argClass));
          env.warning(L.l(
-                 "'{0}' of type '{1}' is an unexpected argument, expected {2}",
-                 value,
-                 shortName(obj.getClass()),
-                 shortName(argClass)));
+            "'{0}' of type '{1}' is an unexpected argument, expected {2}",
+            value,
+            shortName(obj.getClass()),
+            shortName(argClass)));
          return null;
       }
 
@@ -121,7 +121,7 @@ public class JavaMarshal extends Marshal {
       Class type = _def.getType();
 
       if (argValue instanceof JavaValue
-              && type.isAssignableFrom(argValue.toJavaObject().getClass())) {
+         && type.isAssignableFrom(argValue.toJavaObject().getClass())) {
          return Marshal.ZERO;
       } else {
          return Marshal.FOUR;

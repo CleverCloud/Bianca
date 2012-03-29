@@ -32,7 +32,7 @@ package com.clevercloud.bianca.lib.spl;
 import com.clevercloud.bianca.env.IteratorClass;
 
 public interface RecursiveIterator
-        extends IteratorClass {
+   extends IteratorClass {
 
    public boolean hasChildren();
 

@@ -38,75 +38,67 @@ import java.util.HashSet;
  * Represents generaic text.
  */
 public class DataItem extends Item {
-  protected final static L10N L = new L10N(DataItem.class);
+   protected final static L10N L = new L10N(DataItem.class);
 
-  private String _type;
-  
-  public DataItem(String type)
-  {
-    _type = type;
-  }
+   private String _type;
 
-  /**
-   * Returns the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-    set.add(new QName("#data", ""));
-  }
-  
-  /**
-   * Data allows the empty match.
-   */
-  public boolean allowEmpty()
-  {
-    return true;
-  }
-  
-  /**
-   * Data repeats
-   */
-  @Override
-  public Item text(CharSequence text)
-  {
-    return this;
-  }
+   public DataItem(String type) {
+      _type = type;
+   }
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(int depth)
-  {
-    return "string";
-  }
+   /**
+    * Returns the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+      set.add(new QName("#data", ""));
+   }
 
-  /**
-   * Returns the hash code for the empty item.
-   */
-  public int hashCode()
-  {
-    return 193 + _type.hashCode();
-  }
-
-  /**
-   * Returns true if the object is an empty item.
-   */
-  public boolean equals(Object o)
-  {
-    if (this == o)
+   /**
+    * Data allows the empty match.
+    */
+   public boolean allowEmpty() {
       return true;
-    
-    if (! (o instanceof DataItem))
-      return false;
+   }
 
-    DataItem item = (DataItem) o;
+   /**
+    * Data repeats
+    */
+   @Override
+   public Item text(CharSequence text) {
+      return this;
+   }
 
-    return _type.equals(item._type);
-  }
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(int depth) {
+      return "string";
+   }
 
-  public String toString()
-  {
-    return "DataItem[]";
-  }
+   /**
+    * Returns the hash code for the empty item.
+    */
+   public int hashCode() {
+      return 193 + _type.hashCode();
+   }
+
+   /**
+    * Returns true if the object is an empty item.
+    */
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof DataItem))
+         return false;
+
+      DataItem item = (DataItem) o;
+
+      return _type.equals(item._type);
+   }
+
+   public String toString() {
+      return "DataItem[]";
+   }
 }
 

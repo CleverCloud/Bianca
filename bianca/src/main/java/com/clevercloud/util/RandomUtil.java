@@ -37,81 +37,76 @@ import java.util.Random;
  * System-wide random number generator.
  */
 public class RandomUtil {
-  private static FreeList<Random> _freeRandomList
-    = new FreeList<Random>(64);
-  
-  private static Random _testRandom;
-  
-  private static boolean _isTest;
+   private static FreeList<Random> _freeRandomList
+      = new FreeList<Random>(64);
 
-  /**
-   * Returns the next random long.
-   */
-  public static long getRandomLong()
-  {
-    Random random = getRandom();
+   private static Random _testRandom;
 
-    long value = random.nextLong();
+   private static boolean _isTest;
 
-    if (! _isTest)
-      _freeRandomList.free(random);
+   /**
+    * Returns the next random long.
+    */
+   public static long getRandomLong() {
+      Random random = getRandom();
 
-    return value;
-  }
+      long value = random.nextLong();
 
-  /**
-   * Returns the next random int.
-   */
-  public static int nextInt(int n)
-  {
-    Random random = getRandom();
+      if (!_isTest)
+         _freeRandomList.free(random);
 
-    int value = random.nextInt(n);
+      return value;
+   }
 
-    if (! _isTest)
-      _freeRandomList.free(random);
+   /**
+    * Returns the next random int.
+    */
+   public static int nextInt(int n) {
+      Random random = getRandom();
 
-    return value;
-  }
+      int value = random.nextInt(n);
 
-  /**
-   * Returns the next random double between 0 and 1
-   */
-  public static double nextDouble()
-  {
-    Random random = getRandom();
+      if (!_isTest)
+         _freeRandomList.free(random);
 
-    double value = random.nextDouble();
+      return value;
+   }
 
-    if (! _isTest)
-      _freeRandomList.free(random);
+   /**
+    * Returns the next random double between 0 and 1
+    */
+   public static double nextDouble() {
+      Random random = getRandom();
 
-    return value;
-  }
+      double value = random.nextDouble();
 
-  /**
-   * Returns the random generator.
-   */
-  private static Random getRandom()
-  {
-    if (_isTest) {
-      return _testRandom;
-    }
+      if (!_isTest)
+         _freeRandomList.free(random);
 
-    Random random = _freeRandomList.allocate();
+      return value;
+   }
 
-    if (random == null)
-      random = new SecureRandom();
+   /**
+    * Returns the random generator.
+    */
+   private static Random getRandom() {
+      if (_isTest) {
+         return _testRandom;
+      }
 
-    return random;
-  }
+      Random random = _freeRandomList.allocate();
 
-  /**
-   * Sets the specific seed.  Only for testing.
-   */
-  public static void setTestSeed(long seed)
-  {
-    _isTest = true;
-    _testRandom = new Random(seed);
-  }
+      if (random == null)
+         random = new SecureRandom();
+
+      return random;
+   }
+
+   /**
+    * Sets the specific seed.  Only for testing.
+    */
+   public static void setTestSeed(long seed) {
+      _isTest = true;
+      _testRandom = new Random(seed);
+   }
 }

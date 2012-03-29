@@ -50,7 +50,6 @@ abstract public class AbstractLongValuedExpr extends Expr {
     * Evaluates the expression as a value.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -62,7 +61,6 @@ abstract public class AbstractLongValuedExpr extends Expr {
     * Evaluates the expression as a boolean.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -74,7 +72,6 @@ abstract public class AbstractLongValuedExpr extends Expr {
     * Evaluates the expression as double
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -86,7 +83,6 @@ abstract public class AbstractLongValuedExpr extends Expr {
     * Evaluates the expression as a long.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

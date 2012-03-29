@@ -36,132 +36,123 @@ import javax.xml.namespace.QName;
  * Interning names
  */
 public class StaxIntern {
-  private static final int SIZE = 203;
-  
-  private final Entry []_entries = new Entry[SIZE];
+   private static final int SIZE = 203;
 
-  private final NamespaceReaderContext _namespaceContext;
+   private final Entry[] _entries = new Entry[SIZE];
 
-  StaxIntern(NamespaceReaderContext namespaceContext)
-  {
-    _namespaceContext = namespaceContext;
-  }
+   private final NamespaceReaderContext _namespaceContext;
 
-  Entry add(byte []buffer, int offset, int length, int colon, 
-            boolean isAttribute)
-  {
-    int hash = 0;
+   StaxIntern(NamespaceReaderContext namespaceContext) {
+      _namespaceContext = namespaceContext;
+   }
 
-    for (int i = length - 1; i >= 0; i--) {
-      hash = 37 * hash + buffer[offset + i];
-    }
+   Entry add(byte[] buffer, int offset, int length, int colon,
+             boolean isAttribute) {
+      int hash = 0;
 
-    int bucket = (hash & 0x7fffffff) % SIZE;
-
-    Entry entry;
-
-    for (entry = _entries[bucket];
-         entry != null;
-         entry = entry._next) {
-      if (entry.match(buffer, offset, length, isAttribute))
-        return entry;
-    }
-
-    entry = new Entry(_entries[bucket],
-                      buffer, offset, length,
-                      colon,
-                      isAttribute);
-    _entries[bucket] = entry;
-
-    return entry;
-  }
-
-  final class Entry {
-    final Entry _next;
-    
-    final byte []_buf;
-    final boolean _isAttribute;
-
-    final String _prefix;
-    final String _localName;
-
-    NamespaceBinding _namespace;
-    int _version;
-    QName _qName;
-
-    Entry(Entry next,
-          byte []buf, int offset, int length,
-          int colon,
-          boolean isAttribute)
-    {
-      _next = next;
-
-      _buf = new byte[length];
-      System.arraycopy(buf, offset, _buf, 0, length);
-
-      _isAttribute = isAttribute;
-
-      if (colon > 0) {
-        _prefix = new String(buf, 0, colon);
-        _localName = new String(buf, colon + 1, length - colon - 1);
-      }
-      else {
-        _prefix = XMLConstants.DEFAULT_NS_PREFIX;
-        _localName = new String(buf, 0, length);
+      for (int i = length - 1; i >= 0; i--) {
+         hash = 37 * hash + buffer[offset + i];
       }
 
-      if (_isAttribute)
-        _namespace = _namespaceContext.getAttributeNamespace(_prefix);
-      else
-        _namespace = _namespaceContext.getElementNamespace(_prefix);
+      int bucket = (hash & 0x7fffffff) % SIZE;
 
-      fillQName();
-    }
+      Entry entry;
 
-    public final boolean match(byte []buf, int offset, int length,
-                               boolean isAttribute)
-    {
-      if (length != _buf.length || _isAttribute != isAttribute)
-        return false;
-
-      byte []entryBuf = _buf;
-
-      for (length--; length >= 0; length--) {
-        if (entryBuf[length] != buf[offset + length])
-          return false;
+      for (entry = _entries[bucket];
+           entry != null;
+           entry = entry._next) {
+         if (entry.match(buffer, offset, length, isAttribute))
+            return entry;
       }
 
-      return true;
-    }
+      entry = new Entry(_entries[bucket],
+         buffer, offset, length,
+         colon,
+         isAttribute);
+      _entries[bucket] = entry;
 
-    String getLocalName()
-    {
-      return _localName;
-    }
+      return entry;
+   }
 
-    String getPrefix()
-    {
-      return _prefix;
-    }
+   final class Entry {
+      final Entry _next;
 
-    QName getQName()
-    {
-      if (_version != _namespace.getVersion())
-        fillQName();
+      final byte[] _buf;
+      final boolean _isAttribute;
 
-      return _qName;
-    }
+      final String _prefix;
+      final String _localName;
 
-    private void fillQName()
-    {
-      _version = _namespace.getVersion();
+      NamespaceBinding _namespace;
+      int _version;
+      QName _qName;
 
-      String prefix = _prefix;
+      Entry(Entry next,
+            byte[] buf, int offset, int length,
+            int colon,
+            boolean isAttribute) {
+         _next = next;
 
-      if (prefix == null)
-        prefix = "";
+         _buf = new byte[length];
+         System.arraycopy(buf, offset, _buf, 0, length);
 
-      _qName = new QName(_namespace.getUri(), _localName, prefix);
-    }
-  }
+         _isAttribute = isAttribute;
+
+         if (colon > 0) {
+            _prefix = new String(buf, 0, colon);
+            _localName = new String(buf, colon + 1, length - colon - 1);
+         } else {
+            _prefix = XMLConstants.DEFAULT_NS_PREFIX;
+            _localName = new String(buf, 0, length);
+         }
+
+         if (_isAttribute)
+            _namespace = _namespaceContext.getAttributeNamespace(_prefix);
+         else
+            _namespace = _namespaceContext.getElementNamespace(_prefix);
+
+         fillQName();
+      }
+
+      public final boolean match(byte[] buf, int offset, int length,
+                                 boolean isAttribute) {
+         if (length != _buf.length || _isAttribute != isAttribute)
+            return false;
+
+         byte[] entryBuf = _buf;
+
+         for (length--; length >= 0; length--) {
+            if (entryBuf[length] != buf[offset + length])
+               return false;
+         }
+
+         return true;
+      }
+
+      String getLocalName() {
+         return _localName;
+      }
+
+      String getPrefix() {
+         return _prefix;
+      }
+
+      QName getQName() {
+         if (_version != _namespace.getVersion())
+            fillQName();
+
+         return _qName;
+      }
+
+      private void fillQName() {
+         _version = _namespace.getVersion();
+
+         String prefix = _prefix;
+
+         if (prefix == null)
+            prefix = "";
+
+         _qName = new QName(_namespace.getUri(), _localName, prefix);
+      }
+   }
 }

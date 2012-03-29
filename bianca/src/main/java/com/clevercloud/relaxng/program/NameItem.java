@@ -38,66 +38,58 @@ import java.util.HashSet;
  * Matches names.
  */
 public class NameItem extends NameClassItem {
-  private final QName _name;
+   private final QName _name;
 
-  public NameItem(QName name)
-  {
-    _name = name;
-  }
-    
-  public QName getQName()
-  {
-    return _name;
-  }
+   public NameItem(QName name) {
+      _name = name;
+   }
 
-  /**
-   * Adds to the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-    set.add(_name);
-  }
+   public QName getQName() {
+      return _name;
+   }
 
-  /**
-   * Returns true if the name matches.
-   */
-  public boolean matches(QName name)
-  {
-    return name.equals(_name);
-  }
+   /**
+    * Adds to the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+      set.add(_name);
+   }
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(String prefix)
-  {
-    if (prefix.equals(""))
-      return "<" + _name.getName() + ">";
-    else
-      return prefix + _name.getName();
-  }
+   /**
+    * Returns true if the name matches.
+    */
+   public boolean matches(QName name) {
+      return name.equals(_name);
+   }
 
-  public int hashCode()
-  {
-    return _name.hashCode();
-  }
-  
-  public boolean equals(Object o)
-  {
-    if (this == o)
-      return true;
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(String prefix) {
+      if (prefix.equals(""))
+         return "<" + _name.getName() + ">";
+      else
+         return prefix + _name.getName();
+   }
 
-    if (! (o instanceof NameItem))
-      return false;
+   public int hashCode() {
+      return _name.hashCode();
+   }
 
-    NameItem name = (NameItem) o;
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
 
-    return _name.equals(name._name);
-  }
+      if (!(o instanceof NameItem))
+         return false;
 
-  public String toString()
-  {
-    return "NameItem[" + _name + "]";
-  }
+      NameItem name = (NameItem) o;
+
+      return _name.equals(name._name);
+   }
+
+   public String toString() {
+      return "NameItem[" + _name + "]";
+   }
 }
 

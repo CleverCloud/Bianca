@@ -32,7 +32,7 @@ package com.clevercloud.bianca.lib.dom;
 import org.w3c.dom.Node;
 
 public class DOMNode<T extends Node>
-        extends DOMWrapper<T> {
+   extends DOMWrapper<T> {
 
    protected DOMNode(DOMImplementation impl, T delegate) {
       super(impl, delegate);
@@ -43,7 +43,7 @@ public class DOMNode<T extends Node>
    }
 
    public DOMNode appendChild(DOMNode newChild)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.appendChild(newChild.getDelegate()));
       } catch (org.w3c.dom.DOMException ex) {
@@ -56,7 +56,7 @@ public class DOMNode<T extends Node>
    }
 
    public short compareDocumentPosition(DOMNode other)
-           throws DOMException {
+      throws DOMException {
       try {
          return _delegate.compareDocumentPosition(other.getDelegate());
       } catch (org.w3c.dom.DOMException ex) {
@@ -109,7 +109,7 @@ public class DOMNode<T extends Node>
    }
 
    public String getNodeValue()
-           throws DOMException {
+      throws DOMException {
       try {
          return _delegate.getNodeValue();
       } catch (org.w3c.dom.DOMException ex) {
@@ -134,7 +134,7 @@ public class DOMNode<T extends Node>
    }
 
    public String getTextContent()
-           throws DOMException {
+      throws DOMException {
       try {
          return _delegate.getTextContent();
       } catch (org.w3c.dom.DOMException ex) {
@@ -155,10 +155,10 @@ public class DOMNode<T extends Node>
    }
 
    public DOMNode insertBefore(DOMNode newChild, DOMNode refChild)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.insertBefore(
-                 newChild.getDelegate(), refChild.getDelegate()));
+            newChild.getDelegate(), refChild.getDelegate()));
       } catch (org.w3c.dom.DOMException ex) {
          throw wrap(ex);
       }
@@ -193,7 +193,7 @@ public class DOMNode<T extends Node>
    }
 
    public DOMNode removeChild(DOMNode oldChild)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.removeChild(oldChild.getDelegate()));
       } catch (org.w3c.dom.DOMException ex) {
@@ -202,17 +202,17 @@ public class DOMNode<T extends Node>
    }
 
    public DOMNode replaceChild(DOMNode newChild, DOMNode oldChild)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.replaceChild(
-                 newChild.getDelegate(), oldChild.getDelegate()));
+            newChild.getDelegate(), oldChild.getDelegate()));
       } catch (org.w3c.dom.DOMException ex) {
          throw wrap(ex);
       }
    }
 
    public void setNodeValue(String nodeValue)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setNodeValue(nodeValue);
       } catch (org.w3c.dom.DOMException ex) {
@@ -221,7 +221,7 @@ public class DOMNode<T extends Node>
    }
 
    public void setPrefix(String prefix)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setPrefix(prefix);
       } catch (org.w3c.dom.DOMException ex) {
@@ -230,7 +230,7 @@ public class DOMNode<T extends Node>
    }
 
    public void setTextContent(String textContent)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setTextContent(textContent);
       } catch (org.w3c.dom.DOMException ex) {

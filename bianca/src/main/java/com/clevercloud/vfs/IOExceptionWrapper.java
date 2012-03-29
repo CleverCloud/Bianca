@@ -32,46 +32,39 @@ package com.clevercloud.vfs;
 import java.io.IOException;
 
 public class IOExceptionWrapper extends IOException {
-  private Throwable _rootCause;
-  
-  public IOExceptionWrapper()
-  {
-  }
-  
-  public IOExceptionWrapper(String message)
-  {
-    super(message);
-  }
-  
-  public IOExceptionWrapper(String message, Throwable e)
-  {
-    super(message);
+   private Throwable _rootCause;
 
-    _rootCause = e;
-  }
-  
-  public IOExceptionWrapper(Throwable e)
-  {
-    super(e.toString());
+   public IOExceptionWrapper() {
+   }
 
-    _rootCause = e;
-  }
+   public IOExceptionWrapper(String message) {
+      super(message);
+   }
 
-  public static IOException create(Exception e)
-  {
-    if (e instanceof IOException)
-      return (IOException) e;
-    else
-      return new IOExceptionWrapper(e);
-  }
-  
-  public Throwable getRootCause()
-  {
-    return _rootCause;
-  }
-  
-  public Throwable getCause()
-  {
-    return _rootCause;
-  }
+   public IOExceptionWrapper(String message, Throwable e) {
+      super(message);
+
+      _rootCause = e;
+   }
+
+   public IOExceptionWrapper(Throwable e) {
+      super(e.toString());
+
+      _rootCause = e;
+   }
+
+   public static IOException create(Exception e) {
+      if (e instanceof IOException)
+         return (IOException) e;
+      else
+         return new IOExceptionWrapper(e);
+   }
+
+   public Throwable getRootCause() {
+      return _rootCause;
+   }
+
+   public Throwable getCause() {
+      return _rootCause;
+   }
 }

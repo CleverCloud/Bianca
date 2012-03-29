@@ -29,9 +29,9 @@
  */
 package com.clevercloud.bianca.lib.reflection;
 
+import com.clevercloud.bianca.env.BiancaLanguageException;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.BiancaLanguageException;
 import com.clevercloud.bianca.env.Value;
 
 public class ReflectionException extends BiancaLanguageException {

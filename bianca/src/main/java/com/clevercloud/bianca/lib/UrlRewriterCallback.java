@@ -53,8 +53,8 @@ public class UrlRewriterCallback extends CallbackFunction {
 
       try {
          Method rewriterMethod =
-                 UrlRewriterCallback.class.getMethod("_internal_url_rewriter",
-                 Env.class, Value.class);
+            UrlRewriterCallback.class.getMethod("_internal_url_rewriter",
+               Env.class, Value.class);
          setFunction(new JavaMethod(env.getModuleContext(), rewriterMethod));
       } catch (NoSuchMethodException e) {
       } catch (SecurityException e) {
@@ -155,7 +155,7 @@ public class UrlRewriterCallback extends CallbackFunction {
 
       public Value parse() {
          if (_env.getSession() != null && _env.getJavaSession() != null
-                 && _env.getIni("session.use_trans_sid").toBoolean()) {
+            && _env.getIni("session.use_trans_sid").toBoolean()) {
             _includeSessionInfo = true;
 
             _sessionName = _env.getIni("session.name").toString();
@@ -171,7 +171,7 @@ public class UrlRewriterCallback extends CallbackFunction {
          }
 
          String[] tagPairs =
-                 _env.getIni("url_rewriter.tags").toString().split(",");
+            _env.getIni("url_rewriter.tags").toString().split(",");
          HashMap<String, String> tags = new HashMap<String, String>();
 
          for (String tagPair : tagPairs) {
@@ -200,24 +200,24 @@ public class UrlRewriterCallback extends CallbackFunction {
 
                   if (_includeSessionInfo) {
                      String phpSessionInputTag =
-                             "<input type=\"hidden\" name=\"" + _sessionName + "\""
-                             + " value=\"" + _sessionId + "\" />";
+                        "<input type=\"hidden\" name=\"" + _sessionName + "\""
+                           + " value=\"" + _sessionId + "\" />";
 
                      _output.append(phpSessionInputTag);
                   }
 
                   for (String[] entry : _rewriterVars) {
                      String inputTag =
-                             "<input type=\"hidden\" name=\"" + entry[0] + "\""
-                             + " value=\"" + entry[1] + "\" />";
+                        "<input type=\"hidden\" name=\"" + entry[0] + "\""
+                           + " value=\"" + entry[1] + "\" />";
                      _output.append(inputTag);
                   }
                } else {
                   int valueEnd = 0;
 
                   for (valueEnd = getNextAttribute(attribute);
-                          valueEnd == 0;
-                          valueEnd = getNextAttribute(attribute)) {
+                       valueEnd == 0;
+                       valueEnd = getNextAttribute(attribute)) {
                      // intentionally empty
                      // TODO: thats a bad smell! refactor
                   }
@@ -262,11 +262,11 @@ public class UrlRewriterCallback extends CallbackFunction {
        * Finds the next attribute matching the given name.
        *
        * @return -1 if no more valid attributes can be found, 0 if the next
-       * attribute is not the one sought, and 1 if the attribute was found.
-       *
-       * The _index pointer will refer to the end position for the value
-       * in the _input in the final case, but only those characters up to
-       * the beginning of the value will have been copied to the output.
+       *         attribute is not the one sought, and 1 if the attribute was found.
+       *         <p/>
+       *         The _index pointer will refer to the end position for the value
+       *         in the _input in the final case, but only those characters up to
+       *         the beginning of the value will have been copied to the output.
        */
       private int getNextAttribute(String attribute) {
          consumeWhiteSpace();
@@ -274,7 +274,7 @@ public class UrlRewriterCallback extends CallbackFunction {
          int attributeStart = _index;
 
          while (_index < _input.length()
-                 && isValidAttributeCharacter(_input.charAt(_index))) {
+            && isValidAttributeCharacter(_input.charAt(_index))) {
             consumeOneCharacter();
          }
 
@@ -324,11 +324,11 @@ public class UrlRewriterCallback extends CallbackFunction {
          } else {
             // skip to the end of the value
             for (valueEnd = _index;
-                    valueEnd < _input.length()
+                 valueEnd < _input.length()
                     && _input.charAt(valueEnd) != '/'
                     && _input.charAt(valueEnd) != '>'
                     && _input.charAt(valueEnd) != ' ';
-                    valueEnd++) {
+                 valueEnd++) {
                // intentionally left empty
             }
          }
@@ -363,14 +363,14 @@ public class UrlRewriterCallback extends CallbackFunction {
 
       private void consumeWhiteSpace() {
          while (_index < _input.length()
-                 && Character.isWhitespace(_input.charAt(_index))) {
+            && Character.isWhitespace(_input.charAt(_index))) {
             consumeOneCharacter();
          }
       }
 
       private void consumeNonWhiteSpace() {
          while (_index < _input.length()
-                 && !Character.isWhitespace(_input.charAt(_index))) {
+            && !Character.isWhitespace(_input.charAt(_index))) {
             consumeOneCharacter();
          }
       }
@@ -386,7 +386,7 @@ public class UrlRewriterCallback extends CallbackFunction {
 
       private boolean isValidAttributeCharacter(char ch) {
          return Character.isLetterOrDigit(ch)
-                 || (ch == '-') || (ch == '.') || (ch == '_') || (ch == ':');
+            || (ch == '-') || (ch == '.') || (ch == '_') || (ch == ':');
       }
 
       private String rewriteUrl(String urlString) {

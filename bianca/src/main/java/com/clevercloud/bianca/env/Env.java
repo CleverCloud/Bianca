@@ -30,7 +30,6 @@
  */
 package com.clevercloud.bianca.env;
 
-import com.clevercloud.java.WorkDir;
 import com.clevercloud.bianca.*;
 import com.clevercloud.bianca.expr.Expr;
 import com.clevercloud.bianca.function.AbstractFunction;
@@ -48,11 +47,12 @@ import com.clevercloud.bianca.module.IniDefinition;
 import com.clevercloud.bianca.module.ModuleContext;
 import com.clevercloud.bianca.module.ModuleStartupListener;
 import com.clevercloud.bianca.page.BiancaPage;
+import com.clevercloud.bianca.program.BiancaProgram;
 import com.clevercloud.bianca.program.ClassDef;
 import com.clevercloud.bianca.program.JavaClassDef;
-import com.clevercloud.bianca.program.BiancaProgram;
 import com.clevercloud.bianca.program.UndefinedFunction;
 import com.clevercloud.bianca.resources.StreamContextResource;
+import com.clevercloud.java.WorkDir;
 import com.clevercloud.util.*;
 import com.clevercloud.vfs.*;
 import com.clevercloud.vfs.i18n.EncodingReader;
@@ -4322,16 +4322,16 @@ public class Env {
     * @return the found class or null if no class found.
     */
    public BiancaClass findClass(String name,
-                                 boolean useAutoload,
-                                 boolean useImport) {
+                                boolean useAutoload,
+                                boolean useImport) {
       int id = _bianca.getClassId(name);
 
       return findClass(id, useAutoload, useImport);
    }
 
    public BiancaClass findClass(int id,
-                                 boolean useAutoload,
-                                 boolean useImport) {
+                                boolean useAutoload,
+                                boolean useImport) {
       if (id < _qClass.length && _qClass[id] != null) {
          return _qClass[id];
       }
@@ -4361,8 +4361,8 @@ public class Env {
    }
 
    private BiancaClass findClassExt(String name,
-                                     boolean useAutoload,
-                                     boolean useImport) {
+                                    boolean useAutoload,
+                                    boolean useImport) {
       int id = _bianca.getClassId(name);
 
       if (useAutoload) {
@@ -4557,8 +4557,8 @@ public class Env {
     * @return the found class or null if no class found.
     */
    private BiancaClass createClassFromCache(int id,
-                                             boolean useAutoload,
-                                             boolean useImport) {
+                                            boolean useAutoload,
+                                            boolean useImport) {
       if (id < _classDef.length && _classDef[id] != null) {
          ClassDef classDef = _classDef[id];
 
@@ -4752,8 +4752,8 @@ public class Env {
    }
 
    BiancaClass createBiancaClass(int id,
-                                   ClassDef def,
-                                   BiancaClass parent) {
+                                 ClassDef def,
+                                 BiancaClass parent) {
       BiancaClass qClass = _bianca.getCachedClass(id);
 
       // php/0ac0
@@ -5631,7 +5631,7 @@ public class Env {
     * A fatal runtime error.
     */
    public BiancaRuntimeException createErrorException(Location location,
-                                                       String msg)
+                                                      String msg)
       throws BiancaRuntimeException {
       if (location == null || location.isUnknown()) {
          location = getLocation();

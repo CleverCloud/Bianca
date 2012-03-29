@@ -32,7 +32,7 @@ package com.clevercloud.bianca.lib.reflection;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 
 public class ReflectionModule
-        extends AbstractBiancaModule {
+   extends AbstractBiancaModule {
 
    @Override
    public String[] getLoadedExtensions() {

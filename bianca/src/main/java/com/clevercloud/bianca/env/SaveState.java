@@ -58,14 +58,14 @@ public class SaveState {
     * Creates a new save state.
     */
    SaveState(Env env,
-           AbstractFunction[] fun,
-           ClassDef[] classDef,
-           BiancaClass[] qClass,
-           Value[] constants,
-           Map<StringValue, Var> staticMap,
-           Map<StringValue, EnvVar> globalMap,
-           HashMap<Path, BiancaPage> includeMap,
-           ImportMap importMap) {
+             AbstractFunction[] fun,
+             ClassDef[] classDef,
+             BiancaClass[] qClass,
+             Value[] constants,
+             Map<StringValue, Var> staticMap,
+             Map<StringValue, EnvVar> globalMap,
+             HashMap<Path, BiancaPage> includeMap,
+             ImportMap importMap) {
       _fun = new AbstractFunction[fun.length];
       System.arraycopy(fun, 0, _fun, 0, fun.length);
 

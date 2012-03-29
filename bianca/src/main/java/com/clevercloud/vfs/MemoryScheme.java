@@ -32,15 +32,13 @@ package com.clevercloud.vfs;
 import java.util.Map;
 
 public class MemoryScheme extends MemoryPath {
-  public MemoryScheme()
-  {
-    super(null, "/", null, "/");
-  }
+   public MemoryScheme() {
+      super(null, "/", null, "/");
+   }
 
-  public Path fsWalk(String userPath,
-                     Map<String,Object> attributes,
-                     String path)
-  {
-    return Vfs.lookup().lookup(path);
-  }
+   public Path fsWalk(String userPath,
+                      Map<String, Object> attributes,
+                      String path) {
+      return Vfs.lookup().lookup(path);
+   }
 }

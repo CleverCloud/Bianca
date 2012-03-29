@@ -47,31 +47,31 @@ public interface BinaryOutput extends BinaryStream {
     * Writes a buffer.
     */
    public void write(byte[] buffer, int offset, int length)
-           throws IOException;
+      throws IOException;
 
    /**
     * Writes a buffer.
     */
    public int write(InputStream is, int length)
-           throws IOException;
+      throws IOException;
 
    /**
     * prints a unicode character
     */
    public void print(char ch)
-           throws IOException;
+      throws IOException;
 
    /**
     * prints
     */
    public void print(String s)
-           throws IOException;
+      throws IOException;
 
    /**
     * Flushes the output
     */
    public void flush()
-           throws IOException;
+      throws IOException;
 
    /**
     * Closes the stream for writing

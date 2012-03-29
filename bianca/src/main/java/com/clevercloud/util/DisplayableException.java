@@ -32,7 +32,7 @@ package com.clevercloud.util;
 import java.io.PrintWriter;
 
 public interface DisplayableException {
-  public void print(PrintWriter out);
+   public void print(PrintWriter out);
 }
 
 

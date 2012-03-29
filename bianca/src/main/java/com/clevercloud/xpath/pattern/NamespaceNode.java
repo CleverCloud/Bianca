@@ -34,12 +34,7 @@ import com.clevercloud.xml.CleverCloudElement;
 import com.clevercloud.xml.CleverCloudNode;
 import com.clevercloud.xml.QAbstractNode;
 import com.clevercloud.xml.QAttr;
-
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,242 +43,230 @@ import java.util.HashMap;
  * A pseudo-node for handling the namespace:: axis.
  */
 public class NamespaceNode extends QAbstractNode implements CleverCloudNode {
-  Node _parent;
+   Node _parent;
 
-  NamespaceNode _next;
-  NamespaceNode _prev;
+   NamespaceNode _next;
+   NamespaceNode _prev;
 
-  String _local;
-  String _name;
-  String _url;
+   String _local;
+   String _name;
+   String _url;
 
-  /**
-   * Creates a new namespace node.
-   */
-  public NamespaceNode(Node parent, NamespaceNode next,
-                       String prefix, String url)
-  {
-    _parent = parent;
-    _next = next;
-    if (next != null)
-      next._prev = this;
-    _local = prefix;
-    if (prefix == null || prefix.equals(""))
-      _name = "xmlns";
-    else
-      _name = ("xmlns:" + prefix).intern();
-    _url = url;
-  }
+   /**
+    * Creates a new namespace node.
+    */
+   public NamespaceNode(Node parent, NamespaceNode next,
+                        String prefix, String url) {
+      _parent = parent;
+      _next = next;
+      if (next != null)
+         next._prev = this;
+      _local = prefix;
+      if (prefix == null || prefix.equals(""))
+         _name = "xmlns";
+      else
+         _name = ("xmlns:" + prefix).intern();
+      _url = url;
+   }
 
-  /**
-   * Creates a list of namespace nodes based on the current element.
-   * The list is the list of namespaces active for that element.
-   */
-  static NamespaceNode create(Node node)
-  {
-    Node top = node;
-    NamespaceNode nodes = null;
-    HashMap<String,String> map = new HashMap<String,String>();
+   /**
+    * Creates a list of namespace nodes based on the current element.
+    * The list is the list of namespaces active for that element.
+    */
+   static NamespaceNode create(Node node) {
+      Node top = node;
+      NamespaceNode nodes = null;
+      HashMap<String, String> map = new HashMap<String, String>();
 
-    for (; node instanceof CleverCloudElement; node = node.getParentNode()) {
-      CleverCloudElement elt = (CleverCloudElement) node;
+      for (; node instanceof CleverCloudElement; node = node.getParentNode()) {
+         CleverCloudElement elt = (CleverCloudElement) node;
 
-      String prefix = elt.getPrefix();
-      String url = elt.getNamespaceURI();
-      if (url == null)
-        url = "";
-      
-      if (map.get(prefix) == null) {
-        map.put(prefix, url);
-        if (! url.equals(""))
-          nodes = new NamespaceNode(top, nodes, prefix, url);
+         String prefix = elt.getPrefix();
+         String url = elt.getNamespaceURI();
+         if (url == null)
+            url = "";
+
+         if (map.get(prefix) == null) {
+            map.put(prefix, url);
+            if (!url.equals(""))
+               nodes = new NamespaceNode(top, nodes, prefix, url);
+         }
+
+         QAttr attr = (QAttr) elt.getFirstAttribute();
+         for (; attr != null; attr = (QAttr) attr.getNextSibling()) {
+            String name = attr.getNodeName();
+            prefix = null;
+            url = "";
+
+            if (name.startsWith("xmlns:")) {
+               prefix = name.substring(6);
+               url = attr.getNodeValue();
+            } else if (name.equals("xmlns")) {
+               prefix = "";
+               url = attr.getNodeValue();
+            } else {
+               prefix = attr.getPrefix();
+               url = attr.getNamespaceURI();
+            }
+
+            if (url == null)
+               url = "";
+
+            if (map.get(prefix) == null) {
+               map.put(prefix, url);
+               if (!url.equals(""))
+                  nodes = new NamespaceNode(top, nodes, prefix, url);
+            }
+         }
       }
 
-      QAttr attr = (QAttr) elt.getFirstAttribute();
-      for (; attr != null; attr = (QAttr) attr.getNextSibling()) {
-        String name = attr.getNodeName();
-        prefix = null;
-        url = "";
+      return nodes;
+   }
 
-        if (name.startsWith("xmlns:")) {
-          prefix = name.substring(6);
-          url = attr.getNodeValue();
-        }
-        else if (name.equals("xmlns")) {
-          prefix = "";
-          url = attr.getNodeValue();
-        }
-        else {
-          prefix = attr.getPrefix();
-          url = attr.getNamespaceURI();
-        }
+   public short getNodeType() {
+      return ATTRIBUTE_NODE;
+   }
 
-        if (url == null)
-          url = "";
-      
-        if (map.get(prefix) == null) {
-          map.put(prefix, url);
-          if (! url.equals(""))
-            nodes = new NamespaceNode(top, nodes, prefix, url);
-        }
-      }
-    }
+   public String getNodeName() {
+      return _name;
+   }
 
-    return nodes;
-  }
+   public String getPrefix() {
+      return "xmlns";
+   }
 
-  public short getNodeType()
-  {
-    return ATTRIBUTE_NODE;
-  }
+   public void setPrefix(String prefix) {
+   }
 
-  public String getNodeName()
-  {
-    return _name;
-  }
+   public boolean supports(String feature, String version) {
+      return false;
+   }
 
-  public String getPrefix()
-  {
-    return "xmlns";
-  }
+   public String getCanonicalName() {
+      return "";
+   }
 
-  public void setPrefix(String prefix)
-  {
-  }
+   public String getLocalName() {
+      return _local;
+   }
 
-  public boolean supports(String feature, String version)
-  {
-    return false;
-  }
-  
-  public String getCanonicalName()
-  {
-    return "";
-  }
+   public String getNamespaceURI() {
+      return null;
+   }
 
-  public String getLocalName()
-  {
-    return _local;
-  }
+   public String getNodeValue() {
+      return _url;
+   }
 
-  public String getNamespaceURI()
-  {
-    return null;
-  }
+   public Node getParentNode() {
+      return _parent;
+   }
 
-  public String getNodeValue()
-  {
-    return _url;
-  }
+   public Node getPreviousSibling() {
+      return _prev;
+   }
 
-  public Node getParentNode()
-  {
-    return _parent;
-  }
+   public Node getNextSibling() {
+      return _next;
+   }
 
-  public Node getPreviousSibling()
-  {
-    return _prev;
-  }
+   // The following are just stubs to conform to the api
 
-  public Node getNextSibling()
-  {
-    return _next;
-  }
+   public void setLocation(String filename, int line, int column) {
+   }
 
-  // The following are just stubs to conform to the api
+   public String getFilename() {
+      return null;
+   }
 
-  public void setLocation(String filename, int line, int column)
-  { 
-  }
+   public int getLine() {
+      return 0;
+   }
 
-  public String getFilename()
-  {
-    return null;
-  }
+   public int getColumn() {
+      return 0;
+   }
 
-  public int getLine()
-  {
-    return 0;
-  }
+   public Document getOwnerDocument() {
+      return null;
+   }
 
-  public int getColumn() { return 0; }
+   public void setNodeValue(String value) {
+   }
 
-  public Document getOwnerDocument() { return null; }
+   public NodeList getChildNodes() {
+      return null;
+   }
 
-  public void setNodeValue(String value) {}
+   public Node getFirstChild() {
+      return null;
+   }
 
-  public NodeList getChildNodes() { return null; }
+   public Node getLastChild() {
+      return null;
+   }
 
-  public Node getFirstChild() { return null; }
+   public NamedNodeMap getAttributes() {
+      return null;
+   }
 
-  public Node getLastChild() { return null; }
+   public Node insertBefore(Node newChild, Node refChild) {
+      return null;
+   }
 
-  public NamedNodeMap getAttributes() { return null; }
+   public Node replaceChild(Node newChild, Node refChild) {
+      return null;
+   }
 
-  public Node insertBefore(Node newChild, Node refChild)
-  { 
-    return null;
-  }
+   public Node removeChild(Node oldChild) throws DOMException {
+      return null;
+   }
 
-  public Node replaceChild(Node newChild, Node refChild)
-  { 
-    return null;
-  }
+   public Node appendChild(Node newNode) throws DOMException {
+      return null;
+   }
 
-  public Node removeChild(Node oldChild) throws DOMException
-  { 
-    return null;
-  }
+   public boolean hasChildNodes() {
+      return false;
+   }
 
-  public Node appendChild(Node newNode) throws DOMException
-  { 
-    return null;
-  }
+   public boolean equals(Node arg, boolean deep) {
+      return this == arg;
+   }
 
-  public boolean hasChildNodes() { return false; }
+   public Node cloneNode(boolean deep) {
+      return null;
+   }
 
-  public boolean equals(Node arg, boolean deep)
-  {
-    return this == arg;
-  }
+   public void normalize() {
+   }
 
-  public Node cloneNode(boolean deep)
-  {
-    return null;
-  }
+   public String getTextValue() {
+      return getNodeValue();
+   }
 
-  public void normalize()
-  {
-  }
+   public boolean checkValid() {
+      return false;
+   }
 
-  public String getTextValue() { return getNodeValue(); }
-  public boolean checkValid() { return false; }
+   public void print(WriteStream out) throws IOException {
+   }
 
-  public void print(WriteStream out) throws IOException
-  {
-  }
+   public void printPretty(WriteStream out) throws IOException {
+   }
 
-  public void printPretty(WriteStream out) throws IOException
-  {
-  }
+   public void printHtml(WriteStream out) throws IOException {
+   }
 
-  public void printHtml(WriteStream out) throws IOException
-  {
-  }
+   public boolean isSupported(String feature, String version) {
+      return false;
+   }
 
-  public boolean isSupported(String feature, String version)
-  {
-    return false;
-  }
+   public boolean hasAttributes() {
+      return false;
+   }
 
-  public boolean hasAttributes()
-  {
-    return false;
-  }
-
-  public String toString()
-  {
-    return "NamespaceNode[" + _name + " " + _url + "]";
-  }
+   public String toString() {
+      return "NamespaceNode[" + _name + " " + _url + "]";
+   }
 }

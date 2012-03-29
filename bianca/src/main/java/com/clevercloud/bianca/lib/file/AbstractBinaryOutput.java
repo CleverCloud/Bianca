@@ -32,7 +32,6 @@ package com.clevercloud.bianca.lib.file;
 import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.env.BooleanValue;
 import com.clevercloud.bianca.env.Value;
-import com.clevercloud.vfs.TempBuffer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,8 +41,8 @@ import java.io.OutputStream;
  * Represents a PHP open file
  */
 abstract public class AbstractBinaryOutput
-        extends OutputStream
-        implements BinaryOutput {
+   extends OutputStream
+   implements BinaryOutput {
 
    private int lockedShared = 0;
    private boolean lockedExclusive = false;
@@ -98,7 +97,7 @@ abstract public class AbstractBinaryOutput
     */
    @Override
    public void print(char v)
-           throws IOException {
+      throws IOException {
       write((byte) v);
    }
 
@@ -107,7 +106,7 @@ abstract public class AbstractBinaryOutput
     */
    @Override
    public void print(String v)
-           throws IOException {
+      throws IOException {
       for (int i = 0; i < v.length(); i++) {
          write(v.charAt(i));
       }
@@ -118,7 +117,7 @@ abstract public class AbstractBinaryOutput
     */
    @Override
    public void flush()
-           throws IOException {
+      throws IOException {
    }
 
    /**

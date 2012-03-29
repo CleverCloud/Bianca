@@ -32,7 +32,7 @@ package com.clevercloud.bianca.lib.dom;
 import org.w3c.dom.TypeInfo;
 
 public class DOMTypeInfo
-        extends DOMWrapper<TypeInfo> {
+   extends DOMWrapper<TypeInfo> {
 
    DOMTypeInfo(DOMImplementation impl, TypeInfo delegate) {
       super(impl, delegate);
@@ -47,9 +47,9 @@ public class DOMTypeInfo
    }
 
    public boolean isDerivedFrom(String typeNamespaceArg,
-           String typeNameArg,
-           int derivationMethod) {
+                                String typeNameArg,
+                                int derivationMethod) {
       return _delegate.isDerivedFrom(
-              typeNamespaceArg, typeNameArg, derivationMethod);
+         typeNamespaceArg, typeNameArg, derivationMethod);
    }
 }

@@ -33,225 +33,206 @@ package com.clevercloud.vfs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.util.logging.Logger;
 
 /**
  * Reads from a file in a random-access fashion.
  */
 public class DatastoreRandomAccessStream extends RandomAccessStream
-    implements LockableStream
-{
-  private static final Logger log
-    = Logger.getLogger(DatastoreRandomAccessStream.class.getName());
+   implements LockableStream {
+   private static final Logger log
+      = Logger.getLogger(DatastoreRandomAccessStream.class.getName());
 
-  private DatastoreRandomAccessFile _file;
-  private OutputStream _os;
-  private InputStream _is;
+   private DatastoreRandomAccessFile _file;
+   private OutputStream _os;
+   private InputStream _is;
 
-  public DatastoreRandomAccessStream(DatastoreRandomAccessFile file)
-  {
-    _file = file;
-  }
+   public DatastoreRandomAccessStream(DatastoreRandomAccessFile file) {
+      _file = file;
+   }
 
-  public DatastoreRandomAccessFile getRandomAccessFile()
-  {
-    return _file;
-  }
+   public DatastoreRandomAccessFile getRandomAccessFile() {
+      return _file;
+   }
 
-  /**
-   * Returns the length.
-   */
-  public long getLength()
-    throws IOException
-  {
-    return _file.getLength();
-  }
-  
-  /**
-   * Reads a block starting from the current file pointer.
-   */
-  public int read(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    return _file.read(buffer, offset, length);
-  }
+   /**
+    * Returns the length.
+    */
+   public long getLength()
+      throws IOException {
+      return _file.getLength();
+   }
 
-  /**
-   * Reads a block starting from the current file pointer.
-   */
-  public int read(char []buffer, int offset, int length)
-    throws IOException
-  {
-    byte[] bytes = new byte[length];
+   /**
+    * Reads a block starting from the current file pointer.
+    */
+   public int read(byte[] buffer, int offset, int length)
+      throws IOException {
+      return _file.read(buffer, offset, length);
+   }
 
-    int count = _file.read(bytes, 0, length);
+   /**
+    * Reads a block starting from the current file pointer.
+    */
+   public int read(char[] buffer, int offset, int length)
+      throws IOException {
+      byte[] bytes = new byte[length];
 
-    for (int i = 0; i < count; i++) {
-      buffer[offset + i] = (char) bytes[i];
+      int count = _file.read(bytes, 0, length);
 
-    }
+      for (int i = 0; i < count; i++) {
+         buffer[offset + i] = (char) bytes[i];
 
-    return count;
-  }
+      }
 
-  /**
-   * Reads a block from a given location.
-   */
-  public int read(long fileOffset, byte []buffer, int offset, int length)
-    throws IOException
-  {
-    _file.seek(fileOffset);
-    
-    return _file.read(buffer, offset, length);
-  }
+      return count;
+   }
 
-  /**
-   * Writes a block starting from the current file pointer.
-   */
-  public void write(byte []buffer, int offset, int length)
-    throws IOException
-  {
-    _file.write(buffer, offset, length);
-  }
+   /**
+    * Reads a block from a given location.
+    */
+   public int read(long fileOffset, byte[] buffer, int offset, int length)
+      throws IOException {
+      _file.seek(fileOffset);
 
-  /**
-   * Writes a block from a given location.
-   */
-  public void write(long fileOffset, byte []buffer, int offset, int length)
-    throws IOException
-  {
-    _file.seek(fileOffset);
-    
-    _file.write(buffer, offset, length);
-  }
+      return _file.read(buffer, offset, length);
+   }
 
-  /**
-   * Seeks to the given position in the file.
-   */
-  public boolean seek(long position)
-  {
-    try {
-      _file.seek(position);
+   /**
+    * Writes a block starting from the current file pointer.
+    */
+   public void write(byte[] buffer, int offset, int length)
+      throws IOException {
+      _file.write(buffer, offset, length);
+   }
+
+   /**
+    * Writes a block from a given location.
+    */
+   public void write(long fileOffset, byte[] buffer, int offset, int length)
+      throws IOException {
+      _file.seek(fileOffset);
+
+      _file.write(buffer, offset, length);
+   }
+
+   /**
+    * Seeks to the given position in the file.
+    */
+   public boolean seek(long position) {
+      try {
+         _file.seek(position);
+
+         return true;
+      } catch (IOException e) {
+         return false;
+      }
+   }
+
+   /**
+    * Returns an OutputStream for this stream.
+    */
+   public OutputStream getOutputStream()
+      throws IOException {
+      if (_os == null)
+         _os = new DatastoreRandomAccessOutputStream(_file);
+
+      return _os;
+   }
+
+   /**
+    * Returns an InputStream for this stream.
+    */
+   public InputStream getInputStream()
+      throws IOException {
+      if (_is == null)
+         _is = new DatastoreRandomAccessInputStream(_file);
+
+      return _is;
+   }
+
+   /**
+    * Read a byte from the file, advancing the pointer.
+    */
+   public int read()
+      throws IOException {
+      return _file.read();
+   }
+
+   /**
+    * Write a byte to the file, advancing the pointer.
+    */
+   public void write(int b)
+      throws IOException {
+      _file.write(b);
+   }
+
+   /**
+    * Returns the current position of the file pointer.
+    */
+   public long getFilePointer()
+      throws IOException {
+      return _file.getFilePointer();
+   }
+
+   /**
+    * Closes the stream.
+    */
+   public void close()
+      throws IOException {
+      unlock();
+
+      DatastoreRandomAccessFile file = _file;
+      _file = null;
+
+      if (file != null)
+         file.close();
+   }
+
+   public boolean lock(boolean shared, boolean block) {
+      /*
+      unlock();
+
+      try {
+        if (_fileChannel == null) {
+          _fileChannel = _file.getChannel();
+        }
+
+        if (block)
+          _fileLock = _fileChannel.lock(0, Long.MAX_VALUE, shared);
+        else
+          _fileLock = _fileChannel.tryLock(0, Long.MAX_VALUE, shared);
+
+        return _fileLock != null;
+      } catch (IOException e) {
+        log.log(Level.FINE, e.toString(), e);
+        return false;
+      }
+      */
 
       return true;
-    } catch (IOException e) {
-      return false;
-    }
-  }
+   }
 
-  /**
-   * Returns an OutputStream for this stream.
-   */
-  public OutputStream getOutputStream()
-    throws IOException
-  {
-    if (_os == null)
-      _os = new DatastoreRandomAccessOutputStream(_file);
+   public boolean unlock() {
+      /*
+      try {
+        FileLock lock = _fileLock;
+        _fileLock = null;
 
-    return _os;
-  }
+        if (lock != null) {
+          lock.release();
 
-  /**
-   * Returns an InputStream for this stream.
-   */
-  public InputStream getInputStream()
-    throws IOException
-  {
-    if (_is == null)
-      _is = new DatastoreRandomAccessInputStream(_file);
+          return true;
+        }
 
-    return _is;
-  }
-
-  /**
-   * Read a byte from the file, advancing the pointer.
-   */
-  public int read()
-    throws IOException
-  {
-    return _file.read();
-  }
-
-  /**
-   * Write a byte to the file, advancing the pointer.
-   */
-  public void write(int b)
-    throws IOException
-  {
-    _file.write(b);
-  }
-
-  /**
-   * Returns the current position of the file pointer.
-   */
-  public long getFilePointer()
-    throws IOException
-  {
-    return _file.getFilePointer();
-  }
-
-  /**
-   * Closes the stream.
-   */
-  public void close()
-    throws IOException
-  {
-    unlock();
-
-    DatastoreRandomAccessFile file = _file;
-    _file = null;
-
-    if (file != null)
-      file.close();
-  }
-
-  public boolean lock(boolean shared, boolean block)
-  {
-    /*
-    unlock();
-
-    try {
-      if (_fileChannel == null) {
-        _fileChannel = _file.getChannel();
+        return false;
+      } catch (IOException e) {
+        log.log(Level.FINE, e.toString(), e);
+        return false;
       }
+      */
 
-      if (block)
-        _fileLock = _fileChannel.lock(0, Long.MAX_VALUE, shared);
-      else
-        _fileLock = _fileChannel.tryLock(0, Long.MAX_VALUE, shared);
-
-      return _fileLock != null;
-    } catch (IOException e) {
-      log.log(Level.FINE, e.toString(), e);
-      return false;
-    }
-    */
-    
-    return true;
-  }
-
-  public boolean unlock()
-  {
-    /*
-    try {
-      FileLock lock = _fileLock;
-      _fileLock = null;
-
-      if (lock != null) {
-        lock.release();
-
-        return true;
-      }
-
-      return false;
-    } catch (IOException e) {
-      log.log(Level.FINE, e.toString(), e);
-      return false;
-    }
-    */
-    
-    return true;
-  }
+      return true;
+   }
 
 }

@@ -35,7 +35,6 @@ import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.XPathFun;
 import com.clevercloud.xpath.pattern.AbstractPattern;
-
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
@@ -44,65 +43,59 @@ import java.util.ArrayList;
  * Expressions based on custom library extensions.
  */
 public class FunExpr extends Expr {
-  private String _name;
-  private AbstractPattern _pattern;
-  private ArrayList<Expr> _args;
+   private String _name;
+   private AbstractPattern _pattern;
+   private ArrayList<Expr> _args;
 
-  public FunExpr(String name, AbstractPattern pattern, ArrayList<Expr> args)
-  {
-    _name = name;
-    _pattern = pattern;
-    _args = args;
-  }
+   public FunExpr(String name, AbstractPattern pattern, ArrayList<Expr> args) {
+      _name = name;
+      _pattern = pattern;
+      _args = args;
+   }
 
-  public boolean evalBoolean(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return toBoolean(evalObject(node, env));
-  }
+   public boolean evalBoolean(Node node, ExprEnvironment env)
+      throws XPathException {
+      return toBoolean(evalObject(node, env));
+   }
 
-  public double evalNumber(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return toDouble(evalObject(node, env));
-  }
+   public double evalNumber(Node node, ExprEnvironment env)
+      throws XPathException {
+      return toDouble(evalObject(node, env));
+   }
 
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return toString(evalObject(node, env));
-  }
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      return toString(evalObject(node, env));
+   }
 
-  public Object evalObject(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    XPathFun fun = env.getFunction(_name);
-    
-    // XXX: need to propagate the exception
-    if (fun == null)
-      throw new RuntimeException("unknown function: " + _name);
+   public Object evalObject(Node node, ExprEnvironment env)
+      throws XPathException {
+      XPathFun fun = env.getFunction(_name);
 
-    ArrayList<Object> values = new ArrayList<Object>();
-    for (int i = 0; i < _args.size(); i++) {
-      Expr expr = _args.get(i);
-      values.add(expr.evalObject(node, env));
-    }
+      // XXX: need to propagate the exception
+      if (fun == null)
+         throw new RuntimeException("unknown function: " + _name);
 
-    return fun.eval(node, env, _pattern, values);
-  }
+      ArrayList<Object> values = new ArrayList<Object>();
+      for (int i = 0; i < _args.size(); i++) {
+         Expr expr = _args.get(i);
+         values.add(expr.evalObject(node, env));
+      }
 
-  public String toString()
-  {
-    CharBuffer cb = new CharBuffer();
-    cb.append(_name);
-    cb.append("(");
-    for (int i = 0; i < _args.size(); i++) {
-      if (i != 0)
-        cb.append(", ");
-      cb.append(_args.get(i));
-    }
-    cb.append(")");
+      return fun.eval(node, env, _pattern, values);
+   }
 
-    return cb.toString();
-  }
+   public String toString() {
+      CharBuffer cb = new CharBuffer();
+      cb.append(_name);
+      cb.append("(");
+      for (int i = 0; i < _args.size(); i++) {
+         if (i != 0)
+            cb.append(", ");
+         cb.append(_args.get(i));
+      }
+      cb.append(")");
+
+      return cb.toString();
+   }
 }

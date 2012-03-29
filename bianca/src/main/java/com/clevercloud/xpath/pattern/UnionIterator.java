@@ -31,7 +31,6 @@ package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 import java.util.logging.Level;
@@ -40,84 +39,79 @@ import java.util.logging.Level;
  * Uses the axis to select new nodes.
  */
 public class UnionIterator extends NodeIterator {
-  private NodeIterator _leftIter;
-  private NodeIterator _rightIter;
+   private NodeIterator _leftIter;
+   private NodeIterator _rightIter;
 
-  private Node _node;
-  
-  /**
-   * Creates the new AxisIterator.
-   *
-   * @param leftIter the left iterator
-   * @param rightIter the right iterator
-   */
-  public UnionIterator(ExprEnvironment env,
-                       NodeIterator leftIter, NodeIterator rightIter)
-    throws XPathException
-  {
-    super(env);
-    
-    _leftIter = leftIter;
-    _rightIter = rightIter;
+   private Node _node;
 
-    _node = leftIter.nextNode();
-    if (_node == null) {
-      _leftIter = null;
-      _node = _rightIter.nextNode();
-    }
-  }
-  
-  /**
-   * True if there's more data.
-   */
-  public boolean hasNext()
-  {
-    return _node != null;
-  }
-  
-  /**
-   * Returns the next selected node.
-   */
-  public Node nextNode()
-    throws XPathException
-  {
-    Node next = _node;
+   /**
+    * Creates the new AxisIterator.
+    *
+    * @param leftIter  the left iterator
+    * @param rightIter the right iterator
+    */
+   public UnionIterator(ExprEnvironment env,
+                        NodeIterator leftIter, NodeIterator rightIter)
+      throws XPathException {
+      super(env);
 
-    if (next == null)
-      return null;
+      _leftIter = leftIter;
+      _rightIter = rightIter;
 
-    if (_leftIter != null) {
-      _node = _leftIter.nextNode();
+      _node = leftIter.nextNode();
       if (_node == null) {
-        _leftIter = null;
-        _node = _rightIter.nextNode();
+         _leftIter = null;
+         _node = _rightIter.nextNode();
       }
-    }
-    else
-      _node = _rightIter.nextNode();
-    
-    return next;
-  }
+   }
 
-  /**
-   * Returns a clone of the iterator.
-   */
-  public Object clone()
-  {
-    try {
-      UnionIterator clone;
-      clone = new UnionIterator(_env,
-                                (NodeIterator) _leftIter.clone(),
-                                (NodeIterator) _rightIter.clone());
+   /**
+    * True if there's more data.
+    */
+   public boolean hasNext() {
+      return _node != null;
+   }
 
-      clone._node = _node;
-      clone._position = _position;
+   /**
+    * Returns the next selected node.
+    */
+   public Node nextNode()
+      throws XPathException {
+      Node next = _node;
 
-      return clone;
-    } catch (Exception e) {
-      log.log(Level.FINE, e.toString(), e);
-      
-      return null;
-    }
-  }
+      if (next == null)
+         return null;
+
+      if (_leftIter != null) {
+         _node = _leftIter.nextNode();
+         if (_node == null) {
+            _leftIter = null;
+            _node = _rightIter.nextNode();
+         }
+      } else
+         _node = _rightIter.nextNode();
+
+      return next;
+   }
+
+   /**
+    * Returns a clone of the iterator.
+    */
+   public Object clone() {
+      try {
+         UnionIterator clone;
+         clone = new UnionIterator(_env,
+            (NodeIterator) _leftIter.clone(),
+            (NodeIterator) _rightIter.clone());
+
+         clone._node = _node;
+         clone._position = _position;
+
+         return clone;
+      } catch (Exception e) {
+         log.log(Level.FINE, e.toString(), e);
+
+         return null;
+      }
+   }
 }

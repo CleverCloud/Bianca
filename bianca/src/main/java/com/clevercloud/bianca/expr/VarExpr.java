@@ -30,18 +30,14 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Var;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.parser.BiancaParser;
 
 /**
  * Represents a PHP variable expression.
  */
 public class VarExpr
-        extends AbstractVarExpr {
+   extends AbstractVarExpr {
 
    private final VarInfo _var;
    protected final StringValue _name;
@@ -82,6 +78,7 @@ public class VarExpr
 
    /**
     * Copy for things like $a .= "test";
+    *
     * @param location
     */
    public Expr copy(Location location) {
@@ -111,7 +108,7 @@ public class VarExpr
     */
    @Override
    public Expr createAssignRef(BiancaParser parser,
-           Expr value) {
+                               Expr value) {
       // _var.setAssigned();
 
       return super.createAssignRef(parser, value);
@@ -294,11 +291,11 @@ public class VarExpr
    @Override
    public void evalUnset(Env env) {
       // php/023b
-    /*
-      if (getVarInfo().isGlobal())
-      env.unsetGlobalVar(_name);
-      else
-       */
+      /*
+     if (getVarInfo().isGlobal())
+     env.unsetGlobalVar(_name);
+     else
+      */
       env.unsetLocalVar(_name);
    }
 

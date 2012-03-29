@@ -46,9 +46,9 @@ public class ZlibProtocolWrapper extends ProtocolWrapper {
 
    @Override
    public BinaryStream fopen(Env env, StringValue path, StringValue mode,
-           LongValue options) {
+                             LongValue options) {
       boolean useIncludePath =
-              (options.toLong() & StreamModule.STREAM_USE_PATH) != 0;
+         (options.toLong() & StreamModule.STREAM_USE_PATH) != 0;
 
       Value pathComponent = UrlModule.parse_url(env, path, UrlModule.PHP_URL_PATH);
 
@@ -58,8 +58,8 @@ public class ZlibProtocolWrapper extends ProtocolWrapper {
       }
 
       return ZlibModule.gzopen(env, pathComponent.toStringValue(),
-              mode.toString(),
-              useIncludePath);
+         mode.toString(),
+         useIncludePath);
    }
 
    @Override
@@ -85,7 +85,7 @@ public class ZlibProtocolWrapper extends ProtocolWrapper {
 
    @Override
    public boolean mkdir(Env env,
-           StringValue path, LongValue mode, LongValue options) {
+                        StringValue path, LongValue mode, LongValue options) {
       env.warning(L.l("mkdir not supported by protocol"));
 
       return false;

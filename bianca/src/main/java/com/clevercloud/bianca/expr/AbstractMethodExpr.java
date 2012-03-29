@@ -31,8 +31,8 @@ package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 
 
 /**
@@ -48,7 +48,6 @@ abstract public class AbstractMethodExpr extends Expr {
     * Evaluates the expression as a copy
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -60,7 +59,6 @@ abstract public class AbstractMethodExpr extends Expr {
     * Evaluates the expression as a copy
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -72,12 +70,11 @@ abstract public class AbstractMethodExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    protected Value eval(Env env, Value qThis,
-           StringValue methodName, int hashCode,
-           Expr[] argExprs) {
+                        StringValue methodName, int hashCode,
+                        Expr[] argExprs) {
       Value[] args = evalArgs(env, argExprs);
 
       env.pushCall(this, qThis, args);

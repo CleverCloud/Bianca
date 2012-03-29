@@ -33,101 +33,96 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class MemoryStream extends StreamImpl {
-  private TempBuffer _head;
-  private TempBuffer _tail;
+   private TempBuffer _head;
+   private TempBuffer _tail;
 
-  @Override
-  public Path getPath() { return new NullPath("temp:"); }
+   @Override
+   public Path getPath() {
+      return new NullPath("temp:");
+   }
 
-  /**
-   * A memory stream is writable.
-   */
-  @Override
-  public boolean canWrite()
-  {
-    return true;
-  }
-  
-  /**
-   * Writes a buffer to the underlying stream.
-   *
-   * @param buffer the byte array to write.
-   * @param offset the offset into the byte array.
-   * @param length the number of bytes to write.
-   * @param isEnd true when the write is flushing a close.
-   */
-  @Override
-  public void write(byte []buf, int offset, int length, boolean isEnd)
-    throws IOException
-  {
-    while (offset < length) {
-      if (_tail == null || _tail._length >= _tail._buf.length)
-        addBuffer(TempBuffer.allocate());
+   /**
+    * A memory stream is writable.
+    */
+   @Override
+   public boolean canWrite() {
+      return true;
+   }
 
-      int sublen = _tail._buf.length - _tail._length;
-      if (length - offset < sublen)
-        sublen = length - offset;
+   /**
+    * Writes a buffer to the underlying stream.
+    *
+    * @param buffer the byte array to write.
+    * @param offset the offset into the byte array.
+    * @param length the number of bytes to write.
+    * @param isEnd  true when the write is flushing a close.
+    */
+   @Override
+   public void write(byte[] buf, int offset, int length, boolean isEnd)
+      throws IOException {
+      while (offset < length) {
+         if (_tail == null || _tail._length >= _tail._buf.length)
+            addBuffer(TempBuffer.allocate());
 
-      System.arraycopy(buf, offset, _tail._buf, _tail._length, sublen);
+         int sublen = _tail._buf.length - _tail._length;
+         if (length - offset < sublen)
+            sublen = length - offset;
 
-      offset += sublen;
-      _tail._length += sublen;
-    }
-  }
+         System.arraycopy(buf, offset, _tail._buf, _tail._length, sublen);
 
-  private void addBuffer(TempBuffer buf)
-  {
-    buf._next = null;
-    buf._length = 0;
-    if (_tail != null) {
-      _tail._next = buf;
-      _tail = buf;
-    } else {
-      _tail = buf;
-      _head = buf;
-    }
-    _head._bufferCount++;
-  }
+         offset += sublen;
+         _tail._length += sublen;
+      }
+   }
 
-  public void writeToStream(OutputStream os) throws IOException
-  {
-    for (TempBuffer node = _head; node != null; node = node._next) {
-      os.write(node._buf, 0, node._length);
-    } 
-  }
+   private void addBuffer(TempBuffer buf) {
+      buf._next = null;
+      buf._length = 0;
+      if (_tail != null) {
+         _tail._next = buf;
+         _tail = buf;
+      } else {
+         _tail = buf;
+         _head = buf;
+      }
+      _head._bufferCount++;
+   }
 
-  public int getLength()
-  {
-    if (_tail == null)
-      return 0;
-    else
-      return (_head._bufferCount - 1) * _head._length + _tail._length;
-  }
+   public void writeToStream(OutputStream os) throws IOException {
+      for (TempBuffer node = _head; node != null; node = node._next) {
+         os.write(node._buf, 0, node._length);
+      }
+   }
 
-  public ReadStream openReadAndSaveBuffer()
-    throws IOException
-  {
-    close();
+   public int getLength() {
+      if (_tail == null)
+         return 0;
+      else
+         return (_head._bufferCount - 1) * _head._length + _tail._length;
+   }
 
-    TempReadStream read = new TempReadStream(_head);
-    read.setFreeWhenDone(false);
+   public ReadStream openReadAndSaveBuffer()
+      throws IOException {
+      close();
 
-    return new ReadStream(read);
-  }
+      TempReadStream read = new TempReadStream(_head);
+      read.setFreeWhenDone(false);
 
-  public void destroy()
-  {
-    TempBuffer ptr;
-    TempBuffer next;
+      return new ReadStream(read);
+   }
 
-    ptr = _head;
-    _head = null;
-    _tail = null;
-    
-    for (; ptr != null; ptr = next) {
-      next = ptr._next;
-      TempBuffer.free(ptr);
-      ptr = null;
-    }
-  }
+   public void destroy() {
+      TempBuffer ptr;
+      TempBuffer next;
+
+      ptr = _head;
+      _head = null;
+      _tail = null;
+
+      for (; ptr != null; ptr = next) {
+         next = ptr._next;
+         TempBuffer.free(ptr);
+         ptr = null;
+      }
+   }
 }

@@ -37,41 +37,37 @@ import com.clevercloud.xpath.pattern.NodeIterator;
  * A variable containing a Java object.
  */
 public class ObjectVar extends Var {
-  private Object object;
+   private Object object;
 
-  /**
-   * Creates a new object variable with the object.
-   */
-  public ObjectVar(Object object)
-  {
-    this.object = object;
-  }
-  
-  /**
-   * Returns the value as a double.
-   */
-  double getDouble()
-    throws XPathException
-  {
-    double v = Expr.toDouble(getObject());
+   /**
+    * Creates a new object variable with the object.
+    */
+   public ObjectVar(Object object) {
+      this.object = object;
+   }
 
-    return v;
-  }
-  
-  /**
-   * Returns the value as an object.
-   */
-  Object getObject()
-  {
-    if (object instanceof NodeIterator)
-      return ((NodeIterator) object).clone();
-    else
-      return object;
-  }
+   /**
+    * Returns the value as a double.
+    */
+   double getDouble()
+      throws XPathException {
+      double v = Expr.toDouble(getObject());
 
-  public String toString()
-  {
-    return "[ObjectVar " + object + "]";
-  }
+      return v;
+   }
+
+   /**
+    * Returns the value as an object.
+    */
+   Object getObject() {
+      if (object instanceof NodeIterator)
+         return ((NodeIterator) object).clone();
+      else
+         return object;
+   }
+
+   public String toString() {
+      return "[ObjectVar " + object + "]";
+   }
 }
 

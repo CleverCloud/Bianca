@@ -30,7 +30,6 @@
 package com.clevercloud.xpath.pattern;
 
 import com.clevercloud.xpath.ExprEnvironment;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -38,65 +37,58 @@ import org.w3c.dom.NodeList;
  * Iterates through matching nodes.
  */
 public class SingleNodeIterator extends NodeIterator implements NodeList {
-  protected Node _node;
+   protected Node _node;
 
-  public SingleNodeIterator(ExprEnvironment env, Node node)
-  {
-    super(env);
-    
-    _node = node;
-  }
-  
-  /**
-   * Returns the current position.
-   */
-  public int getPosition()
-  {
-    return _node == null ? 1 : 0;
-  }
-  /**
-   * True if there's more data.
-   */
-  public boolean hasNext()
-  {
-    return _node != null;
-  }
-  
-  /**
-   * Returns the next node.
-   */
-  public Node nextNode()
-  {
-    if (_node != null) {
-      Node next = _node;
-      _node = null;
-      return next;
-    }
-    else
-      return null;
-  }
+   public SingleNodeIterator(ExprEnvironment env, Node node) {
+      super(env);
 
-  /**
-   * Returns the NodeList length.
-   */
-  public int getLength()
-  {
-    return _node != null ? 1 : 0;
-  }
+      _node = node;
+   }
 
-  /**
-   * Returns the NodeList item.
-   */
-  public Node item(int i)
-  {
-    return i == 0 ? _node : null;
-  }
+   /**
+    * Returns the current position.
+    */
+   public int getPosition() {
+      return _node == null ? 1 : 0;
+   }
 
-  /**
-   * clones the iterator
-   */
-  public Object clone()
-  {
-    return new SingleNodeIterator(_env, _node);
-  }
+   /**
+    * True if there's more data.
+    */
+   public boolean hasNext() {
+      return _node != null;
+   }
+
+   /**
+    * Returns the next node.
+    */
+   public Node nextNode() {
+      if (_node != null) {
+         Node next = _node;
+         _node = null;
+         return next;
+      } else
+         return null;
+   }
+
+   /**
+    * Returns the NodeList length.
+    */
+   public int getLength() {
+      return _node != null ? 1 : 0;
+   }
+
+   /**
+    * Returns the NodeList item.
+    */
+   public Node item(int i) {
+      return i == 0 ? _node : null;
+   }
+
+   /**
+    * clones the iterator
+    */
+   public Object clone() {
+      return new SingleNodeIterator(_env, _node);
+   }
 }

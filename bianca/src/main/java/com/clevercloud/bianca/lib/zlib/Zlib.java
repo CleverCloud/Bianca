@@ -38,7 +38,6 @@ import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.lib.file.FileValue;
 import com.clevercloud.bianca.lib.string.StringModule;
 import com.clevercloud.util.L10N;
-import com.clevercloud.vfs.TempBuffer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,15 +60,14 @@ public class Zlib {
 
    /**
     * XXX: todo - implement additional read/write modes (a,etc)
-    *
+    * <p/>
     * Creates and sets GZIP stream if mode is 'w'
     * Also creates _fileValue.  All write functions are wrappers around
     * the _fileValue functions using the private class GZFileValueWriter to
     * compress the byte stream.
     *
-    *
     * @param fileName
-    * @param mode (ie: "w9" or "r7f")
+    * @param mode           (ie: "w9" or "r7f")
     * @param useIncludePath is always on
     */
    public Zlib(Env env, String filename, String mode, boolean useIncludePath) {
@@ -114,6 +112,7 @@ public class Zlib {
 
    /**
     * Reads from the input and writes to the gzip stream
+    *
     * @param s
     * @param length # of bytes to compress
     * @return # of uncompressed bytes
@@ -162,6 +161,7 @@ public class Zlib {
 
    /**
     * Closes the gzip stream
+    *
     * @return true if successful, false otherwise
     */
    public boolean gzclose() {
@@ -187,19 +187,19 @@ public class Zlib {
 
    /**
     * alias of gzwrite
+    *
     * @param env
     * @param s
     * @param length
     * @return # of uncompressed bytes
     */
    public int gzputs(Env env,
-           @NotNull InputStream is,
-           @Optional("-1") int length) {
+                     @NotNull InputStream is,
+                     @Optional("-1") int length) {
       return gzwrite(env, is, length);
    }
 
    /**
-    *
     * @return the next character or BooleanValue.FALSE
     */
    public Value gzgetc(Env env) {
@@ -285,6 +285,7 @@ public class Zlib {
 
    /**
     * same as gzgets but does not stop at '\n' or '\r'
+    *
     * @param length
     * @return StringValue, an empty StringValue if no data read
     * @throws IOException
@@ -303,7 +304,6 @@ public class Zlib {
    }
 
    /**
-    *
     * @return true if eof
     */
    public boolean gzeof() {
@@ -322,7 +322,6 @@ public class Zlib {
    }
 
    /**
-    *
     * @param length
     * @param allowedTags
     * @return next line stripping tags
@@ -331,7 +330,7 @@ public class Zlib {
     */
    @ReturnNullAsFalse
    public StringValue gzgetss(int length,
-           @Optional StringValue allowedTags) {
+                              @Optional StringValue allowedTags) {
       try {
          if (_in == null) {
             return null;
@@ -385,7 +384,7 @@ public class Zlib {
     * @throws IOException
     */
    protected InputStream getGZIPInputStream()
-           throws IOException {
+      throws IOException {
       try {
          _isGZIPInputStream = true;
          return new GZIPInputStream(_fileValue.getPath().openRead());
@@ -401,10 +400,9 @@ public class Zlib {
    /**
     * Helper function to retrieve the filemode closest to the end
     * Note: PHP5 unexpectedly fails when 'x' is the mode.
-    *
+    * <p/>
     * XXX todo: toss a warning if '+' is found (gzip cannot be open for
-    *  both reading and writing at the same time)
-    *
+    * both reading and writing at the same time)
     */
    private String getFileMode(String input) {
       String modifier = "";
@@ -435,7 +433,7 @@ public class Zlib {
 
    /**
     * Helper function to retrieve the compression level like how PHP5 does it.
-    *         1. finds the compression level nearest to the end and returns that
+    * 1. finds the compression level nearest to the end and returns that
     */
    private int getCompressionLevel(String input) {
       for (int i = input.length() - 1; i >= 0; i--) {
@@ -449,7 +447,7 @@ public class Zlib {
 
    /**
     * Helper function to retrieve the compression strategy like how PHP5 does it.
-    *     1. finds the compression strategy nearest to the end and returns that
+    * 1. finds the compression strategy nearest to the end and returns that
     */
    private int getCompressionStrategy(String input) {
       for (int i = input.length() - 1; i >= 0; i--) {

@@ -41,7 +41,7 @@ import java.util.Map;
  * them to the iterator returned by {@link IteratorAggregate#getIterator()}
  */
 public class IteratorAggregateDelegate
-        implements TraversableDelegate {
+   implements TraversableDelegate {
 
    private static final L10N L = new L10N(IteratorAggregateDelegate.class);
    private static final StringValue GET_ITERATOR = new StringValue("getIterator");
@@ -55,7 +55,7 @@ public class IteratorAggregateDelegate
          return target.getIterator(env);
       } else {
          throw new BiancaException(L.l("'{0}' is not a valid Traversable",
-                 qThis));
+            qThis));
       }
    }
 
@@ -67,7 +67,7 @@ public class IteratorAggregateDelegate
          return _iteratorDelegate.getKeyIterator(env, (ObjectValue) target);
       } else {
          throw new BiancaException(L.l("'{0}' is not a valid Traversable",
-                 qThis));
+            qThis));
       }
    }
 
@@ -83,7 +83,7 @@ public class IteratorAggregateDelegate
          }
       } else {
          throw new BiancaException(L.l("'{0}' is not a valid Traversable",
-                 qThis));
+            qThis));
       }
    }
 

@@ -31,12 +31,15 @@
 package com.clevercloud.bianca.lib.json;
 
 import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.ArrayValueImpl;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 
 
 public class JsonModule
-        extends AbstractBiancaModule {
+   extends AbstractBiancaModule {
 
    @Override
    public String[] getLoadedExtensions() {
@@ -45,7 +48,7 @@ public class JsonModule
 
    /**
     * Returns a JSON-encoded String.
-    *
+    * <p/>
     * JSON strings can be in any Unicode format (UTF-8, UTF-16, UTF-32).
     * Therefore need to pay special attention to multi-char characters.
     *
@@ -65,14 +68,14 @@ public class JsonModule
     * Takes a JSON-encoded string and returns a PHP value.
     *
     * @param env
-    * @param s JSON-encoded string.
+    * @param s     JSON-encoded string.
     * @param assoc determines whether a generic PHP object or PHP associative
-    *     array should be returned when decoding json objects.
+    *              array should be returned when decoding json objects.
     * @return decoded PHP value.
     */
    public Value json_decode(Env env,
-           StringValue s,
-           @Optional("false") boolean assoc) {
+                            StringValue s,
+                            @Optional("false") boolean assoc) {
       if (s.length() == 0) {
          return new ArrayValueImpl();
       }

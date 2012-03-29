@@ -69,7 +69,7 @@ public class ZlibOutputStream extends AbstractBinaryOutput {
     * @param def
     */
    private ZlibOutputStream(OutputStream os, Deflater def)
-           throws IOException {
+      throws IOException {
       _os = os;
       _out = new DeflaterOutputStream(_os, def);
 
@@ -79,16 +79,16 @@ public class ZlibOutputStream extends AbstractBinaryOutput {
    /**
     * @param out
     * @param compressionLevel
-    * @param strategy Deflate compression strategy
-    * @param encodingMode FORCE_GZIP to write gzwrite compatible output;
-    *    FORCE_DEFLATE to write gzip header and zlib header, but do not
-    *    write crc32 trailer
+    * @param strategy         Deflate compression strategy
+    * @param encodingMode     FORCE_GZIP to write gzwrite compatible output;
+    *                         FORCE_DEFLATE to write gzip header and zlib header, but do not
+    *                         write crc32 trailer
     */
    public ZlibOutputStream(OutputStream os,
-           int compressionLevel,
-           int strategy,
-           int encodingMode)
-           throws IOException {
+                           int compressionLevel,
+                           int strategy,
+                           int encodingMode)
+      throws IOException {
       this(os, createDeflater(compressionLevel, strategy, encodingMode));
 
       _isGzip = (encodingMode == ZlibModule.FORCE_GZIP);
@@ -101,27 +101,27 @@ public class ZlibOutputStream extends AbstractBinaryOutput {
    /**
     * @param os
     * @param compressionLevel
-    * @param strategy Deflate compression strategy
+    * @param strategy         Deflate compression strategy
     */
    public ZlibOutputStream(OutputStream os, int compressionLevel, int strategy)
-           throws IOException {
+      throws IOException {
       this(os, compressionLevel, strategy, ZlibModule.FORCE_GZIP);
    }
 
    public ZlibOutputStream(OutputStream os)
-           throws IOException {
+      throws IOException {
       this(os,
-              Deflater.DEFAULT_COMPRESSION,
-              Deflater.DEFAULT_STRATEGY,
-              ZlibModule.FORCE_GZIP);
+         Deflater.DEFAULT_COMPRESSION,
+         Deflater.DEFAULT_STRATEGY,
+         ZlibModule.FORCE_GZIP);
    }
 
    /**
     * Creates a deflater based on the Zlib arguments.
     */
    private static Deflater createDeflater(int compressionLevel,
-           int strategy,
-           int encodingMode) {
+                                          int strategy,
+                                          int encodingMode) {
       Deflater def;
 
       if (encodingMode == ZlibModule.FORCE_GZIP) {
@@ -142,7 +142,7 @@ public class ZlibOutputStream extends AbstractBinaryOutput {
     */
    @Override
    public void write(int v)
-           throws IOException {
+      throws IOException {
       _out.write(v);
 
       _inputSize++;
@@ -159,7 +159,7 @@ public class ZlibOutputStream extends AbstractBinaryOutput {
     */
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       _out.write(buffer, offset, length);
 
       _inputSize += length;
@@ -170,7 +170,7 @@ public class ZlibOutputStream extends AbstractBinaryOutput {
    }
 
    private void finish(DeflaterOutputStream out)
-           throws IOException {
+      throws IOException {
       out.finish();
 
       if (_isGzip) {

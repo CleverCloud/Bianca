@@ -30,10 +30,10 @@
 package com.clevercloud.bianca.lib.dom;
 
 public class DOMConfiguration
-        extends DOMWrapper<org.w3c.dom.DOMConfiguration> {
+   extends DOMWrapper<org.w3c.dom.DOMConfiguration> {
 
    DOMConfiguration(
-           DOMImplementation impl, org.w3c.dom.DOMConfiguration delegate) {
+      DOMImplementation impl, org.w3c.dom.DOMConfiguration delegate) {
       super(impl, delegate);
    }
 
@@ -42,7 +42,7 @@ public class DOMConfiguration
    }
 
    public Object getParameter(String name)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.getParameter(name));
       } catch (org.w3c.dom.DOMException ex) {
@@ -55,7 +55,7 @@ public class DOMConfiguration
    }
 
    public void setParameter(String name, Object value)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setParameter(name, value);
       } catch (org.w3c.dom.DOMException ex) {

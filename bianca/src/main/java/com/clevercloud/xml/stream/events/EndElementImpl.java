@@ -38,60 +38,52 @@ import java.io.Writer;
 import java.util.Iterator;
 
 public class EndElementImpl extends XMLEventImpl implements EndElement {
-  private final QName _name;
-  private final Iterator _namespaces;
+   private final QName _name;
+   private final Iterator _namespaces;
 
-  public EndElementImpl(QName name, Iterator namespaces)
-  {
-    _name = name;
-    _namespaces = namespaces;
-  }
+   public EndElementImpl(QName name, Iterator namespaces) {
+      _name = name;
+      _namespaces = namespaces;
+   }
 
-  public EndElementImpl(QName name)
-  {
-    this(name, null);
-  }
+   public EndElementImpl(QName name) {
+      this(name, null);
+   }
 
-  public QName getName()
-  {
-    return _name;
-  }
+   public QName getName() {
+      return _name;
+   }
 
-  public Iterator getNamespaces()
-  {
-    return _namespaces;
-  }
+   public Iterator getNamespaces() {
+      return _namespaces;
+   }
 
-  public int getEventType()
-  {
-    return END_ELEMENT;
-  }
+   public int getEventType() {
+      return END_ELEMENT;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    try {
-      writer.write("</" + _name + ">");
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      try {
+         writer.write("</" + _name + ">");
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof EndElement))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof EndElement))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    EndElement end = (EndElement) o;
-    
-    // XXX Check namespaces
+      EndElement end = (EndElement) o;
 
-    return getName().equals(end.getName());
-  }
+      // XXX Check namespaces
+
+      return getName().equals(end.getName());
+   }
 }
 

@@ -33,8 +33,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /*
  * javax.sql.DataSource adapter for java.sql.Driver
@@ -51,7 +51,7 @@ public class JavaSqlDriverWrapper implements javax.sql.DataSource {
 
    @Override
    public Connection getConnection()
-           throws SQLException {
+      throws SQLException {
       Properties props = new Properties();
       props.put("user", "");
       props.put("password", "");
@@ -61,7 +61,7 @@ public class JavaSqlDriverWrapper implements javax.sql.DataSource {
 
    @Override
    public Connection getConnection(String user, String password)
-           throws SQLException {
+      throws SQLException {
       Properties props = new Properties();
 
       if (user != null) {
@@ -106,13 +106,13 @@ public class JavaSqlDriverWrapper implements javax.sql.DataSource {
 
    @Override
    public <T> T unwrap(Class<T> iface)
-           throws SQLException {
+      throws SQLException {
       throw new UnsupportedOperationException("Not supported yet.");
    }
 
    @Override
    public boolean isWrapperFor(Class<?> iface)
-           throws SQLException {
+      throws SQLException {
       throw new UnsupportedOperationException("Not supported yet.");
    }
 }

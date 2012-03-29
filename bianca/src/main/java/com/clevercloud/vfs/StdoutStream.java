@@ -35,50 +35,46 @@ import java.io.IOException;
  * Stream encapsulating System.out.
  */
 public class StdoutStream extends StreamImpl {
-  private static StdoutStream _stdout;
+   private static StdoutStream _stdout;
 
-  /**
-   * Private, since StdoutStream should always use the create() interface.
-   */
-  private StdoutStream()
-  {
-  }
+   /**
+    * Private, since StdoutStream should always use the create() interface.
+    */
+   private StdoutStream() {
+   }
 
-  /**
-   * Returns the StdoutStream singleton
-   */
-  public static StdoutStream create()
-  {
-    if (_stdout == null) {
-      _stdout = new StdoutStream();
-      ConstPath path = new ConstPath(null, _stdout);
-      path.setScheme("stdout");
-      _stdout.setPath(path);
-    }
+   /**
+    * Returns the StdoutStream singleton
+    */
+   public static StdoutStream create() {
+      if (_stdout == null) {
+         _stdout = new StdoutStream();
+         ConstPath path = new ConstPath(null, _stdout);
+         path.setScheme("stdout");
+         _stdout.setPath(path);
+      }
 
-    return _stdout;
-  }
+      return _stdout;
+   }
 
-  /**
-   * The standard-output stream returns true since it's writable.
-   */
-  public boolean canWrite()
-  {
-    return true;
-  }
+   /**
+    * The standard-output stream returns true since it's writable.
+    */
+   public boolean canWrite() {
+      return true;
+   }
 
-  /**
-   * Writes the data to the System.out.
-   *
-   * @param buf the buffer to write.
-   * @param offset starting offset in the buffer.
-   * @param length number of bytes to write.
-   * @param isEnd true when the stream is closing.
-   */
-  public void write(byte []buf, int offset, int length, boolean isEnd)
-    throws IOException
-  {
-    System.out.write(buf, offset, length);
-    System.out.flush();
-  }
+   /**
+    * Writes the data to the System.out.
+    *
+    * @param buf    the buffer to write.
+    * @param offset starting offset in the buffer.
+    * @param length number of bytes to write.
+    * @param isEnd  true when the stream is closing.
+    */
+   public void write(byte[] buf, int offset, int length, boolean isEnd)
+      throws IOException {
+      System.out.write(buf, offset, length);
+      System.out.flush();
+   }
 }

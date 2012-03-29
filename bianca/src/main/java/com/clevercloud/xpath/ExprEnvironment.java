@@ -30,7 +30,6 @@
 package com.clevercloud.xpath;
 
 import com.clevercloud.xpath.expr.Var;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -38,60 +37,64 @@ import org.w3c.dom.Node;
  * Adds variable environment.
  */
 public interface ExprEnvironment {
-  /**
-   * Returns the value associated with name.  
-   *
-   * <p><em>name must be interned</em>
-   */
-  public Var getVar(String name);
-  
-  /**
-   * Returns the value associated with name.  
-   *
-   * <p><em>name must be interned</em>
-   */
-  public XPathFun getFunction(String name);
-  
-  /**
-   * Sets the node context.
-   */
-  public Node setContextNode(Node node);
-  /**
-   * Returns the StylesheetEnv
-   */
-  public StylesheetEnv getStylesheetEnv();
-  /**
-   * Return context node from the XPath expression context.
-   */
-  Node getContextNode();
-  
-  /**
-   * Returns the context position from the XPath expression context.
-   */
-  int getContextPosition();
-  
-  /**
-   * Returns the context size from the XPath expression context.
-   */
-  int getContextSize();
-  
-  /**
-   * Returns the current node from the XSLT context; the same
-   * as calling current() function from the XPath expression context.
-   */
-  Node getCurrentNode();
-  
-  /**
-   * Returns a Document to be used for creating nodes.
-   */
-  Document getOwnerDocument();
-  /**
-   * Returns an Object representing the value of the system property
-   * whose expanded-name has the specified namespace URI and local part.
-   */
-  Object systemProperty(String namespaceURI, String localName);
-  /**
-   * Returns the string-value of the specified Node.
-   */
-  String stringValue(Node n);
+   /**
+    * Returns the value associated with name.
+    * <p/>
+    * <p><em>name must be interned</em>
+    */
+   public Var getVar(String name);
+
+   /**
+    * Returns the value associated with name.
+    * <p/>
+    * <p><em>name must be interned</em>
+    */
+   public XPathFun getFunction(String name);
+
+   /**
+    * Sets the node context.
+    */
+   public Node setContextNode(Node node);
+
+   /**
+    * Returns the StylesheetEnv
+    */
+   public StylesheetEnv getStylesheetEnv();
+
+   /**
+    * Return context node from the XPath expression context.
+    */
+   Node getContextNode();
+
+   /**
+    * Returns the context position from the XPath expression context.
+    */
+   int getContextPosition();
+
+   /**
+    * Returns the context size from the XPath expression context.
+    */
+   int getContextSize();
+
+   /**
+    * Returns the current node from the XSLT context; the same
+    * as calling current() function from the XPath expression context.
+    */
+   Node getCurrentNode();
+
+   /**
+    * Returns a Document to be used for creating nodes.
+    */
+   Document getOwnerDocument();
+
+   /**
+    * Returns an Object representing the value of the system property
+    * whose expanded-name has the specified namespace URI and local part.
+    */
+   Object systemProperty(String namespaceURI, String localName);
+
+   /**
+    * Returns the string-value of the specified Node.
+    */
+   String stringValue(Node n);
 }

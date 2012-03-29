@@ -51,7 +51,7 @@ public class EnvCloseable implements EnvCleanup {
 
    @Override
    public void cleanup()
-           throws Exception {
+      throws Exception {
       _obj.close();
    }
 }

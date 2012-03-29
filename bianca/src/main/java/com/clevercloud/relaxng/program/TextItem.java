@@ -38,83 +38,74 @@ import java.util.HashSet;
  * Generates programs from patterns.
  */
 public class TextItem extends Item {
-  protected final static L10N L = new L10N(TextItem.class);
+   protected final static L10N L = new L10N(TextItem.class);
 
-  private final static QName TEXT_NAME = new QName("#text", "");
-  
-  public final static TextItem TEXT = new TextItem();
+   private final static QName TEXT_NAME = new QName("#text", "");
 
-  private TextItem()
-  {
-  }
+   public final static TextItem TEXT = new TextItem();
 
-  /**
-   * Returns the first set, the set of element names possible.
-   */
-  public void firstSet(HashSet<QName> set)
-  {
-    set.add(TEXT_NAME);
-  }
-  
-  /**
-   * Text allows the empty match.
-   */
-  public boolean allowEmpty()
-  {
-    return true;
-  }
-  
-  /**
-   * Text repeats
-   */
-  @Override
-  public Item text(CharSequence text)
-  {
-    return this;
-  }
+   private TextItem() {
+   }
 
+   /**
+    * Returns the first set, the set of element names possible.
+    */
+   public void firstSet(HashSet<QName> set) {
+      set.add(TEXT_NAME);
+   }
 
-  /**
-   * Returns the pretty printed syntax.
-   */
-  public String toSyntaxDescription(int depth)
-  {
-    return "text";
-  }
-
-  /**
-   * True for simple syntax.
-   */
-  public boolean isSimpleSyntax()
-  {
-    return true;
-  }
-
-  /**
-   * Returns the hash code for the empty item.
-   */
-  public int hashCode()
-  {
-    return 191;
-  }
-
-  /**
-   * Returns true if the object is an empty item.
-   */
-  public boolean equals(Object o)
-  {
-    if (this == o)
+   /**
+    * Text allows the empty match.
+    */
+   public boolean allowEmpty() {
       return true;
-    
-    if (! (o instanceof TextItem))
-      return false;
+   }
 
-    return true;
-  }
+   /**
+    * Text repeats
+    */
+   @Override
+   public Item text(CharSequence text) {
+      return this;
+   }
 
-  public String toString()
-  {
-    return "TextItem[]";
-  }
+
+   /**
+    * Returns the pretty printed syntax.
+    */
+   public String toSyntaxDescription(int depth) {
+      return "text";
+   }
+
+   /**
+    * True for simple syntax.
+    */
+   public boolean isSimpleSyntax() {
+      return true;
+   }
+
+   /**
+    * Returns the hash code for the empty item.
+    */
+   public int hashCode() {
+      return 191;
+   }
+
+   /**
+    * Returns true if the object is an empty item.
+    */
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof TextItem))
+         return false;
+
+      return true;
+   }
+
+   public String toString() {
+      return "TextItem[]";
+   }
 }
 

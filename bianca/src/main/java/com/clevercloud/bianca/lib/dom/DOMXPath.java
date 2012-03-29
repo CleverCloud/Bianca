@@ -29,25 +29,23 @@
  */
 package com.clevercloud.bianca.lib.dom;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
+import com.clevercloud.bianca.BiancaModuleException;
+import com.clevercloud.bianca.annotation.Optional;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.util.LruCache;
+import com.clevercloud.xpath.Expr;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.util.LruCache;
-import com.clevercloud.xpath.Expr;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
 
 public class DOMXPath {
 
@@ -63,7 +61,7 @@ public class DOMXPath {
    }
 
    public Object evaluate(Env env,
-           String expression) {
+                          String expression) {
       Node node = _document.getDelegate();
 
       NodeList nodeList = (NodeList) query(env, expression, node);
@@ -77,8 +75,8 @@ public class DOMXPath {
    }
 
    public DOMNodeList query(Env env,
-           String expression,
-           @Optional DOMNode<Node> contextNode) {
+                            String expression,
+                            @Optional DOMNode<Node> contextNode) {
       Node node;
 
       if (contextNode != null) {
@@ -164,7 +162,7 @@ public class DOMXPath {
    }
 
    public class DOMNamespaceContext
-           implements NamespaceContext {
+      implements NamespaceContext {
 
       private HashMap<String, LinkedHashSet<String>> _namespaceMap = new HashMap<String, LinkedHashSet<String>>();
 
@@ -220,7 +218,7 @@ public class DOMXPath {
       private final LruCache<String, ExpressionEntry> _xpathCache = new LruCache<String, ExpressionEntry>(1024);
 
       XPathExpression compile(String pattern)
-              throws XPathExpressionException {
+         throws XPathExpressionException {
          ExpressionEntry entry = _xpathCache.get(pattern);
          XPathExpression expr = null;
 

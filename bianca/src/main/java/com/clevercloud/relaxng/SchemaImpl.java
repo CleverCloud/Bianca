@@ -38,58 +38,52 @@ import com.clevercloud.util.LruCache;
  * JARV Schema implementation
  */
 public class SchemaImpl implements Schema {
-  protected static final L10N L = new L10N(SchemaImpl.class);
+   protected static final L10N L = new L10N(SchemaImpl.class);
 
-  private String _filename;
-  
-  private LruCache<Object,Item> _programCache
-    = new LruCache<Object,Item>(1024);
-  
-  private Item _startItem;
+   private String _filename;
 
-  public SchemaImpl(GrammarPattern grammar)
-    throws RelaxException
-  {
-    _startItem = grammar.getStart().createItem(grammar);
+   private LruCache<Object, Item> _programCache
+      = new LruCache<Object, Item>(1024);
 
-    if (_startItem == null)
-      throw new RelaxException(L.l("Expected a start item."));
-  }
-  
-  /**
-   * Returns the program.
-   */
-  public Item getStartItem()
-  {
-    return _startItem;
-  }
+   private Item _startItem;
 
-  public LruCache<Object,Item> getProgramCache()
-  {
-    return _programCache;
-  }
+   public SchemaImpl(GrammarPattern grammar)
+      throws RelaxException {
+      _startItem = grammar.getStart().createItem(grammar);
 
-  /**
-   * Sets the schema filename.
-   */
-  public void setFilename(String filename)
-  {
-    _filename = filename;
-  }
-  
-  /**
-   * Creates a verifier from the schema.
-   */
-  public Verifier newVerifier()
-  {
-    return new VerifierImpl(this);
-  }
+      if (_startItem == null)
+         throw new RelaxException(L.l("Expected a start item."));
+   }
 
-  public String toString()
-  {
-    if (_filename != null)
-      return "SchemaImpl[" + _filename + "]";
-    else
-      return "SchemaImpl[]";
-  }
+   /**
+    * Returns the program.
+    */
+   public Item getStartItem() {
+      return _startItem;
+   }
+
+   public LruCache<Object, Item> getProgramCache() {
+      return _programCache;
+   }
+
+   /**
+    * Sets the schema filename.
+    */
+   public void setFilename(String filename) {
+      _filename = filename;
+   }
+
+   /**
+    * Creates a verifier from the schema.
+    */
+   public Verifier newVerifier() {
+      return new VerifierImpl(this);
+   }
+
+   public String toString() {
+      if (_filename != null)
+         return "SchemaImpl[" + _filename + "]";
+      else
+         return "SchemaImpl[]";
+   }
 }

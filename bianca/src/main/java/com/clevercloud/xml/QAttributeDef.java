@@ -32,19 +32,18 @@ package com.clevercloud.xml;
 import java.util.ArrayList;
 
 class QAttributeDef {
-  String _name;
-  String _type;
-  ArrayList<String> _enumeration;
-  String _qualifier;
-  String _deflt;
+   String _name;
+   String _type;
+   ArrayList<String> _enumeration;
+   String _qualifier;
+   String _deflt;
 
-  QAttributeDef(String name, String type, ArrayList enumeration,
-                String qualifier, String deflt)
-  {
-    _name = name;
-    _type = type;
-    _enumeration = enumeration;
-    _qualifier = qualifier;
-    _deflt = deflt;
-  }
+   QAttributeDef(String name, String type, ArrayList enumeration,
+                 String qualifier, String deflt) {
+      _name = name;
+      _type = type;
+      _enumeration = enumeration;
+      _qualifier = qualifier;
+      _deflt = deflt;
+   }
 }

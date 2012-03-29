@@ -35,8 +35,8 @@ import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.lib.file.FileModule;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.bianca.module.IniDefinition;
+import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.util.IntMap;
 import com.clevercloud.util.L10N;
 import com.clevercloud.vfs.WriteStream;
@@ -188,14 +188,14 @@ public class TokenModule extends AbstractBiancaModule {
    }
 
    public static Value highlight_file(Env env,
-           StringValue filename,
-           @Optional boolean isReturn) {
+                                      StringValue filename,
+                                      @Optional boolean isReturn) {
       StringValue v = FileModule.file_get_contents(env,
-              filename,
-              false,
-              null,
-              0,
-              Integer.MAX_VALUE);
+         filename,
+         false,
+         null,
+         0,
+         Integer.MAX_VALUE);
 
       if (v == null) {
          return BooleanValue.FALSE;
@@ -205,14 +205,14 @@ public class TokenModule extends AbstractBiancaModule {
    }
 
    public static Value show_source(Env env,
-           StringValue filename,
-           @Optional boolean isReturn) {
+                                   StringValue filename,
+                                   @Optional boolean isReturn) {
       return highlight_file(env, filename, isReturn);
    }
 
    public static Value highlight_string(Env env,
-           StringValue s,
-           @Optional boolean isReturn) {
+                                        StringValue s,
+                                        @Optional boolean isReturn) {
       try {
          StringValue sb = isReturn ? new StringValue() : null;
          WriteStream out = env.getOut();
@@ -270,9 +270,9 @@ public class TokenModule extends AbstractBiancaModule {
    }
 
    private static void highlight(StringValue sb,
-           WriteStream out,
-           String string)
-           throws IOException {
+                                 WriteStream out,
+                                 String string)
+      throws IOException {
       if (sb != null) {
          sb.append(string);
       } else {
@@ -281,9 +281,9 @@ public class TokenModule extends AbstractBiancaModule {
    }
 
    private static void highlight(StringValue sb,
-           WriteStream out,
-           StringValue string)
-           throws IOException {
+                                 WriteStream out,
+                                 StringValue string)
+      throws IOException {
       if (sb != null) {
          int len = string.length();
          for (int i = 0; i < len; i++) {
@@ -374,7 +374,7 @@ public class TokenModule extends AbstractBiancaModule {
 
       while ((token = lexer.nextToken()) >= 0) {
          if (0x20 <= token && token <= 0x7f) {
-            result.put(env.createString(((char)token) + ""));
+            result.put(env.createString(((char) token) + ""));
          } else {
             result.put(new ArrayValueImpl().append(LongValue.create(token)).append(lexer.getLexeme()));
          }
@@ -1061,14 +1061,14 @@ public class TokenModule extends AbstractBiancaModule {
          int ch;
 
          while ('0' <= (ch = read()) && ch <= '9'
-                 || ch == '.'
-                 || ch == 'x' || ch == 'X'
-                 || 'a' <= ch && ch <= 'f'
-                 || 'A' <= ch && ch <= 'F') {
+            || ch == '.'
+            || ch == 'x' || ch == 'X'
+            || 'a' <= ch && ch <= 'f'
+            || 'A' <= ch && ch <= 'F') {
             _lexeme.append((char) ch);
 
             if ('a' <= ch && ch <= 'f' || 'A' <= ch && ch <= 'f'
-                    || ch == 'x' || ch == 'X') {
+               || ch == 'x' || ch == 'X') {
                isInt = true;
             }
          }
@@ -1158,6 +1158,7 @@ public class TokenModule extends AbstractBiancaModule {
       _reservedMap.put("__FUNCTION__", T_FUNC_C);
       _reservedMap.put("__CLASS__", T_CLASS_C);
    }
+
    static final IniDefinition INI_HIGHLIGHT_STRING = _iniDefinitions.add("highlight.string", "#DD0000", PHP_INI_ALL);
    static final IniDefinition INI_HIGHLIGHT_COMMENT = _iniDefinitions.add("highlight.comment", "#FF8000", PHP_INI_ALL);
    static final IniDefinition INI_HIGHLIGHT_KEYWORD = _iniDefinitions.add("highlight.keyword", "#007700", PHP_INI_ALL);

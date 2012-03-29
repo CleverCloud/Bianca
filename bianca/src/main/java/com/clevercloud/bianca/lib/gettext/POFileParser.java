@@ -30,7 +30,6 @@
  */
 package com.clevercloud.bianca.lib.gettext;
 
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.lib.gettext.expr.PluralExpr;
@@ -61,14 +60,14 @@ class POFileParser extends GettextParser {
    private StringValue _string;
 
    POFileParser(Env env, Path path)
-           throws IOException {
+      throws IOException {
       _env = env;
 
       init(path);
    }
 
    final void init(Path path)
-           throws IOException {
+      throws IOException {
       _in = path.openRead();
       _peekChar = -1;
 
@@ -81,7 +80,7 @@ class POFileParser extends GettextParser {
    }
 
    private StringValue getMetadata()
-           throws IOException {
+      throws IOException {
       StringValue metadata = null;
 
       int token = readToken();
@@ -110,9 +109,9 @@ class POFileParser extends GettextParser {
     */
    @Override
    HashMap<StringValue, ArrayList<StringValue>> readTranslations()
-           throws IOException {
+      throws IOException {
       HashMap<StringValue, ArrayList<StringValue>> translations =
-              new HashMap<StringValue, ArrayList<StringValue>>();
+         new HashMap<StringValue, ArrayList<StringValue>>();
 
       int token = readToken();
 
@@ -141,7 +140,7 @@ class POFileParser extends GettextParser {
    }
 
    private int readToken()
-           throws IOException {
+      throws IOException {
       int ch = skipWhitespace();
 
       switch (ch) {
@@ -151,7 +150,7 @@ class POFileParser extends GettextParser {
 
          case 'm':
             if (read() == 's'
-                    && read() == 'g') {
+               && read() == 'g') {
                return readMsgToken();
             } else {
                return UNKNOWN;
@@ -166,7 +165,7 @@ class POFileParser extends GettextParser {
    }
 
    private int readMsgToken()
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       switch (ch) {
@@ -179,7 +178,7 @@ class POFileParser extends GettextParser {
 
          case 's':
             if (read() == 't'
-                    && read() == 'r') {
+               && read() == 'r') {
                return readMsgstrToken();
             } else {
                return UNKNOWN;
@@ -191,17 +190,17 @@ class POFileParser extends GettextParser {
    }
 
    private int readMsgidToken()
-           throws IOException {
+      throws IOException {
       int token;
       int ch = skipWhitespace();
 
       if (ch == '_') {
          if (read() == 'p'
-                 && read() == 'l'
-                 && read() == 'u'
-                 && read() == 'r'
-                 && read() == 'a'
-                 && read() == 'l') {
+            && read() == 'l'
+            && read() == 'u'
+            && read() == 'r'
+            && read() == 'a'
+            && read() == 'l') {
             token = MSGID_PLURAL;
 
             ch = skipWhitespace();
@@ -220,7 +219,7 @@ class POFileParser extends GettextParser {
    }
 
    private int readMsgstrToken()
-           throws IOException {
+      throws IOException {
       int ch = skipWhitespace();
 
       if (ch == '[') {
@@ -244,7 +243,7 @@ class POFileParser extends GettextParser {
     * Reads a string in quotes.
     */
    private int readOriginalString(int token)
-           throws IOException {
+      throws IOException {
       return readString(new StringValue(), token);
    }
 
@@ -252,7 +251,7 @@ class POFileParser extends GettextParser {
     * Reads a string in quotes.
     */
    private int readString(int token)
-           throws IOException {
+      throws IOException {
       return readString(new StringValue(), token);
    }
 
@@ -260,7 +259,7 @@ class POFileParser extends GettextParser {
     * XXX: any other possible character escapes?
     */
    private int readString(StringValue sb, int token)
-           throws IOException {
+      throws IOException {
       for (int ch = read(); ch != '"'; ch = read()) {
          switch (ch) {
             case '\\':
@@ -312,7 +311,7 @@ class POFileParser extends GettextParser {
    }
 
    private int read()
-           throws IOException {
+      throws IOException {
       if (_peekChar >= 0) {
          int swap = _peekChar;
          _peekChar = -1;
@@ -323,7 +322,7 @@ class POFileParser extends GettextParser {
    }
 
    private void skipLine()
-           throws IOException {
+      throws IOException {
       int ch = read();
 
       while (ch >= 0) {
@@ -346,7 +345,7 @@ class POFileParser extends GettextParser {
    }
 
    private int skipWhitespace()
-           throws IOException {
+      throws IOException {
       while (true) {
          int ch = read();
 

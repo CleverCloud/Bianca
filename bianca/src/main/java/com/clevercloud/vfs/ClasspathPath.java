@@ -30,122 +30,110 @@
 
 package com.clevercloud.vfs;
 
-import com.clevercloud.util.CharBuffer;
 import com.clevercloud.util.L10N;
-import com.clevercloud.util.LruCache;
-import com.clevercloud.util.QDate;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
  * The classpath scheme.
  */
 public class ClasspathPath extends FilesystemPath {
-  protected static L10N L = new L10N(ClasspathPath.class);
+   protected static L10N L = new L10N(ClasspathPath.class);
 
-  /**
-   * Creates a new classpath sub path.
-   *
-   * @param root the classpath filesystem root
-   * @param userPath the argument to the calling lookup()
-   * @param newAttributes any attributes passed to http
-   * @param path the full normalized path
-   * @param query any query string
-   */
-  public ClasspathPath(FilesystemPath root,
-                       String userPath,
-                       String path)
-  {
-    super(root, userPath, path);
+   /**
+    * Creates a new classpath sub path.
+    *
+    * @param root          the classpath filesystem root
+    * @param userPath      the argument to the calling lookup()
+    * @param newAttributes any attributes passed to http
+    * @param path          the full normalized path
+    * @param query         any query string
+    */
+   public ClasspathPath(FilesystemPath root,
+                        String userPath,
+                        String path) {
+      super(root, userPath, path);
 
-    if (_root == null)
-      _root = this;
-  }
-  
-  /**
-   * Lookup the actual path relative to the filesystem root.
-   *
-   * @param userPath the user's path to lookup()
-   * @param attributes the user's attributes to lookup()
-   * @param path the normalized path
-   *
-   * @return the selected path
-   */
-  public Path fsWalk(String userPath,
-                        Map<String,Object> attributes,
-                        String path)
-  {
-    return new ClasspathPath(_root, userPath, path);
-  }
+      if (_root == null)
+         _root = this;
+   }
 
-  /**
-   * Returns the scheme, http.
-   */
-  public String getScheme()
-  {
-    return "classpath";
-  }
+   /**
+    * Lookup the actual path relative to the filesystem root.
+    *
+    * @param userPath   the user's path to lookup()
+    * @param attributes the user's attributes to lookup()
+    * @param path       the normalized path
+    * @return the selected path
+    */
+   public Path fsWalk(String userPath,
+                      Map<String, Object> attributes,
+                      String path) {
+      return new ClasspathPath(_root, userPath, path);
+   }
 
-  /**
-   * Returns true if the file exists.
-   */
-  public boolean exists()
-  {
-    ClassLoader loader = Thread.currentThread().getContextClassLoader();
-    
-    return loader.getResource(getPath()) != null;
-  }
+   /**
+    * Returns the scheme, http.
+    */
+   public String getScheme() {
+      return "classpath";
+   }
 
-  /**
-   * Returns true if the file exists.
-   */
-  public boolean isFile()
-  {
-    return exists();
-  }
+   /**
+    * Returns true if the file exists.
+    */
+   public boolean exists() {
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-  /**
-   * Returns true if the file is readable.
-   */
-  public boolean canRead()
-  {
-    return exists();
-  }
+      return loader.getResource(getPath()) != null;
+   }
 
-  /**
-   * Returns the last modified time.
-   */
-  public boolean isDirectory()
-  {
-    return false;
-  }
+   /**
+    * Returns true if the file exists.
+    */
+   public boolean isFile() {
+      return exists();
+   }
 
-  /**
-   * Returns a read stream for a GET request.
-   */
-  public StreamImpl openReadImpl() throws IOException
-  {
-    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+   /**
+    * Returns true if the file is readable.
+    */
+   public boolean canRead() {
+      return exists();
+   }
 
-    String path = getPath();
-    if (path.startsWith("/"))
-      path = path.substring(1);
+   /**
+    * Returns the last modified time.
+    */
+   public boolean isDirectory() {
+      return false;
+   }
 
-    InputStream is = loader.getResourceAsStream(path);
+   /**
+    * Returns a read stream for a GET request.
+    */
+   public StreamImpl openReadImpl() throws IOException {
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-    if (is == null)
-      throw new FileNotFoundException(getFullPath());
-    
-    return new VfsStream(is, null);
-  }
-  
-  /**
-   * Returns the string form of the http path.
-   */
-  public String toString()
-  {
-    return getURL();
-  }
+      String path = getPath();
+      if (path.startsWith("/"))
+         path = path.substring(1);
+
+      InputStream is = loader.getResourceAsStream(path);
+
+      if (is == null)
+         throw new FileNotFoundException(getFullPath());
+
+      return new VfsStream(is, null);
+   }
+
+   /**
+    * Returns the string form of the http path.
+    */
+   public String toString() {
+      return getURL();
+   }
 }

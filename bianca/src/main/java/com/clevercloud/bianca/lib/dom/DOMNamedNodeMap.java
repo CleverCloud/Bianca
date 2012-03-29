@@ -32,7 +32,7 @@ package com.clevercloud.bianca.lib.dom;
 import org.w3c.dom.NamedNodeMap;
 
 public class DOMNamedNodeMap
-        extends DOMWrapper<NamedNodeMap> {
+   extends DOMWrapper<NamedNodeMap> {
 
    DOMNamedNodeMap(DOMImplementation impl, NamedNodeMap delegate) {
       super(impl, delegate);
@@ -47,7 +47,7 @@ public class DOMNamedNodeMap
    }
 
    public DOMNode getNamedItemNS(String namespaceURI, String localName)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.getNamedItemNS(namespaceURI, localName));
       } catch (org.w3c.dom.DOMException ex) {
@@ -60,7 +60,7 @@ public class DOMNamedNodeMap
    }
 
    public DOMNode removeNamedItem(String name)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.removeNamedItem(name));
       } catch (org.w3c.dom.DOMException ex) {
@@ -69,7 +69,7 @@ public class DOMNamedNodeMap
    }
 
    public DOMNode removeNamedItemNS(String namespaceURI, String localName)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.removeNamedItemNS(namespaceURI, localName));
       } catch (org.w3c.dom.DOMException ex) {
@@ -78,7 +78,7 @@ public class DOMNamedNodeMap
    }
 
    public DOMNode setNamedItem(DOMNode arg)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.setNamedItem(arg.getDelegate()));
       } catch (org.w3c.dom.DOMException ex) {
@@ -87,7 +87,7 @@ public class DOMNamedNodeMap
    }
 
    public DOMNode setNamedItemNS(DOMNode arg)
-           throws DOMException {
+      throws DOMException {
       try {
          return wrap(_delegate.setNamedItemNS(arg.getDelegate()));
       } catch (org.w3c.dom.DOMException ex) {

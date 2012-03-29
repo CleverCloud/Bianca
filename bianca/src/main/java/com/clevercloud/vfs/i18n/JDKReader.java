@@ -29,52 +29,43 @@
 
 package com.clevercloud.vfs.i18n;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.charset.Charset;
 
 /**
  * Reader to handle any encoding by passing it to the JDK.
  */
 public class JDKReader extends EncodingReader {
-  /**
-   * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
-   */
-  public JDKReader()
-  {
-  }
+   /**
+    * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
+    */
+   public JDKReader() {
+   }
 
-  /**
-   * Create a JDK-based reader.
-   *
-   * @param is the input stream providing the bytes.
-   * @param javaEncoding the JDK name for the encoding.
-   *
-   * @return an InputStreamReader
-   */
-  public Reader create(InputStream is, String javaEncoding)
-    throws UnsupportedEncodingException
-  {
-    if (Charset.isSupported(javaEncoding)) {
-      Charset charset = Charset.forName(javaEncoding);
-    
-      return new InputStreamReader(is, charset);
-    }
-    else {
-      // RSN-274, Charset doesn't support all java.io encoding
-      return new InputStreamReader(is, javaEncoding);
-    }
-  }
+   /**
+    * Create a JDK-based reader.
+    *
+    * @param is           the input stream providing the bytes.
+    * @param javaEncoding the JDK name for the encoding.
+    * @return an InputStreamReader
+    */
+   public Reader create(InputStream is, String javaEncoding)
+      throws UnsupportedEncodingException {
+      if (Charset.isSupported(javaEncoding)) {
+         Charset charset = Charset.forName(javaEncoding);
 
-  /**
-   * Reads into a character buffer using the correct encoding.
-   */
-  public int read()
-    throws IOException
-  {
-    throw new UnsupportedOperationException();
-  }
+         return new InputStreamReader(is, charset);
+      } else {
+         // RSN-274, Charset doesn't support all java.io encoding
+         return new InputStreamReader(is, javaEncoding);
+      }
+   }
+
+   /**
+    * Reads into a character buffer using the correct encoding.
+    */
+   public int read()
+      throws IOException {
+      throw new UnsupportedOperationException();
+   }
 }

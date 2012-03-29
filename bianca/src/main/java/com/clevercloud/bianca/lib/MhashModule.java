@@ -30,15 +30,10 @@
  */
 package com.clevercloud.bianca.lib;
 
-import com.clevercloud.config.ConfigException;
 import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
+import com.clevercloud.config.ConfigException;
 import com.clevercloud.util.L10N;
 
 import java.security.MessageDigest;
@@ -50,7 +45,7 @@ import java.util.logging.Logger;
 
 /**
  * Mhash functions.
- *
+ * <p/>
  * This module uses the {@link MessageDigest} class to calculate
  * digests. Typical java installations support MD2, MD5, SHA1, SHA256, SHA384,
  * and SHA512.
@@ -240,7 +235,7 @@ public class MhashModule extends AbstractBiancaModule {
       }
 
       public void init()
-              throws ConfigException {
+         throws ConfigException {
          if (_name == null) {
             throw new ConfigException(L.l("`{0}' is required", "name"));
          }
@@ -279,9 +274,9 @@ public class MhashModule extends AbstractBiancaModule {
       @Override
       public String toString() {
          return "MhashAlgorithm[name=" + _name
-                 + " java-name=" + _javaName
-                 + " java-provider=" + _javaProvider
-                 + "]";
+            + " java-name=" + _javaName
+            + " java-provider=" + _javaProvider
+            + "]";
       }
    }
 }

@@ -35,7 +35,7 @@ import java.io.Serializable;
  * Represents a PHP null value.
  */
 public class UnsetValue extends NullValue
-        implements Serializable {
+   implements Serializable {
 
    public static final UnsetValue UNSET = new UnsetValue();
 

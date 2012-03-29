@@ -33,7 +33,6 @@ import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.Expr;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
@@ -41,43 +40,39 @@ import org.w3c.dom.Node;
  * the a[b] pattern.
  */
 public class FilterPattern extends AbstractPattern {
-  private Expr _expr;
-  
-  private AbstractPattern _position;
+   private Expr _expr;
 
-  public FilterPattern(AbstractPattern parent, Expr expr)
-  {
-    super(parent);
-    
-    _expr = expr;
+   private AbstractPattern _position;
 
-    if (parent == null)
-      throw new RuntimeException();
-  }
+   public FilterPattern(AbstractPattern parent, Expr expr) {
+      super(parent);
 
-  public String getNodeName()
-  {
-    return _parent.getNodeName();
-  }
+      _expr = expr;
 
-  /**
-   * Returns the filter's expression.
-   */
-  public Expr getExpr()
-  {
-    return _expr;
-  }
+      if (parent == null)
+         throw new RuntimeException();
+   }
 
-  /**
-   * Matches if the filter expression matches.  When the filter expression
-   * returns a number, match if the position() equals the expression.
-   *
-   * @param node the current node to test
-   * @param env the variable environment
-   *
-   * @return true if the pattern matches.
-   */
-  /* Because match works from the bottom up, it must sometimes evaluate
+   public String getNodeName() {
+      return _parent.getNodeName();
+   }
+
+   /**
+    * Returns the filter's expression.
+    */
+   public Expr getExpr() {
+      return _expr;
+   }
+
+   /**
+    * Matches if the filter expression matches.  When the filter expression
+    * returns a number, match if the position() equals the expression.
+    *
+    * @param node the current node to test
+    * @param env  the variable environment
+    * @return true if the pattern matches.
+    */
+   /* Because match works from the bottom up, it must sometimes evaluate
    * the expression several times.  Take the match pattern
    * 'a/preceding-sibling::b[2]'.  Given the XML:
    *   <foo>
@@ -94,107 +89,97 @@ public class FilterPattern extends AbstractPattern {
    * e.g. preceding-sibling, signals the filter that another axis-context
    * is available through env.setMorePositions().
    */
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (! _parent.match(node, env))
-      return false;
-    
-    // Select patterns use the first shortcut.
-    int envPosition = env.getContextPosition();
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (!_parent.match(node, env))
+         return false;
 
-    if (envPosition > 0) {
-      if (_expr.isBoolean()) {
-        return _expr.evalBoolean(node, env);
-      }
-      else if (_expr.isNumber()) {
-        double test = _expr.evalNumber(node, env);
+      // Select patterns use the first shortcut.
+      int envPosition = env.getContextPosition();
 
-        return (envPosition == (int) test);
-      }
-      else {
-        Object value = _expr.evalObject(node, env);
+      if (envPosition > 0) {
+         if (_expr.isBoolean()) {
+            return _expr.evalBoolean(node, env);
+         } else if (_expr.isNumber()) {
+            double test = _expr.evalNumber(node, env);
 
-        if (value instanceof Number)
-          return (envPosition == ((Number) value).intValue());
+            return (envPosition == (int) test);
+         } else {
+            Object value = _expr.evalObject(node, env);
 
-        return Expr.toBoolean(value);
-      }
-    }
+            if (value instanceof Number)
+               return (envPosition == ((Number) value).intValue());
 
-    // Match patterns need to use a more complicated test.
-    if (! (env instanceof Env))
-      throw new RuntimeException(String.valueOf(env));
-    
-    Env globalEnv = (Env) env;
-    boolean oldMorePositions = globalEnv.setMorePositions(true);
-    int oldIndex = globalEnv.setPositionIndex(0);
-    try {
-      for (int i = 0; globalEnv.hasMorePositions(); i++) {
-        globalEnv.setPositionIndex(i);
-        globalEnv.setMorePositions(false);
-
-        if (_expr.isNumber()) {
-          double test = _expr.evalNumber(node, env);
-          double position = _parent.position(node, globalEnv,
-                                             _parent.copyPosition());
-
-          if (position == test)
-            return true;
-        }
-        else if (_expr.isBoolean()) {
-          if (_expr.evalBoolean(node, env))
-            return true;
-        }
-        else {
-          Object value = _expr.evalObject(node, env);
-
-          if (value instanceof Number) {
-            double test = ((Number) value).doubleValue();
-            double position = _parent.position(node, globalEnv,
-                                               _parent.copyPosition());
-
-            if (position == test)
-              return true;
-          }
-          else if (Expr.toBoolean(value))
-            return true;
-        }
+            return Expr.toBoolean(value);
+         }
       }
 
-      return false;
-    } finally {
-      globalEnv.setPositionIndex(oldIndex);
-      globalEnv.setMorePositions(oldMorePositions);
-    }
-  }
+      // Match patterns need to use a more complicated test.
+      if (!(env instanceof Env))
+         throw new RuntimeException(String.valueOf(env));
 
-  /**
-   * Creates a new node iterator.
-   *
-   * @param node the starting node
-   * @param env the variable environment
-   * @param match the axis match pattern
-   *
-   * @return the node iterator
-   */
-  public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
-                                         AbstractPattern match)
-    throws XPathException
-  {
-    NodeIterator parentIter;
-    parentIter = _parent.createNodeIterator(node, env, _parent.copyPosition());
+      Env globalEnv = (Env) env;
+      boolean oldMorePositions = globalEnv.setMorePositions(true);
+      int oldIndex = globalEnv.setPositionIndex(0);
+      try {
+         for (int i = 0; globalEnv.hasMorePositions(); i++) {
+            globalEnv.setPositionIndex(i);
+            globalEnv.setMorePositions(false);
 
-    return new FilterIterator(parentIter, _expr, env, node);
-  }
+            if (_expr.isNumber()) {
+               double test = _expr.evalNumber(node, env);
+               double position = _parent.position(node, globalEnv,
+                  _parent.copyPosition());
 
-  public AbstractPattern copyPosition()
-  {
-    return null;
-  }
+               if (position == test)
+                  return true;
+            } else if (_expr.isBoolean()) {
+               if (_expr.evalBoolean(node, env))
+                  return true;
+            } else {
+               Object value = _expr.evalObject(node, env);
 
-  public String toString()
-  {
-    return (_parent.toString() + "[" + _expr + "]");
-  }
+               if (value instanceof Number) {
+                  double test = ((Number) value).doubleValue();
+                  double position = _parent.position(node, globalEnv,
+                     _parent.copyPosition());
+
+                  if (position == test)
+                     return true;
+               } else if (Expr.toBoolean(value))
+                  return true;
+            }
+         }
+
+         return false;
+      } finally {
+         globalEnv.setPositionIndex(oldIndex);
+         globalEnv.setMorePositions(oldMorePositions);
+      }
+   }
+
+   /**
+    * Creates a new node iterator.
+    *
+    * @param node  the starting node
+    * @param env   the variable environment
+    * @param match the axis match pattern
+    * @return the node iterator
+    */
+   public NodeIterator createNodeIterator(Node node, ExprEnvironment env,
+                                          AbstractPattern match)
+      throws XPathException {
+      NodeIterator parentIter;
+      parentIter = _parent.createNodeIterator(node, env, _parent.copyPosition());
+
+      return new FilterIterator(parentIter, _expr, env, node);
+   }
+
+   public AbstractPattern copyPosition() {
+      return null;
+   }
+
+   public String toString() {
+      return (_parent.toString() + "[" + _expr + "]");
+   }
 }

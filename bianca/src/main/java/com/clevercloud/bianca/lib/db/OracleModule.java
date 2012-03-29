@@ -50,24 +50,23 @@ import java.util.regex.Pattern;
 
 /**
  * Bianca oracle routines.
- *
+ * <p/>
  * NOTE from php.net:
- *
+ * <p/>
  * "...
  * These functions allow you to access Oracle 10, Oracle 9, Oracle 8
  * and Oracle 7 databases using the Oracle Call Interface (OCI). They
  * support binding of PHP variables to Oracle placeholders, have full
  * LOB, FILE and ROWID support, and allow you to use user-supplied
  * define variables.
- *
+ * <p/>
  * Requirements
- *
+ * <p/>
  * You will need the Oracle client libraries to use this extension.
  * Windows users will need libraries with version at least 10
  * to use the php_oci8.dll.
- *
+ * <p/>
  * ..."
- *
  */
 public class OracleModule extends AbstractBiancaModule {
 
@@ -147,57 +146,57 @@ public class OracleModule extends AbstractBiancaModule {
          classOracleTypes = Class.forName("oracle.jdbc.OracleTypes");
 
          arrayPhpToOracleType = new int[]{
-                    -1,
-                    classOracleTypes.getDeclaredField("BFILE").getInt(null), // OCI_B_BFILE
-                    -1, // OCI_B_CFILEE
-                    classOracleTypes.getDeclaredField("CLOB").getInt(null), // OCI_B_CLOB
-                    classOracleTypes.getDeclaredField("BLOB").getInt(null), // OCI_B_BLOB
-                    classOracleTypes.getDeclaredField("ROWID").getInt(null), // OCI_B_ROWID
+            -1,
+            classOracleTypes.getDeclaredField("BFILE").getInt(null), // OCI_B_BFILE
+            -1, // OCI_B_CFILEE
+            classOracleTypes.getDeclaredField("CLOB").getInt(null), // OCI_B_CLOB
+            classOracleTypes.getDeclaredField("BLOB").getInt(null), // OCI_B_BLOB
+            classOracleTypes.getDeclaredField("ROWID").getInt(null), // OCI_B_ROWID
 
-                    // OCI_B_CURSOR:
-                    classOracleTypes.getDeclaredField("CURSOR").getInt(null),
-                    classOracleTypes.getDeclaredField("OTHER").getInt(null), // OCI_B_NTY
-                    classOracleTypes.getDeclaredField("RAW").getInt(null), // OCI_B_BIN
-                    -1, // OCI_DTYPE_FILE
-                    -1, // OCI_DTYPE_LOB
-                    -1, // OCI_DTYPE_ROWID
-                    -1, // OCI_D_FILE
-                    -1, // OCI_D_LOB
-                    -1, // OCI_D_ROWID
-                    // OCI_SYSDATE:
-                    classOracleTypes.getDeclaredField("TIMESTAMP").getInt(null),
-                    -1, // OCI_TEMP_CLOB
-                    -1, // OCI_TEMP_BLOB
-                    classOracleTypes.getDeclaredField("BFILE").getInt(null), // SQLT_BFILEE
-                    -1, // SQLT_CFILEE
-                    classOracleTypes.getDeclaredField("CLOB").getInt(null), // SQLT_CLOB
-                    classOracleTypes.getDeclaredField("BLOB").getInt(null), // SQLT_BLOB
-                    classOracleTypes.getDeclaredField("ROWID").getInt(null), // SQLT_RDD
-                    classOracleTypes.getDeclaredField("OTHER").getInt(null), // SQLT_NTY
-                    classOracleTypes.getDeclaredField("NUMBER").getInt(null), // SQLT_LNG
-                    classOracleTypes.getDeclaredField("RAW").getInt(null), // SQLT_LBI
-                    classOracleTypes.getDeclaredField("RAW").getInt(null), // SQLT_BIN
-                    classOracleTypes.getDeclaredField("NUMBER").getInt(null), // SQLT_NUM
-                    classOracleTypes.getDeclaredField("INTEGER").getInt(null), // SQLT_INT
-                    classOracleTypes.getDeclaredField("CHAR").getInt(null), // SQLT_AFC
-                    classOracleTypes.getDeclaredField("CHAR").getInt(null), // SQLT_CHR
-                    classOracleTypes.getDeclaredField("VARCHAR").getInt(null), // SQLT_VCS
-                    classOracleTypes.getDeclaredField("CHAR").getInt(null), // SQLT_AVC
-                    classOracleTypes.getDeclaredField("VARCHAR").getInt(null), // SQLT_STR
-                    // SQLT_LVC:
-                    classOracleTypes.getDeclaredField("LONGVARCHAR").getInt(null),
-                    classOracleTypes.getDeclaredField("FLOAT").getInt(null), // SQLT_FLT
-                    classOracleTypes.getDeclaredField("DATE").getInt(null), // SQLT_ODT
-                    // SQLT_BDOUBLE:
-                    classOracleTypes.getDeclaredField("DOUBLE").getInt(null),
-                    classOracleTypes.getDeclaredField("FLOAT").getInt(null), // SQLT_BFLOAT
-                    classOracleTypes.getDeclaredField("CURSOR").getInt(null), // SQLT_RSET
-                    classOracleTypes.getDeclaredField("BFILE").getInt(null), // SQLT_FILE
-                    -1 // SQLT_CFILE
-                 };
+            // OCI_B_CURSOR:
+            classOracleTypes.getDeclaredField("CURSOR").getInt(null),
+            classOracleTypes.getDeclaredField("OTHER").getInt(null), // OCI_B_NTY
+            classOracleTypes.getDeclaredField("RAW").getInt(null), // OCI_B_BIN
+            -1, // OCI_DTYPE_FILE
+            -1, // OCI_DTYPE_LOB
+            -1, // OCI_DTYPE_ROWID
+            -1, // OCI_D_FILE
+            -1, // OCI_D_LOB
+            -1, // OCI_D_ROWID
+            // OCI_SYSDATE:
+            classOracleTypes.getDeclaredField("TIMESTAMP").getInt(null),
+            -1, // OCI_TEMP_CLOB
+            -1, // OCI_TEMP_BLOB
+            classOracleTypes.getDeclaredField("BFILE").getInt(null), // SQLT_BFILEE
+            -1, // SQLT_CFILEE
+            classOracleTypes.getDeclaredField("CLOB").getInt(null), // SQLT_CLOB
+            classOracleTypes.getDeclaredField("BLOB").getInt(null), // SQLT_BLOB
+            classOracleTypes.getDeclaredField("ROWID").getInt(null), // SQLT_RDD
+            classOracleTypes.getDeclaredField("OTHER").getInt(null), // SQLT_NTY
+            classOracleTypes.getDeclaredField("NUMBER").getInt(null), // SQLT_LNG
+            classOracleTypes.getDeclaredField("RAW").getInt(null), // SQLT_LBI
+            classOracleTypes.getDeclaredField("RAW").getInt(null), // SQLT_BIN
+            classOracleTypes.getDeclaredField("NUMBER").getInt(null), // SQLT_NUM
+            classOracleTypes.getDeclaredField("INTEGER").getInt(null), // SQLT_INT
+            classOracleTypes.getDeclaredField("CHAR").getInt(null), // SQLT_AFC
+            classOracleTypes.getDeclaredField("CHAR").getInt(null), // SQLT_CHR
+            classOracleTypes.getDeclaredField("VARCHAR").getInt(null), // SQLT_VCS
+            classOracleTypes.getDeclaredField("CHAR").getInt(null), // SQLT_AVC
+            classOracleTypes.getDeclaredField("VARCHAR").getInt(null), // SQLT_STR
+            // SQLT_LVC:
+            classOracleTypes.getDeclaredField("LONGVARCHAR").getInt(null),
+            classOracleTypes.getDeclaredField("FLOAT").getInt(null), // SQLT_FLT
+            classOracleTypes.getDeclaredField("DATE").getInt(null), // SQLT_ODT
+            // SQLT_BDOUBLE:
+            classOracleTypes.getDeclaredField("DOUBLE").getInt(null),
+            classOracleTypes.getDeclaredField("FLOAT").getInt(null), // SQLT_BFLOAT
+            classOracleTypes.getDeclaredField("CURSOR").getInt(null), // SQLT_RSET
+            classOracleTypes.getDeclaredField("BFILE").getInt(null), // SQLT_FILE
+            -1 // SQLT_CFILE
+         };
       } catch (Exception e) {
          L.l("Unable to load Oracle types from oracle.jdbc.OracleTypes. "
-                 + "Check your Oracle JDBC driver version.");
+            + "Check your Oracle JDBC driver version.");
       }
    }
 
@@ -213,7 +212,7 @@ public class OracleModule extends AbstractBiancaModule {
 
    /**
     * Binds PHP array to Oracle PL/SQL array by name.
-    *
+    * <p/>
     * oci_bind_array_by_name() binds the PHP array
     * varArray to the Oracle placeholder name, which
     * points to Oracle PL/SQL array. Whether it will
@@ -229,46 +228,45 @@ public class OracleModule extends AbstractBiancaModule {
     * should be used to set the type of PL/SQL array
     * items. See list of available types below.
     *
-    * @param env the PHP executing environment
-    * @param stmt the Oracle statement
-    * @param name the Oracle placeholder
-    * @param varArray the array to be binded
+    * @param env            the PHP executing environment
+    * @param stmt           the Oracle statement
+    * @param name           the Oracle placeholder
+    * @param varArray       the array to be binded
     * @param maxTableLength maximum table length
-    * @param maxItemLength maximum item length
-    * @param type one of the following types:
-    * <br/>
-    * SQLT_NUM - for arrays of NUMBER.
-    * <br/>
-    * SQLT_INT - for arrays of INTEGER
-    * (Note: INTEGER it is actually a synonym for
-    *  NUMBER(38), but SQLT_NUM type won't work in
-    *  this case even though they are synonyms).
-    * <br/>
-    * SQLT_FLT - for arrays of FLOAT.
-    * <br/>
-    * SQLT_AFC - for arrays of CHAR.
-    * <br/>
-    * SQLT_CHR - for arrays of VARCHAR2.
-    * <br/>
-    * SQLT_VCS - for arrays of VARCHAR.
-    * <br/>
-    * SQLT_AVC - for arrays of CHARZ.
-    * <br/>
-    * SQLT_STR - for arrays of STRING.
-    * <br/>
-    * SQLT_LVC - for arrays of LONG VARCHAR.
-    * <br/>
-    * SQLT_ODT - for arrays of DATE.
-    *
+    * @param maxItemLength  maximum item length
+    * @param type           one of the following types:
+    *                       <br/>
+    *                       SQLT_NUM - for arrays of NUMBER.
+    *                       <br/>
+    *                       SQLT_INT - for arrays of INTEGER
+    *                       (Note: INTEGER it is actually a synonym for
+    *                       NUMBER(38), but SQLT_NUM type won't work in
+    *                       this case even though they are synonyms).
+    *                       <br/>
+    *                       SQLT_FLT - for arrays of FLOAT.
+    *                       <br/>
+    *                       SQLT_AFC - for arrays of CHAR.
+    *                       <br/>
+    *                       SQLT_CHR - for arrays of VARCHAR2.
+    *                       <br/>
+    *                       SQLT_VCS - for arrays of VARCHAR.
+    *                       <br/>
+    *                       SQLT_AVC - for arrays of CHARZ.
+    *                       <br/>
+    *                       SQLT_STR - for arrays of STRING.
+    *                       <br/>
+    *                       SQLT_LVC - for arrays of LONG VARCHAR.
+    *                       <br/>
+    *                       SQLT_ODT - for arrays of DATE.
     * @return true on success of false on failure
     */
    public static boolean oci_bind_array_by_name(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull String name,
-           @NotNull ArrayValue varArray,
-           @NotNull int maxTableLength,
-           @Optional("0") int maxItemLength,
-           @Optional("0") int type) {
+                                                @NotNull OracleStatement stmt,
+                                                @NotNull String name,
+                                                @NotNull ArrayValue varArray,
+                                                @NotNull int maxTableLength,
+                                                @Optional("0") int maxItemLength,
+                                                @Optional("0") int type) {
       try {
 
          // JDBC underlying connection
@@ -285,10 +283,10 @@ public class OracleModule extends AbstractBiancaModule {
          Class clArrayDescriptor = Class.forName("oracle.sql.ArrayDescriptor");
 
          Method method = clArrayDescriptor.getDeclaredMethod(
-                 "createDescriptor", new Class[]{String.class, Connection.class});
+            "createDescriptor", new Class[]{String.class, Connection.class});
 
          Object arrayDesc = method.invoke(clArrayDescriptor,
-                 new Object[]{"NUMBER_VARRAY", conn});
+            new Object[]{"NUMBER_VARRAY", conn});
 
          Value[] valueArray = varArray.valuesToArray(); // int arrayValues[] = {123, 234};
 
@@ -304,7 +302,7 @@ public class OracleModule extends AbstractBiancaModule {
          Class clARRAY = Class.forName("oracle.sql.ARRAY");
 
          Constructor constructor = clARRAY.getDeclaredConstructor(new Class[]{
-                    clArrayDescriptor, Connection.class, Object.class});
+            clArrayDescriptor, Connection.class, Object.class});
 
          Array oracleArray = (Array) constructor.newInstance(new Object[]{arrayDesc, conn, objectArray});
 
@@ -366,95 +364,94 @@ public class OracleModule extends AbstractBiancaModule {
     * Binds the PHP variable to the Oracle placeholder
     *
     * @param type one of the following types:
-    *
-    * SQLT_INT - for integers;
-    *
-    * SQLT_CHR - for VARCHARs;
-    *
-    * SQLT_RSET - for cursors, that were created before with oci_new_cursor()
-    *
-    * OCI_B_BFILE (integer)
-    *
-    *    Used with oci_bind_by_name() when binding BFILEs.
-    *
-    * OCI_B_CFILEE (integer)
-    *
-    *    Used with oci_bind_by_name() when binding CFILEs.
-    *
-    * OCI_B_CLOB (integer)
-    *
-    *    Used with oci_bind_by_name() when binding CLOBs.
-    *
-    * OCI_B_BLOB (integer)
-    *
-    *    Used with oci_bind_by_name() when binding BLOBs.
-    *
-    * OCI_B_ROWID (integer)
-    *
-    *    Used with oci_bind_by_name() when binding ROWIDs.
-    *
-    * OCI_B_CURSOR (integer)
-    *
-    *    Used with oci_bind_by_name() when binding cursors,
-    *    previously allocated with oci_new_descriptor().
-    *
-    * OCI_B_NTY (integer)
-    *
-    *    Used with oci_bind_by_name() when binding named data
-    *    types. Note: in PHP < 5.0 it was called OCI_B_SQLT_NTY.
-    *
-    * OCI_B_BIN (integer)
-    *
-    * SQLT_FILE (integer)
-    *
-    * SQLT_BFILEE (integer)
-    *
-    *    The same as OCI_B_BFILE.
-    *
-    * SQLT_CFILE (integer)
-    *
-    * SQLT_CFILEE (integer)
-    *
-    *    The same as OCI_B_CFILEE.
-    *
-    * SQLT_CLOB (integer)
-    *
-    *    The same as OCI_B_CLOB.
-    *
-    * SQLT_BLOB (integer)
-    *
-    *    The same as OCI_B_BLOB.
-    *
-    * SQLT_RDD (integer)
-    *
-    *    The same as OCI_B_ROWID.
-    *
-    * SQLT_NTY (integer)
-    *
-    *    The same as OCI_B_NTY.
-    *
-    * SQLT_LNG (integer)
-    *
-    *    Used with oci_bind_by_name() to bind LONG values.
-    *
-    * SQLT_LBI (integer)
-    *
-    *    Used with oci_bind_by_name() to bind LONG RAW values.
-    *
-    * SQLT_BIN (integer)
-    *
-    *    Used with oci_bind_by_name() to bind RAW values.
-    *
+    *             <p/>
+    *             SQLT_INT - for integers;
+    *             <p/>
+    *             SQLT_CHR - for VARCHARs;
+    *             <p/>
+    *             SQLT_RSET - for cursors, that were created before with oci_new_cursor()
+    *             <p/>
+    *             OCI_B_BFILE (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() when binding BFILEs.
+    *             <p/>
+    *             OCI_B_CFILEE (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() when binding CFILEs.
+    *             <p/>
+    *             OCI_B_CLOB (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() when binding CLOBs.
+    *             <p/>
+    *             OCI_B_BLOB (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() when binding BLOBs.
+    *             <p/>
+    *             OCI_B_ROWID (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() when binding ROWIDs.
+    *             <p/>
+    *             OCI_B_CURSOR (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() when binding cursors,
+    *             previously allocated with oci_new_descriptor().
+    *             <p/>
+    *             OCI_B_NTY (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() when binding named data
+    *             types. Note: in PHP < 5.0 it was called OCI_B_SQLT_NTY.
+    *             <p/>
+    *             OCI_B_BIN (integer)
+    *             <p/>
+    *             SQLT_FILE (integer)
+    *             <p/>
+    *             SQLT_BFILEE (integer)
+    *             <p/>
+    *             The same as OCI_B_BFILE.
+    *             <p/>
+    *             SQLT_CFILE (integer)
+    *             <p/>
+    *             SQLT_CFILEE (integer)
+    *             <p/>
+    *             The same as OCI_B_CFILEE.
+    *             <p/>
+    *             SQLT_CLOB (integer)
+    *             <p/>
+    *             The same as OCI_B_CLOB.
+    *             <p/>
+    *             SQLT_BLOB (integer)
+    *             <p/>
+    *             The same as OCI_B_BLOB.
+    *             <p/>
+    *             SQLT_RDD (integer)
+    *             <p/>
+    *             The same as OCI_B_ROWID.
+    *             <p/>
+    *             SQLT_NTY (integer)
+    *             <p/>
+    *             The same as OCI_B_NTY.
+    *             <p/>
+    *             SQLT_LNG (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() to bind LONG values.
+    *             <p/>
+    *             SQLT_LBI (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() to bind LONG RAW values.
+    *             <p/>
+    *             SQLT_BIN (integer)
+    *             <p/>
+    *             Used with oci_bind_by_name() to bind RAW values.
     */
    public static boolean oci_bind_by_name(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull String placeholderName,
-           Value variable,
-           @Optional("0") int maxLength,
-           @Optional("0") int type) {
+                                          @NotNull OracleStatement stmt,
+                                          @NotNull String placeholderName,
+                                          Value variable,
+                                          @Optional("0") int maxLength,
+                                          @Optional("0") int type) {
       if ((type == OCI_B_CFILEE)
-              || (type == SQLT_CFILE)
-              || (type == SQLT_CFILEE)) {
+         || (type == SQLT_CFILE)
+         || (type == SQLT_CFILEE)) {
          throw new UnimplementedException("oci_bind_by_name with CFILE");
       }
 
@@ -583,7 +580,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Cancels reading from cursor
     */
    public static boolean oci_cancel(Env env,
-           @NotNull OracleStatement stmt) {
+                                    @NotNull OracleStatement stmt) {
       return oci_free_statement(env, stmt);
    }
 
@@ -591,7 +588,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Closes Oracle connection
     */
    public static boolean oci_close(Env env,
-           @NotNull Oracle conn) {
+                                   @NotNull Oracle conn) {
       if (conn == null) {
          conn = getConnection(env);
       }
@@ -613,7 +610,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Commits outstanding statements
     */
    public static boolean oci_commit(Env env,
-           @NotNull Oracle conn) {
+                                    @NotNull Oracle conn) {
       try {
          return conn.commit();
       } catch (Exception ex) {
@@ -626,11 +623,11 @@ public class OracleModule extends AbstractBiancaModule {
     * Establishes a connection to the Oracle server
     */
    public static Value oci_connect(Env env,
-           @NotNull String username,
-           @NotNull String password,
-           @Optional String db,
-           @Optional String charset,
-           @Optional("0") int sessionMode) {
+                                   @NotNull String username,
+                                   @NotNull String password,
+                                   @Optional String db,
+                                   @Optional String charset,
+                                   @Optional("0") int sessionMode) {
       // Note:  The second and subsequent calls to oci_connect() with the
       // same parameters will return the connection handle returned from
       // the first call. This means that queries issued against one handle
@@ -642,23 +639,23 @@ public class OracleModule extends AbstractBiancaModule {
       }
 
       if (sessionMode == OCI_DEFAULT
-              || sessionMode == OCI_SYSOPER
-              || sessionMode == OCI_SYSDBA) {
+         || sessionMode == OCI_SYSOPER
+         || sessionMode == OCI_SYSDBA) {
          throw new UnimplementedException("oci_connect with session mode");
       }
 
       return connectInternal(env, true, username, password, db,
-              charset, sessionMode);
+         charset, sessionMode);
    }
 
    /**
     * Uses a PHP variable for the define-step during a SELECT
     */
    public static boolean oci_define_by_name(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull String columnName,
-           @NotNull @Reference Value variable,
-           @Optional("0") int type) {
+                                            @NotNull OracleStatement stmt,
+                                            @NotNull String columnName,
+                                            @NotNull @Reference Value variable,
+                                            @Optional("0") int type) {
       // Example:
       //
       //  $stmt = oci_parse($conn, "SELECT id, data FROM test");
@@ -689,7 +686,7 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String oci_error(Env env,
-           @Optional Value resource) {
+                                  @Optional Value resource) {
       if (resource instanceof DefaultValue) {
          return null;
       }
@@ -719,8 +716,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Executes a statement
     */
    public static boolean oci_execute(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional("0") int mode) {
+                                     @NotNull OracleStatement stmt,
+                                     @Optional("0") int mode) {
       try {
 
          //  Scenarios for oci_execute.
@@ -852,11 +849,11 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue oci_fetch_all(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull Value output,
-           @Optional int skip,
-           @Optional int maxrows,
-           @Optional int flags) {
+                                          @NotNull OracleStatement stmt,
+                                          @NotNull Value output,
+                                          @Optional int skip,
+                                          @Optional int maxrows,
+                                          @Optional int flags) {
       JdbcResultResource resource = null;
 
       ArrayValueImpl newArray = new ArrayValueImpl();
@@ -897,8 +894,8 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue oci_fetch_array(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional("-1") int mode) {
+                                            @NotNull OracleStatement stmt,
+                                            @Optional("-1") int mode) {
       if (stmt == null) {
          return null;
       }
@@ -935,7 +932,7 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue oci_fetch_assoc(Env env,
-           @NotNull OracleStatement stmt) {
+                                            @NotNull OracleStatement stmt) {
       try {
 
          if (stmt == null) {
@@ -945,7 +942,7 @@ public class OracleModule extends AbstractBiancaModule {
          JdbcResultResource resource = new JdbcResultResource(env, null, stmt.getResultSet(), null);
 
          ArrayValue arrayValue = resource.fetchArray(
-                 env, JdbcResultResource.FETCH_ASSOC);
+            env, JdbcResultResource.FETCH_ASSOC);
 
          return arrayValue;
 
@@ -959,7 +956,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Returns the next row from the result data as an object
     */
    public static Value oci_fetch_object(Env env,
-           @NotNull OracleStatement stmt) {
+                                        @NotNull OracleStatement stmt) {
       try {
          if (stmt == null) {
             return BooleanValue.FALSE;
@@ -979,7 +976,7 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ArrayValue oci_fetch_row(Env env,
-           @NotNull OracleStatement stmt) {
+                                          @NotNull OracleStatement stmt) {
       try {
 
          if (stmt == null) {
@@ -1000,7 +997,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Fetches the next row into result-buffer
     */
    public static boolean oci_fetch(Env env,
-           @NotNull OracleStatement stmt) {
+                                   @NotNull OracleStatement stmt) {
       try {
 
          if (stmt == null) {
@@ -1046,13 +1043,13 @@ public class OracleModule extends AbstractBiancaModule {
    /**
     * Checks if the field is NULL
     *
-    * @param stmt oracle statement
+    * @param stmt              oracle statement
     * @param fieldNameOrNumber field's index (1-based) or it's name
     * @return TRUE if the field is null or FALSE otherwise.
     */
    public static boolean oci_field_is_null(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull Value fieldNameOrNumber) {
+                                           @NotNull OracleStatement stmt,
+                                           @NotNull Value fieldNameOrNumber) {
       if (stmt == null) {
          return false;
       }
@@ -1072,7 +1069,7 @@ public class OracleModule extends AbstractBiancaModule {
          ResultSetMetaData metaData = rs.getMetaData();
 
          return metaData.isNullable(fieldNumber + 1)
-                 == ResultSetMetaData.columnNullable;
+            == ResultSetMetaData.columnNullable;
 
       } catch (Exception ex) {
          log.log(Level.FINE, ex.toString(), ex);
@@ -1084,8 +1081,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Returns the name of a field from the statement
     */
    public static Value oci_field_name(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull int fieldNumber) {
+                                      @NotNull OracleStatement stmt,
+                                      @NotNull int fieldNumber) {
       try {
          if (stmt == null) {
             return BooleanValue.FALSE;
@@ -1105,8 +1102,8 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue oci_field_precision(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull int field) {
+                                               @NotNull OracleStatement stmt,
+                                               @NotNull int field) {
       if (stmt == null) {
          return null;
       }
@@ -1130,8 +1127,8 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static LongValue oci_field_scale(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull int field) {
+                                           @NotNull OracleStatement stmt,
+                                           @NotNull int field) {
       if (stmt == null) {
          return null;
       }
@@ -1153,13 +1150,13 @@ public class OracleModule extends AbstractBiancaModule {
    /**
     * Returns field's size
     *
-    * @param stmt oracle statement
+    * @param stmt              oracle statement
     * @param fieldNameOrNumber field's index (1-based) or it's name
     * @return the field's size
     */
    public static Value oci_field_size(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional("-1") Value fieldNameOrNumber) {
+                                      @NotNull OracleStatement stmt,
+                                      @Optional("-1") Value fieldNameOrNumber) {
       try {
 
          if (stmt == null) {
@@ -1186,8 +1183,8 @@ public class OracleModule extends AbstractBiancaModule {
     * @param field the field number (1-based)
     */
    public static int oci_field_type_raw(Env env,
-           @NotNull OracleStatement stmt,
-           int field) {
+                                        @NotNull OracleStatement stmt,
+                                        int field) {
       try {
 
          if (stmt == null) {
@@ -1250,8 +1247,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Returns field's data type
     */
    public static Value oci_field_type(Env env,
-           @NotNull OracleStatement stmt,
-           int fieldNumber) {
+                                      @NotNull OracleStatement stmt,
+                                      int fieldNumber) {
       try {
          if (stmt == null) {
             return BooleanValue.FALSE;
@@ -1267,10 +1264,10 @@ public class OracleModule extends AbstractBiancaModule {
    }
 
    /**
-    *  Frees all resources associated with statement or cursor
+    * Frees all resources associated with statement or cursor
     */
    public static boolean oci_free_statement(Env env,
-           @NotNull OracleStatement stmt) {
+                                            @NotNull OracleStatement stmt) {
       try {
 
          stmt.close();
@@ -1287,7 +1284,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Enables or disables internal debug output
     */
    public static void oci_internal_debug(Env env,
-           @NotNull int onoff) {
+                                         @NotNull int onoff) {
       throw new UnimplementedException("oci_internal_debug");
    }
 
@@ -1295,9 +1292,9 @@ public class OracleModule extends AbstractBiancaModule {
     * Copies large object
     */
    public static boolean oci_lob_copy(Env env,
-           @NotNull OracleOciLob lobTo,
-           @NotNull OracleOciLob lobFrom,
-           @Optional("-1") int length) {
+                                      @NotNull OracleOciLob lobTo,
+                                      @NotNull OracleOciLob lobFrom,
+                                      @Optional("-1") int length) {
       try {
 
          return lobTo.save(env, lobFrom.read(env, length).toString(), 0);
@@ -1312,8 +1309,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Compares two LOB/FILE locators for equality
     */
    public static boolean oci_lob_is_equal(Env env,
-           @NotNull OracleOciLob lob1,
-           @NotNull OracleOciLob lob2) {
+                                          @NotNull OracleOciLob lob1,
+                                          @NotNull OracleOciLob lob2) {
       try {
 
          return lob1.equals(lob2);
@@ -1329,9 +1326,9 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static OracleOciCollection oci_new_collection(Env env,
-           @NotNull Oracle conn,
-           @NotNull String tdo,
-           @Optional String schema) {
+                                                        @NotNull Oracle conn,
+                                                        @NotNull String tdo,
+                                                        @Optional String schema) {
       try {
 
          String typeName = tdo;
@@ -1357,12 +1354,12 @@ public class OracleModule extends AbstractBiancaModule {
          Class clArrayDescriptor = Class.forName("oracle.sql.ArrayDescriptor");
 
          Method method = clArrayDescriptor.getDeclaredMethod(
-                 "createDescriptor",
-                 new Class[]{String.class,
-                    Connection.class});
+            "createDescriptor",
+            new Class[]{String.class,
+               Connection.class});
 
          Object arrayDesc = method.invoke(clArrayDescriptor,
-                 new Object[]{typeName, jdbcConn});
+            new Object[]{typeName, jdbcConn});
 
          if (arrayDesc != null) {
             return new OracleOciCollection(jdbcConn, arrayDesc);
@@ -1379,19 +1376,19 @@ public class OracleModule extends AbstractBiancaModule {
     * Establishes a new connection to the Oracle server
     */
    public static Value oci_new_connect(Env env,
-           @NotNull String username,
-           @NotNull String password,
-           @Optional String db,
-           @Optional String charset,
-           @Optional("0") int sessionMode) {
+                                       @NotNull String username,
+                                       @NotNull String password,
+                                       @Optional String db,
+                                       @Optional String charset,
+                                       @Optional("0") int sessionMode) {
       if ((sessionMode == OCI_DEFAULT)
-              || (sessionMode == OCI_SYSOPER)
-              || (sessionMode == OCI_SYSDBA)) {
+         || (sessionMode == OCI_SYSOPER)
+         || (sessionMode == OCI_SYSDBA)) {
          log.warning(L.l("oci_new_connect with session mode '{0}'", sessionMode));
       }
 
       return connectInternal(env, false, username, password, db,
-              charset, sessionMode);
+         charset, sessionMode);
    }
 
    /**
@@ -1399,11 +1396,11 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static OracleStatement oci_new_cursor(Env env,
-           @NotNull Oracle conn) {
+                                                @NotNull Oracle conn) {
       try {
 
          OracleStatement stmt = new OracleStatement(
-                 (Oracle) conn.validateConnection());
+            (Oracle) conn.validateConnection());
 
          return stmt;
 
@@ -1417,22 +1414,22 @@ public class OracleModule extends AbstractBiancaModule {
     * Initializes a new empty LOB or FILE descriptor
     *
     * @param type one of the following types:
-    *
-    * OCI_D_FILE - a FILE descriptor
-    *
-    * OCI_D_LOB - a LOB descriptor
-    *
-    * OCI_D_ROWID - a ROWID descriptor
+    *             <p/>
+    *             OCI_D_FILE - a FILE descriptor
+    *             <p/>
+    *             OCI_D_LOB - a LOB descriptor
+    *             <p/>
+    *             OCI_D_ROWID - a ROWID descriptor
     */
    @ReturnNullAsFalse
    public static OracleOciLob oci_new_descriptor(Env env,
-           @NotNull Oracle conn,
-           @Optional("-1") int type) {
+                                                 @NotNull Oracle conn,
+                                                 @Optional("-1") int type) {
       try {
 
          if ((type == OCI_D_FILE)
-                 || (type == OCI_D_LOB)
-                 || (type == OCI_D_ROWID)) {
+            || (type == OCI_D_LOB)
+            || (type == OCI_D_ROWID)) {
 
             OracleOciLob oracleLob = new OracleOciLob(conn, type);
 
@@ -1447,10 +1444,10 @@ public class OracleModule extends AbstractBiancaModule {
    }
 
    /**
-    *  Returns the number of result columns in a statement
+    * Returns the number of result columns in a statement
     */
    public static Value oci_num_fields(Env env,
-           @NotNull OracleStatement stmt) {
+                                      @NotNull OracleStatement stmt) {
       try {
          if (stmt == null) {
             return BooleanValue.FALSE;
@@ -1467,14 +1464,14 @@ public class OracleModule extends AbstractBiancaModule {
 
    /**
     * Returns number of rows affected during statement execution
-    *
+    * <p/>
     * Note:  This function does not return number of rows selected!
     * For SELECT statements this function will return the number of rows,
     * that were fetched to the buffer with oci_fetchxxxx() functions.
     */
    @ReturnNullAsFalse
    public static LongValue oci_num_rows(Env env,
-           @NotNull OracleStatement stmt) {
+                                        @NotNull OracleStatement stmt) {
       try {
 
          if (stmt == null) {
@@ -1499,8 +1496,8 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static OracleStatement oci_parse(Env env,
-           @NotNull Oracle conn,
-           String query) {
+                                           @NotNull Oracle conn,
+                                           String query) {
       try {
          // TODO: Rework this.
          // Enclose the query with "begin ...; end;" so any regular statement
@@ -1510,8 +1507,8 @@ public class OracleModule extends AbstractBiancaModule {
          String lowerCaseQuery = query.toLowerCase();
 
          if (lowerCaseQuery.startsWith("insert")
-                 || lowerCaseQuery.startsWith("update")
-                 || lowerCaseQuery.startsWith("delete")) {
+            || lowerCaseQuery.startsWith("update")
+            || lowerCaseQuery.startsWith("delete")) {
             if (!lowerCaseQuery.startsWith("begin ")) {
                query = "begin " + query;
             }
@@ -1552,10 +1549,10 @@ public class OracleModule extends AbstractBiancaModule {
     * Changes password of Oracle's user
     */
    public static boolean oci_password_change(Env env,
-           @NotNull Oracle conn,
-           @NotNull String username,
-           @NotNull String oldPassword,
-           @NotNull String newPassword) {
+                                             @NotNull Oracle conn,
+                                             @NotNull String username,
+                                             @NotNull String oldPassword,
+                                             @NotNull String newPassword) {
       try {
 
          // TODO: When is oldPassword used?
@@ -1567,7 +1564,7 @@ public class OracleModule extends AbstractBiancaModule {
          OracleStatement oracleStmt;
 
          oracleStmt = oci_parse(
-                 env, conn, "ALTER USER " + username + " IDENTIFIED BY " + newPassword);
+            env, conn, "ALTER USER " + username + " IDENTIFIED BY " + newPassword);
 
          oci_execute(env, oracleStmt, 0);
 
@@ -1583,31 +1580,31 @@ public class OracleModule extends AbstractBiancaModule {
     * Connect to an Oracle database using a persistent connection
     */
    public static Value oci_pconnect(Env env,
-           @NotNull String username,
-           @NotNull String password,
-           @Optional String db,
-           @Optional String charset,
-           @Optional("0") int sessionMode) {
+                                    @NotNull String username,
+                                    @NotNull String password,
+                                    @Optional String db,
+                                    @Optional String charset,
+                                    @Optional("0") int sessionMode) {
       if (!((charset == null) || charset.length() == 0)) {
          throw new UnimplementedException("oci_pconnect with charset");
       }
 
       if ((sessionMode == OCI_DEFAULT)
-              || (sessionMode == OCI_SYSOPER)
-              || (sessionMode == OCI_SYSDBA)) {
+         || (sessionMode == OCI_SYSOPER)
+         || (sessionMode == OCI_SYSDBA)) {
          throw new UnimplementedException("oci_pconnect with session mode");
       }
 
       return connectInternal(
-              env, true, username, password, db, charset, sessionMode);
+         env, true, username, password, db, charset, sessionMode);
    }
 
    /**
     * Returns field's value from the fetched row
     */
    public static Value oci_result(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull Value field) {
+                                  @NotNull OracleStatement stmt,
+                                  @NotNull Value field) {
       try {
          if (stmt == null) {
             return BooleanValue.FALSE;
@@ -1626,7 +1623,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Rolls back outstanding transaction
     */
    public static Value oci_rollback(Env env,
-           @NotNull Oracle conn) {
+                                    @NotNull Oracle conn) {
       try {
          return BooleanValue.create(conn.rollback());
       } catch (Exception ex) {
@@ -1640,7 +1637,7 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String oci_server_version(Env env,
-           @NotNull Oracle conn) {
+                                           @NotNull Oracle conn) {
       try {
          if (conn == null) {
             conn = getConnection(env);
@@ -1657,8 +1654,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Sets number of rows to be prefetched
     */
    public static boolean oci_set_prefetch(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional("1") int rows) {
+                                          @NotNull OracleStatement stmt,
+                                          @Optional("1") int rows) {
       try {
 
          if (stmt == null) {
@@ -1680,7 +1677,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Returns the type of an OCI statement
     */
    public static String oci_statement_type(Env env,
-           @NotNull OracleStatement stmt) {
+                                           @NotNull OracleStatement stmt) {
       return stmt.getStatementType();
    }
 
@@ -1688,11 +1685,11 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_bind_by_name()
     */
    public static boolean ocibindbyname(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull String variable,
-           @NotNull Value value,
-           @Optional("0") int maxLength,
-           @Optional("0") int type) {
+                                       @NotNull OracleStatement stmt,
+                                       @NotNull String variable,
+                                       @NotNull Value value,
+                                       @Optional("0") int maxLength,
+                                       @Optional("0") int type) {
       return oci_bind_by_name(env, stmt, variable, value, maxLength, type);
    }
 
@@ -1700,7 +1697,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_cancel()
     */
    public static boolean ocicancel(Env env,
-           @NotNull OracleStatement stmt) {
+                                   @NotNull OracleStatement stmt) {
       return oci_cancel(env, stmt);
    }
 
@@ -1708,7 +1705,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Lob->close
     */
    public static Value ocicloselob(Env env,
-           @NotNull Oracle conn) {
+                                   @NotNull Oracle conn) {
       throw new UnimplementedException("ocicloselob");
    }
 
@@ -1716,7 +1713,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Collection->append
     */
    public static Value ocicollappend(Env env,
-           @NotNull Oracle conn) {
+                                     @NotNull Oracle conn) {
       throw new UnimplementedException("ocicollappend");
    }
 
@@ -1724,7 +1721,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Collection->assign
     */
    public static Value ocicollassign(Env env,
-           @NotNull Oracle conn) {
+                                     @NotNull Oracle conn) {
       throw new UnimplementedException("ocicollassign");
    }
 
@@ -1732,7 +1729,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Collection->assignElem
     */
    public static Value ocicollassignelem(Env env,
-           @NotNull Oracle conn) {
+                                         @NotNull Oracle conn) {
       throw new UnimplementedException("ocicollassignelem");
    }
 
@@ -1740,7 +1737,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Collection->getElem
     */
    public static Value ocicollgetelem(Env env,
-           @NotNull Oracle conn) {
+                                      @NotNull Oracle conn) {
       throw new UnimplementedException("ocicollgetelem");
    }
 
@@ -1748,7 +1745,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Collection->max
     */
    public static Value ocicollmax(Env env,
-           @NotNull Oracle conn) {
+                                  @NotNull Oracle conn) {
       throw new UnimplementedException("ocicollmax");
    }
 
@@ -1756,7 +1753,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Collection->size
     */
    public static Value ocicollsize(Env env,
-           @NotNull Oracle conn) {
+                                   @NotNull Oracle conn) {
       throw new UnimplementedException("ocicollsize");
    }
 
@@ -1764,7 +1761,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Collection->trim
     */
    public static Value ocicolltrim(Env env,
-           @NotNull Oracle conn) {
+                                   @NotNull Oracle conn) {
       throw new UnimplementedException("ocicolltrim");
    }
 
@@ -1772,8 +1769,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_field_is_null()
     */
    public static boolean ocicolumnisnull(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull Value field) {
+                                         @NotNull OracleStatement stmt,
+                                         @NotNull Value field) {
       return oci_field_is_null(env, stmt, field);
    }
 
@@ -1781,8 +1778,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_field_name()
     */
    public static Value ocicolumnname(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull int fieldNumber) {
+                                     @NotNull OracleStatement stmt,
+                                     @NotNull int fieldNumber) {
       return oci_field_name(env, stmt, fieldNumber);
    }
 
@@ -1790,8 +1787,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_field_precision()
     */
    public static Value ocicolumnprecision(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull int field) {
+                                          @NotNull OracleStatement stmt,
+                                          @NotNull int field) {
       return oci_field_precision(env, stmt, field);
    }
 
@@ -1799,8 +1796,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_field_scale()
     */
    public static Value ocicolumnscale(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull int field) {
+                                      @NotNull OracleStatement stmt,
+                                      @NotNull int field) {
       return oci_field_scale(env, stmt, field);
    }
 
@@ -1808,8 +1805,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_field_size()
     */
    public static Value ocicolumnsize(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional Value field) {
+                                     @NotNull OracleStatement stmt,
+                                     @Optional Value field) {
       return oci_field_size(env, stmt, field);
    }
 
@@ -1817,8 +1814,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_field_type()
     */
    public static Value ocicolumntype(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional int fieldNumber) {
+                                     @NotNull OracleStatement stmt,
+                                     @Optional int fieldNumber) {
       return oci_field_type(env, stmt, fieldNumber);
    }
 
@@ -1826,8 +1823,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_field_type_raw()
     */
    public static int ocicolumntyperaw(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional int field) {
+                                      @NotNull OracleStatement stmt,
+                                      @Optional int field) {
       return oci_field_type_raw(env, stmt, field);
    }
 
@@ -1835,7 +1832,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_commit()
     */
    public static boolean ocicommit(Env env,
-           @NotNull Oracle conn) {
+                                   @NotNull Oracle conn) {
       return oci_commit(env, conn);
    }
 
@@ -1843,10 +1840,10 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_define_by_name()
     */
    public static boolean ocidefinebyname(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull String columnName,
-           @NotNull Value variable,
-           @Optional("0") int type) {
+                                         @NotNull OracleStatement stmt,
+                                         @NotNull String columnName,
+                                         @NotNull Value variable,
+                                         @Optional("0") int type) {
       return oci_define_by_name(env, stmt, columnName, variable, type);
    }
 
@@ -1855,7 +1852,7 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static String ocierror(Env env,
-           @Optional Value resource) {
+                                 @Optional Value resource) {
       return oci_error(env, resource);
    }
 
@@ -1863,8 +1860,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_execute()
     */
    public static boolean ociexecute(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional("0") int mode) {
+                                    @NotNull OracleStatement stmt,
+                                    @Optional("0") int mode) {
       return oci_execute(env, stmt, mode);
    }
 
@@ -1872,7 +1869,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_fetch()
     */
    public static boolean ocifetch(Env env,
-           @NotNull OracleStatement stmt) {
+                                  @NotNull OracleStatement stmt) {
       return oci_fetch(env, stmt);
    }
 
@@ -1880,9 +1877,9 @@ public class OracleModule extends AbstractBiancaModule {
     * Fetches the next row into an array
     */
    public static Value ocifetchinto(Env env,
-           @NotNull OracleStatement stmt,
-           @Reference Value result,
-           @Optional("-1") int mode) {
+                                    @NotNull OracleStatement stmt,
+                                    @Reference Value result,
+                                    @Optional("-1") int mode) {
       if (mode == -1) {
          mode = OCI_NUM;
       }
@@ -1901,11 +1898,11 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_fetch_all()
     */
    public static Value ocifetchstatement(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull Value output,
-           @Optional int skip,
-           @Optional int maxrows,
-           @Optional int flags) {
+                                         @NotNull OracleStatement stmt,
+                                         @NotNull Value output,
+                                         @Optional int skip,
+                                         @Optional int maxrows,
+                                         @Optional int flags) {
       return oci_fetch_all(env, stmt, output, skip, maxrows, flags);
    }
 
@@ -1913,7 +1910,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Collection->free
     */
    public static Value ocifreecollection(Env env,
-           @NotNull Oracle conn) {
+                                         @NotNull Oracle conn) {
       throw new UnimplementedException("ocifreecollection");
    }
 
@@ -1921,7 +1918,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_free_statement()
     */
    public static boolean ocifreecursor(Env env,
-           @NotNull OracleStatement stmt) {
+                                       @NotNull OracleStatement stmt) {
       return oci_free_statement(env, stmt);
    }
 
@@ -1929,7 +1926,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Lob->free
     */
    public static Value ocifreedesc(Env env,
-           @NotNull Oracle conn) {
+                                   @NotNull Oracle conn) {
       throw new UnimplementedException("ocifreedesc");
    }
 
@@ -1937,7 +1934,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_free_statement()
     */
    public static boolean ocifreestatement(Env env,
-           @NotNull OracleStatement stmt) {
+                                          @NotNull OracleStatement stmt) {
       return oci_free_statement(env, stmt);
    }
 
@@ -1945,7 +1942,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_internal_debug()
     */
    public static void ociinternaldebug(Env env,
-           @NotNull int onoff) {
+                                       @NotNull int onoff) {
       oci_internal_debug(env, onoff);
    }
 
@@ -1953,7 +1950,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Lob->load
     */
    public static Value ociloadlob(Env env,
-           @NotNull Oracle conn) {
+                                  @NotNull Oracle conn) {
       throw new UnimplementedException("ociloadlob");
    }
 
@@ -1961,7 +1958,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_close()
     */
    public static boolean ocilogoff(Env env,
-           @NotNull Oracle conn) {
+                                   @NotNull Oracle conn) {
       return oci_close(env, conn);
    }
 
@@ -1969,11 +1966,11 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_connect()
     */
    public static Value ocilogon(Env env,
-           @NotNull String username,
-           @NotNull String password,
-           @Optional String db,
-           @Optional String charset,
-           @Optional("0") int sessionMode) {
+                                @NotNull String username,
+                                @NotNull String password,
+                                @Optional String db,
+                                @Optional String charset,
+                                @Optional("0") int sessionMode) {
       return oci_connect(env, username, password, db, charset, sessionMode);
    }
 
@@ -1982,9 +1979,9 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static OracleOciCollection ocinewcollection(Env env,
-           @NotNull Oracle conn,
-           @NotNull String tdo,
-           @Optional String schema) {
+                                                      @NotNull Oracle conn,
+                                                      @NotNull String tdo,
+                                                      @Optional String schema) {
       return oci_new_collection(env, conn, tdo, schema);
    }
 
@@ -1993,7 +1990,7 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static OracleStatement ocinewcursor(Env env,
-           @NotNull Oracle conn) {
+                                              @NotNull Oracle conn) {
       return oci_new_cursor(env, conn);
    }
 
@@ -2001,8 +1998,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_new_descriptor()
     */
    public static OracleOciLob ocinewdescriptor(Env env,
-           @NotNull Oracle conn,
-           @Optional("-1") int type) {
+                                               @NotNull Oracle conn,
+                                               @Optional("-1") int type) {
       return oci_new_descriptor(env, conn, type);
    }
 
@@ -2010,11 +2007,11 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_new_connect()
     */
    public static Value ocinlogon(Env env,
-           @NotNull String username,
-           @NotNull String password,
-           @Optional String db,
-           @Optional String charset,
-           @Optional("0") int sessionMode) {
+                                 @NotNull String username,
+                                 @NotNull String password,
+                                 @Optional String db,
+                                 @Optional String charset,
+                                 @Optional("0") int sessionMode) {
       return oci_new_connect(env, username, password, db, charset, sessionMode);
    }
 
@@ -2022,7 +2019,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_num_fields()
     */
    public static Value ocinumcols(Env env,
-           @NotNull OracleStatement stmt) {
+                                  @NotNull OracleStatement stmt) {
       return oci_num_fields(env, stmt);
    }
 
@@ -2031,8 +2028,8 @@ public class OracleModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static OracleStatement ociparse(Env env,
-           @NotNull Oracle conn,
-           @NotNull String query) {
+                                          @NotNull Oracle conn,
+                                          @NotNull String query) {
       return oci_parse(env, conn, query);
    }
 
@@ -2040,11 +2037,11 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_pconnect()
     */
    public static Value ociplogon(Env env,
-           @NotNull String username,
-           @NotNull String password,
-           @Optional String db,
-           @Optional String charset,
-           @Optional("0") int sessionMode) {
+                                 @NotNull String username,
+                                 @NotNull String password,
+                                 @Optional String db,
+                                 @Optional String charset,
+                                 @Optional("0") int sessionMode) {
       return oci_pconnect(env, username, password, db, charset, sessionMode);
    }
 
@@ -2052,8 +2049,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_result()
     */
    public static Value ociresult(Env env,
-           @NotNull OracleStatement stmt,
-           @NotNull Value field) {
+                                 @NotNull OracleStatement stmt,
+                                 @NotNull Value field) {
       return oci_result(env, stmt, field);
    }
 
@@ -2061,7 +2058,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_rollback()
     */
    public static Value ocirollback(Env env,
-           @NotNull Oracle conn) {
+                                   @NotNull Oracle conn) {
       return oci_rollback(env, conn);
    }
 
@@ -2069,7 +2066,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_num_rows()
     */
    public static Value ocirowcount(Env env,
-           @NotNull OracleStatement stmt) {
+                                   @NotNull OracleStatement stmt) {
       return oci_num_rows(env, stmt);
    }
 
@@ -2077,7 +2074,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Lob->save
     */
    public static Value ocisavelob(Env env,
-           @NotNull Oracle conn) {
+                                  @NotNull Oracle conn) {
       throw new UnimplementedException("ocisavelob");
    }
 
@@ -2085,7 +2082,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Lob->import
     */
    public static Value ocisavelobfile(Env env,
-           @NotNull Oracle conn) {
+                                      @NotNull Oracle conn) {
       throw new UnimplementedException("ocisavelobfile");
    }
 
@@ -2093,7 +2090,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_server_version()
     */
    public static String ociserverversion(Env env,
-           @NotNull Oracle conn) {
+                                         @NotNull Oracle conn) {
       return oci_server_version(env, conn);
    }
 
@@ -2101,8 +2098,8 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_set_prefetch()
     */
    public static boolean ocisetprefetch(Env env,
-           @NotNull OracleStatement stmt,
-           @Optional("1") int rows) {
+                                        @NotNull OracleStatement stmt,
+                                        @Optional("1") int rows) {
       return oci_set_prefetch(env, stmt, rows);
    }
 
@@ -2110,7 +2107,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of oci_statement_type()
     */
    public static String ocistatementtype(Env env,
-           @NotNull OracleStatement stmt) {
+                                         @NotNull OracleStatement stmt) {
       return oci_statement_type(env, stmt);
    }
 
@@ -2118,7 +2115,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Lob->export
     */
    public static Value ociwritelobtofile(Env env,
-           @NotNull Oracle conn) {
+                                         @NotNull Oracle conn) {
       throw new UnimplementedException("ociwritelobtofile");
    }
 
@@ -2126,7 +2123,7 @@ public class OracleModule extends AbstractBiancaModule {
     * Alias of OCI-Lob->writeTemporary
     */
    public static Value ociwritetemporarylob(Env env,
-           @NotNull Oracle conn) {
+                                            @NotNull Oracle conn) {
       throw new UnimplementedException("ociwritetemporarylob");
    }
 
@@ -2152,12 +2149,12 @@ public class OracleModule extends AbstractBiancaModule {
    }
 
    private static Value connectInternal(Env env,
-           boolean reuseConnection,
-           String username,
-           String password,
-           String db,
-           String charset,
-           int sessionMode) {
+                                        boolean reuseConnection,
+                                        String username,
+                                        String password,
+                                        String db,
+                                        String charset,
+                                        int sessionMode) {
       String host = "localhost";
       int port = 1521;
 
@@ -2178,7 +2175,7 @@ public class OracleModule extends AbstractBiancaModule {
       ConnectionInfo connectionInfo = (ConnectionInfo) env.getSpecialValue("clevercloud.oracle");
 
       if (reuseConnection && connectionInfo != null
-              && url.equals(connectionInfo.getUrl())) {
+         && url.equals(connectionInfo.getUrl())) {
          // Reuse the cached connection
          conn = connectionInfo.getConnection();
       } else {

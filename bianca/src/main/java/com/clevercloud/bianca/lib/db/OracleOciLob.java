@@ -30,13 +30,12 @@
  */
 package com.clevercloud.bianca.lib.db;
 
+import com.clevercloud.bianca.annotation.Name;
 import com.clevercloud.bianca.annotation.NotNull;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.annotation.Name;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.util.L10N;
 import com.clevercloud.vfs.Path;
@@ -60,7 +59,7 @@ import java.util.logging.Logger;
 public class OracleOciLob {
 
    private static final Logger log = Logger.getLogger(
-           OracleOciLob.class.getName());
+      OracleOciLob.class.getName());
    private static final L10N L = new L10N(OracleOciLob.class);
    // The large object
    private Object _lob;
@@ -88,27 +87,27 @@ public class OracleOciLob {
          classOracleBLOB = Class.forName("oracle.sql.BLOB");
          classOracleCLOB = Class.forName("oracle.sql.CLOB");
          createTemporaryBLOB = classOracleBLOB.getDeclaredMethod(
-                 "createTemporary",
-                 new Class[]{Connection.class,
-                    Boolean.TYPE,
-                    Integer.TYPE});
+            "createTemporary",
+            new Class[]{Connection.class,
+               Boolean.TYPE,
+               Integer.TYPE});
          createTemporaryCLOB = classOracleCLOB.getDeclaredMethod(
-                 "createTemporary",
-                 new Class[]{Connection.class,
-                    Boolean.TYPE,
-                    Integer.TYPE});
+            "createTemporary",
+            new Class[]{Connection.class,
+               Boolean.TYPE,
+               Integer.TYPE});
          BLOB_DURATION_CALL = classOracleBLOB.getDeclaredField(
-                 "DURATION_CALL").getInt(null);
+            "DURATION_CALL").getInt(null);
          BLOB_DURATION_SESSION = classOracleBLOB.getDeclaredField(
-                 "DURATION_SESSION").getInt(null);
+            "DURATION_SESSION").getInt(null);
          CLOB_DURATION_CALL = classOracleCLOB.getDeclaredField(
-                 "DURATION_CALL").getInt(null);
+            "DURATION_CALL").getInt(null);
          CLOB_DURATION_SESSION = classOracleCLOB.getDeclaredField(
-                 "DURATION_SESSION").getInt(null);
+            "DURATION_SESSION").getInt(null);
       } catch (Exception e) {
          log.log(Level.FINER, L.l(
-                 "Unable to load LOB classes or methods for "
-                 + "oracle.sql.BLOB and oracle.sql.CLOB."));
+            "Unable to load LOB classes or methods for "
+               + "oracle.sql.BLOB and oracle.sql.CLOB."));
       }
    }
 
@@ -116,12 +115,12 @@ public class OracleOciLob {
     * Constructor for OracleOciLob
     *
     * @param type one of the following types:
-    *
-    * OCI_D_FILE - a FILE descriptor
-    *
-    * OCI_D_LOB - a LOB descriptor
-    *
-    * OCI_D_ROWID - a ROWID descriptor
+    *             <p/>
+    *             OCI_D_FILE - a FILE descriptor
+    *             <p/>
+    *             OCI_D_LOB - a LOB descriptor
+    *             <p/>
+    *             OCI_D_ROWID - a ROWID descriptor
     */
    OracleOciLob(Oracle conn, int type) {
       _conn = conn;
@@ -136,7 +135,7 @@ public class OracleOciLob {
     * Appends data from the large object to another large object
     */
    public boolean append(Env env,
-           OracleOciLob lobFrom) {
+                         OracleOciLob lobFrom) {
       try {
 
          switch (_type) {
@@ -228,12 +227,12 @@ public class OracleOciLob {
     * Erases a specified portion of the internal LOB data
     *
     * @return the actual number of characters/bytes erased or
-    * FALSE in case of error.
+    *         FALSE in case of error.
     */
    @ReturnNullAsFalse
    public LongValue erase(Env env,
-           @Optional("0") long offset,
-           @Optional("-1") long length) {
+                          @Optional("0") long offset,
+                          @Optional("-1") long length) {
       try {
 
          if (offset < 0) {
@@ -316,9 +315,9 @@ public class OracleOciLob {
     * Exports LOB's contents to a file
     */
    public boolean export(Env env,
-           Path file,
-           @Optional("0") long start,
-           @Optional("-1") long length) {
+                         Path file,
+                         @Optional("0") long start,
+                         @Optional("-1") long length) {
       try {
 
          WriteStream writeStream = file.openWrite();
@@ -353,7 +352,7 @@ public class OracleOciLob {
     * Flushes/writes buffer of the LOB to the server
     */
    public boolean flush(Env env,
-           @Optional("-1") int flag) {
+                        @Optional("-1") int flag) {
       try {
 
          if (_outputStream != null) {
@@ -491,7 +490,7 @@ public class OracleOciLob {
     */
    @ReturnNullAsFalse
    public Object read(Env env,
-           long length) {
+                      long length) {
       try {
 
          switch (_type) {
@@ -526,8 +525,8 @@ public class OracleOciLob {
     * Saves data to the large object
     */
    public boolean save(Env env,
-           @NotNull String data,
-           @Optional("0") long offset) {
+                       @NotNull String data,
+                       @Optional("0") long offset) {
       try {
 
          switch (_type) {
@@ -572,7 +571,7 @@ public class OracleOciLob {
     * Alias of import()
     */
    public boolean saveFile(Env env,
-           Path file) {
+                           Path file) {
       return q_import(env, file);
    }
 
@@ -580,8 +579,8 @@ public class OracleOciLob {
     * Sets the internal pointer of the large object
     */
    public boolean seek(Env env,
-           long offset,
-           @Optional("-1") int whence) {
+                       long offset,
+                       @Optional("-1") int whence) {
       try {
 
          switch (whence) {
@@ -596,7 +595,7 @@ public class OracleOciLob {
                   length = ((Clob) _lob).length();
                } else {
                   L.l("Unable to determine large object's "
-                          + "length trying to seek with OCI_SEEK_END");
+                     + "length trying to seek with OCI_SEEK_END");
                   return false;
                }
                _currentPointer = length + offset;
@@ -617,7 +616,7 @@ public class OracleOciLob {
     * Changes current state of buffering for the large object
     */
    public boolean setBuffering(Env env,
-           boolean onOff) {
+                               boolean onOff) {
       // TODO: we assume buffering is always turned on.
       return true;
    }
@@ -698,7 +697,7 @@ public class OracleOciLob {
     * Truncates large object
     */
    public boolean truncate(Env env,
-           @Optional("0") long length) {
+                           @Optional("0") long length) {
       try {
 
          switch (_type) {
@@ -730,8 +729,8 @@ public class OracleOciLob {
     */
    @ReturnNullAsFalse
    public LongValue write(Env env,
-           String data,
-           @Optional("-1") long length) {
+                          String data,
+                          @Optional("-1") long length) {
       try {
 
          long dataLength = data.length();
@@ -778,8 +777,8 @@ public class OracleOciLob {
     * Writes temporary large object
     */
    public boolean writeTemporary(Env env,
-           String data,
-           @Optional("-1") int lobType) {
+                                 String data,
+                                 @Optional("-1") int lobType) {
       try {
 
          if (_type != OracleModule.OCI_D_LOB) {
@@ -789,14 +788,14 @@ public class OracleOciLob {
 
          if (lobType == OracleModule.OCI_TEMP_BLOB) {
             _lob = createTemporaryBLOB.invoke(classOracleBLOB,
-                    new Object[]{_conn,
-                       true,
-                       BLOB_DURATION_SESSION});
+               new Object[]{_conn,
+                  true,
+                  BLOB_DURATION_SESSION});
          } else {
             _lob = createTemporaryCLOB.invoke(classOracleCLOB,
-                    new Object[]{_conn,
-                       true,
-                       CLOB_DURATION_SESSION});
+               new Object[]{_conn,
+                  true,
+                  CLOB_DURATION_SESSION});
          }
 
          return true;
@@ -811,14 +810,14 @@ public class OracleOciLob {
     * Alias of export()
     */
    public boolean writeToFile(Env env,
-           Path file,
-           @Optional("0") long start,
-           @Optional("-1") long length) {
+                              Path file,
+                              @Optional("0") long start,
+                              @Optional("-1") long length) {
       return export(env, file, start, length);
    }
 
    private boolean appendInternalBlob(Env env,
-           OracleOciLob lobFrom) {
+                                      OracleOciLob lobFrom) {
       try {
 
          Blob blob = (Blob) _lob;
@@ -853,7 +852,7 @@ public class OracleOciLob {
    }
 
    private boolean appendInternalClob(Env env,
-           OracleOciLob lobFrom) {
+                                      OracleOciLob lobFrom) {
       try {
 
          Clob clob = (Clob) _lob;
@@ -912,7 +911,7 @@ public class OracleOciLob {
    }
 
    private StringValue readInternalClob(Env env,
-           long length) {
+                                        long length) {
       try {
          StringValue sb = new StringValue();
 

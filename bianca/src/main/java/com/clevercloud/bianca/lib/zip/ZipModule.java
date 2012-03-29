@@ -33,11 +33,7 @@ import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.annotation.NotNull;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.lib.file.BinaryInput;
 import com.clevercloud.bianca.lib.file.BinaryStream;
 import com.clevercloud.bianca.lib.file.FileModule;
@@ -67,7 +63,7 @@ public class ZipModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public ZipDirectory zip_open(Env env,
-           @NotNull StringValue filename) {
+                                @NotNull StringValue filename) {
       if (filename == null || filename.length() == 0) {
          return null;
       }
@@ -87,7 +83,7 @@ public class ZipModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public BiancaZipEntry zip_read(Env env,
-           @NotNull ZipDirectory directory) {
+                                  @NotNull ZipDirectory directory) {
       if (directory == null) {
          return null;
       }
@@ -109,7 +105,7 @@ public class ZipModule extends AbstractBiancaModule {
     * @return false if zipEntry is null
     */
    public Value zip_entry_name(Env env,
-           @NotNull BiancaZipEntry entry) {
+                               @NotNull BiancaZipEntry entry) {
       if (entry == null) {
          return BooleanValue.FALSE;
       }
@@ -147,9 +143,9 @@ public class ZipModule extends AbstractBiancaModule {
     * @return true on success or false on failure
     */
    public boolean zip_entry_open(Env env,
-           @NotNull ZipDirectory directory,
-           @NotNull BiancaZipEntry entry,
-           @Optional String mode) {
+                                 @NotNull ZipDirectory directory,
+                                 @NotNull BiancaZipEntry entry,
+                                 @Optional String mode) {
       if ((directory == null) || (entry == null)) {
          return false;
       }
@@ -163,7 +159,7 @@ public class ZipModule extends AbstractBiancaModule {
     * @return true if successful, else false;
     */
    public boolean zip_entry_close(Env env,
-           @NotNull BiancaZipEntry entry) {
+                                  @NotNull BiancaZipEntry entry) {
       try {
          if (entry == null) {
             return false;
@@ -185,8 +181,8 @@ public class ZipModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public StringValue zip_entry_read(Env env,
-           @NotNull BiancaZipEntry entry,
-           @Optional("1024") int length) {
+                                     @NotNull BiancaZipEntry entry,
+                                     @Optional("1024") int length) {
       if (entry == null) {
          return null;
       }

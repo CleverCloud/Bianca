@@ -34,30 +34,27 @@ package com.clevercloud.xml;
  * characters.
  */
 class Latin1Entities extends HtmlEntities {
-  private static HtmlEntities _html40;
-  private static HtmlEntities _html32;
+   private static HtmlEntities _html40;
+   private static HtmlEntities _html32;
 
-  static Entities create(double version)
-  {
-    if (version == 0 || version >= 4.0) {
-      if (_html40 == null)
-        _html40 = new Latin1Entities(4.0);
-      return _html40;
-    }
-    else {
-      if (_html32 == null)
-        _html32 = new Latin1Entities(3.2);
-      return _html32;
-    }
-  }
+   static Entities create(double version) {
+      if (version == 0 || version >= 4.0) {
+         if (_html40 == null)
+            _html40 = new Latin1Entities(4.0);
+         return _html40;
+      } else {
+         if (_html32 == null)
+            _html32 = new Latin1Entities(3.2);
+         return _html32;
+      }
+   }
 
-  protected Latin1Entities(double version)
-  {
-    super(version);
+   protected Latin1Entities(double version) {
+      super(version);
 
-    for (int i = 161; i < 256; i++) {
-      _latin1[i] = String.valueOf((char) i).toCharArray();
-      _attrLatin1[i] = _latin1[i];
-    }
-  }
+      for (int i = 161; i < 256; i++) {
+         _latin1[i] = String.valueOf((char) i).toCharArray();
+         _attrLatin1[i] = _latin1[i];
+      }
+   }
 }

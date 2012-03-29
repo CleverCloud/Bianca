@@ -33,13 +33,8 @@ package com.clevercloud.bianca.lib;
 import com.clevercloud.bianca.BiancaContext;
 import com.clevercloud.bianca.BiancaException;
 import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.annotation.NotNull;
-import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.annotation.Reference;
-import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.annotation.UsesSymbolTable;
+import com.clevercloud.bianca.annotation.*;
 import com.clevercloud.bianca.env.*;
-import com.clevercloud.bianca.env.StringValue;
 import com.clevercloud.bianca.lib.file.BinaryStream;
 import com.clevercloud.bianca.lib.file.FileInput;
 import com.clevercloud.bianca.lib.file.FileModule;
@@ -48,8 +43,9 @@ import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.bianca.program.BiancaProgram;
 import com.clevercloud.util.L10N;
 import com.clevercloud.util.RandomUtil;
-import com.clevercloud.vfs.*;
-import com.clevercloud.vfs.i18n.*;
+import com.clevercloud.vfs.Path;
+import com.clevercloud.vfs.WriteStream;
+import com.clevercloud.vfs.i18n.UTF8Reader;
 
 import java.io.File;
 import java.io.IOException;
@@ -221,8 +217,8 @@ public class MiscModule extends AbstractBiancaModule {
     * Execute a system command.
     */
    public static String exec(Env env, String command,
-           @Optional Value output,
-           @Optional @Reference Value result) {
+                             @Optional Value output,
+                             @Optional @Reference Value result) {
       try {
          String[] args = new String[3];
 
@@ -242,8 +238,8 @@ public class MiscModule extends AbstractBiancaModule {
          processBuilder.directory(new File(env.getShellPwd()));
          final Process process = processBuilder.start();
 
-         UTF8Reader is = new UTF8Reader (process.getInputStream());
-         UTF8Reader es = new UTF8Reader (process.getErrorStream());
+         UTF8Reader is = new UTF8Reader(process.getInputStream());
+         UTF8Reader es = new UTF8Reader(process.getErrorStream());
          OutputStream os = process.getOutputStream();
          os.close();
 
@@ -305,11 +301,11 @@ public class MiscModule extends AbstractBiancaModule {
     * @param return_array
     */
    public static Value get_browser(
-           Env env,
-           @Optional() String user_agent,
-           @Optional() boolean return_array) {
+      Env env,
+      @Optional() String user_agent,
+      @Optional() boolean return_array) {
       if (user_agent == null
-              || user_agent.length() == 0) {
+         || user_agent.length() == 0) {
          user_agent = env.getRequest().getHeader("User-Agent");
       }
 
@@ -336,14 +332,14 @@ public class MiscModule extends AbstractBiancaModule {
       }
 
       return getBrowserReport(
-              env, ini.toArrayValue(env), user_agent, return_array);
+         env, ini.toArrayValue(env), user_agent, return_array);
    }
 
    private static Value getBrowserReport(
-           Env env,
-           ArrayValue browsers,
-           String user_agent,
-           boolean return_array) {
+      Env env,
+      ArrayValue browsers,
+      String user_agent,
+      boolean return_array) {
       StringValue patternMatched = StringValue.EMPTY;
       String regExpMatched = null;
 
@@ -373,29 +369,29 @@ public class MiscModule extends AbstractBiancaModule {
       }
 
       return prepareBrowserReport(env, browsers, patternMatched, regExpMatched,
-              user_agent, return_array);
+         user_agent, return_array);
    }
 
    private static Value prepareBrowserReport(
-           Env env,
-           ArrayValue browsers,
-           StringValue patternMatched,
-           String regExpMatched,
-           String user_agent,
-           boolean return_array) {
+      Env env,
+      ArrayValue browsers,
+      StringValue patternMatched,
+      String regExpMatched,
+      String user_agent,
+      boolean return_array) {
       ArrayValue capabilities = browsers.get(patternMatched).toArrayValue(env);
 
       if (regExpMatched == null) {
          capabilities.put(env.createString("browser_name_regex"),
-                 patternMatched);
+            patternMatched);
       } else {
          capabilities.put("browser_name_regex", regExpMatched);
       }
       capabilities.put(env.createString("browser_name_pattern"), patternMatched);
 
       addBrowserCapabilities(env, browsers,
-              capabilities.get(env.createString("parent")),
-              capabilities);
+         capabilities.get(env.createString("parent")),
+         capabilities);
 
       if (return_array) {
          ArrayValue array = new ArrayValueImpl();
@@ -412,10 +408,10 @@ public class MiscModule extends AbstractBiancaModule {
    }
 
    private static void addBrowserCapabilities(
-           Env env,
-           ArrayValue browsers,
-           Value browser,
-           ArrayValue cap) {
+      Env env,
+      ArrayValue browsers,
+      Value browser,
+      ArrayValue cap) {
       if (browser == UnsetValue.UNSET) {
          return;
       }
@@ -433,7 +429,7 @@ public class MiscModule extends AbstractBiancaModule {
 
          if (key.equals(parentString)) {
             addBrowserCapabilities(
-                    env, browsers, entry.getValue(), cap);
+               env, browsers, entry.getValue(), cap);
          } else if (cap.containsKey(key) == null) {
             cap.put(key, entry.getValue());
          }
@@ -672,7 +668,7 @@ public class MiscModule extends AbstractBiancaModule {
     * Execute a system command.
     */
    public static void passthru(Env env, String command,
-           @Optional @Reference Value result) {
+                               @Optional @Reference Value result) {
 
       try {
          String[] args = new String[3];
@@ -719,12 +715,12 @@ public class MiscModule extends AbstractBiancaModule {
     */
    @ReturnNullAsFalse
    public static ProcOpenResource proc_open(Env env,
-           String command,
-           ArrayValue descriptorArray,
-           @Reference Value pipes,
-           @Optional Path pwd,
-           @Optional ArrayValue envArray,
-           @Optional ArrayValue options) {
+                                            String command,
+                                            ArrayValue descriptorArray,
+                                            @Reference Value pipes,
+                                            @Optional Path pwd,
+                                            @Optional ArrayValue envArray,
+                                            @Optional ArrayValue options) {
       String[] args = new String[3];
 
       try {
@@ -784,7 +780,7 @@ public class MiscModule extends AbstractBiancaModule {
                   OutputStream processOut = process.getOutputStream();
 
                   BinaryStream stream = FileModule.fopen(
-                          env, name, mode, false, null);
+                     env, name, mode, false, null);
 
                   if (stream instanceof FileInput) {
                      FileInput file = (FileInput) stream;
@@ -806,7 +802,7 @@ public class MiscModule extends AbstractBiancaModule {
                   array.put(LongValue.ONE, env.wrapJava(out));
                } else if (type.equals("file")) {
                   BinaryStream stream = FileModule.fopen(
-                          env, name, mode, false, null);
+                     env, name, mode, false, null);
 
                   if (stream instanceof FileOutput) {
                      FileOutput file = (FileOutput) stream;
@@ -824,7 +820,7 @@ public class MiscModule extends AbstractBiancaModule {
                   array.put(LongValue.create(2), env.wrapJava(es));
                } else if (type.equals("file")) {
                   BinaryStream stream = FileModule.fopen(
-                          env, name, mode, false, null);
+                     env, name, mode, false, null);
 
                   if (stream instanceof FileOutput) {
                      FileOutput file = (FileOutput) stream;
@@ -852,7 +848,7 @@ public class MiscModule extends AbstractBiancaModule {
     * Closes the process opened by proc_open.
     */
    public static int proc_close(Env env,
-           @NotNull ProcOpenResource stream) {
+                                @NotNull ProcOpenResource stream) {
       if (stream == null) {
          env.warning("input to proc_close must not be null");
 
@@ -866,7 +862,7 @@ public class MiscModule extends AbstractBiancaModule {
     * Forcibly terminates the process opened by proc_open.
     */
    public static boolean proc_terminate(Env env,
-           @NotNull ProcOpenResource stream) {
+                                        @NotNull ProcOpenResource stream) {
       if (stream == null) {
          log.log(Level.FINE, "input to proc_close must not be null");
          env.warning("input to proc_close must not be null");
@@ -878,7 +874,7 @@ public class MiscModule extends AbstractBiancaModule {
    }
 
    public static Value proc_get_status(Env env,
-           @NotNull ProcOpenResource stream) {
+                                       @NotNull ProcOpenResource stream) {
       if (stream == null) {
          env.warning("input to proc_get_status() must not be null");
 
@@ -965,12 +961,12 @@ public class MiscModule extends AbstractBiancaModule {
     * Execute a system command.
     */
    public static String system(Env env, String command,
-           @Optional @Reference Value result) {
+                               @Optional @Reference Value result) {
       return exec(env, command, null, result);
    }
 
    private static ArrayList<PackSegment> parsePackFormat123(
-           Env env, String format) {
+      Env env, String format) {
       ArrayList<PackSegment> segments = new ArrayList<PackSegment>();
 
       int length = format.length();
@@ -982,8 +978,8 @@ public class MiscModule extends AbstractBiancaModule {
 
          char ch1 = ' ';
          for (i++;
-                 i < length && '0' <= (ch1 = format.charAt(i)) && ch1 <= '9';
-                 i++) {
+              i < length && '0' <= (ch1 = format.charAt(i)) && ch1 <= '9';
+              i++) {
             count = 10 * count + ch1 - '0';
          }
 
@@ -1059,8 +1055,8 @@ public class MiscModule extends AbstractBiancaModule {
    }
 
    private static ArrayList<PackSegment> parsePackFormat(Env env,
-           String format,
-           boolean hasName) {
+                                                         String format,
+                                                         boolean hasName) {
       ArrayList<PackSegment> segments = new ArrayList<PackSegment>();
 
       int length = format.length();
@@ -1188,15 +1184,15 @@ public class MiscModule extends AbstractBiancaModule {
    abstract static class PackSegment {
 
       abstract public int pack(Env env, StringValue bb,
-              int i, Value[] args)
-              throws IOException;
+                               int i, Value[] args)
+         throws IOException;
 
       abstract public int unpack(Env env,
-              ArrayValue array,
-              StringValue s,
-              int offset,
-              int strLen)
-              throws IOException;
+                                 ArrayValue array,
+                                 StringValue s,
+                                 int offset,
+                                 int strLen)
+         throws IOException;
    }
 
    static class SpacePackSegment extends PackSegment {
@@ -1217,7 +1213,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          Value arg;
 
          if (i < args.length) {
@@ -1250,7 +1246,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          if (strLen - offset < _length) {
             return offset;
          }
@@ -1299,7 +1295,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          Value arg;
 
          if (i < args.length) {
@@ -1320,7 +1316,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          StringValue bb = new StringValue();
 
          int j = offset;
@@ -1365,7 +1361,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          Value arg;
 
          if (i < args.length) {
@@ -1416,7 +1412,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          if (offset + (long) (_length / 2 - 1) >= strLen) {
             return offset;
          }
@@ -1451,7 +1447,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          Value arg;
 
          if (i < args.length) {
@@ -1502,7 +1498,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          if (offset + (long) (_length / 2 - 1) >= strLen) {
             return offset;
          }
@@ -1544,7 +1540,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          for (int j = 0; j < _length; j++) {
             Value arg;
 
@@ -1571,7 +1567,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          outer:
          for (int j = 0; j < _length; j++) {
             Value key;
@@ -1641,7 +1637,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          for (int j = 0; j < _length; j++) {
             Value arg;
 
@@ -1668,7 +1664,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          outer:
          for (int j = 0; j < _length; j++) {
             Value key;
@@ -1722,7 +1718,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          for (int j = 0; j < _length; j++) {
             Value arg;
 
@@ -1750,7 +1746,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          outer:
          for (int j = 0; j < _length; j++) {
             Value key;
@@ -1804,7 +1800,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          for (int j = 0; j < _length; j++) {
             Value arg;
 
@@ -1832,7 +1828,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          outer:
          for (int j = 0; j < _length; j++) {
             Value key;
@@ -1891,7 +1887,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          for (int j = 0; j < _length; j++) {
             bb.append(0);
          }
@@ -1901,7 +1897,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          return (int) Math.min(offset + (long) _length, strLen);
       }
    }
@@ -1924,7 +1920,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int pack(Env env, StringValue bb, int i, Value[] args)
-              throws IOException {
+         throws IOException {
          while (bb.length() < _length) {
             bb.append(0);
          }
@@ -1934,7 +1930,7 @@ public class MiscModule extends AbstractBiancaModule {
 
       @Override
       public int unpack(Env env, ArrayValue result,
-              StringValue s, int offset, int strLen) {
+                        StringValue s, int offset, int strLen) {
          throw new UnsupportedOperationException("'@' skip to position");
       }
    }

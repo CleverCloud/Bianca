@@ -39,7 +39,7 @@ import java.net.ProtocolException;
  * Represents a POST Http request.
  */
 public class HttpPostRequest
-        extends HttpRequest {
+   extends HttpRequest {
 
    private PostBody _body;
 
@@ -52,7 +52,7 @@ public class HttpPostRequest
     */
    @Override
    protected boolean init(Env env)
-           throws ProtocolException {
+      throws ProtocolException {
       if (!super.init(env)) {
          return false;
       }
@@ -69,7 +69,7 @@ public class HttpPostRequest
       conn.setRequestProperty("Content-Type", _body.getContentType(curl.getContentType()));
 
       conn.setRequestProperty("Content-Length",
-              String.valueOf(_body.getContentLength()));
+         String.valueOf(_body.getContentLength()));
 
       conn.setDoOutput(true);
 
@@ -81,7 +81,7 @@ public class HttpPostRequest
     */
    @Override
    protected void transfer(Env env)
-           throws IOException {
+      throws IOException {
       super.transfer(env);
 
       HttpConnection conn = getHttpConnection();

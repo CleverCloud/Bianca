@@ -32,657 +32,609 @@ package com.clevercloud.vfs;
 
 import com.clevercloud.util.CharBuffer;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.Map;
-import java.util.logging.*;
+import java.io.*;
 import java.security.AccessControlException;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * FilePath implements the native filesystem.
  */
 public class FilePath extends FilesystemPath {
-  private static Logger log = Logger.getLogger(FilePath.class.getName());
+   private static Logger log = Logger.getLogger(FilePath.class.getName());
 
-  // The underlying Java File object.
-  private static byte []NEWLINE = getNewlineString().getBytes();
+   // The underlying Java File object.
+   private static byte[] NEWLINE = getNewlineString().getBytes();
 
-  private static FilesystemPath PWD;
+   private static FilesystemPath PWD;
 
-  private File _file;
-  protected boolean _isWindows;
+   private File _file;
+   protected boolean _isWindows;
 
-  /**
-   * @param path canonical path
-   */
-  protected FilePath(FilesystemPath root, String userPath, String path)
-  {
-    super(root, userPath, path);
+   /**
+    * @param path canonical path
+    */
+   protected FilePath(FilesystemPath root, String userPath, String path) {
+      super(root, userPath, path);
 
-    _separatorChar = getFileSeparatorChar();
-    _isWindows = _separatorChar == '\\';
-  }
+      _separatorChar = getFileSeparatorChar();
+      _isWindows = _separatorChar == '\\';
+   }
 
-  public FilePath(String path)
-  {
-    this(null,  //PWD != null ? PWD._root : null,
+   public FilePath(String path) {
+      this(null,  //PWD != null ? PWD._root : null,
          path, normalizePath("/", initialPath(path),
-                             0, getFileSeparatorChar()));
+         0, getFileSeparatorChar()));
 
-    if (_root == null) {
-      _root = new FilePath(null, "/", "/");
-      _root._root = _root;
+      if (_root == null) {
+         _root = new FilePath(null, "/", "/");
+         _root._root = _root;
 
-      if (PWD == null)
-        PWD = _root;
-    }
-
-    _separatorChar = _root._separatorChar;
-    _isWindows = ((FilePath) _root)._isWindows;
-  }
-
-  protected static String initialPath(String path)
-  {
-    if (path == null)
-      return getPwd();
-    else if (path.length() > 0 && path.charAt(0) == '/')
-      return path;
-    else if (path.length() > 1 && path.charAt(1) == ':' && isWindows())
-      //return convertFromWindowsPath(path);
-      return path;
-    else {
-      String dir = getPwd();
-
-      if (dir.length() > 0 && dir.charAt(dir.length() - 1) == '/')
-        return dir + path;
-      else
-        return dir + "/" + path;
-    }
-  }
-
-  /**
-   * Gets the system's user dir (pwd) and convert it to the Resin format.
-   */
-  public static String getPwd()
-  {
-    String path = getUserDir();
-
-    path = path.replace(getFileSeparatorChar(), '/');
-
-    if (isWindows())
-      path = convertFromWindowsPath(path);
-
-    return path;
-  }
-
-  /**
-   * a:xxx -> /a:xxx
-   * ///a:xxx -> /a:xxx
-   * //xxx -> /:/xxx
-   *
-   */
-  private static String convertFromWindowsPath(String path)
-  {
-    int colon = path.indexOf(':');
-    int length = path.length();
-    char ch;
-
-    if (colon == 1 && (ch = path.charAt(0)) != '/' && ch != '\\')
-      return "/" + path.charAt(0) + ":/" + path.substring(2);
-    else if (length > 1
-             && ((ch = path.charAt(0)) == '/' || ch == '\\')
-             && ((ch = path.charAt(1)) == '/' || ch == '\\')) {
-      if (colon < 0)
-        return "/:" + path;
-
-      for (int i = colon - 2; i > 1; i--) {
-        if ((ch = path.charAt(i)) != '/' && ch != '\\')
-          return "/:" + path;
+         if (PWD == null)
+            PWD = _root;
       }
 
-      ch = path.charAt(colon - 1);
+      _separatorChar = _root._separatorChar;
+      _isWindows = ((FilePath) _root)._isWindows;
+   }
 
-      if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z')
-        return path.substring(colon - 2);
-      else
-        return "/:" + path;
-    }
-    else
+   protected static String initialPath(String path) {
+      if (path == null)
+         return getPwd();
+      else if (path.length() > 0 && path.charAt(0) == '/')
+         return path;
+      else if (path.length() > 1 && path.charAt(1) == ':' && isWindows())
+         //return convertFromWindowsPath(path);
+         return path;
+      else {
+         String dir = getPwd();
+
+         if (dir.length() > 0 && dir.charAt(dir.length() - 1) == '/')
+            return dir + path;
+         else
+            return dir + "/" + path;
+      }
+   }
+
+   /**
+    * Gets the system's user dir (pwd) and convert it to the Resin format.
+    */
+   public static String getPwd() {
+      String path = getUserDir();
+
+      path = path.replace(getFileSeparatorChar(), '/');
+
+      if (isWindows())
+         path = convertFromWindowsPath(path);
+
       return path;
-  }
+   }
 
-  @Override
-  public long getDiskSpaceFree()
-  {
-    try {
-      // JDK 1.6+ only
-      return _file.getFreeSpace();
-    } catch (Exception e) {
-      return 0;
-    }
-  }
+   /**
+    * a:xxx -> /a:xxx
+    * ///a:xxx -> /a:xxx
+    * //xxx -> /:/xxx
+    */
+   private static String convertFromWindowsPath(String path) {
+      int colon = path.indexOf(':');
+      int length = path.length();
+      char ch;
 
-  @Override
-  public long getDiskSpaceTotal()
-  {
-    try {
-      // JDK 1.6+ only
-      return _file.getTotalSpace();
-    } catch (Exception e) {
-      return 0;
-    }
-  }
+      if (colon == 1 && (ch = path.charAt(0)) != '/' && ch != '\\')
+         return "/" + path.charAt(0) + ":/" + path.substring(2);
+      else if (length > 1
+         && ((ch = path.charAt(0)) == '/' || ch == '\\')
+         && ((ch = path.charAt(1)) == '/' || ch == '\\')) {
+         if (colon < 0)
+            return "/:" + path;
 
-  /**
-   * Lookup the path, handling windows weirdness
-   */
-  protected Path schemeWalk(String userPath,
-                            Map<String,Object> attributes,
-                            String filePath,
-                            int offset)
-  {
-    if (! isWindows())
-      return super.schemeWalk(userPath, attributes, filePath, offset);
+         for (int i = colon - 2; i > 1; i--) {
+            if ((ch = path.charAt(i)) != '/' && ch != '\\')
+               return "/:" + path;
+         }
 
-    String canonicalPath;
+         ch = path.charAt(colon - 1);
 
-    if (filePath.length() < offset + 2)
-      return super.schemeWalk(userPath, attributes, filePath, offset);
+         if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z')
+            return path.substring(colon - 2);
+         else
+            return "/:" + path;
+      } else
+         return path;
+   }
 
-    char ch1 = filePath.charAt(offset + 1);
-    char ch2 = filePath.charAt(offset);
+   @Override
+   public long getDiskSpaceFree() {
+      try {
+         // JDK 1.6+ only
+         return _file.getFreeSpace();
+      } catch (Exception e) {
+         return 0;
+      }
+   }
 
-    if ((ch2 == '/' || ch2 == _separatorChar)
-        && (ch1 == '/' || ch1 == _separatorChar))
-      return super.schemeWalk(userPath, attributes,
-                              convertFromWindowsPath(filePath.substring(offset)), 0);
-    else
-      return super.schemeWalk(userPath, attributes, filePath, offset);
-  }
+   @Override
+   public long getDiskSpaceTotal() {
+      try {
+         // JDK 1.6+ only
+         return _file.getTotalSpace();
+      } catch (Exception e) {
+         return 0;
+      }
+   }
 
-  /**
-   * Lookup the actual path relative to the filesystem root.
-   *
-   * @param userPath the user's path to lookup()
-   * @param attributes the user's attributes to lookup()
-   * @param path the normalized path
-   *
-   * @return the selected path
-   */
-  public Path fsWalk(String userPath,
-                        Map<String,Object> attributes,
-                        String path)
-  {
-    return new FilePath(_root, userPath, path);
-  }
+   /**
+    * Lookup the path, handling windows weirdness
+    */
+   protected Path schemeWalk(String userPath,
+                             Map<String, Object> attributes,
+                             String filePath,
+                             int offset) {
+      if (!isWindows())
+         return super.schemeWalk(userPath, attributes, filePath, offset);
 
-  /**
-   * Returns true if the path itself is cacheable
-   */
-  @Override
-  protected boolean isPathCacheable()
-  {
-    return true;
-  }
+      String canonicalPath;
 
-  public String getScheme()
-  {
-    return "file";
-  }
+      if (filePath.length() < offset + 2)
+         return super.schemeWalk(userPath, attributes, filePath, offset);
 
-  /**
-   * Returns the full url for the given path.
-   */
-  public String getURL()
-  {
-    if (! isWindows())
-      return escapeURL("file:" + getFullPath());
+      char ch1 = filePath.charAt(offset + 1);
+      char ch2 = filePath.charAt(offset);
 
-    String path = getFullPath();
-    int length = path.length();
-    CharBuffer cb = new CharBuffer();
-
-    // #2725, server/1495
-    cb.append("file:");
-
-    char ch;
-    int offset = 0;
-    // For windows, convert /c: to c:
-    if (length >= 3
-        && path.charAt(0) == '/'
-        && path.charAt(2) == ':'
-        && ('a' <= (ch = path.charAt(1)) && ch <= 'z'
-            || 'A' <= ch && ch <= 'Z')) {
-      // offset = 1;
-    }
-    else if (length >= 3
-             && path.charAt(0) == '/'
-             && path.charAt(1) == ':'
-             && path.charAt(2) == '/') {
-      cb.append('/');
-      cb.append('/');
-      cb.append('/');
-      cb.append('/');
-      offset = 3;
-    }
-
-    for (; offset < length; offset++) {
-      ch = path.charAt(offset);
-
-      if (ch == '\\')
-        cb.append('/');
+      if ((ch2 == '/' || ch2 == _separatorChar)
+         && (ch1 == '/' || ch1 == _separatorChar))
+         return super.schemeWalk(userPath, attributes,
+            convertFromWindowsPath(filePath.substring(offset)), 0);
       else
-        cb.append(ch);
-    }
+         return super.schemeWalk(userPath, attributes, filePath, offset);
+   }
 
-    return escapeURL(cb.toString());
+   /**
+    * Lookup the actual path relative to the filesystem root.
+    *
+    * @param userPath   the user's path to lookup()
+    * @param attributes the user's attributes to lookup()
+    * @param path       the normalized path
+    * @return the selected path
+    */
+   public Path fsWalk(String userPath,
+                      Map<String, Object> attributes,
+                      String path) {
+      return new FilePath(_root, userPath, path);
+   }
 
-  }
+   /**
+    * Returns true if the path itself is cacheable
+    */
+   @Override
+   protected boolean isPathCacheable() {
+      return true;
+   }
 
-  /**
-   * Returns the native path.
-   */
-  public String getNativePath()
-  {
-    if (! isWindows())
-      return getFullPath();
+   public String getScheme() {
+      return "file";
+   }
 
-    String path = getFullPath();
-    int length = path.length();
-    CharBuffer cb = new CharBuffer();
-    char ch;
-    int offset = 0;
+   /**
+    * Returns the full url for the given path.
+    */
+   public String getURL() {
+      if (!isWindows())
+         return escapeURL("file:" + getFullPath());
 
-    // For windows, convert /c: to c:
-    if (length >= 3
-        && path.charAt(0) == '/'
-        && path.charAt(2) == ':'
-        && ('a' <= (ch = path.charAt(1)) && ch <= 'z'
-            || 'A' <= ch && ch <= 'Z')) {
-      offset = 1;
-    }
-    else if (length >= 3
-             && path.charAt(0) == '/'
-             && path.charAt(1) == ':'
-             && path.charAt(2) == '/') {
-      cb.append('\\');
-      cb.append('\\');
-      offset = 3;
-    }
+      String path = getFullPath();
+      int length = path.length();
+      CharBuffer cb = new CharBuffer();
 
-    for (; offset < length; offset++) {
-      ch = path.charAt(offset);
-      
-      if (ch == '/')
-        cb.append(_separatorChar);
-      else
-        cb.append(ch);
-    }
-    
-    return cb.toString();
-  }
+      // #2725, server/1495
+      cb.append("file:");
 
-  @Override
-  public boolean exists()
-  {
-    try {
-      if (_isWindows && isAux())
-        return false;
-      else
-        return getFile().exists();
-    } catch (AccessControlException e) {
-      log.finer(e.toString());
+      char ch;
+      int offset = 0;
+      // For windows, convert /c: to c:
+      if (length >= 3
+         && path.charAt(0) == '/'
+         && path.charAt(2) == ':'
+         && ('a' <= (ch = path.charAt(1)) && ch <= 'z'
+         || 'A' <= ch && ch <= 'Z')) {
+         // offset = 1;
+      } else if (length >= 3
+         && path.charAt(0) == '/'
+         && path.charAt(1) == ':'
+         && path.charAt(2) == '/') {
+         cb.append('/');
+         cb.append('/');
+         cb.append('/');
+         cb.append('/');
+         offset = 3;
+      }
 
-      return false;
-    }
-  }
+      for (; offset < length; offset++) {
+         ch = path.charAt(offset);
 
-  @Override
-  public int getMode()
-  {
-    int perms = 0;
+         if (ch == '\\')
+            cb.append('/');
+         else
+            cb.append(ch);
+      }
 
-    if (isDirectory()) {
-      perms += 01000;
-      perms += 0111;
-    }
+      return escapeURL(cb.toString());
 
-    if (canRead())
-      perms += 0444;
+   }
 
-    if (canWrite())
-      perms += 0220;
+   /**
+    * Returns the native path.
+    */
+   public String getNativePath() {
+      if (!isWindows())
+         return getFullPath();
 
-    return perms;
-  }
+      String path = getFullPath();
+      int length = path.length();
+      CharBuffer cb = new CharBuffer();
+      char ch;
+      int offset = 0;
 
-  public boolean isDirectory()
-  {
-    try {
-      return getFile().isDirectory();
-    } catch (AccessControlException e) {
-      log.finer(e.toString());
+      // For windows, convert /c: to c:
+      if (length >= 3
+         && path.charAt(0) == '/'
+         && path.charAt(2) == ':'
+         && ('a' <= (ch = path.charAt(1)) && ch <= 'z'
+         || 'A' <= ch && ch <= 'Z')) {
+         offset = 1;
+      } else if (length >= 3
+         && path.charAt(0) == '/'
+         && path.charAt(1) == ':'
+         && path.charAt(2) == '/') {
+         cb.append('\\');
+         cb.append('\\');
+         offset = 3;
+      }
 
-      return false;
-    }
-  }
+      for (; offset < length; offset++) {
+         ch = path.charAt(offset);
 
-  public boolean isFile()
-  {
-    try {
-      if (_isWindows && isAux())
-        return false;
-      else
-        return getFile().isFile();
-    } catch (AccessControlException e) {
-      log.finer(e.toString());
+         if (ch == '/')
+            cb.append(_separatorChar);
+         else
+            cb.append(ch);
+      }
 
-      return false;
-    }
-  }
+      return cb.toString();
+   }
 
-  public long getLength()
-  {
-    try {
-      return getFile().length();
-    } catch (AccessControlException e) {
-      log.finer(e.toString());
+   @Override
+   public boolean exists() {
+      try {
+         if (_isWindows && isAux())
+            return false;
+         else
+            return getFile().exists();
+      } catch (AccessControlException e) {
+         log.finer(e.toString());
 
-      return -1;
-    }
-  }
+         return false;
+      }
+   }
 
-  public long getLastModified()
-  {
-    try {
-      return getFile().lastModified();
-    } catch (AccessControlException e) {
-      log.finer(e.toString());
+   @Override
+   public int getMode() {
+      int perms = 0;
 
-      return -1;
-    }
-  }
+      if (isDirectory()) {
+         perms += 01000;
+         perms += 0111;
+      }
 
-  // This exists in JDK 1.2
-  public void setLastModified(long time)
-  {
-    getFile().setLastModified(time);
-  }
+      if (canRead())
+         perms += 0444;
 
-  public boolean canRead()
-  {
-    try {
+      if (canWrite())
+         perms += 0220;
+
+      return perms;
+   }
+
+   public boolean isDirectory() {
+      try {
+         return getFile().isDirectory();
+      } catch (AccessControlException e) {
+         log.finer(e.toString());
+
+         return false;
+      }
+   }
+
+   public boolean isFile() {
+      try {
+         if (_isWindows && isAux())
+            return false;
+         else
+            return getFile().isFile();
+      } catch (AccessControlException e) {
+         log.finer(e.toString());
+
+         return false;
+      }
+   }
+
+   public long getLength() {
+      try {
+         return getFile().length();
+      } catch (AccessControlException e) {
+         log.finer(e.toString());
+
+         return -1;
+      }
+   }
+
+   public long getLastModified() {
+      try {
+         return getFile().lastModified();
+      } catch (AccessControlException e) {
+         log.finer(e.toString());
+
+         return -1;
+      }
+   }
+
+   // This exists in JDK 1.2
+   public void setLastModified(long time) {
+      getFile().setLastModified(time);
+   }
+
+   public boolean canRead() {
+      try {
+         File file = getFile();
+
+         if (_isWindows && isAux())
+            return false;
+         else
+            return file.canRead();
+      } catch (AccessControlException e) {
+         log.finer(e.toString());
+
+         return false;
+      }
+   }
+
+   public boolean canWrite() {
+      try {
+         File file = getFile();
+
+         if (_isWindows && isAux())
+            return false;
+         else
+            return file.canWrite();
+      } catch (AccessControlException e) {
+         log.finer(e.toString());
+
+         return false;
+      }
+   }
+
+   /**
+    * Returns a list of files in the directory.
+    */
+   public String[] list() throws IOException {
+      try {
+         String[] list = getFile().list();
+
+         if (list != null)
+            return list;
+      } catch (AccessControlException e) {
+         log.finer(e.toString());
+      }
+
+      return new String[0];
+   }
+
+   public boolean mkdir()
+      throws IOException {
+      boolean value = getFile().mkdir();
+
+      if (!value && !getFile().isDirectory())
+         throw new IOException("cannot create directory");
+
+      return value;
+   }
+
+   public boolean mkdirs()
+      throws IOException {
       File file = getFile();
 
-      if (_isWindows && isAux())
-        return false;
-      else
-        return file.canRead();
-    } catch (AccessControlException e) {
-      log.finer(e.toString());
+      boolean value;
 
-      return false;
-    }
-  }
+      synchronized (file) {
+         value = file.mkdirs();
+      }
 
-  public boolean canWrite()
-  {
-    try {
-      File file = getFile();
-
-      if (_isWindows && isAux())
-        return false;
-      else
-        return file.canWrite();
-    } catch (AccessControlException e) {
-      log.finer(e.toString());
-
-      return false;
-    }
-  }
-
-  /**
-   * Returns a list of files in the directory.
-   */
-  public String []list() throws IOException
-  {
-    try {
-      String []list = getFile().list();
-
-      if (list != null)
-        return list;
-    } catch (AccessControlException e) {
-      log.finer(e.toString());
-    }
-
-    return new String[0];
-  }
-
-  public boolean mkdir()
-    throws IOException
-  {
-    boolean value = getFile().mkdir();
-
-    if (! value && ! getFile().isDirectory())
-      throw new IOException("cannot create directory");
-
-    return value;
-  }
-
-  public boolean mkdirs()
-    throws IOException
-  {
-    File file = getFile();
-
-    boolean value;
-
-    synchronized (file) {
-      value = file.mkdirs();
-    }
-
-    clearStatusCache();
-
-    if (! value && ! file.isDirectory())
-      throw new IOException("Cannot create directory: " + getFile());
-
-    return value;
-  }
-
-  @Override
-  public boolean remove()
-  {
-    if (getFile().delete()) {
       clearStatusCache();
 
-      return true;
-    }
+      if (!value && !file.isDirectory())
+         throw new IOException("Cannot create directory: " + getFile());
 
-    /*
-    if (getPath().endsWith(".jar")) {
-      // XXX:
-      // Jar.create(this).clearCache();
-      return getFile().delete();
-    }
-    */
+      return value;
+   }
 
-    return false;
-  }
+   @Override
+   public boolean remove() {
+      if (getFile().delete()) {
+         clearStatusCache();
 
-  @Override
-  public boolean truncate(long length)
-    throws IOException
-  {
-    File file = getFile();
+         return true;
+      }
 
-    clearStatusCache();
+      /*
+      if (getPath().endsWith(".jar")) {
+        // XXX:
+        // Jar.create(this).clearCache();
+        return getFile().delete();
+      }
+      */
 
-    FileOutputStream fos = new FileOutputStream(file);
-
-    try {
-      fos.getChannel().truncate(length);
-
-      return true;
-    } finally {
-      fos.close();
-    }
-  }
-
-  public boolean renameTo(Path path)
-  {
-    if (! (path instanceof FilePath))
       return false;
+   }
 
-    FilePath file = (FilePath) path;
+   @Override
+   public boolean truncate(long length)
+      throws IOException {
+      File file = getFile();
 
-    clearStatusCache();
-    file.clearStatusCache();
+      clearStatusCache();
 
-    return this.getFile().renameTo(file.getFile());
-  }
+      FileOutputStream fos = new FileOutputStream(file);
 
-  /**
-   * Returns the stream implementation for a read stream.
-   */
-  public StreamImpl openReadImpl() throws IOException
-  {
-    if (_isWindows && isAux())
-      throw new FileNotFoundException(_file.toString());
+      try {
+         fos.getChannel().truncate(length);
 
-    /* XXX: only for Solaris (?)
-    if (isDirectory())
-      throw new IOException("is directory");
+         return true;
+      } finally {
+         fos.close();
+      }
+   }
+
+   public boolean renameTo(Path path) {
+      if (!(path instanceof FilePath))
+         return false;
+
+      FilePath file = (FilePath) path;
+
+      clearStatusCache();
+      file.clearStatusCache();
+
+      return this.getFile().renameTo(file.getFile());
+   }
+
+   /**
+    * Returns the stream implementation for a read stream.
     */
+   public StreamImpl openReadImpl() throws IOException {
+      if (_isWindows && isAux())
+         throw new FileNotFoundException(_file.toString());
 
-    return new FileReadStream(new FileInputStream(getFile()), this);
-  }
+      /* XXX: only for Solaris (?)
+      if (isDirectory())
+        throw new IOException("is directory");
+      */
 
-  public StreamImpl openWriteImpl() throws IOException
-  {
-    FileWriteStream fws = new FileWriteStream(
-      new FileOutputStream(getFile()),
-      this);
+      return new FileReadStream(new FileInputStream(getFile()), this);
+   }
 
-    fws.setNewline(NEWLINE);
+   public StreamImpl openWriteImpl() throws IOException {
+      FileWriteStream fws = new FileWriteStream(
+         new FileOutputStream(getFile()),
+         this);
 
-    return fws;
-  }
+      fws.setNewline(NEWLINE);
 
-  public StreamImpl openAppendImpl() throws IOException
-  {
-    FileOutputStream fos = null;
+      return fws;
+   }
 
-    try {
-      fos = new FileOutputStream(getFile().toString(), true);
-    } catch (IOException e) {
-      // MacOS hack
-      fos = new FileOutputStream(getFile().toString());
-    }
+   public StreamImpl openAppendImpl() throws IOException {
+      FileOutputStream fos = null;
 
-    FileWriteStream fws = new FileWriteStream(fos);
+      try {
+         fos = new FileOutputStream(getFile().toString(), true);
+      } catch (IOException e) {
+         // MacOS hack
+         fos = new FileOutputStream(getFile().toString());
+      }
 
-    fws.setNewline(NEWLINE);
+      FileWriteStream fws = new FileWriteStream(fos);
 
-    return fws;
-  }
+      fws.setNewline(NEWLINE);
 
-  public StreamImpl openReadWriteImpl() throws IOException
-  {
-    VfsStream os;
+      return fws;
+   }
 
-    os = new VfsStream(new FileInputStream(getFile()),
-                       new FileOutputStream(getFile()),
-                       this);
+   public StreamImpl openReadWriteImpl() throws IOException {
+      VfsStream os;
 
-    os.setNewline(NEWLINE);
+      os = new VfsStream(new FileInputStream(getFile()),
+         new FileOutputStream(getFile()),
+         this);
 
-    return os;
-  }
+      os.setNewline(NEWLINE);
 
-  /**
-   * Returns the stream implementation for a random-access stream.
-   */
-  public RandomAccessStream openRandomAccess() throws IOException
-  {
-    if (_isWindows && isAux())
-      throw new FileNotFoundException(_file.toString());
+      return os;
+   }
 
-    return new FileRandomAccessStream(new RandomAccessFile(getFile(), "rw"));
-  }
+   /**
+    * Returns the stream implementation for a random-access stream.
+    */
+   public RandomAccessStream openRandomAccess() throws IOException {
+      if (_isWindows && isAux())
+         throw new FileNotFoundException(_file.toString());
 
-  @Override
-  protected Path copy()
-  {
-    return new FilePath(getRoot(), getUserPath(), getPath());
-  }
+      return new FileRandomAccessStream(new RandomAccessFile(getFile(), "rw"));
+   }
 
-  public int hashCode()
-  {
-    return getFullPath().hashCode();
-  }
+   @Override
+   protected Path copy() {
+      return new FilePath(getRoot(), getUserPath(), getPath());
+   }
 
-  public boolean equals(Object b)
-  {
-    if (this == b)
-      return true;
+   public int hashCode() {
+      return getFullPath().hashCode();
+   }
 
-    if (! (b instanceof FilePath))
-      return false;
+   public boolean equals(Object b) {
+      if (this == b)
+         return true;
 
-    FilePath file = (FilePath) b;
+      if (!(b instanceof FilePath))
+         return false;
 
-    return getFullPath().equals(file.getFullPath());
-  }
+      FilePath file = (FilePath) b;
 
-  /**
-   * Lazily returns the native File object.
-   */
-  public File getFile()
-  {
-    if (_file != null)
+      return getFullPath().equals(file.getFullPath());
+   }
+
+   /**
+    * Lazily returns the native File object.
+    */
+   public File getFile() {
+      if (_file != null)
+         return _file;
+
+      _file = new File(getNativePath());
+
       return _file;
+   }
 
-    _file = new File(getNativePath());
+   /**
+    * Special case for the evil windows special
+    */
+   protected boolean isAux() {
+      if (!_isWindows)
+         return false;
 
-    return _file;
-  }
+      File file = getFile();
 
-  /**
-   * Special case for the evil windows special
-   */
-  protected boolean isAux()
-  {
-    if (! _isWindows)
+      String path = getFullPath().toLowerCase();
+
+      int len = path.length();
+      int p = path.indexOf("/aux");
+      int ch;
+      if (p >= 0 && (len <= p + 4 || path.charAt(p + 4) == '.'))
+         return true;
+
+      p = path.indexOf("/con");
+      if (p >= 0 && (len <= p + 4 || path.charAt(p + 4) == '.'))
+         return true;
+
+      p = path.indexOf("/lpt");
+      if (p >= 0
+         && (len <= p + 5 || path.charAt(p + 5) == '.')
+         && '0' <= (ch = path.charAt(p + 4)) && ch <= '9') {
+         return true;
+      }
+
+      p = path.indexOf("/nul");
+      if (p >= 0 && (len <= p + 4 || path.charAt(p + 4) == '.'))
+         return true;
+
       return false;
-
-    File file = getFile();
-
-    String path = getFullPath().toLowerCase();
-
-    int len = path.length();
-    int p = path.indexOf("/aux");
-    int ch;
-    if (p >= 0 && (len <= p + 4 || path.charAt(p + 4) == '.'))
-      return true;
-
-    p = path.indexOf("/con");
-    if (p >= 0 && (len <= p + 4 || path.charAt(p + 4) == '.'))
-      return true;
-
-    p = path.indexOf("/lpt");
-    if (p >= 0
-        && (len <= p + 5 || path.charAt(p + 5) == '.')
-        && '0' <= (ch = path.charAt(p + 4)) && ch <= '9') {
-      return true;
-    }
-
-    p = path.indexOf("/nul");
-    if (p >= 0 && (len <= p + 4 || path.charAt(p + 4) == '.'))
-      return true;
-
-    return false;
-  }
+   }
 }

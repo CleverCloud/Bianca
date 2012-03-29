@@ -35,20 +35,17 @@ import javax.xml.stream.events.EndDocument;
 import java.io.Writer;
 
 public class EndDocumentImpl extends XMLEventImpl implements EndDocument {
-  public int getEventType()
-  {
-    return END_DOCUMENT;
-  }
+   public int getEventType() {
+      return END_DOCUMENT;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    // XXX
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      // XXX
+   }
 
-  public boolean equals(Object o) 
-  {
-    return o instanceof EndDocument;
-  }
+   public boolean equals(Object o) {
+      return o instanceof EndDocument;
+   }
 }
 

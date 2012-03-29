@@ -29,13 +29,12 @@
  */
 package com.clevercloud.bianca.lib.dom;
 
-import org.w3c.dom.NodeList;
-
 import com.clevercloud.bianca.annotation.Delegates;
+import org.w3c.dom.NodeList;
 
 @Delegates(DOMNodeListDelegate.class)
 public class DOMNodeList
-        extends DOMWrapper<NodeList> {
+   extends DOMWrapper<NodeList> {
 
    DOMNodeList(DOMImplementation impl, NodeList nodeList) {
       super(impl, nodeList);

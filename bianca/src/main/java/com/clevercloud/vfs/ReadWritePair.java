@@ -30,31 +30,28 @@
 package com.clevercloud.vfs;
 
 public class ReadWritePair {
-  private ReadStream _readStream;
-  private WriteStream _writeStream;
+   private ReadStream _readStream;
+   private WriteStream _writeStream;
 
-  /**
-   * Creates a ReadWritePair
-   */
-  public ReadWritePair(ReadStream readStream, WriteStream writeStream)
-  {
-    _readStream = readStream;
-    _writeStream = writeStream;
-  }
+   /**
+    * Creates a ReadWritePair
+    */
+   public ReadWritePair(ReadStream readStream, WriteStream writeStream) {
+      _readStream = readStream;
+      _writeStream = writeStream;
+   }
 
-  /**
-   * Return the read stream of the pair.
-   */
-  public ReadStream getReadStream()
-  {
-    return _readStream;
-  }
+   /**
+    * Return the read stream of the pair.
+    */
+   public ReadStream getReadStream() {
+      return _readStream;
+   }
 
-  /**
-   * Return the write stream of the pair.
-   */
-  public WriteStream getWriteStream()
-  {
-    return _writeStream;
-  }
+   /**
+    * Return the write stream of the pair.
+    */
+   public WriteStream getWriteStream() {
+      return _writeStream;
+   }
 }

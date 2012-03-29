@@ -54,7 +54,7 @@ public class ZipDirectory {
     * Closes the previous entry and returns the next entry's metadata.
     */
    public BiancaZipEntry zip_read()
-           throws IOException {
+      throws IOException {
       closeEntry();
 
       long position = _in.getPosition();
@@ -71,7 +71,7 @@ public class ZipDirectory {
     * Reads the next entry's metadata from the current stream position.
     */
    protected ZipEntry readEntry()
-           throws IOException {
+      throws IOException {
       if (_eof || _currentEntry != null) {
          return null;
       }
@@ -84,9 +84,9 @@ public class ZipDirectory {
 
       // Zip file signature check
       if ((((_tmpBuf[3] & 0xff) << 24)
-              | ((_tmpBuf[2] & 0xff) << 16)
-              | ((_tmpBuf[1] & 0xff) << 8)
-              | (_tmpBuf[0] & 0xff)) != 0x04034b50) {
+         | ((_tmpBuf[2] & 0xff) << 16)
+         | ((_tmpBuf[1] & 0xff) << 8)
+         | (_tmpBuf[0] & 0xff)) != 0x04034b50) {
          _eof = true;
          return null;
       }
@@ -157,7 +157,7 @@ public class ZipDirectory {
    }
 
    private void skip(long len)
-           throws IOException {
+      throws IOException {
       while (len-- > 0 && _in.read() != -1) {
       }
    }
@@ -166,7 +166,7 @@ public class ZipDirectory {
     * Positions stream to beginning of next entry
     */
    protected void closeEntry()
-           throws IOException {
+      throws IOException {
       if (_currentEntry == null) {
          return;
       }

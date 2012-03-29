@@ -36,7 +36,7 @@ import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.function.AbstractFunction;
 
 public class ReflectionFunction extends ReflectionFunctionAbstract
-        implements Reflector {
+   implements Reflector {
 
    public static final int IS_DEPRECATED = 1024 * 256; //262144;  //2^18
 
@@ -58,8 +58,8 @@ public class ReflectionFunction extends ReflectionFunctionAbstract
    }
 
    public Value export(Env env,
-           String name,
-           @Optional boolean isReturn) {
+                       String name,
+                       @Optional boolean isReturn) {
       return null;
    }
 

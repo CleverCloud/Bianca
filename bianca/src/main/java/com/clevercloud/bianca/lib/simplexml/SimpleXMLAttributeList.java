@@ -33,7 +33,7 @@ package com.clevercloud.bianca.lib.simplexml;
 import com.clevercloud.bianca.annotation.Name;
 import com.clevercloud.bianca.env.*;
 
-import java.util.*;
+import java.util.Iterator;
 
 /**
  * SimpleXMLElement object oriented API facade.
@@ -42,18 +42,18 @@ import java.util.*;
 public class SimpleXMLAttributeList extends SimpleXMLElement {
 
    protected SimpleXMLAttributeList(Env env,
-           BiancaClass cls,
-           SimpleXMLElement parent,
-           String name) {
+                                    BiancaClass cls,
+                                    SimpleXMLElement parent,
+                                    String name) {
       super(env, cls, parent, name);
    }
 
    protected SimpleXMLAttributeList(Env env,
-           BiancaClass cls,
-           SimpleXMLElement parent,
-           String name,
-           String namespace,
-           StringValue text) {
+                                    BiancaClass cls,
+                                    SimpleXMLElement parent,
+                                    String name,
+                                    String namespace,
+                                    StringValue text) {
       super(env, cls, parent, name, namespace);
 
       _text = text;
@@ -86,7 +86,7 @@ public class SimpleXMLAttributeList extends SimpleXMLElement {
     */
    @Override
    protected void addNamespaceAttribute(Env env, String name,
-           String namespace) {
+                                        String namespace) {
       if (_parent != null) {
          _parent.addNamespaceAttribute(env, name, namespace);
       }
@@ -97,7 +97,7 @@ public class SimpleXMLAttributeList extends SimpleXMLElement {
     * the loop <code>foreach($a as $b)</code>, this method
     * should return an iterator that contains Java objects
     * that will be wrapped in a Value.
-    *
+    * <p/>
     * When a 'foreach' loop with name/value pairs
     * i.e. <code>foreach($a as $b=>$c)</code>
     * invokes this method, it expects an iterator that

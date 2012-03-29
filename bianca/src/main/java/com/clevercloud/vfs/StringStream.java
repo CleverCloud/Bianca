@@ -32,66 +32,63 @@ package com.clevercloud.vfs;
 import java.io.IOException;
 
 public class StringStream extends StreamImpl {
-  private String _string;
-  private int _length;
-  private int _index;
+   private String _string;
+   private int _length;
+   private int _index;
 
-  StringStream(String string)
-  {
-    // this.path = new NullPath("string");
-    _string = string;
-    _length = string.length();
-    _index = 0;
-  }
+   StringStream(String string) {
+      // this.path = new NullPath("string");
+      _string = string;
+      _length = string.length();
+      _index = 0;
+   }
 
-  public static ReadStream open(String string)
-  {
-    StringStream ss = new StringStream(string);
-    return new ReadStream(ss);
-  }
+   public static ReadStream open(String string) {
+      StringStream ss = new StringStream(string);
+      return new ReadStream(ss);
+   }
 
-  public Path getPath() { return new StringPath(_string); }
+   public Path getPath() {
+      return new StringPath(_string);
+   }
 
-  public boolean canRead() { return true; }
+   public boolean canRead() {
+      return true;
+   }
 
-  // XXX: encoding issues
-  public int read(byte []buf, int offset, int length) throws IOException
-  {
-    int strlen = _length;
+   // XXX: encoding issues
+   public int read(byte[] buf, int offset, int length) throws IOException {
+      int strlen = _length;
 
-    int start = offset;
-    int end = offset + length;
-    
-    int index = _index;
-    for (; index < strlen && offset < end; index++) {
-      int ch = _string.charAt(index);
+      int start = offset;
+      int end = offset + length;
 
-      if (ch < 0x80)
-        buf[offset++] = (byte) ch;
-      else if (ch < 0x800 && offset + 1 < end) {
-        buf[offset++] = (byte) (0xc0 | (ch >> 6));
-        buf[offset++] = (byte) (0x80 | (ch & 0x3f));
+      int index = _index;
+      for (; index < strlen && offset < end; index++) {
+         int ch = _string.charAt(index);
+
+         if (ch < 0x80)
+            buf[offset++] = (byte) ch;
+         else if (ch < 0x800 && offset + 1 < end) {
+            buf[offset++] = (byte) (0xc0 | (ch >> 6));
+            buf[offset++] = (byte) (0x80 | (ch & 0x3f));
+         } else if (ch < 0x8000 && offset + 2 < end) {
+            buf[offset++] = (byte) (0xe0 | (ch >> 12));
+            buf[offset++] = (byte) (0x80 | ((ch >> 6) & 0x3f));
+            buf[offset++] = (byte) (0x80 | ((ch >> 6) & 0x3f));
+         } else if (offset == start) {
+            throw new IllegalStateException("buffer length is not large enough to decode UTF-8 data");
+         } else {
+            break;
+         }
       }
-      else if (ch < 0x8000 && offset + 2 < end) {
-        buf[offset++] = (byte) (0xe0 | (ch >> 12));
-        buf[offset++] = (byte) (0x80 | ((ch >> 6) & 0x3f));
-        buf[offset++] = (byte) (0x80 | ((ch >> 6) & 0x3f));
-      }
-      else if (offset == start) {
-        throw new IllegalStateException("buffer length is not large enough to decode UTF-8 data");
-      }
-      else {
-        break;
-      }
-    }
 
-    _index = index;
+      _index = index;
 
-    return start < offset ? offset - start : -1;
-  }
+      return start < offset ? offset - start : -1;
+   }
 
-  public int getAvailable() throws IOException
-  {
-    return _length - _index;
-  }
+   public int getAvailable() throws IOException {
+      return _length - _index;
+   }
 }

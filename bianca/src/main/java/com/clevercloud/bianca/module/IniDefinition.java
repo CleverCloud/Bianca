@@ -30,8 +30,8 @@
  */
 package com.clevercloud.bianca.module;
 
-import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.BiancaContext;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
 import java.util.HashMap;
@@ -52,7 +52,9 @@ public class IniDefinition {
    public enum Type {
 
       BOOLEAN, STRING, LONG
-   };
+   }
+
+   ;
 
    public IniDefinition(String name, Type type, Value deflt, int scope) {
       assert name != null;
@@ -60,9 +62,9 @@ public class IniDefinition {
       assert deflt != null;
 
       assert scope == PHP_INI_USER
-              || scope == PHP_INI_PERDIR
-              || scope == PHP_INI_SYSTEM
-              || scope == PHP_INI_ALL;
+         || scope == PHP_INI_PERDIR
+         || scope == PHP_INI_SYSTEM
+         || scope == PHP_INI_ALL;
 
       _name = name.intern();
       _type = type;
@@ -111,9 +113,9 @@ public class IniDefinition {
       String valueAsString = value.toString().trim();
 
       if (valueAsString.length() == 0
-              || valueAsString.equalsIgnoreCase("false")
-              || valueAsString.equalsIgnoreCase("off")
-              || valueAsString.equalsIgnoreCase("0")) {
+         || valueAsString.equalsIgnoreCase("false")
+         || valueAsString.equalsIgnoreCase("off")
+         || valueAsString.equalsIgnoreCase("0")) {
          return BooleanValue.FALSE;
       } else {
          return BooleanValue.TRUE;
@@ -147,6 +149,7 @@ public class IniDefinition {
    return LongValue.create(val);
    }
     */
+
    /**
     * Set the ini value for the given scope.
     */
@@ -173,18 +176,18 @@ public class IniDefinition {
     */
    public void set(Env env, String value) {
       set(env.getIniMap(true),
-              PHP_INI_USER,
-              env.createString(value));
+         PHP_INI_USER,
+         env.createString(value));
    }
 
    /**
     * Set the ini value for the given scope.
     */
    protected void set(HashMap<String, Value> map,
-           int scope,
-           Value value) {
+                      int scope,
+                      Value value) {
       if (scope == PHP_INI_USER
-              && !(_scope == PHP_INI_USER || _scope == PHP_INI_ALL)) {
+         && !(_scope == PHP_INI_USER || _scope == PHP_INI_ALL)) {
          // do nothing
       } else if (_type == Type.BOOLEAN) {
          map.put(_name, toBooleanValue(value));
@@ -198,7 +201,7 @@ public class IniDefinition {
    }
 
    private Value get(HashMap<String, Value> envMap,
-           HashMap<String, Value> biancaMap) {
+                     HashMap<String, Value> biancaMap) {
       Value value = null;
 
       if (envMap != null) {
@@ -270,11 +273,11 @@ public class IniDefinition {
 
    public BooleanValue getAsBooleanValue(Env env) {
       return getAsBooleanValue(env.getIniMap(false),
-              env.getBianca().getIniMap(false));
+         env.getBianca().getIniMap(false));
    }
 
    private BooleanValue getAsBooleanValue(HashMap<String, Value> overrideMap,
-           HashMap<String, Value> iniMap) {
+                                          HashMap<String, Value> iniMap) {
       Value value = get(overrideMap, iniMap);
 
       return toBooleanValue(value);
@@ -286,11 +289,11 @@ public class IniDefinition {
 
    public LongValue getAsLongValue(Env env) {
       return getAsLongValue(env.getIniMap(false),
-              env.getBianca().getIniMap(false));
+         env.getBianca().getIniMap(false));
    }
 
    private LongValue getAsLongValue(HashMap<String, Value> overrideMap,
-           HashMap<String, Value> iniMap) {
+                                    HashMap<String, Value> iniMap) {
       Value value = get(overrideMap, iniMap);
 
       if (value instanceof LongValue) {
@@ -343,12 +346,12 @@ public class IniDefinition {
       if (bytes.endsWith("gb") || bytes.endsWith("g") || bytes.endsWith("G")) {
          return value * 1024L * 1024L * 1024L;
       } else if (bytes.endsWith("mb")
-              || bytes.endsWith("m")
-              || bytes.endsWith("M")) {
+         || bytes.endsWith("m")
+         || bytes.endsWith("M")) {
          return value * 1024L * 1024L;
       } else if (bytes.endsWith("kb")
-              || bytes.endsWith("k")
-              || bytes.endsWith("K")) {
+         || bytes.endsWith("k")
+         || bytes.endsWith("K")) {
          return value * 1024L;
       } else if (bytes.endsWith("b") || bytes.endsWith("B")) {
          return value;
@@ -367,7 +370,7 @@ public class IniDefinition {
    }
 
    static public class Unsupported
-           extends IniDefinition {
+      extends IniDefinition {
 
       private L10N L = new L10N(Unsupported.class);
 
@@ -377,8 +380,8 @@ public class IniDefinition {
 
       @Override
       public void set(HashMap<String, Value> map,
-              int scope,
-              Value value) {
+                      int scope,
+                      Value value) {
          Env env = Env.getInstance();
 
          // php/1a17
@@ -402,7 +405,7 @@ public class IniDefinition {
    }
 
    static private class Null
-           extends Unsupported {
+      extends Unsupported {
 
       private L10N L = new L10N(Unsupported.class);
 
@@ -412,8 +415,8 @@ public class IniDefinition {
 
       @Override
       public void set(HashMap<String, Value> map,
-              int scope,
-              Value value) {
+                      int scope,
+                      Value value) {
          if (true) {
             throw new UnsupportedOperationException();
          }
@@ -423,13 +426,13 @@ public class IniDefinition {
    }
 
    static public class Runtime
-           extends IniDefinition {
+      extends IniDefinition {
 
       public Runtime(String name) {
          super(name,
-                 IniDefinition.Type.STRING,
-                 NullValue.NULL,
-                 IniDefinition.PHP_INI_ALL);
+            IniDefinition.Type.STRING,
+            NullValue.NULL,
+            IniDefinition.PHP_INI_ALL);
       }
 
       @Override

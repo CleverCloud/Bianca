@@ -30,11 +30,7 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.MethodIntern;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.util.L10N;
 
@@ -51,9 +47,9 @@ public class ClassConstructorExpr extends Expr {
    protected final Expr[] _args;
 
    public ClassConstructorExpr(Location location,
-           String className,
-           String name,
-           ArrayList<Expr> args) {
+                               String className,
+                               String name,
+                               ArrayList<Expr> args) {
       super(location);
 
       _className = className.intern();
@@ -65,9 +61,9 @@ public class ClassConstructorExpr extends Expr {
    }
 
    public ClassConstructorExpr(Location location,
-           String className,
-           String name,
-           Expr[] args) {
+                               String className,
+                               String name,
+                               Expr[] args) {
       super(location);
 
       _className = className.intern();
@@ -81,7 +77,6 @@ public class ClassConstructorExpr extends Expr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -90,7 +85,7 @@ public class ClassConstructorExpr extends Expr {
 
       if (cl == null) {
          throw env.createErrorException(L.l("{0} is an unknown class",
-                 _className));
+            _className));
       }
 
       AbstractFunction fun = cl.getFunction(_name);

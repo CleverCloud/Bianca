@@ -30,11 +30,7 @@
 package com.clevercloud.bianca.lib.simplexml;
 
 import com.clevercloud.bianca.annotation.ReturnNullAsFalse;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 
 /**
  * SimpleXMLElement object oriented API facade.
@@ -43,7 +39,7 @@ import com.clevercloud.bianca.env.Value;
 public class SimpleXMLChildren extends SimpleXMLElement {
 
    protected SimpleXMLChildren(Env env, BiancaClass cls,
-           SimpleXMLElement parent, String name) {
+                               SimpleXMLElement parent, String name) {
       super(env, cls, parent, name);
    }
 

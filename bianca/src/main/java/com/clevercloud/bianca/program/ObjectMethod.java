@@ -42,23 +42,23 @@ public class ObjectMethod extends Function {
    private ClassDef _biancaClass;
 
    ObjectMethod(Location location,
-           InterpretedClassDef biancaClass,
-           String name,
-           FunctionInfo info,
-           Arg[] args,
-           Statement[] statements) {
+                InterpretedClassDef biancaClass,
+                String name,
+                FunctionInfo info,
+                Arg[] args,
+                Statement[] statements) {
       super(location, name, info, args, statements);
 
       _biancaClass = biancaClass;
    }
 
    public ObjectMethod(ExprFactory exprFactory,
-           Location location,
-           InterpretedClassDef biancaClass,
-           String name,
-           FunctionInfo info,
-           Arg[] argList,
-           Statement[] statementList) {
+                       Location location,
+                       InterpretedClassDef biancaClass,
+                       String name,
+                       FunctionInfo info,
+                       Arg[] argList,
+                       Statement[] statementList) {
       super(exprFactory, location, name, info, argList, statementList);
       _biancaClass = biancaClass;
    }

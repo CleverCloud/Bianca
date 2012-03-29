@@ -31,8 +31,8 @@
 package com.clevercloud.bianca.program;
 
 import com.clevercloud.bianca.BiancaContext;
-import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.BiancaException;
+import com.clevercloud.bianca.BiancaModuleException;
 import com.clevercloud.bianca.BiancaRuntimeException;
 import com.clevercloud.bianca.annotation.*;
 import com.clevercloud.bianca.env.*;
@@ -48,11 +48,7 @@ import com.clevercloud.vfs.WriteStream;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -119,14 +115,14 @@ public class JavaClassDef extends ClassDef {
 
       if (type.isArray() && !isArray()) {
          throw new IllegalStateException(
-                 L.l("'{0}' needs to be called with JavaArrayClassDef", type));
+            L.l("'{0}' needs to be called with JavaArrayClassDef", type));
       }
    }
 
    public JavaClassDef(ModuleContext moduleContext,
-           String name,
-           Class type,
-           String extension) {
+                       String name,
+                       Class type,
+                       String extension) {
       this(moduleContext, name, type);
 
       _extension = extension;
@@ -160,21 +156,21 @@ public class JavaClassDef extends ClassDef {
    }
 
    public static JavaClassDef create(ModuleContext moduleContext,
-           String name, Class type) {
+                                     String name, Class type) {
       if (Double.class.isAssignableFrom(type)
-              || Float.class.isAssignableFrom(type)) {
+         || Float.class.isAssignableFrom(type)) {
          return new DoubleClassDef(moduleContext);
       } else if (Long.class.isAssignableFrom(type)
-              || Integer.class.isAssignableFrom(type)
-              || Short.class.isAssignableFrom(type)
-              || Byte.class.isAssignableFrom(type)) {
+         || Integer.class.isAssignableFrom(type)
+         || Short.class.isAssignableFrom(type)
+         || Byte.class.isAssignableFrom(type)) {
          return new LongClassDef(moduleContext);
       } else if (BigDecimal.class.isAssignableFrom(type)) {
          return new BigDecimalClassDef(moduleContext);
       } else if (BigInteger.class.isAssignableFrom(type)) {
          return new BigIntegerClassDef(moduleContext);
       } else if (String.class.isAssignableFrom(type)
-              || Character.class.isAssignableFrom(type)) {
+         || Character.class.isAssignableFrom(type)) {
          return new StringClassDef(moduleContext);
       } else if (Boolean.class.isAssignableFrom(type)) {
          return new BooleanClassDef(moduleContext);
@@ -189,7 +185,7 @@ public class JavaClassDef extends ClassDef {
       } else if (List.class.isAssignableFrom(type)) {
          return new JavaListClassDef(moduleContext, name, type);
       } else if (Collection.class.isAssignableFrom(type)
-              && !Queue.class.isAssignableFrom(type)) {
+         && !Queue.class.isAssignableFrom(type)) {
          return new JavaCollectionClassDef(moduleContext, name, type);
       } else {
          return null;
@@ -244,7 +240,7 @@ public class JavaClassDef extends ClassDef {
       }
 
       return (_instanceOfSet.contains(name)
-              || _instanceOfSetLowerCase.contains(name.toLowerCase()));
+         || _instanceOfSetLowerCase.contains(name.toLowerCase()));
    }
 
    /**
@@ -256,8 +252,8 @@ public class JavaClassDef extends ClassDef {
    }
 
    protected void addInterfaces(HashSet<String> interfaceSet,
-           Class type,
-           boolean isTop) {
+                                Class type,
+                                boolean isTop) {
       if (type == null) {
          return;
       }
@@ -463,9 +459,9 @@ public class JavaClassDef extends ClassDef {
    }
 
    public Value putField(Env env,
-           Value qThis,
-           StringValue name,
-           Value value) {
+                         Value qThis,
+                         StringValue name,
+                         Value value) {
       AbstractJavaMethod setter = _setMap.get(name);
 
       if (setter != null) {
@@ -513,10 +509,10 @@ public class JavaClassDef extends ClassDef {
       if (__fieldSet != null) {
          try {
             return __fieldSet.callMethod(env,
-                    getBiancaClass(),
-                    qThis,
-                    name,
-                    value);
+               getBiancaClass(),
+               qThis,
+               name,
+               value);
          } catch (Exception e) {
             log.log(Level.FINE, L.l(e.getMessage()), e);
 
@@ -600,8 +596,8 @@ public class JavaClassDef extends ClassDef {
     * Eval a method
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value[] args) {
+                           StringValue methodName, int hash,
+                           Value[] args) {
       AbstractFunction fun = _functionMap.get(methodName, hash);
 
       return fun.callMethod(env, getBiancaClass(), qThis, args);
@@ -611,7 +607,7 @@ public class JavaClassDef extends ClassDef {
     * Eval a method
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash) {
+                           StringValue methodName, int hash) {
       AbstractFunction fun = _functionMap.get(methodName, hash);
 
       return fun.callMethod(env, getBiancaClass(), qThis);
@@ -621,8 +617,8 @@ public class JavaClassDef extends ClassDef {
     * Eval a method
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1) {
+                           StringValue methodName, int hash,
+                           Value a1) {
       AbstractFunction fun = _functionMap.get(methodName, hash);
 
       return fun.callMethod(env, getBiancaClass(), qThis, a1);
@@ -632,8 +628,8 @@ public class JavaClassDef extends ClassDef {
     * Eval a method
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2) {
       AbstractFunction fun = _functionMap.get(methodName, hash);
 
       return fun.callMethod(env, getBiancaClass(), qThis, a1, a2);
@@ -643,8 +639,8 @@ public class JavaClassDef extends ClassDef {
     * Eval a method
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3) {
       AbstractFunction fun = _functionMap.get(methodName, hash);
 
       return fun.callMethod(env, getBiancaClass(), qThis, a1, a2, a3);
@@ -654,8 +650,8 @@ public class JavaClassDef extends ClassDef {
     * Eval a method
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4) {
       AbstractFunction fun = _functionMap.get(methodName, hash);
 
       return fun.callMethod(env, getBiancaClass(), qThis, a1, a2, a3, a4);
@@ -665,8 +661,8 @@ public class JavaClassDef extends ClassDef {
     * Eval a method
     */
    public Value callMethod(Env env, Value qThis,
-           StringValue methodName, int hash,
-           Value a1, Value a2, Value a3, Value a4, Value a5) {
+                           StringValue methodName, int hash,
+                           Value a1, Value a2, Value a3, Value a4, Value a5) {
       AbstractFunction fun = _functionMap.get(methodName, hash);
 
       return fun.callMethod(env, getBiancaClass(), qThis, a1, a2, a3, a4, a5);
@@ -730,7 +726,7 @@ public class JavaClassDef extends ClassDef {
       if (_traversableDelegate != null) {
          cl.setTraversableDelegate(_traversableDelegate);
       } else if (cl.getTraversableDelegate() == null
-              && _iteratorMethod != null) {
+         && _iteratorMethod != null) {
          // adds support for Java classes implementing iterator()
          // php/
          cl.setTraversableDelegate(new JavaTraversableDelegate(_iteratorMethod));
@@ -873,7 +869,7 @@ public class JavaClassDef extends ClassDef {
                _cons = new JavaConstructor(_moduleContext, cons[0]);
                for (i = 1; i < cons.length; i++) {
                   _cons = _cons.overload(new JavaConstructor(_moduleContext,
-                          cons[i]));
+                     cons[i]));
                }
             }
 
@@ -917,7 +913,7 @@ public class JavaClassDef extends ClassDef {
 
                   if (!isDelegate) {
                      throw new IllegalArgumentException(
-                             L.l("unknown @Delegate class '{0}'", cl));
+                        L.l("unknown @Delegate class '{0}'", cl));
                   }
                }
             } else if (annotation.annotationType() == ResourceType.class) {
@@ -934,7 +930,7 @@ public class JavaClassDef extends ClassDef {
    }
 
    private boolean addDelegate(Class cl)
-           throws InstantiationException, IllegalAccessException {
+      throws InstantiationException, IllegalAccessException {
       boolean isDelegate = false;
 
       if (TraversableDelegate.class.isAssignableFrom(cl)) {
@@ -956,8 +952,8 @@ public class JavaClassDef extends ClassDef {
    }
 
    private <T> boolean addDelegate(Class<T> cl,
-           ArrayList<T> delegates,
-           Class<? extends Object> delegateClass) {
+                                   ArrayList<T> delegates,
+                                   Class<? extends Object> delegateClass) {
       if (!cl.isAssignableFrom(delegateClass)) {
          return false;
       }
@@ -1101,13 +1097,13 @@ public class JavaClassDef extends ClassDef {
       }
 
       // server/2v00
-    /*
-      if (__fieldGet != null)
-      _getMap.clear();
+      /*
+     if (__fieldGet != null)
+     _getMap.clear();
 
-      if (__fieldSet != null)
-      _setMap.clear();
-       */
+     if (__fieldSet != null)
+     _setMap.clear();
+      */
 
       // Introspect public non-static fields
       Field[] fields = type.getFields();
@@ -1123,7 +1119,7 @@ public class JavaClassDef extends ClassDef {
          Marshal marshal = factory.create(field.getType(), false);
 
          _fieldMap.put(new StringValue(field.getName()),
-                 new FieldMarshalPair(field, marshal));
+            new FieldMarshalPair(field, marshal));
       }
 
 
@@ -1215,7 +1211,7 @@ public class JavaClassDef extends ClassDef {
     * Introspects the Java class.
     */
    private void introspectMethods(ModuleContext moduleContext,
-           Class<?> type) {
+                                  Class<?> type) {
       if (type == null) {
          return;
       }
@@ -1236,8 +1232,8 @@ public class JavaClassDef extends ClassDef {
          }
 
          if ("iterator".equals(method.getName())
-                 && method.getParameterTypes().length == 0
-                 && Iterator.class.isAssignableFrom(method.getReturnType())) {
+            && method.getParameterTypes().length == 0
+            && Iterator.class.isAssignableFrom(method.getReturnType())) {
             _iteratorMethod = method;
          }
 
@@ -1256,7 +1252,7 @@ public class JavaClassDef extends ClassDef {
          } else {
             if (method.getName().startsWith("bianca_")) {
                throw new UnsupportedOperationException(
-                       L.l("{0}: use @Name instead", method.getName()));
+                  L.l("{0}: use @Name instead", method.getName()));
             }
 
             JavaMethod newFun = new JavaMethod(moduleContext, method);
@@ -1289,13 +1285,13 @@ public class JavaClassDef extends ClassDef {
    }
 
    public StringValue toString(Env env,
-           JavaValue value) {
+                               JavaValue value) {
       if (__toString == null) {
          return null;
       }
 
       return __toString.callMethod(
-              env, getBiancaClass(), value, new Expr[0]).toStringValue();
+         env, getBiancaClass(), value, new Expr[0]).toStringValue();
    }
 
    public boolean jsonEncode(Env env, Object obj, StringValue sb) {
@@ -1315,16 +1311,15 @@ public class JavaClassDef extends ClassDef {
    }
 
    /**
-    *
     * @return false if printRImpl not implemented
     * @throws IOException
     */
    public boolean printRImpl(Env env,
-           Object obj,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                             Object obj,
+                             WriteStream out,
+                             int depth,
+                             IdentityHashMap<Value, String> valueSet)
+      throws IOException {
 
       try {
          if (_printRImpl == null) {
@@ -1342,12 +1337,12 @@ public class JavaClassDef extends ClassDef {
    }
 
    public boolean varDumpImpl(Env env,
-           Value obj,
-           Object javaObj,
-           WriteStream out,
-           int depth,
-           IdentityHashMap<Value, String> valueSet)
-           throws IOException {
+                              Value obj,
+                              Object javaObj,
+                              WriteStream out,
+                              int depth,
+                              IdentityHashMap<Value, String> valueSet)
+      throws IOException {
       try {
          if (_varDumpImpl == null) {
             return false;
@@ -1363,7 +1358,7 @@ public class JavaClassDef extends ClassDef {
    }
 
    private class JavaTraversableDelegate
-           implements TraversableDelegate {
+      implements TraversableDelegate {
 
       private Method _iteratorMethod;
 
@@ -1388,7 +1383,7 @@ public class JavaClassDef extends ClassDef {
       public Iterator<Value> getKeyIterator(Env env, ObjectValue qThis) {
          try {
             Iterator iterator =
-                    (Iterator) _iteratorMethod.invoke(qThis.toJavaObject());
+               (Iterator) _iteratorMethod.invoke(qThis.toJavaObject());
 
             return new JavaKeyIterator(iterator);
          } catch (InvocationTargetException e) {
@@ -1402,7 +1397,7 @@ public class JavaClassDef extends ClassDef {
       public Iterator<Value> getValueIterator(Env env, ObjectValue qThis) {
          try {
             Iterator iterator =
-                    (Iterator) _iteratorMethod.invoke(qThis.toJavaObject());
+               (Iterator) _iteratorMethod.invoke(qThis.toJavaObject());
 
             return new JavaValueIterator(env, iterator);
          } catch (InvocationTargetException e) {
@@ -1414,7 +1409,7 @@ public class JavaClassDef extends ClassDef {
    }
 
    private class JavaKeyIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private Iterator _iterator;
       private int _index;
@@ -1442,7 +1437,7 @@ public class JavaClassDef extends ClassDef {
    }
 
    private class JavaValueIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private Env _env;
       private Iterator _iterator;
@@ -1473,7 +1468,7 @@ public class JavaClassDef extends ClassDef {
    }
 
    private class JavaIterator
-           implements Iterator<Map.Entry<Value, Value>> {
+      implements Iterator<Map.Entry<Value, Value>> {
 
       private Env _env;
       private Iterator _iterator;
@@ -1493,7 +1488,7 @@ public class JavaClassDef extends ClassDef {
             Map.Entry entry = (Map.Entry) next;
 
             if (entry.getKey() instanceof Value
-                    && entry.getValue() instanceof Value) {
+               && entry.getValue() instanceof Value) {
                return (Map.Entry<Value, Value>) entry;
             } else {
                Value key = _env.wrapJava(entry.getKey());
@@ -1522,7 +1517,7 @@ public class JavaClassDef extends ClassDef {
    }
 
    private class JavaEntry
-           implements Map.Entry<Value, Value> {
+      implements Map.Entry<Value, Value> {
 
       private Value _key;
       private Value _value;
@@ -1554,7 +1549,7 @@ public class JavaClassDef extends ClassDef {
       public Marshal _marshal;
 
       public MethodMarshalPair(Method method,
-              Marshal marshal) {
+                               Marshal marshal) {
          _method = method;
          _marshal = marshal;
       }
@@ -1566,7 +1561,7 @@ public class JavaClassDef extends ClassDef {
       public Marshal _marshal;
 
       public FieldMarshalPair(Field field,
-              Marshal marshal) {
+                              Marshal marshal) {
          _field = field;
          _marshal = marshal;
       }

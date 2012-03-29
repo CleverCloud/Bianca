@@ -32,88 +32,77 @@ package com.clevercloud.xpath.expr;
 import com.clevercloud.xpath.Expr;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 abstract public class AbstractNumberExpr extends Expr {
-  public boolean isNumber()
-  {
-    return true;
-  }
+   public boolean isNumber() {
+      return true;
+   }
 
-  /**
-   * Evaluates to a variable.
-   *
-   * @param node the node to evaluate and use as a context.
-   * @param env the variable environment.
-   *
-   * @return a variable containing the value.
-   */
-  public Var evalVar(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    double value = evalNumber(node, env);
+   /**
+    * Evaluates to a variable.
+    *
+    * @param node the node to evaluate and use as a context.
+    * @param env  the variable environment.
+    * @return a variable containing the value.
+    */
+   public Var evalVar(Node node, ExprEnvironment env)
+      throws XPathException {
+      double value = evalNumber(node, env);
 
-    return NumberVar.create(value);
-  }
+      return NumberVar.create(value);
+   }
 
-  /**
-   * Evaluates the expression as a number.
-   *
-   * @param node the node to evaluate and use as a context.
-   * @param env the variable environment.
-   *
-   * @return the numeric value
-   */
-  abstract public double evalNumber(Node node, ExprEnvironment env)
-    throws XPathException;
+   /**
+    * Evaluates the expression as a number.
+    *
+    * @param node the node to evaluate and use as a context.
+    * @param env  the variable environment.
+    * @return the numeric value
+    */
+   abstract public double evalNumber(Node node, ExprEnvironment env)
+      throws XPathException;
 
-  /**
-   * Evaluates the expression as a boolean.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the boolean representation of the number.
-   */
-  public boolean evalBoolean(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    double value = evalNumber(node, env);
+   /**
+    * Evaluates the expression as a boolean.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the boolean representation of the number.
+    */
+   public boolean evalBoolean(Node node, ExprEnvironment env)
+      throws XPathException {
+      double value = evalNumber(node, env);
 
-    return value != 0.0 && ! Double.isNaN(value);
-  }
+      return value != 0.0 && !Double.isNaN(value);
+   }
 
-  /**
-   * Evaluates the expression as a string.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the string representation of the number.
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    double value = evalNumber(node, env);
+   /**
+    * Evaluates the expression as a string.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the string representation of the number.
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      double value = evalNumber(node, env);
 
-    if ((int) value == value)
-      return String.valueOf((int) value);
-    else
-      return String.valueOf(value);
-  }
+      if ((int) value == value)
+         return String.valueOf((int) value);
+      else
+         return String.valueOf(value);
+   }
 
-  /**
-   * Evaluates the expression as an object.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the Double representation of the number.
-   */
-  public Object evalObject(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return new Double(evalNumber(node, env));
-  }
+   /**
+    * Evaluates the expression as an object.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the Double representation of the number.
+    */
+   public Object evalObject(Node node, ExprEnvironment env)
+      throws XPathException {
+      return new Double(evalNumber(node, env));
+   }
 }

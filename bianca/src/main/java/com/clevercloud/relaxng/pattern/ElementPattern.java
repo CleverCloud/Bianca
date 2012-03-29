@@ -37,157 +37,144 @@ import com.clevercloud.relaxng.program.Item;
  * Relax element pattern
  */
 public class ElementPattern extends Pattern {
-  private String _defName;
-  
-  private NameClassPattern _name;
-  //private GroupPattern _children = new GroupPattern();
-  private Pattern _children;
-  private Item _item;
+   private String _defName;
 
-  /**
-   * Creates a new element pattern.
+   private NameClassPattern _name;
+   //private GroupPattern _children = new GroupPattern();
+   private Pattern _children;
+   private Item _item;
+
+   /**
+    * Creates a new element pattern.
+    */
+   public ElementPattern(String defName) {
+      _defName = defName;
+   }
+
+   /**
+    * Returns the Relax schema name.
+    */
+   public String getTagName() {
+      return "element";
+   }
+
+   /**
+    * Returns the definition name.
+    */
+   public String getDefName() {
+      return _defName;
+   }
+
+   /**
+    * Returns the children pattern.
+    */
+   /*
+   public GroupPattern getChildren()
+   {
+     return _children;
+   }
    */
-  public ElementPattern(String defName)
-  {
-    _defName = defName;
-  }
 
-  /**
-   * Returns the Relax schema name.
-   */
-  public String getTagName()
-  {
-    return "element";
-  }
-
-  /**
-   * Returns the definition name.
-   */
-  public String getDefName()
-  {
-    return _defName;
-  }
-
-  /**
-   * Returns the children pattern.
-   */
-  /*
-  public GroupPattern getChildren()
-  {
-    return _children;
-  }
-  */
-
-  /**
-   * Returns true if it contains an element.
-   */
-  public boolean hasElement()
-  {
-    return true;
-  }
-
-  /**
-   * Adds an element.
-   */
-  public void addNameChild(NameClassPattern child)
-    throws RelaxException
-  {
-    _name = child;
-    setElementName(_name.toProduction());
-  }
-
-  /**
-   * Adds an element.
-   */
-  public NameClassPattern getNameChild()
-    throws RelaxException
-  {
-    return _name;
-  }
-
-  /**
-   * Adds an element.
-   */
-  public void addChild(Pattern child)
-    throws RelaxException
-  {
-    if (_name == null)
-      throw new RelaxException(L.l("<element> must have <name> definitions before other children."));
-    
-    child.setParent(_children);
-    // XXX: (group always null?)
-    // child.setElementName(_children.getElementName());
-
-    if (_children == null)
-      _children = child;
-    else if (_children instanceof GroupPattern) {
-      GroupPattern group = (GroupPattern) _children;
-      group.addChild(child);
-    }
-    else {
-      GroupPattern group = new GroupPattern();
-      group.addChild(_children);
-      group.addChild(child);
-      _children = group;
-    }
-  }
-
-  /**
-   * Ends the element.
-   */
-  public void endElement()
-    throws RelaxException
-  {
-    if (_name == null)
-      throw new RelaxException(L.l("<element> must have a <name> definition."));
-    
-    if (_children == null)
-      throw new RelaxException(L.l("<element> tag '{0}' must have a child grammar production.",
-                                   _name.toProduction()));
-  }
-
-  /**
-   * Creates the item, i.e. program
-   */
-  public Item createItem(GrammarPattern grammar)
-    throws RelaxException
-  {
-    if (_item == null) {
-      ElementItem item = new ElementItem(this, _name.createNameItem());
-      _item = item;
-      item.setChildrenItem(_children.createItem(grammar));
-    }
-    
-    return _item;
-  }
-
-  /**
-   * Returns a string for the production.
-   */
-  public String toProduction()
-  {
-    return _name.toProduction();
-  }
-
-  public boolean equals(Object o)
-  {
-    if (this == o)
+   /**
+    * Returns true if it contains an element.
+    */
+   public boolean hasElement() {
       return true;
+   }
 
-    if (! (o instanceof ElementPattern))
-      return false;
+   /**
+    * Adds an element.
+    */
+   public void addNameChild(NameClassPattern child)
+      throws RelaxException {
+      _name = child;
+      setElementName(_name.toProduction());
+   }
 
-    ElementPattern elt = (ElementPattern) o;
+   /**
+    * Adds an element.
+    */
+   public NameClassPattern getNameChild()
+      throws RelaxException {
+      return _name;
+   }
 
-    return _defName.equals(elt._defName);
-  }
+   /**
+    * Adds an element.
+    */
+   public void addChild(Pattern child)
+      throws RelaxException {
+      if (_name == null)
+         throw new RelaxException(L.l("<element> must have <name> definitions before other children."));
 
-  /**
-   * Debugging.
-   */
-  public String toString()
-  {
-    return getClass().getSimpleName() + "[" + _name + "]";
-  }
+      child.setParent(_children);
+      // XXX: (group always null?)
+      // child.setElementName(_children.getElementName());
+
+      if (_children == null)
+         _children = child;
+      else if (_children instanceof GroupPattern) {
+         GroupPattern group = (GroupPattern) _children;
+         group.addChild(child);
+      } else {
+         GroupPattern group = new GroupPattern();
+         group.addChild(_children);
+         group.addChild(child);
+         _children = group;
+      }
+   }
+
+   /**
+    * Ends the element.
+    */
+   public void endElement()
+      throws RelaxException {
+      if (_name == null)
+         throw new RelaxException(L.l("<element> must have a <name> definition."));
+
+      if (_children == null)
+         throw new RelaxException(L.l("<element> tag '{0}' must have a child grammar production.",
+            _name.toProduction()));
+   }
+
+   /**
+    * Creates the item, i.e. program
+    */
+   public Item createItem(GrammarPattern grammar)
+      throws RelaxException {
+      if (_item == null) {
+         ElementItem item = new ElementItem(this, _name.createNameItem());
+         _item = item;
+         item.setChildrenItem(_children.createItem(grammar));
+      }
+
+      return _item;
+   }
+
+   /**
+    * Returns a string for the production.
+    */
+   public String toProduction() {
+      return _name.toProduction();
+   }
+
+   public boolean equals(Object o) {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof ElementPattern))
+         return false;
+
+      ElementPattern elt = (ElementPattern) o;
+
+      return _defName.equals(elt._defName);
+   }
+
+   /**
+    * Debugging.
+    */
+   public String toString() {
+      return getClass().getSimpleName() + "[" + _name + "]";
+   }
 }
 

@@ -31,7 +31,10 @@ package com.clevercloud.bianca.env;
 
 import com.clevercloud.util.IntMap;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents the Bianca environment.

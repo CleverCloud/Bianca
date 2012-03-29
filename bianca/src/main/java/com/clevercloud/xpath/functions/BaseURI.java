@@ -37,46 +37,41 @@ import com.clevercloud.xpath.XPathException;
 import com.clevercloud.xpath.XPathParseException;
 import com.clevercloud.xpath.expr.AbstractStringExpr;
 import com.clevercloud.xpath.pattern.NodeIterator;
-
 import org.w3c.dom.Node;
 
 /**
  * Returns the base URI of a node.
  */
 public class BaseURI extends AbstractStringExpr {
-  private static final L10N L = new L10N(BaseURI.class);
-  
-  private Expr _expr;
+   private static final L10N L = new L10N(BaseURI.class);
 
-  public BaseURI(Expr expr)
-    throws XPathParseException
-  {
-    _expr = expr;
+   private Expr _expr;
 
-    if (expr == null)
-      throw new XPathParseException(L.l("fn:base-uri requires a single argument"));
-  }
+   public BaseURI(Expr expr)
+      throws XPathParseException {
+      _expr = expr;
 
-  /**
-   * Evaluates the expression as an string.
-   *
-   * @param node the current node
-   * @param env the variable environment.
-   *
-   * @return the string representation of the expression.
-   */
-  public String evalString(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    NodeIterator iter = _expr.evalNodeSet(node, env);
+      if (expr == null)
+         throw new XPathParseException(L.l("fn:base-uri requires a single argument"));
+   }
 
-    Node result = iter.next();
+   /**
+    * Evaluates the expression as an string.
+    *
+    * @param node the current node
+    * @param env  the variable environment.
+    * @return the string representation of the expression.
+    */
+   public String evalString(Node node, ExprEnvironment env)
+      throws XPathException {
+      NodeIterator iter = _expr.evalNodeSet(node, env);
 
-    return QAbstractNode.baseURI(result);
-  }
+      Node result = iter.next();
 
-  public String toString()
-  {
-    return "fn:base-uri(" + _expr + ")";
-  }
+      return QAbstractNode.baseURI(result);
+   }
+
+   public String toString() {
+      return "fn:base-uri(" + _expr + ")";
+   }
 }

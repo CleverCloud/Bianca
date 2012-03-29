@@ -41,7 +41,7 @@ public class Directory {
    public String path;
 
    protected Directory(Env env, Path path)
-           throws IOException {
+      throws IOException {
       handle = new DirectoryValue(env, path);
       env.addCleanup(handle);
 

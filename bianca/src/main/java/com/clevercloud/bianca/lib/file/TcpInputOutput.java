@@ -35,6 +35,9 @@ import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.vfs.SocketStream;
 import com.clevercloud.vfs.WriteStream;
 
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -44,16 +47,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.net.SocketFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
 /**
  * Represents read/write stream
  */
 public class TcpInputOutput
-        extends BufferedBinaryInputOutput
-        implements SocketInputOutput {
+   extends BufferedBinaryInputOutput
+   implements SocketInputOutput {
 
    private static final Logger log = Logger.getLogger(TcpInputOutput.class.getName());
    private Socket _socket;
@@ -61,9 +60,9 @@ public class TcpInputOutput
    private int _errno;
 
    public TcpInputOutput(Env env, String host, int port,
-           boolean isSecure,
-           Domain domain)
-           throws IOException {
+                         boolean isSecure,
+                         Domain domain)
+      throws IOException {
       super(env);
       env.addCleanup(this);
 
@@ -91,29 +90,29 @@ public class TcpInputOutput
    }
 
    private Socket createSSLSocket(String host, int port)
-           throws IOException, NoSuchAlgorithmException, KeyManagementException {
+      throws IOException, NoSuchAlgorithmException, KeyManagementException {
       Socket s = new Socket(host, port);
 
       SSLContext context = SSLContext.getInstance("TLS");
 
       javax.net.ssl.TrustManager tm =
-              new javax.net.ssl.X509TrustManager() {
+         new javax.net.ssl.X509TrustManager() {
 
-                 @Override
-                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                 }
+            @Override
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+               return null;
+            }
 
-                 @Override
-                 public void checkClientTrusted(
-                         java.security.cert.X509Certificate[] cert, String foo) {
-                 }
+            @Override
+            public void checkClientTrusted(
+               java.security.cert.X509Certificate[] cert, String foo) {
+            }
 
-                 @Override
-                 public void checkServerTrusted(
-                         java.security.cert.X509Certificate[] cert, String foo) {
-                 }
-              };
+            @Override
+            public void checkServerTrusted(
+               java.security.cert.X509Certificate[] cert, String foo) {
+            }
+         };
 
 
       context.init(null, new javax.net.ssl.TrustManager[]{tm}, null);
@@ -124,13 +123,13 @@ public class TcpInputOutput
 
    @Override
    public void bind(SocketAddress address)
-           throws IOException {
+      throws IOException {
       _socket.bind(address);
    }
 
    @Override
    public void connect(SocketAddress address)
-           throws IOException {
+      throws IOException {
       _socket.connect(address);
 
       init();
@@ -169,14 +168,14 @@ public class TcpInputOutput
 
    @Override
    public void write(int ch)
-           throws IOException {
+      throws IOException {
       super.write(ch);
       flush();
    }
 
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       super.write(buffer, offset, length);
       flush();
    }
@@ -187,7 +186,7 @@ public class TcpInputOutput
     */
    @Override
    public int write(InputStream is, int length)
-           throws IOException {
+      throws IOException {
       int writeLength = super.write(is, length);
       flush();
 
@@ -215,7 +214,7 @@ public class TcpInputOutput
    public String toString() {
       if (_socket != null) {
          return "TcpInputOutput[" + _socket.getInetAddress()
-                 + "," + _socket.getPort() + "]";
+            + "," + _socket.getPort() + "]";
       } else {
          return "TcpInputOutput[closed]";
       }

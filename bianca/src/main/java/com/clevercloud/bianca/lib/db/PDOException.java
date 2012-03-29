@@ -28,14 +28,14 @@
  */
 package com.clevercloud.bianca.lib.db;
 
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.BiancaLanguageException;
 import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 
 public class PDOException
-        extends BiancaLanguageException {
+   extends BiancaLanguageException {
 
    private final String _code;
    private final String _message;

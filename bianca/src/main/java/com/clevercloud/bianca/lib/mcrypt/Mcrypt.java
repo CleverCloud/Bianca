@@ -49,7 +49,7 @@ public class Mcrypt {
 
    private static final L10N L = new L10N(Mcrypt.class);
    private static final Logger log =
-           Logger.getLogger(Mcrypt.class.getName());
+      Logger.getLogger(Mcrypt.class.getName());
    private final String _algorithm;
    private final String _mode;
    private final Cipher _cipher;
@@ -57,7 +57,7 @@ public class Mcrypt {
    private IvParameterSpec _iv;
 
    Mcrypt(Env env, String algorithm, String mode)
-           throws Exception {
+      throws Exception {
       _algorithm = algorithm;
       _mode = mode.toUpperCase();
 
@@ -65,7 +65,7 @@ public class Mcrypt {
 
       if (transformation == null) {
          throw new BiancaRuntimeException(L.l("'{0}' is an unknown algorithm",
-                 algorithm));
+            algorithm));
       }
 
       _cipher = Cipher.getInstance(transformation);
@@ -203,14 +203,14 @@ public class Mcrypt {
    /**
     * Pads a key up to the next accepted size for the given cipher.
     * Follows php mcrypt behavior php/1q0x
-    **/
+    */
    private byte[] padKey(byte[] keyData) {
       int keySize = get_key_size();
       int len = keyData.length;
 
       if (McryptModule.MCRYPT_RIJNDAEL_128.equals(_algorithm)
-              || McryptModule.MCRYPT_RIJNDAEL_192.equals(_algorithm)
-              || McryptModule.MCRYPT_RIJNDAEL_256.equals(_algorithm)) {
+         || McryptModule.MCRYPT_RIJNDAEL_192.equals(_algorithm)
+         || McryptModule.MCRYPT_RIJNDAEL_256.equals(_algorithm)) {
          if (len <= 16) {
             keySize = 16;
          } else if (len <= 24) {
@@ -219,7 +219,7 @@ public class Mcrypt {
             keySize = 32;
          } else {
             throw new BiancaRuntimeException(
-                    L.l("Key too large for algorithm ({0} > 32)", len));
+               L.l("Key too large for algorithm ({0} > 32)", len));
          }
       }
 
@@ -323,7 +323,7 @@ public class Mcrypt {
    }
 
    private static String getTransformation(String algorithm, String mode)
-           throws Exception {
+      throws Exception {
       mode = mode.toUpperCase();
 
       // php/1q02 & php/1q0s
@@ -350,7 +350,7 @@ public class Mcrypt {
          // php/1q0t, #2561
          return "Blowfish/" + mode + "/NoPadding";
       } else if (McryptModule.MCRYPT_ARCFOUR.equals(algorithm)
-              || McryptModule.MCRYPT_RC4.equals(algorithm)) {
+         || McryptModule.MCRYPT_RC4.equals(algorithm)) {
          return "ARCFOUR/" + mode + "/NoPadding";
       } else {
          return algorithm + '/' + mode + "/NoPadding";
@@ -361,7 +361,7 @@ public class Mcrypt {
       if (McryptModule.MCRYPT_RIJNDAEL_128.equals(algorithm)) {
          return "AES";
       } else if (McryptModule.MCRYPT_RIJNDAEL_192.equals(algorithm)
-              || McryptModule.MCRYPT_RIJNDAEL_256.equals(algorithm)) {
+         || McryptModule.MCRYPT_RIJNDAEL_256.equals(algorithm)) {
          return "Rijndael";
       } else if (McryptModule.MCRYPT_3DES.equals(algorithm)) {
          return "DESede";

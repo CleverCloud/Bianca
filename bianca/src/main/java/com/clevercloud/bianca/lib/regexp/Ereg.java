@@ -34,7 +34,7 @@ import com.clevercloud.bianca.env.StringValue;
 public class Ereg extends Regexp {
 
    public Ereg(StringValue rawRegexp)
-           throws IllegalRegexpException {
+      throws IllegalRegexpException {
       super(rawRegexp);
    }
 

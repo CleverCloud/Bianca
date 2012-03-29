@@ -31,7 +31,6 @@ package com.clevercloud.xpath;
 
 import com.clevercloud.xpath.pattern.AbstractPattern;
 import com.clevercloud.xpath.pattern.NodeIterator;
-
 import org.w3c.dom.Node;
 
 import java.util.Iterator;
@@ -41,7 +40,7 @@ import java.util.logging.Logger;
  * A node selection pattern.  Patterns represent compiled XPath node selectors.
  * They can be used to find nodes, select nodes, and test if a node matches
  * a pattern.
- *
+ * <p/>
  * <p>There are two types of patterns: select patterns and match patterns.
  * <p>Select patterns match a node relative to another node.
  * <code>find</code> and <code>select</code> use select patterns.
@@ -49,176 +48,161 @@ import java.util.logging.Logger;
  * match patterns.
  */
 public class Pattern {
-  protected final static Logger log
-    = Logger.getLogger(Pattern.class.getName());
-  
-  private AbstractPattern pattern;
+   protected final static Logger log
+      = Logger.getLogger(Pattern.class.getName());
 
-  Pattern(AbstractPattern pattern)
-  {
-    this.pattern = pattern;
-  }
+   private AbstractPattern pattern;
 
-  /**
-   * Returns the first node matching the pattern.  The pattern should
-   * be a select pattern.
-   *
-   * @param node node represented by '.' and start of match.
-   *
-   * @return first matching node
-   */
-  public Node find(Node node)
-    throws XPathException
-  {
-    if (node == null)
-      throw new NullPointerException();
+   Pattern(AbstractPattern pattern) {
+      this.pattern = pattern;
+   }
 
-    Env env = XPath.createEnv();
-    // XXX: doesn't make sense for a match to have a context?
-    //env.setCurrentNode(node);
-    //env.setContextNode(node);
-    
-    Iterator iter = pattern.select(node, env);
+   /**
+    * Returns the first node matching the pattern.  The pattern should
+    * be a select pattern.
+    *
+    * @param node node represented by '.' and start of match.
+    * @return first matching node
+    */
+   public Node find(Node node)
+      throws XPathException {
+      if (node == null)
+         throw new NullPointerException();
 
-    Node value = null;
-    if (iter.hasNext())
-      value = (Node) iter.next();
-
-    XPath.freeEnv(env);
-    
-    return value;
-  }
-
-  /**
-   * Returns the first node matching the pattern.  The pattern should
-   * be a select pattern.
-   *
-   * @param node node represented by '.' and start of match.
-   * @param env variable environment.
-   *
-   * @return first matching node
-   */
-  public Node find(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
-      throw new NullPointerException();
-
-    if (env instanceof Env) {
-      Env globalEnv = (Env) env;
-      
+      Env env = XPath.createEnv();
       // XXX: doesn't make sense for a match to have a context?
-      //globalEnv.setCurrentNode(node);
-      //globalEnv.setContextNode(node);
-    }
-    
-    Iterator iter = pattern.select(node, env);
+      //env.setCurrentNode(node);
+      //env.setContextNode(node);
 
-    Node value = null;
-    if (iter.hasNext())
-      value = (Node) iter.next();
+      Iterator iter = pattern.select(node, env);
 
-    return value;
-  }
+      Node value = null;
+      if (iter.hasNext())
+         value = (Node) iter.next();
 
-  /**
-   * Selects all nodes matching the pattern.  The pattern should be a
-   * select pattern.
-   *
-   * @param node node represented by '.' and start of match.
-   *
-   * @return iterator of matching nodes
-   */
-  public NodeIterator select(Node node)
-    throws XPathException
-  {
-    if (node == null)
-      throw new NullPointerException();
+      XPath.freeEnv(env);
 
-    Env env = XPath.createEnv();
+      return value;
+   }
 
-    env.setCurrentNode(node);
-    
-    NodeIterator iter = pattern.select(node, env);
+   /**
+    * Returns the first node matching the pattern.  The pattern should
+    * be a select pattern.
+    *
+    * @param node node represented by '.' and start of match.
+    * @param env  variable environment.
+    * @return first matching node
+    */
+   public Node find(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         throw new NullPointerException();
 
-    XPath.freeEnv(env);
+      if (env instanceof Env) {
+         Env globalEnv = (Env) env;
 
-    return iter;
-  }
+         // XXX: doesn't make sense for a match to have a context?
+         //globalEnv.setCurrentNode(node);
+         //globalEnv.setContextNode(node);
+      }
 
-  /**
-   * Selects all nodes matching the pattern.  The pattern should be a
-   * select pattern.
-   *
-   * @param context node represented by '.' and start of match.
-   * @param env variable environment.
-   *
-   * @return iterator of matching nodes
-   */
-  public NodeIterator select(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
-      throw new NullPointerException();
+      Iterator iter = pattern.select(node, env);
 
-    if (env instanceof Env) {
-      Env globalEnv = (Env) env;
-      globalEnv.setCurrentNode(node);
-      globalEnv.setContextNode(node);
-    }
-    
-    return pattern.select(node, env);
-  }
-  
-  /**
-   * Test if the node matches the pattern.  The pattern should be a
-   * match pattern.
-   *
-   * @param node node to test
-   *
-   * @return true if the pattern matches.
-   */
-  public boolean isMatch(Node node)
-    throws XPathException
-  {
-    Env env = XPath.createEnv();
+      Node value = null;
+      if (iter.hasNext())
+         value = (Node) iter.next();
 
-    // XXX: doesn't make sense for a match to have a context?
-    //env.setCurrentNode(node);
-    //env.setContextNode(node);
-    
-    boolean value = pattern.match(node, env);
+      return value;
+   }
 
-    XPath.freeEnv(env);
+   /**
+    * Selects all nodes matching the pattern.  The pattern should be a
+    * select pattern.
+    *
+    * @param node node represented by '.' and start of match.
+    * @return iterator of matching nodes
+    */
+   public NodeIterator select(Node node)
+      throws XPathException {
+      if (node == null)
+         throw new NullPointerException();
 
-    return value;
-  }
+      Env env = XPath.createEnv();
 
-  /**
-   * Test if the node matches the pattern.  The pattern should be a
-   * match pattern.
-   *
-   * @param node node to test
-   * @param env variable environment.
-   *
-   * @return true if the pattern matches.
-   */
-  public boolean isMatch(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    return pattern.match(node, env);
-  }
+      env.setCurrentNode(node);
 
-  /**
-   * Returns the underlying pattern implementation.
-   */
-  public AbstractPattern getPattern()
-  {
-    return pattern;
-  }
+      NodeIterator iter = pattern.select(node, env);
 
-  public String toString()
-  {
-    return pattern.toString();
-  }
+      XPath.freeEnv(env);
+
+      return iter;
+   }
+
+   /**
+    * Selects all nodes matching the pattern.  The pattern should be a
+    * select pattern.
+    *
+    * @param context node represented by '.' and start of match.
+    * @param env     variable environment.
+    * @return iterator of matching nodes
+    */
+   public NodeIterator select(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         throw new NullPointerException();
+
+      if (env instanceof Env) {
+         Env globalEnv = (Env) env;
+         globalEnv.setCurrentNode(node);
+         globalEnv.setContextNode(node);
+      }
+
+      return pattern.select(node, env);
+   }
+
+   /**
+    * Test if the node matches the pattern.  The pattern should be a
+    * match pattern.
+    *
+    * @param node node to test
+    * @return true if the pattern matches.
+    */
+   public boolean isMatch(Node node)
+      throws XPathException {
+      Env env = XPath.createEnv();
+
+      // XXX: doesn't make sense for a match to have a context?
+      //env.setCurrentNode(node);
+      //env.setContextNode(node);
+
+      boolean value = pattern.match(node, env);
+
+      XPath.freeEnv(env);
+
+      return value;
+   }
+
+   /**
+    * Test if the node matches the pattern.  The pattern should be a
+    * match pattern.
+    *
+    * @param node node to test
+    * @param env  variable environment.
+    * @return true if the pattern matches.
+    */
+   public boolean isMatch(Node node, ExprEnvironment env)
+      throws XPathException {
+      return pattern.match(node, env);
+   }
+
+   /**
+    * Returns the underlying pattern implementation.
+    */
+   public AbstractPattern getPattern() {
+      return pattern;
+   }
+
+   public String toString() {
+      return pattern.toString();
+   }
 }

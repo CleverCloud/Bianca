@@ -38,8 +38,8 @@ import java.sql.SQLException;
 public interface BiancaResultSet extends ResultSet {
 
    public int getStringLength(int column)
-           throws SQLException;
+      throws SQLException;
 
    public void getString(int column, byte[] buffer, int offset)
-           throws SQLException;
+      throws SQLException;
 }

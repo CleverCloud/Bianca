@@ -38,23 +38,19 @@ import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.lib.MiscModule;
 import com.clevercloud.bianca.lib.string.StringModule;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.bianca.module.IniDefinition;
+import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.bianca.resources.StreamContextResource;
 import com.clevercloud.util.L10N;
+import com.clevercloud.vfs.LockableStream;
 import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.vfs.WriteStream;
-import com.clevercloud.vfs.LockableStream;
 import com.clevercloud.vfs.i18n.UTF8Reader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -69,7 +65,7 @@ public class FileModule extends AbstractBiancaModule {
    private static final L10N L = new L10N(FileModule.class);
    private static final Logger log = Logger.getLogger(FileModule.class.getName());
    public static final String DIRECTORY_SEPARATOR = ""
-           + Path.getFileSeparatorChar();
+      + Path.getFileSeparatorChar();
    public static final String PATH_SEPARATOR = "" + Path.getPathSeparatorChar();
    public static final int UPLOAD_ERR_OK = 0;
    public static final int UPLOAD_ERR_INI_SIZE = 1;
@@ -126,7 +122,7 @@ public class FileModule extends AbstractBiancaModule {
     * Returns the base name of a string.
     */
    public static Value basename(StringValue path,
-           @Optional StringValue suffix) {
+                                @Optional StringValue suffix) {
       int len = path.length();
 
       if (len == 0) {
@@ -195,8 +191,8 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Changes the group of the file.
     *
-    * @param env the PHP executing environment
-    * @param file the file to change the group of
+    * @param env   the PHP executing environment
+    * @param file  the file to change the group of
     * @param group the group id to change to
     */
    public static boolean chgrp(Env env, Path file, Value group) {
@@ -228,7 +224,7 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Changes the permissions of the file.
     *
-    * @param env the PHP executing environment
+    * @param env  the PHP executing environment
     * @param file the file to change the group of
     * @param mode the mode id to change to
     */
@@ -249,7 +245,7 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Changes the ownership of the file.
     *
-    * @param env the PHP executing environment
+    * @param env  the PHP executing environment
     * @param file the file to change the group of
     * @param user the user id to change to
     */
@@ -503,16 +499,16 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Parses a comma-separated-value line from a file.
     *
-    * @param file the file to read
-    * @param length the maximum line length
+    * @param file      the file to read
+    * @param length    the maximum line length
     * @param delimiter optional comma replacement
     * @param enclosure optional quote replacement
     */
    public Value fgetcsv(Env env,
-           @NotNull BinaryInput is,
-           @Optional int length,
-           @Optional String delimiter,
-           @Optional String enclosure) {
+                        @NotNull BinaryInput is,
+                        @Optional int length,
+                        @Optional String delimiter,
+                        @Optional String enclosure) {
       // php/1619
 
       try {
@@ -587,8 +583,8 @@ public class FileModule extends AbstractBiancaModule {
                }
             } else {
                for (;
-                       ch >= 0 && ch != comma && ch != '\r' && ch != '\n';
-                       ch = is.read()) {
+                    ch >= 0 && ch != comma && ch != '\r' && ch != '\n';
+                    ch = is.read()) {
                   sb.append((char) ch);
                }
 
@@ -620,8 +616,8 @@ public class FileModule extends AbstractBiancaModule {
     * Returns the next line
     */
    public static Value fgets(Env env,
-           @NotNull BinaryInput is,
-           @Optional("0x7fffffff") int length) {
+                             @NotNull BinaryInput is,
+                             @Optional("0x7fffffff") int length) {
       // php/1615
       try {
          if (is == null) {
@@ -644,9 +640,9 @@ public class FileModule extends AbstractBiancaModule {
     * Returns the next line stripping tags
     */
    public static Value fgetss(Env env,
-           BinaryInput is,
-           @Optional("0x7fffffff") int length,
-           @Optional Value allowedTags) {
+                              BinaryInput is,
+                              @Optional("0x7fffffff") int length,
+                              @Optional Value allowedTags) {
       // php/161a
 
       try {
@@ -670,14 +666,14 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Parses the file, returning it in an array.  Binary-safe.
     *
-    * @param filename the file's name
+    * @param filename       the file's name
     * @param useIncludePath if 1, use the include path
-    * @param context the resource context
+    * @param context        the resource context
     */
    public static Value file(Env env,
-           StringValue filename,
-           @Optional boolean useIncludePath,
-           @Optional Value context) {
+                            StringValue filename,
+                            @Optional boolean useIncludePath,
+                            @Optional Value context) {
       if (filename.length() == 0) {
          return BooleanValue.FALSE;
       }
@@ -690,7 +686,7 @@ public class FileModule extends AbstractBiancaModule {
          }
 
          BinaryInput bi = (BinaryInput) stream;
-         UTF8Reader is = new UTF8Reader (bi.getInputStream ());
+         UTF8Reader is = new UTF8Reader(bi.getInputStream());
 
          ArrayValue result = new ArrayValueImpl();
          try {
@@ -919,17 +915,17 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Parses the file, returning it as a string array.
     *
-    * @param filename the file's name
+    * @param filename       the file's name
     * @param useIncludePath if true, use the include path
-    * @param context the resource context
+    * @param context        the resource context
     */
    @ReturnNullAsFalse
    public static StringValue file_get_contents(Env env,
-           StringValue filename,
-           @Optional boolean useIncludePath,
-           @Optional Value context,
-           @Optional long offset,
-           @Optional("4294967296") long maxLen) {
+                                               StringValue filename,
+                                               @Optional boolean useIncludePath,
+                                               @Optional Value context,
+                                               @Optional long offset,
+                                               @Optional("4294967296") long maxLen) {
       if (filename.length() == 0) {
          env.warning(L.l("file name must not be null"));
          return null;
@@ -954,10 +950,10 @@ public class FileModule extends AbstractBiancaModule {
     * Writes data to a file.
     */
    public static Value file_put_contents(Env env,
-           StringValue filename,
-           Value data,
-           @Optional int flags,
-           @Optional Value context) {
+                                         StringValue filename,
+                                         Value data,
+                                         @Optional int flags,
+                                         @Optional Value context) {
       if (filename.length() == 0) {
          env.warning(L.l("file name must not be null"));
          return BooleanValue.FALSE;
@@ -1016,7 +1012,7 @@ public class FileModule extends AbstractBiancaModule {
          throw new BiancaModuleException(e);
       } finally {
          if (s != null && (s instanceof LockableStream)
-                 && ((flags & LOCK_EX) != 0)) {
+            && ((flags & LOCK_EX) != 0)) {
             flock(env, (LockableStream) s, LOCK_UN, null);
          }
       }
@@ -1025,14 +1021,14 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Advisory locking
     *
-    * @param fileV the file handle
-    * @param operation the locking operation
+    * @param fileV      the file handle
+    * @param operation  the locking operation
     * @param wouldBlock the resource context
     */
    public static boolean flock(Env env,
-           LockableStream fileV,
-           int operation,
-           @Optional Value wouldBlock) {
+                               LockableStream fileV,
+                               int operation,
+                               @Optional Value wouldBlock) {
       // TODO: also wouldblock is a ref
 
       if (fileV == null) {
@@ -1146,7 +1142,7 @@ public class FileModule extends AbstractBiancaModule {
 
             case '/':
                if (!((inSquareBrackets || inCurlyBrackets)
-                       && ((flags & FNM_PATHNAME) != 0))) {
+                  && ((flags & FNM_PATHNAME) != 0))) {
                   globRegex.append(ch);
 
                   if (inSquareBrackets) {
@@ -1268,7 +1264,7 @@ public class FileModule extends AbstractBiancaModule {
     * Returns true if the given string matches the given glob pattern.
     */
    public static boolean fnmatch(Env env, String pattern, String string,
-           @Optional int flags) {
+                                 @Optional int flags) {
       if (pattern == null || string == null) {
          return false;
       }
@@ -1291,9 +1287,9 @@ public class FileModule extends AbstractBiancaModule {
             // special case: if the string starts with '/.', then the pattern
             // must also start with exactly that.
             if ((string.length() >= 2)
-                    && (string.charAt(0) == '/') && (string.charAt(1) == '.')) {
+               && (string.charAt(0) == '/') && (string.charAt(1) == '.')) {
                if (!((pattern.length() >= 2)
-                       && (pattern.charAt(0) == '/') && (pattern.charAt(1) == '.'))) {
+                  && (pattern.charAt(0) == '/') && (pattern.charAt(1) == '.'))) {
                   return false;
                }
 
@@ -1313,7 +1309,7 @@ public class FileModule extends AbstractBiancaModule {
    }
 
    private static ProtocolWrapper getProtocolWrapper(Env env,
-           StringValue pathName) {
+                                                     StringValue pathName) {
       int p = pathName.indexOf(":");
 
       if (p < 0) {
@@ -1328,16 +1324,16 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Opens a file.
     *
-    * @param filename the path to the file to open
-    * @param mode the mode the file should be opened as.
+    * @param filename       the path to the file to open
+    * @param mode           the mode the file should be opened as.
     * @param useIncludePath if true, search the current include path
     */
    @ReturnNullAsFalse
    public static BinaryStream fopen(Env env,
-           StringValue filename,
-           String mode,
-           @Optional boolean useIncludePath,
-           @Optional Value contextV) {
+                                    StringValue filename,
+                                    String mode,
+                                    @Optional boolean useIncludePath,
+                                    @Optional Value contextV) {
       if (filename.length() == 0) {
          env.warning(L.l("file name must not be null"));
          return null;
@@ -1367,8 +1363,8 @@ public class FileModule extends AbstractBiancaModule {
             }
 
             return wrapper.fopen(env, filename,
-                    env.createString(mode),
-                    LongValue.create(options));
+               env.createString(mode),
+               LongValue.create(options));
          }
 
          Path path = env.lookupPwd(filename);
@@ -1391,12 +1387,12 @@ public class FileModule extends AbstractBiancaModule {
                return null;
             }
             // server/2l80
-        /* else if (! path.exists()) {
-            env.warning(L.l("{0} cannot be read", path.getFullPath()));
+            /* else if (! path.exists()) {
+           env.warning(L.l("{0} cannot be read", path.getFullPath()));
 
-            return null;
-            }
-             */
+           return null;
+           }
+            */
 
             try {
                String scheme = path.getScheme();
@@ -1405,7 +1401,7 @@ public class FileModule extends AbstractBiancaModule {
                   return new HttpInputOutput(env, path, context);
                } else if (mode.startsWith("r+")) {
                   return new FileInputOutput(env, path,
-                          false, false, false);
+                     false, false, false);
                } else {
                   return new FileInput(env, path);
                }
@@ -1424,7 +1420,7 @@ public class FileModule extends AbstractBiancaModule {
                   return new HttpInputOutput(env, path, context);
                } else if (mode.startsWith("w+")) {
                   return new FileInputOutput(env, path,
-                          false, true, false);
+                     false, true, false);
                } else {
                   return new FileOutput(env, path);
                }
@@ -1439,7 +1435,7 @@ public class FileModule extends AbstractBiancaModule {
             try {
                if (mode.startsWith("a+")) {
                   return new FileInputOutput(env, path,
-                          true, false, false);
+                     true, false, false);
                } else {
                   return new FileOutput(env, path, true);
                }
@@ -1459,7 +1455,7 @@ public class FileModule extends AbstractBiancaModule {
 
             if (mode.startsWith("x+")) {
                return new FileInputOutput(env, path,
-                       false, false, false);
+                  false, false, false);
             } else {
                return new FileOutput(env, path);
             }
@@ -1472,7 +1468,7 @@ public class FileModule extends AbstractBiancaModule {
          log.log(Level.FINE, e.toString(), e);
 
          env.warning(L.l("{0} can't be opened.\n{1}",
-                 filename, e.toString()));
+            filename, e.toString()));
 
          return null;
       }
@@ -1482,14 +1478,14 @@ public class FileModule extends AbstractBiancaModule {
       String scheme = path.getScheme();
 
       if ("".equals(scheme)
-              || "file".equals(scheme)
-              || "memory".equals(scheme)) {
+         || "file".equals(scheme)
+         || "memory".equals(scheme)) {
          return false;
       }
 
       // TODO: too restrictive for filters
       return !"php".equals(scheme)
-              || path.toString().startsWith("php://filter");
+         || path.toString().startsWith("php://filter");
    }
 
    /**
@@ -1516,15 +1512,15 @@ public class FileModule extends AbstractBiancaModule {
    /**
     * Parses a comma-separated-value line from a file.
     *
-    * @param file the file to read
+    * @param file      the file to read
     * @param delimiter optional comma replacement
     * @param enclosure optional quote replacement
     */
    public Value fputcsv(Env env,
-           @NotNull BinaryOutput os,
-           @NotNull ArrayValue value,
-           @Optional StringValue delimiter,
-           @Optional StringValue enclosure) {
+                        @NotNull BinaryOutput os,
+                        @NotNull ArrayValue value,
+                        @Optional StringValue delimiter,
+                        @Optional StringValue enclosure) {
       // php/1636
 
       try {
@@ -1593,9 +1589,9 @@ public class FileModule extends AbstractBiancaModule {
     * Writes a string to the file.
     */
    public static Value fputs(Env env,
-           BinaryOutput os,
-           InputStream value,
-           @Optional("0x7fffffff") int length) {
+                             BinaryOutput os,
+                             InputStream value,
+                             @Optional("0x7fffffff") int length) {
       return fwrite(env, os, value, length);
    }
 
@@ -1605,8 +1601,8 @@ public class FileModule extends AbstractBiancaModule {
     * @param is the file
     */
    public static Value fread(Env env,
-           @NotNull BinaryInput is,
-           int length) {
+                             @NotNull BinaryInput is,
+                             int length) {
       if (is == null) {
          return BooleanValue.FALSE;
       }
@@ -1626,9 +1622,9 @@ public class FileModule extends AbstractBiancaModule {
     * Reads and parses a line.
     */
    public static Value fscanf(Env env,
-           @NotNull BinaryInput is,
-           StringValue format,
-           @Optional Value[] args) {
+                              @NotNull BinaryInput is,
+                              StringValue format,
+                              @Optional Value[] args) {
       try {
          if (is == null) {
             return BooleanValue.FALSE;
@@ -1653,9 +1649,9 @@ public class FileModule extends AbstractBiancaModule {
     * @return 0 on success, -1 on error.
     */
    public static Value fseek(Env env,
-           @NotNull BinaryStream binaryStream,
-           long offset,
-           @Optional("SEEK_SET") int whence) {
+                             @NotNull BinaryStream binaryStream,
+                             long offset,
+                             @Optional("SEEK_SET") int whence) {
       if (binaryStream == null) {
          return LongValue.MINUS_ONE;
       }
@@ -1687,7 +1683,7 @@ public class FileModule extends AbstractBiancaModule {
     * @return position in file or FALSE on error.
     */
    public static Value ftell(Env env,
-           @NotNull BinaryStream binaryStream) {
+                             @NotNull BinaryStream binaryStream) {
       if (binaryStream == null) {
          return BooleanValue.FALSE;
       }
@@ -1705,8 +1701,8 @@ public class FileModule extends AbstractBiancaModule {
     * Truncates a file.
     */
    public static boolean ftruncate(Env env,
-           @NotNull BinaryOutput handle,
-           long size) {
+                                   @NotNull BinaryOutput handle,
+                                   long size) {
       Path path = null;
 
       if (handle instanceof FileOutput) {
@@ -1728,9 +1724,9 @@ public class FileModule extends AbstractBiancaModule {
     * Writes a string to the file.
     */
    public static Value fwrite(Env env,
-           @NotNull BinaryOutput os,
-           InputStream value,
-           @Optional("0x7fffffff") int length) {
+                              @NotNull BinaryOutput os,
+                              InputStream value,
+                              @Optional("0x7fffffff") int length) {
       try {
          if (os == null) {
             return BooleanValue.FALSE;
@@ -1743,8 +1739,8 @@ public class FileModule extends AbstractBiancaModule {
    }
 
    private static ArrayValue globImpl(Env env, String pattern, int flags,
-           Path path, String prefix,
-           ArrayValue result) {
+                                      Path path, String prefix,
+                                      ArrayValue result) {
       String cwdPattern;
       String subPattern = null;
 
@@ -1823,11 +1819,11 @@ public class FileModule extends AbstractBiancaModule {
                   // actual array
 
                   boolean isNull = null == globImpl(env,
-                          subPattern,
-                          flags,
-                          entryPath,
-                          sb.toString(),
-                          result);
+                     subPattern,
+                     flags,
+                     entryPath,
+                     sb.toString(),
+                     result);
 
                   if ((flags & GLOB_ERR) != 0 && isNull) {
                      return null;
@@ -1838,9 +1834,9 @@ public class FileModule extends AbstractBiancaModule {
             }
 
             if ((firstSlash < 0 || subPattern.length() == 0)
-                    && (((flags & GLOB_ONLYDIR) == 0)
-                    || (((flags & GLOB_ONLYDIR) != 0)
-                    && (entryPath != null && entryPath.isDirectory())))) {
+               && (((flags & GLOB_ONLYDIR) == 0)
+               || (((flags & GLOB_ONLYDIR) != 0)
+               && (entryPath != null && entryPath.isDirectory())))) {
                result.put(sb);
             }
          }
@@ -1908,7 +1904,7 @@ public class FileModule extends AbstractBiancaModule {
 
          pattern = pattern.substring(i);
       } else if (Path.isWindows()
-              && patternLength > 2 && pattern.charAt(1) == ':') {
+         && patternLength > 2 && pattern.charAt(1) == ':') {
          prefix = pattern.substring(0, 2);
 
          String driveLetter = pattern.substring(0, 2);
@@ -1940,7 +1936,7 @@ public class FileModule extends AbstractBiancaModule {
     * Breaks a glob with braces into multiple globs.
     */
    private static Value globBrace(Env env, String pattern, int flags,
-           int braceIndex) {
+                                  int braceIndex) {
       int patternLength = pattern.length();
 
       boolean isEscaped = false;
@@ -2065,7 +2061,7 @@ public class FileModule extends AbstractBiancaModule {
     * @param path the path to check
     */
    public static boolean is_executable(Env env,
-           @NotNull Path path) {
+                                       @NotNull Path path) {
       if (path == null || !path.exists()) {
          return false;
       }
@@ -2075,13 +2071,13 @@ public class FileModule extends AbstractBiancaModule {
          String tail = path.getTail();
 
          return tail.endsWith(".exe")
-                 || tail.endsWith(".com")
-                 || tail.endsWith(".bat")
-                 || tail.endsWith(".cmd");
+            || tail.endsWith(".com")
+            || tail.endsWith(".bat")
+            || tail.endsWith(".cmd");
       } else {
          String cmd = "if [ -x "
-                 + path.getNativePath()
-                 + " ]; then echo 1; else echo 0; fi";
+            + path.getNativePath()
+            + " ]; then echo 1; else echo 0; fi";
 
          String result = MiscModule.shell_exec(env, cmd).toString();
 
@@ -2204,7 +2200,7 @@ public class FileModule extends AbstractBiancaModule {
       if (wrapper != null) // XXX flags?
       {
          return wrapper.url_stat(env, filename,
-                 LongValue.create(StreamModule.STREAM_URL_STAT_LINK));
+            LongValue.create(StreamModule.STREAM_URL_STAT_LINK));
       }
 
       Path path = env.lookupPwd(filename);
@@ -2221,16 +2217,16 @@ public class FileModule extends AbstractBiancaModule {
     * @param path the directory to make
     */
    public static boolean mkdir(Env env,
-           StringValue dirname,
-           @Optional int mode,
-           @Optional boolean recursive,
-           @Optional Value context) {
+                               StringValue dirname,
+                               @Optional int mode,
+                               @Optional boolean recursive,
+                               @Optional Value context) {
       ProtocolWrapper wrapper = getProtocolWrapper(env, dirname);
 
       if (wrapper != null) // XXX options?
       {
          return wrapper.mkdir(env, dirname,
-                 LongValue.create(mode), LongValue.ZERO);
+            LongValue.create(mode), LongValue.ZERO);
       }
 
       Path path = env.lookupPwd(dirname);
@@ -2252,11 +2248,11 @@ public class FileModule extends AbstractBiancaModule {
     * Moves the uploaded file.
     *
     * @param path the temp name of the uploaded file
-    * @param dst the destination path
+    * @param dst  the destination path
     */
    public static boolean move_uploaded_file(Env env,
-           @NotNull Path src,
-           @NotNull Path dst) {
+                                            @NotNull Path src,
+                                            @NotNull Path dst) {
       // php/1665, php/1666
 
       if (src == null) {
@@ -2290,7 +2286,7 @@ public class FileModule extends AbstractBiancaModule {
     * @param pathName the directory to open
     */
    public static Value opendir(Env env, StringValue pathName,
-           @Optional Value context) {
+                               @Optional Value context) {
       ProtocolWrapper wrapper = getProtocolWrapper(env, pathName);
 
       if (wrapper != null) /// XXX options?
@@ -2317,8 +2313,8 @@ public class FileModule extends AbstractBiancaModule {
     * Parses the ini file.
     */
    public static Value parse_ini_file(Env env,
-           Path path,
-           @Optional boolean processSections) {
+                                      Path path,
+                                      @Optional boolean processSections) {
       ReadStream is = null;
 
       try {
@@ -2338,9 +2334,9 @@ public class FileModule extends AbstractBiancaModule {
    }
 
    private static ArrayValue parseIni(Env env,
-           ReadStream is,
-           boolean processSections)
-           throws IOException {
+                                      ReadStream is,
+                                      boolean processSections)
+      throws IOException {
       ArrayValue top = new ArrayValueImpl();
       ArrayValue section = top;
 
@@ -2389,7 +2385,7 @@ public class FileModule extends AbstractBiancaModule {
    }
 
    private static Value parseIniValue(Env env, int ch, ReadStream is)
-           throws IOException {
+      throws IOException {
       if (ch == '\r' || ch == '\n') {
          return NullValue.NULL;
       }
@@ -2418,8 +2414,8 @@ public class FileModule extends AbstractBiancaModule {
          StringBuilder sb = new StringBuilder();
 
          for (;
-                 ch >= 0 && ch != '\r' && ch != '\n';
-                 ch = is.read()) {
+              ch >= 0 && ch != '\r' && ch != '\n';
+              ch = is.read()) {
 
             if (ch == ';') {
                skipToEndOfLine(ch, is);
@@ -2431,8 +2427,8 @@ public class FileModule extends AbstractBiancaModule {
                   StringBuilder var = new StringBuilder();
 
                   for (ch = is.read();
-                          ch >= 0 && ch != '\r' && ch != '\n' && ch != '}';
-                          ch = is.read()) {
+                       ch >= 0 && ch != '\r' && ch != '\n' && ch != '}';
+                       ch = is.read()) {
                      var.append((char) ch);
                   }
 
@@ -2475,10 +2471,10 @@ public class FileModule extends AbstractBiancaModule {
       if (value.equalsIgnoreCase("null")) {
          return "";
       } else if (value.equalsIgnoreCase("true")
-              || value.equalsIgnoreCase("yes")) {
+         || value.equalsIgnoreCase("yes")) {
          return "1";
       } else if (value.equalsIgnoreCase("false")
-              || value.equalsIgnoreCase("no")) {
+         || value.equalsIgnoreCase("no")) {
          return "";
       } else if (env.isDefined(value)) {
          return env.getConstant(value).toString();
@@ -2489,18 +2485,18 @@ public class FileModule extends AbstractBiancaModule {
 
    private static boolean isValidIniKeyChar(char ch) {
       if (ch <= 0
-              || ch == '='
-              || ch == ';'
-              || ch == '{'
-              || ch == '}'
-              || ch == '|'
-              || ch == '&'
-              || ch == '~'
-              || ch == '!'
-              || ch == '['
-              || ch == '('
-              || ch == ')'
-              || ch == '"') {
+         || ch == '='
+         || ch == ';'
+         || ch == '{'
+         || ch == '}'
+         || ch == '|'
+         || ch == '&'
+         || ch == '~'
+         || ch == '!'
+         || ch == '['
+         || ch == '('
+         || ch == ')'
+         || ch == '"') {
          return false;
       } else {
          return true;
@@ -2508,7 +2504,7 @@ public class FileModule extends AbstractBiancaModule {
    }
 
    private static void skipToEndOfLine(int ch, ReadStream is)
-           throws IOException {
+      throws IOException {
       for (; ch > 0 && ch != '\r' && ch != '\n'; ch = is.read()) {
       }
    }
@@ -2593,8 +2589,8 @@ public class FileModule extends AbstractBiancaModule {
 
    @ReturnNullAsFalse
    public static BinaryStream popen(Env env,
-           @NotNull String command,
-           @NotNull StringValue mode) {
+                                    @NotNull String command,
+                                    @NotNull StringValue mode) {
       boolean doRead = false;
 
       if (mode.toString().equalsIgnoreCase("r")) {
@@ -2654,9 +2650,9 @@ public class FileModule extends AbstractBiancaModule {
     * Read the contents of a file and write them out.
     */
    public Value readfile(Env env,
-           StringValue filename,
-           @Optional boolean useIncludePath,
-           @Optional Value context) {
+                         StringValue filename,
+                         @Optional boolean useIncludePath,
+                         @Optional Value context) {
       if (filename.length() == 0) {
          return BooleanValue.FALSE;
       }
@@ -2717,7 +2713,7 @@ public class FileModule extends AbstractBiancaModule {
     * Renames a file
     *
     * @param fromPath the path to change to
-    * @param toPath the path to change to
+    * @param toPath   the path to change to
     */
    public static boolean rename(Env env, StringValue from, StringValue to) {
       ProtocolWrapper wrapper = getProtocolWrapper(env, from);
@@ -2749,7 +2745,7 @@ public class FileModule extends AbstractBiancaModule {
     * @param is the file resource
     */
    public static Value rewind(Env env,
-           @NotNull BinaryStream binaryStream) {
+                              @NotNull BinaryStream binaryStream) {
       if (binaryStream == null) {
          return BooleanValue.FALSE;
       }
@@ -2776,8 +2772,8 @@ public class FileModule extends AbstractBiancaModule {
     * remove a directory
     */
    public static boolean rmdir(Env env,
-           StringValue filename,
-           @Optional Value context) {
+                               StringValue filename,
+                               @Optional Value context) {
       ProtocolWrapper wrapper = getProtocolWrapper(env, filename);
 
       if (wrapper != null) // XXX options?
@@ -2823,8 +2819,8 @@ public class FileModule extends AbstractBiancaModule {
     * @param fileName the directory
     */
    public static Value scandir(Env env, StringValue fileName,
-           @Optional("1") int order,
-           @Optional Value context) {
+                               @Optional("1") int order,
+                               @Optional Value context) {
       if (fileName.length() == 0) {
          env.warning(L.l("file name must not be NULL"));
          return BooleanValue.FALSE;
@@ -2851,7 +2847,7 @@ public class FileModule extends AbstractBiancaModule {
          } else {
             for (int i = values.length - 1; i >= 0; i--) {
                result.append(LongValue.create(values.length - i - 1),
-                       env.createString(values[i]));
+                  env.createString(values[i]));
             }
          }
 
@@ -2865,7 +2861,7 @@ public class FileModule extends AbstractBiancaModule {
     * Sets the write buffer.
     */
    public static int set_file_buffer(Env env, BinaryOutput stream,
-           int bufferSize) {
+                                     int bufferSize) {
       return StreamModule.stream_set_write_buffer(env, stream, bufferSize);
    }
 
@@ -3001,9 +2997,9 @@ public class FileModule extends AbstractBiancaModule {
     * sets the time to the current time
     */
    public static boolean touch(Env env,
-           Path path,
-           @Optional int time,
-           @Optional int atime) {
+                               Path path,
+                               @Optional int time,
+                               @Optional int atime) {
       // TODO: atime not implemented (it might be > time)
 
       try {
@@ -3037,8 +3033,8 @@ public class FileModule extends AbstractBiancaModule {
     * remove call
     */
    public static boolean unlink(Env env,
-           StringValue filename,
-           @Optional Value context) {
+                                StringValue filename,
+                                @Optional Value context) {
       // bianca/160p
 
       // TODO: safe_mode
@@ -3069,7 +3065,7 @@ public class FileModule extends AbstractBiancaModule {
 
       @Override
       public void cleanup()
-              throws IOException {
+         throws IOException {
          _path.remove();
       }
    }
@@ -3077,11 +3073,11 @@ public class FileModule extends AbstractBiancaModule {
    static {
       ProtocolWrapper zlibProtocolWrapper = new ZlibProtocolWrapper();
       StreamModule.stream_wrapper_register(new StringValue("compress.zlib"),
-              zlibProtocolWrapper);
+         zlibProtocolWrapper);
       StreamModule.stream_wrapper_register(new StringValue("zlib"),
-              zlibProtocolWrapper);
+         zlibProtocolWrapper);
       StreamModule.stream_wrapper_register(new StringValue("php"),
-              new PhpProtocolWrapper());
+         new PhpProtocolWrapper());
 
       addConstant(_constMap, "SEEK_SET", SEEK_SET);
       addConstant(_constMap, "SEEK_CUR", SEEK_CUR);
@@ -3104,6 +3100,7 @@ public class FileModule extends AbstractBiancaModule {
       addConstant(_constMap, "GLOB_BRACE", GLOB_BRACE);
       addConstant(_constMap, "GLOB_ONLYDIR", GLOB_ONLYDIR);
    }
+
    static final IniDefinition INI_ALLOW_URL_FOPEN = _iniDefinitions.add("allow_url_fopen", true, PHP_INI_SYSTEM);
    static final IniDefinition INI_USER_AGENT = _iniDefinitions.add("user_agent", null, PHP_INI_ALL);
    static final IniDefinition INI_DEFAULT_SOCKET_TIMEOUT = _iniDefinitions.add("default_socket_timeout", 60, PHP_INI_ALL);

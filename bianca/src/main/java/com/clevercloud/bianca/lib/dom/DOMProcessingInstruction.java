@@ -31,14 +31,13 @@ package com.clevercloud.bianca.lib.dom;
 
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.Env;
-
 import org.w3c.dom.ProcessingInstruction;
 
 public class DOMProcessingInstruction
-        extends DOMNode<ProcessingInstruction> {
+   extends DOMNode<ProcessingInstruction> {
 
    public static DOMProcessingInstruction __construct(
-           Env env, String name, @Optional String data) {
+      Env env, String name, @Optional String data) {
       DOMProcessingInstruction pi = getImpl(env).createProcessingInstruction(name);
 
       if (data != null && data.length() > 0) {
@@ -49,7 +48,7 @@ public class DOMProcessingInstruction
    }
 
    DOMProcessingInstruction(
-           DOMImplementation impl, ProcessingInstruction delegate) {
+      DOMImplementation impl, ProcessingInstruction delegate) {
       super(impl, delegate);
    }
 
@@ -62,7 +61,7 @@ public class DOMProcessingInstruction
    }
 
    public void setData(String data)
-           throws DOMException {
+      throws DOMException {
       try {
          _delegate.setData(data);
       } catch (org.w3c.dom.DOMException ex) {

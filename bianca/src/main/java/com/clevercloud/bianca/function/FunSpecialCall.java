@@ -29,11 +29,7 @@
  */
 package com.clevercloud.bianca.function;
 
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.BiancaClass;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 
 /**
  * Represents a function
@@ -64,13 +60,13 @@ public class FunSpecialCall extends AbstractFunction {
     */
    @Override
    public Value callMethod(Env env,
-           BiancaClass qClass,
-           Value qThis,
-           Value[] args) {
+                           BiancaClass qClass,
+                           Value qThis,
+                           Value[] args) {
       ArrayValueImpl arrayArgs = new ArrayValueImpl(args);
 
       return _call.callMethod(env, qClass, qThis,
-              _name, arrayArgs);
+         _name, arrayArgs);
    }
 
    @Override

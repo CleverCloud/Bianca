@@ -44,7 +44,7 @@ import java.util.Map;
  * Represents a foreach statement.
  */
 public class ForeachStatement
-        extends Statement {
+   extends Statement {
 
    protected final Expr _objExpr;
    protected final AbstractVarExpr _key;
@@ -54,12 +54,12 @@ public class ForeachStatement
    protected final String _label;
 
    public ForeachStatement(Location location,
-           Expr objExpr,
-           AbstractVarExpr key,
-           AbstractVarExpr value,
-           boolean isRef,
-           Statement block,
-           String label) {
+                           Expr objExpr,
+                           AbstractVarExpr key,
+                           AbstractVarExpr value,
+                           boolean isRef,
+                           Statement block,
+                           String label) {
       super(location);
 
       _objExpr = objExpr;

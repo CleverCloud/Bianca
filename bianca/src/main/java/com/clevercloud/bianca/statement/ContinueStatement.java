@@ -29,13 +29,13 @@
  */
 package com.clevercloud.bianca.statement;
 
-import java.util.ArrayList;
-
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.ContinueValue;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.expr.Expr;
+
+import java.util.ArrayList;
 
 /**
  * Represents a continue expression statement in a PHP program.
@@ -47,8 +47,8 @@ public class ContinueStatement extends Statement {
    protected final ArrayList<String> _loopLabelList;
 
    public ContinueStatement(Location location,
-           Expr target,
-           ArrayList<String> loopLabelList) {
+                            Expr target,
+                            ArrayList<String> loopLabelList) {
       super(location);
       _target = target;
       _loopLabelList = loopLabelList;

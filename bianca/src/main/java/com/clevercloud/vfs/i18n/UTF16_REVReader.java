@@ -37,77 +37,70 @@ import java.io.Reader;
  * Implements an encoding reader for UTF-16 using the reversed order.
  */
 public class UTF16_REVReader extends EncodingReader {
-  private InputStream is;
+   private InputStream is;
 
-  /**
-   * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
-   */
-  public UTF16_REVReader()
-  {
-  }
+   /**
+    * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
+    */
+   public UTF16_REVReader() {
+   }
 
-  /**
-   * Create a UTF-16 reader using the input stream to provide bytes.
-   */
-  private UTF16_REVReader(InputStream is)
-  {
-    this.is = is;
-  }
+   /**
+    * Create a UTF-16 reader using the input stream to provide bytes.
+    */
+   private UTF16_REVReader(InputStream is) {
+      this.is = is;
+   }
 
-  /**
-   * Create a UTF-16 reader based on the readStream.
-   *
-   * @param is the input stream providing the bytes.
-   * @param javaEncoding the JDK name for the encoding.
-   *
-   * @return the UTF-16 reader.
-   */
-  public Reader create(InputStream is, String javaEncoding)
-  {
-    return new UTF16_REVReader(is);
-  }
+   /**
+    * Create a UTF-16 reader based on the readStream.
+    *
+    * @param is           the input stream providing the bytes.
+    * @param javaEncoding the JDK name for the encoding.
+    * @return the UTF-16 reader.
+    */
+   public Reader create(InputStream is, String javaEncoding) {
+      return new UTF16_REVReader(is);
+   }
 
-  /**
-   * Reads into a character buffer using the correct encoding.
-   *
-   * @return the next character or -1 on end of file.
-   */
-  public int read()
-    throws IOException
-  {
-    int ch1 = is.read();
-    int ch2 = is.read();
-
-    if (ch2 < 0)
-      return -1;
-
-    return (ch2 << 8) + ch1;
-  }
-
-  /**
-   * Reads into a character buffer using the correct encoding.
-   *
-   * @param cbuf character buffer receiving the data.
-   * @param off starting offset into the buffer.
-   * @param len number of characters to read.
-   *
-   * @return the number of characters read or -1 on end of file.
-   */
-  public int read(char []cbuf, int off, int len)
-    throws IOException
-  {
-    int i = 0;
-
-    for (i = 0; i < len; i++) {
+   /**
+    * Reads into a character buffer using the correct encoding.
+    *
+    * @return the next character or -1 on end of file.
+    */
+   public int read()
+      throws IOException {
       int ch1 = is.read();
       int ch2 = is.read();
 
       if (ch2 < 0)
-        return i == 0 ? -1 : i;
+         return -1;
 
-      cbuf[off + i] = (char) ((ch2 << 8) + ch1);
-    }
+      return (ch2 << 8) + ch1;
+   }
 
-    return i;
-  }
+   /**
+    * Reads into a character buffer using the correct encoding.
+    *
+    * @param cbuf character buffer receiving the data.
+    * @param off  starting offset into the buffer.
+    * @param len  number of characters to read.
+    * @return the number of characters read or -1 on end of file.
+    */
+   public int read(char[] cbuf, int off, int len)
+      throws IOException {
+      int i = 0;
+
+      for (i = 0; i < len; i++) {
+         int ch1 = is.read();
+         int ch2 = is.read();
+
+         if (ch2 < 0)
+            return i == 0 ? -1 : i;
+
+         cbuf[off + i] = (char) ((ch2 << 8) + ch1);
+      }
+
+      return i;
+   }
 }

@@ -29,16 +29,14 @@
 package com.clevercloud.bianca.lib.xml;
 
 import com.clevercloud.bianca.annotation.Optional;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.LongValue;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 import com.clevercloud.vfs.Path;
 
-import javax.xml.stream.*;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -80,7 +78,7 @@ public class XmlReader {
 
    /**
     * Default constructor.
-    *
+    * <p/>
     * XXX: Not completely sure what the passed in string(s) does.
     *
     * @param string not used
@@ -188,7 +186,7 @@ public class XmlReader {
          }
 
          return BooleanValue.create(
-                 _hasAttribute || _streamReader.getAttributeCount() > 0);
+            _hasAttribute || _streamReader.getAttributeCount() > 0);
       } catch (IllegalStateException ex) {
          log.log(Level.WARNING, ex.toString(), ex);
 
@@ -239,7 +237,7 @@ public class XmlReader {
       // like <element/>.  Even something like <element></element> was
       // not considered empty.
       if (_currentNodeType == XMLStreamConstants.START_ELEMENT
-              && _streamReader.isEndElement()) {
+         && _streamReader.isEndElement()) {
          return BooleanValue.TRUE;
       }
 
@@ -342,7 +340,7 @@ public class XmlReader {
 
       if (!_streamReader.isWhiteSpace()) {
          Integer convertedInteger =
-                 _constConvertMap.get(_streamReader.getEventType());
+            _constConvertMap.get(_streamReader.getEventType());
 
          convertedInt = convertedInteger.intValue();
       }
@@ -416,7 +414,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @return
     */
    public Value expand() {
@@ -424,7 +421,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param name
     * @return
     */
@@ -433,7 +429,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param index
     * @return
     */
@@ -442,7 +437,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param localName
     * @param namespaceURI
     * @return
@@ -452,7 +446,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param property
     * @return
     */
@@ -461,7 +454,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @return
     */
    public BooleanValue isValid() {
@@ -469,7 +461,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param prefix
     * @return
     */
@@ -478,7 +469,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param name
     * @return
     */
@@ -487,7 +477,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param index
     * @return
     */
@@ -496,7 +485,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param localName
     * @param namespaceURI
     * @return
@@ -506,7 +494,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @return
     */
    public BooleanValue moveToElement() {
@@ -514,7 +501,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @return
     */
    public BooleanValue moveToFirstAttribute() {
@@ -522,7 +508,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @return
     */
    public BooleanValue moveToNextAttribute() {
@@ -530,7 +515,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param localname
     * @return
     */
@@ -549,12 +533,12 @@ public class XmlReader {
          XMLInputFactory factory = XMLInputFactory.newInstance();
 
          _streamReader = factory.createXMLStreamReader(
-                 path.getNativePath(), path.openRead());
+            path.getNativePath(), path.openRead());
       } catch (XMLStreamException ex) {
          log.log(Level.WARNING, ex.toString(), ex);
 
          env.warning(L.l("XML input file '{0}' cannot be opened for reading.",
-                 path));
+            path));
 
          return BooleanValue.FALSE;
       } catch (IOException ex) {
@@ -570,22 +554,20 @@ public class XmlReader {
 
    /**
     * Updates the depth.
-    *
     */
    private void updateDepth(Env env) {
       if (_lastNodeType == XMLStreamConstants.START_ELEMENT
-              && !_streamReader.isEndElement()) {
+         && !_streamReader.isEndElement()) {
          _depth++;
       } else if ((_lastNodeType == XMLStreamConstants.CHARACTERS
-              || _lastNodeType == XMLStreamConstants.COMMENT)
-              && _currentNodeType == XMLStreamConstants.END_ELEMENT) {
+         || _lastNodeType == XMLStreamConstants.COMMENT)
+         && _currentNodeType == XMLStreamConstants.END_ELEMENT) {
          _depth--;
       }
    }
 
    /**
     * Maintains the _hasAttribute variable.
-    *
     */
    private void updateAttribute(Env env) {
       _hasAttribute = false;
@@ -593,14 +575,14 @@ public class XmlReader {
       String key = getName(env).toString() + _depth;
 
       if (_currentNodeType == XMLStreamConstants.START_ELEMENT
-              && _streamReader.getAttributeCount() > 0) {
+         && _streamReader.getAttributeCount() > 0) {
          _startElements.put(key, _depth);
 
          _hasAttribute = true;
       }
 
       if (_currentNodeType == XMLStreamConstants.END_ELEMENT
-              && _startElements.containsKey(key)) {
+         && _startElements.containsKey(key)) {
          _hasAttribute = true;
 
          _startElements.remove(key);
@@ -661,7 +643,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param property
     * @param value
     * @return
@@ -671,7 +652,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param filename
     * @return
     */
@@ -680,7 +660,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param source
     * @return
     */
@@ -689,7 +668,6 @@ public class XmlReader {
    }
 
    /**
-    *
     * @param source
     * @return
     */
@@ -699,15 +677,15 @@ public class XmlReader {
 
    static {
       _constConvertMap.put(XMLStreamConstants.ATTRIBUTE,
-              ATTRIBUTE);
+         ATTRIBUTE);
       _constConvertMap.put(XMLStreamConstants.CDATA,
-              CDATA);
+         CDATA);
       _constConvertMap.put(XMLStreamConstants.CHARACTERS,
-              TEXT);
+         TEXT);
       _constConvertMap.put(XMLStreamConstants.COMMENT,
-              COMMENT);
+         COMMENT);
       _constConvertMap.put(XMLStreamConstants.END_ELEMENT,
-              END_ELEMENT);
+         END_ELEMENT);
       /*
       _constConvertMap.put(XMLStreamConstants.END_ENTITY,
       END_ENTITY);
@@ -715,17 +693,17 @@ public class XmlReader {
       // TODO: XMLStreamConstants.ENTITY_DECLARATION is 17 in the BAE docs
       // but is 15 in the Resin implementation.
       _constConvertMap.put(XMLStreamConstants.ENTITY_DECLARATION,
-              ENTITY); // ENTITY used twice
+         ENTITY); // ENTITY used twice
       _constConvertMap.put(XMLStreamConstants.ENTITY_REFERENCE,
-              ENTITY_REF);
+         ENTITY_REF);
       _constConvertMap.put(XMLStreamConstants.NOTATION_DECLARATION,
-              NOTATION);
+         NOTATION);
       _constConvertMap.put(XMLStreamConstants.PROCESSING_INSTRUCTION,
-              PI);
+         PI);
       _constConvertMap.put(XMLStreamConstants.SPACE,
-              WHITESPACE);
+         WHITESPACE);
       _constConvertMap.put(XMLStreamConstants.START_ELEMENT,
-              ELEMENT);
+         ELEMENT);
       /*
       _constConvertMap.put(XMLStreamConstants.START_ENTITY,
       ENTITY);

@@ -33,17 +33,14 @@ package com.clevercloud.xpath;
  * Exception thrown when detecting an error during parsing.
  */
 public class XPathParseException extends XPathException {
-  public XPathParseException()
-  {
-  }
+   public XPathParseException() {
+   }
 
-  public XPathParseException(String msg)
-  {
-    super(msg);
-  }
+   public XPathParseException(String msg) {
+      super(msg);
+   }
 
-  public XPathParseException(Throwable e)
-  {
-    super(e);
-  }
+   public XPathParseException(Throwable e) {
+      super(e);
+   }
 }

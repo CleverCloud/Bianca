@@ -29,22 +29,21 @@
  */
 package com.clevercloud.bianca.lib.curl;
 
-import java.security.Principal;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
+import java.security.Principal;
 
 public final class CurlHostnameVerifier
-        implements HostnameVerifier {
+   implements HostnameVerifier {
 
    private boolean _isVerifySSLPeer;
    private boolean _isVerifySSLCommonName;
    private boolean _isVerifySSLHostname;
 
    private CurlHostnameVerifier(boolean verifyPeer,
-           boolean commonName,
-           boolean hostname) {
+                                boolean commonName,
+                                boolean hostname) {
       _isVerifySSLPeer = verifyPeer;
       _isVerifySSLCommonName = commonName;
       _isVerifySSLHostname = hostname;
@@ -55,8 +54,8 @@ public final class CurlHostnameVerifier
    }
 
    public static CurlHostnameVerifier create(boolean verifyPeer,
-           boolean commonName,
-           boolean hostname) {
+                                             boolean commonName,
+                                             boolean hostname) {
       return new CurlHostnameVerifier(verifyPeer, commonName, hostname);
    }
 
@@ -64,8 +63,8 @@ public final class CurlHostnameVerifier
    public boolean verify(String hostname, SSLSession session) {
       System.out.println("VERIFY: " + hostname);
       if (_isVerifySSLPeer == false
-              && _isVerifySSLCommonName == false
-              && _isVerifySSLHostname == false) {
+         && _isVerifySSLCommonName == false
+         && _isVerifySSLHostname == false) {
          return true;
       }
 
@@ -96,7 +95,7 @@ public final class CurlHostnameVerifier
 
       if (_isVerifySSLHostname) {
          if (session.getPeerHost() == null
-                 || !session.getPeerHost().equals(hostname)) {
+            || !session.getPeerHost().equals(hostname)) {
             return false;
          }
       }

@@ -35,104 +35,94 @@ import com.clevercloud.util.CharBuffer;
  * A variable containing a double
  */
 public class NumberVar extends Var {
-  private static NumberVar []intVar = new NumberVar[256];
-  
-  private double value;
-  private Double objValue;
-  private String strValue;
+   private static NumberVar[] intVar = new NumberVar[256];
 
-  /**
-   * Creates a new object variable with the object.
-   */
-  private NumberVar(double value)
-  {
-    this.value = value;
-  }
+   private double value;
+   private Double objValue;
+   private String strValue;
 
-  /**
-   * Creates a new number var with the object.
-   */
-  public static NumberVar create(double value)
-  {
-    NumberVar var;
+   /**
+    * Creates a new object variable with the object.
+    */
+   private NumberVar(double value) {
+      this.value = value;
+   }
 
-    int index = (int) value;
-    
-    if (index == value && index > -128 && index < 128) {
-      var = intVar[index + 128];
-      if (var == null) {
-        var = new NumberVar(value);
-        intVar[index + 128] = var;
+   /**
+    * Creates a new number var with the object.
+    */
+   public static NumberVar create(double value) {
+      NumberVar var;
+
+      int index = (int) value;
+
+      if (index == value && index > -128 && index < 128) {
+         var = intVar[index + 128];
+         if (var == null) {
+            var = new NumberVar(value);
+            intVar[index + 128] = var;
+         }
+
+         return var;
+      } else
+         return new NumberVar(value);
+   }
+
+   /**
+    * Returns the value as a double.
+    */
+   double getDouble() {
+      return value;
+   }
+
+   /**
+    * Returns the value as an object.
+    */
+   Object getObject() {
+      if (objValue == null)
+         objValue = new Double(value);
+
+      return objValue;
+   }
+
+   /**
+    * Returns the value as a string.
+    */
+   String getString() {
+      if (strValue == null) {
+         if ((int) value == value) {
+            CharBuffer cb = CharBuffer.allocate();
+            cb.append((int) value);
+            strValue = cb.close();
+         } else
+            strValue = String.valueOf(value);
       }
+
+      return strValue;
+   }
+
+   /**
+    * Appends the buffer with the string value.
+    */
+   void getString(CharBuffer cb) {
+      if ((int) value == value)
+         cb.append((int) value);
+      else
+         cb.append(value);
+   }
+
+   /**
+    * Clones the variable.
+    */
+   public Object clone() {
+      NumberVar var = (NumberVar) NumberVar.create(value);
+      var.objValue = objValue;
+      var.strValue = strValue;
 
       return var;
-    }
-    else
-      return new NumberVar(value);
-  }
-  
-  /**
-   * Returns the value as a double.
-   */
-  double getDouble()
-  {
-    return value;
-  }
-  
-  /**
-   * Returns the value as an object.
-   */
-  Object getObject()
-  {
-    if (objValue == null)
-      objValue = new Double(value);
-    
-    return objValue;
-  }
-  
-  /**
-   * Returns the value as a string.
-   */
-  String getString()
-  {
-    if (strValue == null) {
-      if ((int) value == value) {
-        CharBuffer cb = CharBuffer.allocate();
-        cb.append((int) value);
-        strValue = cb.close();
-      }
-      else
-        strValue =  String.valueOf(value);
-    }
+   }
 
-    return strValue;
-  }
-  
-  /**
-   * Appends the buffer with the string value.
-   */
-  void getString(CharBuffer cb)
-  {
-    if ((int) value == value)
-      cb.append((int) value);
-    else
-      cb.append(value);
-  }
-
-  /**
-   * Clones the variable.
-   */
-  public Object clone()
-  {
-    NumberVar var = (NumberVar) NumberVar.create(value);
-    var.objValue = objValue;
-    var.strValue = strValue;
-    
-    return var;
-  }
-  
-  public String toString()
-  {
-    return "[NumberVar " + value + "]";
-  }
+   public String toString() {
+      return "[NumberVar " + value + "]";
+   }
 }

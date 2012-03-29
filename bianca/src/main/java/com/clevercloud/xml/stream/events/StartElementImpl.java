@@ -42,142 +42,130 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class StartElementImpl extends XMLEventImpl implements StartElement {
-  private final QName _name;
-  private final HashMap<QName, Attribute> _attributes;
-  private final HashMap<String, Namespace> _namespaces;
-  private final NamespaceContext _namespaceContext;
+   private final QName _name;
+   private final HashMap<QName, Attribute> _attributes;
+   private final HashMap<String, Namespace> _namespaces;
+   private final NamespaceContext _namespaceContext;
 
-  public StartElementImpl(QName name, HashMap<QName, Attribute> attributes,
-                          HashMap<String, Namespace> namespaces,
-                          NamespaceContext namespaceContext)
-  {
-    _name = name;
-    _attributes = attributes;
-    _namespaces = namespaces;
-    _namespaceContext = namespaceContext;
-  }
+   public StartElementImpl(QName name, HashMap<QName, Attribute> attributes,
+                           HashMap<String, Namespace> namespaces,
+                           NamespaceContext namespaceContext) {
+      _name = name;
+      _attributes = attributes;
+      _namespaces = namespaces;
+      _namespaceContext = namespaceContext;
+   }
 
-  public Attribute getAttributeByName(QName name)
-  {
-    return _attributes.get(name);
-  }
+   public Attribute getAttributeByName(QName name) {
+      return _attributes.get(name);
+   }
 
-  public Iterator getAttributes()
-  {
-    return _attributes.values().iterator();
-  }
+   public Iterator getAttributes() {
+      return _attributes.values().iterator();
+   }
 
-  public QName getName()
-  {
-    return _name;
-  }
+   public QName getName() {
+      return _name;
+   }
 
-  public NamespaceContext getNamespaceContext()
-  {
-    return _namespaceContext;
-  }
+   public NamespaceContext getNamespaceContext() {
+      return _namespaceContext;
+   }
 
-  public Iterator getNamespaces()
-  {
-    return _namespaces.values().iterator();
-  }
+   public Iterator getNamespaces() {
+      return _namespaces.values().iterator();
+   }
 
-  public String getNamespaceURI(String prefix)
-  {
-    return _namespaces.get(prefix).getNamespaceURI();
-  }
+   public String getNamespaceURI(String prefix) {
+      return _namespaces.get(prefix).getNamespaceURI();
+   }
 
-  public int getEventType()
-  {
-    return START_ELEMENT;
-  }
+   public int getEventType() {
+      return START_ELEMENT;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    try {
-      writer.write("<" + _name + ">");
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      try {
+         writer.write("<" + _name + ">");
 
-      for (Attribute attribute : _attributes.values())
-        attribute.writeAsEncodedUnicode(writer);
+         for (Attribute attribute : _attributes.values())
+            attribute.writeAsEncodedUnicode(writer);
 
-      for (Namespace namespace : _namespaces.values())
-        namespace.writeAsEncodedUnicode(writer);
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+         for (Namespace namespace : _namespaces.values())
+            namespace.writeAsEncodedUnicode(writer);
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  public String toString()
-  {
-    StringBuilder sb = new StringBuilder();
-    
-    sb.append("StartElement[" + _name);
+   public String toString() {
+      StringBuilder sb = new StringBuilder();
 
-    for (Attribute attribute : _attributes.values()) {
-      sb.append(" ");
-      sb.append(attribute.toString());
-    }
+      sb.append("StartElement[" + _name);
 
-    for (Namespace namespace : _namespaces.values()) {
-      sb.append(" ");
-      sb.append(namespace.toString());
-    }
-    
-    sb.append("]");
+      for (Attribute attribute : _attributes.values()) {
+         sb.append(" ");
+         sb.append(attribute.toString());
+      }
 
-    return sb.toString();
-  }
+      for (Namespace namespace : _namespaces.values()) {
+         sb.append(" ");
+         sb.append(namespace.toString());
+      }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof StartElement))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+      sb.append("]");
 
-    StartElement start = (StartElement) o;
+      return sb.toString();
+   }
 
-    // Namespaces
-    
-    int namespaceCount = 0;
-    Iterator namespaces = start.getNamespaces();
-    
-    while (namespaces.hasNext()) {
-      Namespace ns2 = (Namespace) namespaces.next();
-      namespaceCount++;
+   public boolean equals(Object o) {
+      if (!(o instanceof StartElement))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-      Namespace ns1 = _namespaces.get(ns2.getPrefix());
+      StartElement start = (StartElement) o;
 
-      if (! ns2.equals(ns1))
-        return false;
-    }
+      // Namespaces
 
-    if (namespaceCount < _namespaces.size())
-      return false;
+      int namespaceCount = 0;
+      Iterator namespaces = start.getNamespaces();
 
-    // Attributes
+      while (namespaces.hasNext()) {
+         Namespace ns2 = (Namespace) namespaces.next();
+         namespaceCount++;
 
-    int attributeCount = 0;
-    Iterator attributes = start.getAttributes();
-    
-    while (attributes.hasNext()) {
-      Attribute a2 = (Attribute) attributes.next();
-      attributeCount++;
+         Namespace ns1 = _namespaces.get(ns2.getPrefix());
 
-      Attribute a1 = _attributes.get(a2.getName());
+         if (!ns2.equals(ns1))
+            return false;
+      }
 
-      if (! a2.equals(a1))
-        return false;
-    }
+      if (namespaceCount < _namespaces.size())
+         return false;
 
-    if (attributeCount < _attributes.size())
-      return false;
+      // Attributes
 
-    return getName().equals(start.getName());
-  }
+      int attributeCount = 0;
+      Iterator attributes = start.getAttributes();
+
+      while (attributes.hasNext()) {
+         Attribute a2 = (Attribute) attributes.next();
+         attributeCount++;
+
+         Attribute a1 = _attributes.get(a2.getName());
+
+         if (!a2.equals(a1))
+            return false;
+      }
+
+      if (attributeCount < _attributes.size())
+         return false;
+
+      return getName().equals(start.getName());
+   }
 }
 

@@ -29,8 +29,8 @@
  */
 package com.clevercloud.bianca.statement;
 
-import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.BiancaException;
+import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.Value;
 

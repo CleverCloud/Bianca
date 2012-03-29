@@ -32,147 +32,131 @@ package com.clevercloud.xpath.pattern;
 import com.clevercloud.xpath.Env;
 import com.clevercloud.xpath.ExprEnvironment;
 import com.clevercloud.xpath.XPathException;
-
 import org.w3c.dom.Node;
 
 /**
  * matches child nodes.
  */
 public class FromChildren extends Axis {
-  public FromChildren(AbstractPattern parent)
-  {
-    super(parent);
-  }
+   public FromChildren(AbstractPattern parent) {
+      super(parent);
+   }
 
-  /**
-   * Matches all nodes except attributes and tests the parent pattern
-   * with the parent node.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   *
-   * @return true if the pattern matches
-   */
-  @Override
-  public boolean match(Node node, ExprEnvironment env)
-    throws XPathException
-  {
-    if (node == null)
-      return false;
+   /**
+    * Matches all nodes except attributes and tests the parent pattern
+    * with the parent node.
+    *
+    * @param node the current node
+    * @param env  the variable environment
+    * @return true if the pattern matches
+    */
+   @Override
+   public boolean match(Node node, ExprEnvironment env)
+      throws XPathException {
+      if (node == null)
+         return false;
 
-    return _parent == null || _parent.match(node.getParentNode(), env);
-  }
-  
-  /**
-   * The position of the child is the count of previous siblings
-   * matching the pattern.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   * @param pattern the position pattern
-   *
-   * @return the node's position.
-   */
-  public int position(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    int count = 1;
-    
-    for (node = node.getPreviousSibling();
-         node != null;
-         node = node.getPreviousSibling()) {
-      if (pattern == null || pattern.match(node, env))
-        count++;
-    }
+      return _parent == null || _parent.match(node.getParentNode(), env);
+   }
 
-    return count;
-  }
-  
-  /**
-   * Counts all siblings matching the pattern.
-   *
-   * @param node the current node
-   * @param env the variable environment
-   * @param pattern the position pattern
-   *
-   * @return the count of the node list.
-   */
-  public int count(Node node, Env env, AbstractPattern pattern)
-    throws XPathException
-  {
-    int count = 0;
+   /**
+    * The position of the child is the count of previous siblings
+    * matching the pattern.
+    *
+    * @param node    the current node
+    * @param env     the variable environment
+    * @param pattern the position pattern
+    * @return the node's position.
+    */
+   public int position(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      int count = 1;
 
-    for (node = node.getParentNode().getFirstChild();
-         node != null;
-         node = node.getNextSibling()) {
-      if (pattern.match(node, env))
-        count++;
-    }
+      for (node = node.getPreviousSibling();
+           node != null;
+           node = node.getPreviousSibling()) {
+         if (pattern == null || pattern.match(node, env))
+            count++;
+      }
 
-    return count;
-  }
+      return count;
+   }
 
-  /**
-   * Returns the first node in the selection order.
-   *
-   * @param node the current node
-   *
-   * @return the first node
-   */
-  public Node firstNode(Node node, ExprEnvironment env)
-  {
-    return node.getFirstChild();
-  }
+   /**
+    * Counts all siblings matching the pattern.
+    *
+    * @param node    the current node
+    * @param env     the variable environment
+    * @param pattern the position pattern
+    * @return the count of the node list.
+    */
+   public int count(Node node, Env env, AbstractPattern pattern)
+      throws XPathException {
+      int count = 0;
 
-  /**
-   * Returns the next node in the selection order.
-   *
-   * @param node the current node
-   * @param node the last node
-   *
-   * @return the next node
-   */
-  public Node nextNode(Node node, Node lastNode)
-  {
-    return node.getNextSibling();
-  }
-  
-  /**
-   * Returns true if the pattern nodes on a single level.
-   */
-  boolean isSingleLevel()
-  {
-    return _parent == null || _parent.isSingleLevel();
-  }
+      for (node = node.getParentNode().getFirstChild();
+           node != null;
+           node = node.getNextSibling()) {
+         if (pattern.match(node, env))
+            count++;
+      }
 
-  /**
-   * Returns true if the pattern is strictly ascending.
-   */
-  public boolean isStrictlyAscending()
-  {
-    if (_parent == null)
-      return true;
-    else {
-      return _parent.isStrictlyAscending();
-    }
-  }
+      return count;
+   }
 
-  /**
-   * Returns true if the two patterns are equal.
-   */
-  public boolean equals(Object b)
-  {
-    if (! (b instanceof FromChildren))
-      return false;
+   /**
+    * Returns the first node in the selection order.
+    *
+    * @param node the current node
+    * @return the first node
+    */
+   public Node firstNode(Node node, ExprEnvironment env) {
+      return node.getFirstChild();
+   }
 
-    FromChildren bPattern = (FromChildren) b;
-    
-    return (_parent == bPattern._parent
-            || (_parent != null && _parent.equals(bPattern._parent)));
-  }
+   /**
+    * Returns the next node in the selection order.
+    *
+    * @param node the current node
+    * @param node the last node
+    * @return the next node
+    */
+   public Node nextNode(Node node, Node lastNode) {
+      return node.getNextSibling();
+   }
 
-  public String toString()
-  {
-    return getPrefix() + "child::";
-  }
+   /**
+    * Returns true if the pattern nodes on a single level.
+    */
+   boolean isSingleLevel() {
+      return _parent == null || _parent.isSingleLevel();
+   }
+
+   /**
+    * Returns true if the pattern is strictly ascending.
+    */
+   public boolean isStrictlyAscending() {
+      if (_parent == null)
+         return true;
+      else {
+         return _parent.isStrictlyAscending();
+      }
+   }
+
+   /**
+    * Returns true if the two patterns are equal.
+    */
+   public boolean equals(Object b) {
+      if (!(b instanceof FromChildren))
+         return false;
+
+      FromChildren bPattern = (FromChildren) b;
+
+      return (_parent == bPattern._parent
+         || (_parent != null && _parent.equals(bPattern._parent)));
+   }
+
+   public String toString() {
+      return getPrefix() + "child::";
+   }
 }

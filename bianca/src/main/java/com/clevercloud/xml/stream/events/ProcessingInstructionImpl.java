@@ -35,62 +35,54 @@ import javax.xml.stream.events.ProcessingInstruction;
 import java.io.IOException;
 import java.io.Writer;
 
-public class ProcessingInstructionImpl extends XMLEventImpl 
-  implements ProcessingInstruction 
-{
-  private final String _target;
-  private final String _data;
+public class ProcessingInstructionImpl extends XMLEventImpl
+   implements ProcessingInstruction {
+   private final String _target;
+   private final String _data;
 
-  public ProcessingInstructionImpl(String target, String data)
-  {
-    _target = target;
-    _data = data;
-  }
+   public ProcessingInstructionImpl(String target, String data) {
+      _target = target;
+      _data = data;
+   }
 
-  public String getData()
-  {
-    return _data;
-  }
+   public String getData() {
+      return _data;
+   }
 
-  public String getTarget()
-  {
-    return _target;
-  }
+   public String getTarget() {
+      return _target;
+   }
 
-  public int getEventType()
-  {
-    return PROCESSING_INSTRUCTION;
-  }
+   public int getEventType() {
+      return PROCESSING_INSTRUCTION;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    try {
-      writer.write("<?" + _target);
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      try {
+         writer.write("<?" + _target);
 
-      if (_data != null && ! "".equals(_data))
-        writer.write(" " + _data);
+         if (_data != null && !"".equals(_data))
+            writer.write(" " + _data);
 
-      writer.write("?>");
-    }
-    catch (IOException e) {
-      throw new XMLStreamException(e);
-    }
-  }
+         writer.write("?>");
+      } catch (IOException e) {
+         throw new XMLStreamException(e);
+      }
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof ProcessingInstruction))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof ProcessingInstruction))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    ProcessingInstruction instruction = (ProcessingInstruction) o;
-    
-    return getData().equals(instruction.getData()) &&
-           getTarget().equals(instruction.getTarget());
-  }
+      ProcessingInstruction instruction = (ProcessingInstruction) o;
+
+      return getData().equals(instruction.getData()) &&
+         getTarget().equals(instruction.getTarget());
+   }
 }
 

@@ -33,10 +33,10 @@ import com.clevercloud.util.ByteBuffer;
 import com.clevercloud.util.CharBuffer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 
 /*
  * A stream for reading multipart/mime files.
@@ -53,397 +53,374 @@ import java.util.ArrayList;
  * }
  */
 public class MultipartStream extends StreamImpl {
-  private ByteBuffer _boundary = new ByteBuffer();
-  private byte []_boundaryBuffer;
-  private int _boundaryLength;
+   private ByteBuffer _boundary = new ByteBuffer();
+   private byte[] _boundaryBuffer;
+   private int _boundaryLength;
 
-  private ByteBuffer _peekBuffer = new ByteBuffer();
-  private byte []_peek;
-  private int _peekOffset;
-  private int _peekLength;
+   private ByteBuffer _peekBuffer = new ByteBuffer();
+   private byte[] _peek;
+   private int _peekOffset;
+   private int _peekLength;
 
-  private byte []_dummyBuffer = new byte[32];
-  
-  private ReadStream _is;
-  private ReadStream _readStream;
-  private boolean _isPartDone;
-  private boolean _isDone;
-  private boolean _isComplete;
-  private HashMap<String, List<String>> _headers
-    = new HashMap<String, List<String>>();
-  private CharBuffer _line = new CharBuffer();
+   private byte[] _dummyBuffer = new byte[32];
 
-  private String _defaultEncoding;
+   private ReadStream _is;
+   private ReadStream _readStream;
+   private boolean _isPartDone;
+   private boolean _isDone;
+   private boolean _isComplete;
+   private HashMap<String, List<String>> _headers
+      = new HashMap<String, List<String>>();
+   private CharBuffer _line = new CharBuffer();
 
-  public MultipartStream()
-    throws IOException
-  {
-    _boundary = new ByteBuffer();
-  }
+   private String _defaultEncoding;
 
-  public MultipartStream(ReadStream is, String boundary)
-    throws IOException
-  {
-    this();
+   public MultipartStream()
+      throws IOException {
+      _boundary = new ByteBuffer();
+   }
 
-    init(is, boundary);
-  }
+   public MultipartStream(ReadStream is, String boundary)
+      throws IOException {
+      this();
 
-  /**
-   * Returns the default encoding.
-   */
-  public String getEncoding()
-  {
-    return _defaultEncoding;
-  }
+      init(is, boundary);
+   }
 
-  /**
-   * Sets the default encoding.
-   */
-  public void setEncoding(String encoding)
-  {
-    _defaultEncoding = encoding;
-  }
+   /**
+    * Returns the default encoding.
+    */
+   public String getEncoding() {
+      return _defaultEncoding;
+   }
 
-  /**
-   * Initialize the multipart stream with a given boundary.  The boundary
-   * passed to <code>init</code> will have "--" prefixed.
-   *
-   * @param is the underlying stream
-   * @param headerBoundary the multipart/mime boundary.
-   */
-  public void init(ReadStream is, String headerBoundary)
-    throws IOException
-  {
-    _is = is;
-    
-    _boundary.clear();
-    _boundary.add("--");
-    _boundary.add(headerBoundary);
+   /**
+    * Sets the default encoding.
+    */
+   public void setEncoding(String encoding) {
+      _defaultEncoding = encoding;
+   }
 
-    _boundaryBuffer = _boundary.getBuffer();
-    _boundaryLength = _boundary.getLength();
+   /**
+    * Initialize the multipart stream with a given boundary.  The boundary
+    * passed to <code>init</code> will have "--" prefixed.
+    *
+    * @param is             the underlying stream
+    * @param headerBoundary the multipart/mime boundary.
+    */
+   public void init(ReadStream is, String headerBoundary)
+      throws IOException {
+      _is = is;
 
-    _peekBuffer.setLength(_boundaryLength + 5);
-    _peek = _peekBuffer.getBuffer();
-    _peekOffset = 0;
-    _peekLength = 0;
-    _peek[_peekLength++] = (byte) '\n';
+      _boundary.clear();
+      _boundary.add("--");
+      _boundary.add(headerBoundary);
 
-    _isPartDone = false;
-    _isDone = false;
-    _isComplete = false;
-    
-    while (read(_dummyBuffer, 0, _dummyBuffer.length) >= 0) {
-    }
-    
-    _isPartDone = true;
-  }
+      _boundaryBuffer = _boundary.getBuffer();
+      _boundaryLength = _boundary.getLength();
 
-  /**
-   * Returns true if complete.
-   */
-  public boolean isComplete()
-  {
-    return _isComplete;
-  }
+      _peekBuffer.setLength(_boundaryLength + 5);
+      _peek = _peekBuffer.getBuffer();
+      _peekOffset = 0;
+      _peekLength = 0;
+      _peek[_peekLength++] = (byte) '\n';
 
-  /**
-   * Opens the next part of the multipart/mime stream for reading.  Returns
-   * null when the last section is read.
-   */
-  public ReadStream openRead()
-    throws IOException
-  {
-    if (_isDone)
-      return null;
-    else if (_readStream == null)
-      _readStream = new ReadStream(this, null);
-    else if (! _isPartDone) {
-      int len;
-      while ((len = read(_dummyBuffer, 0, _dummyBuffer.length)) >= 0) {
+      _isPartDone = false;
+      _isDone = false;
+      _isComplete = false;
+
+      while (read(_dummyBuffer, 0, _dummyBuffer.length) >= 0) {
       }
 
+      _isPartDone = true;
+   }
+
+   /**
+    * Returns true if complete.
+    */
+   public boolean isComplete() {
+      return _isComplete;
+   }
+
+   /**
+    * Opens the next part of the multipart/mime stream for reading.  Returns
+    * null when the last section is read.
+    */
+   public ReadStream openRead()
+      throws IOException {
       if (_isDone)
-        return null;
-    }
-    
-    _readStream.init(this, null);
+         return null;
+      else if (_readStream == null)
+         _readStream = new ReadStream(this, null);
+      else if (!_isPartDone) {
+         int len;
+         while ((len = read(_dummyBuffer, 0, _dummyBuffer.length)) >= 0) {
+         }
 
-    _isPartDone = false;
-    
-    if (scanHeaders()) {
-      String contentType = (String) getAttribute("content-type");
-      
-      String charset = getAttributePart(contentType, "charset");
-      
-      if (charset != null)
-        _readStream.setEncoding(charset);
-      else if (_defaultEncoding != null)
-        _readStream.setEncoding(_defaultEncoding);
-      
-      return _readStream;
-    }
-    else {
-      _isDone = true;
-      _readStream.close();
+         if (_isDone)
+            return null;
+      }
+
+      _readStream.init(this, null);
+
+      _isPartDone = false;
+
+      if (scanHeaders()) {
+         String contentType = (String) getAttribute("content-type");
+
+         String charset = getAttributePart(contentType, "charset");
+
+         if (charset != null)
+            _readStream.setEncoding(charset);
+         else if (_defaultEncoding != null)
+            _readStream.setEncoding(_defaultEncoding);
+
+         return _readStream;
+      } else {
+         _isDone = true;
+         _readStream.close();
+         return null;
+      }
+   }
+
+   /**
+    * Returns a read attribute from the multipart mime.
+    */
+   public String getAttribute(String key) {
+      List<String> values = _headers.get(key.toLowerCase());
+
+      if (values != null && values.size() > 0)
+         return values.get(0);
+
       return null;
-    }
-  }
+   }
 
-  /**
-   * Returns a read attribute from the multipart mime.
-   */
-  public String getAttribute(String key)
-  {
-    List<String> values = _headers.get(key.toLowerCase());
+   /**
+    * Returns the headers from the mime.
+    */
+   public Iterator getAttributeNames() {
+      return _headers.keySet().iterator();
+   }
 
-    if (values != null && values.size() > 0)
-      return values.get(0);
+   public HashMap<String, List<String>> getHeaders() {
+      return _headers;
+   }
 
-    return null;
-  }
+   /**
+    * Scans the mime headers.  The mime headers are in standard mail/http
+    * header format: "key: value".
+    */
+   private boolean scanHeaders()
+      throws IOException {
+      int ch = read();
 
-  /**
-   * Returns the headers from the mime.
-   */
-  public Iterator getAttributeNames()
-  {
-    return _headers.keySet().iterator();
-  }
+      _headers.clear();
+      while (ch > 0 && ch != '\n' && ch != '\r') {
+         _line.clear();
 
-  public HashMap<String, List<String>> getHeaders()
-  {
-    return _headers;
-  }
+         _line.append((char) ch);
+         for (ch = read();
+              ch >= 0 && ch != '\n' && ch != '\r';
+              ch = read()) {
+            _line.append((char) ch);
+         }
 
-  /**
-   * Scans the mime headers.  The mime headers are in standard mail/http
-   * header format: "key: value".
-   */
-  private boolean scanHeaders()
-    throws IOException
-  {
-    int ch = read() ;
+         if (ch == '\r') {
+            if ((ch = read()) == '\n')
+               ch = read();
+         } else if (ch == '\n')
+            ch = read();
 
-    _headers.clear();
-    while (ch > 0 && ch != '\n' && ch != '\r') {
-      _line.clear();
+         int i = 0;
+         for (; i < _line.length() && _line.charAt(i) != ':'; i++) {
+         }
 
-      _line.append((char) ch);
-      for (ch = read();
-           ch >= 0 && ch != '\n' && ch != '\r';
-           ch = read()) {
-        _line.append((char) ch);
+         String key = null;
+         String value = null;
+         if (i < _line.length()) {
+            key = _line.substring(0, i).trim().toLowerCase();
+            value = _line.substring(i + 1).trim();
+
+            List<String> values = _headers.get(key);
+
+            if (values == null)
+               values = new ArrayList<String>();
+
+            values.add(value);
+
+            _headers.put(key, values);
+         }
       }
 
       if (ch == '\r') {
-        if ((ch = read()) == '\n')
-          ch = read();
-      } else if (ch == '\n')
-        ch = read();
+         if ((ch = read()) != '\n') {
+            _peek[0] = (byte) ch;
+            _peekOffset = 0;
+            _peekLength = 1;
+         }
+      }
+
+      return true;
+   }
+
+   public boolean canRead() {
+      return true;
+   }
+
+   /**
+    * Returns the number of available bytes.
+    */
+   public int getAvailable()
+      throws IOException {
+      if (_isPartDone)
+         return 0;
+      else if (_peekOffset < _peekLength)
+         return _peekLength - _peekOffset;
+      else {
+         int ch = read();
+         if (ch < 0)
+            return 0;
+         _peekOffset = 0;
+         _peekLength = 1;
+         _peek[0] = (byte) ch;
+
+         return 1;
+      }
+   }
+
+   /**
+    * Reads from the multipart mime buffer.
+    */
+   public int read(byte[] buffer, int offset, int length) throws IOException {
+      int b = -1;
+
+      if (_isPartDone)
+         return -1;
 
       int i = 0;
-      for (; i < _line.length() && _line.charAt(i) != ':'; i++) {
+      // Need the last peek or would miss the initial '\n'
+      while (_peekOffset + 1 < _peekLength && length > 0) {
+         buffer[offset + i++] = _peek[_peekOffset++];
+         length--;
       }
 
-      String key = null;
-      String value = null;
-      if (i < _line.length()) {
-        key = _line.substring(0, i).trim().toLowerCase();
-        value = _line.substring(i + 1).trim();
+      while (i < length && (b = read()) >= 0) {
+         boolean hasCr = false;
 
-        List<String> values = _headers.get(key);
+         if (b == '\r') {
+            hasCr = true;
+            b = read();
 
-        if (values == null)
-          values = new ArrayList<String>();
+            // XXX: Macintosh?
+            if (b != '\n') {
+               buffer[offset + i++] = (byte) '\r';
+               _peek[0] = (byte) b;
+               _peekOffset = 0;
+               _peekLength = 1;
+               continue;
+            }
+         } else if (b != '\n') {
+            buffer[offset + i++] = (byte) b;
+            continue;
+         }
 
-        values.add(value);
-        
-        _headers.put(key, values);
-      }
-    }
-    
-    if (ch == '\r') {
-      if ((ch = read()) != '\n') {
-        _peek[0] = (byte) ch;
-        _peekOffset = 0;
-        _peekLength = 1;
-      }
-    }
+         int j;
+         for (j = 0;
+              j < _boundaryLength && (b = read()) >= 0 && _boundaryBuffer[j] == b;
+              j++) {
+         }
 
-    return true;
-  }
-  
-  public boolean canRead()
-  {
-    return true;
-  }
+         if (j == _boundaryLength) {
+            _isPartDone = true;
+            if ((b = read()) == '-') {
+               if ((b = read()) == '-') {
+                  _isDone = true;
+                  _isComplete = true;
+               }
+            }
 
-  /**
-   * Returns the number of available bytes.
-   */
-  public int getAvailable()
-    throws IOException
-  {
-    if (_isPartDone)
-      return 0;
-    else if (_peekOffset < _peekLength)
-      return _peekLength - _peekOffset;
-    else {
-      int ch = read();
-      if (ch < 0)
-        return 0;
-      _peekOffset = 0;
-      _peekLength = 1;
-      _peek[0] = (byte) ch;
+            for (; b > 0 && b != '\r' && b != '\n'; b = read()) {
+            }
+            if (b == '\r' && (b = read()) != '\n') {
+               _peek[0] = (byte) b;
+               _peekOffset = 0;
+               _peekLength = 1;
+            }
 
-      return 1;
-    }
-  }
+            return i > 0 ? i : -1;
+         }
 
-  /**
-   * Reads from the multipart mime buffer.
-   */
-  public int read(byte []buffer, int offset, int length) throws IOException
-  {
-    int b = -1;
+         _peekLength = 0;
+         if (hasCr && i + 1 < length) {
+            buffer[offset + i++] = (byte) '\r';
+            buffer[offset + i++] = (byte) '\n';
+         } else if (hasCr) {
+            buffer[offset + i++] = (byte) '\r';
+            _peek[_peekLength++] = (byte) '\n';
+         } else {
+            buffer[offset + i++] = (byte) '\n';
+         }
 
-    if (_isPartDone)
-      return -1;
+         int k = 0;
+         while (k < j && i + 1 < length)
+            buffer[offset + i++] = _boundaryBuffer[k++];
 
-    int i = 0;
-    // Need the last peek or would miss the initial '\n'
-    while (_peekOffset + 1 < _peekLength && length > 0) {
-      buffer[offset + i++] = _peek[_peekOffset++];
-      length--;
-    }
+         while (k < j)
+            _peek[_peekLength++] = _boundaryBuffer[k++];
 
-    while (i < length && (b = read()) >= 0) {
-      boolean hasCr = false;
-
-      if (b == '\r') {
-        hasCr = true;
-        b = read();
-
-        // XXX: Macintosh?
-        if (b != '\n') {
-          buffer[offset + i++] = (byte) '\r';
-          _peek[0] = (byte) b;
-          _peekOffset = 0;
-          _peekLength = 1;
-          continue;
-        }
-      }
-      else if (b != '\n') {
-        buffer[offset + i++] = (byte) b;
-        continue;
+         _peek[_peekLength++] = (byte) b;
+         _peekOffset = 0;
       }
 
-      int j;
-      for (j = 0;
-           j < _boundaryLength && (b = read()) >= 0 && _boundaryBuffer[j] == b;
-           j++) {
-      }
-
-      if (j == _boundaryLength) {
-        _isPartDone = true;
-        if ((b = read()) == '-') {
-          if ((b = read()) == '-') {
+      if (i <= 0) {
+         _isPartDone = true;
+         if (b < 0)
             _isDone = true;
-            _isComplete = true;
-          }
-        }
+         return -1;
+      } else {
+         return i;
+      }
+   }
 
-        for (; b > 0 && b != '\r' && b != '\n'; b = read()) {
-        }
-        if (b == '\r' && (b = read()) != '\n') {
-          _peek[0] = (byte) b;
-          _peekOffset = 0;
-          _peekLength = 1;
-        }
+   /**
+    * Read the next byte from the peek or from the underlying stream.
+    */
+   private int read()
+      throws IOException {
+      if (_peekOffset < _peekLength)
+         return _peek[_peekOffset++] & 0xff;
+      else
+         return _is.read();
+   }
 
-        return i > 0 ? i : -1;
+   private static String getAttributePart(String attr, String name) {
+      if (attr == null)
+         return null;
+
+      int length = attr.length();
+      int i = attr.indexOf(name);
+      if (i < 0)
+         return null;
+
+      for (i += name.length(); i < length && attr.charAt(i) != '='; i++) {
       }
 
-      _peekLength = 0;
-      if (hasCr && i + 1 < length) {
-        buffer[offset + i++] = (byte) '\r';
-        buffer[offset + i++] = (byte) '\n';
-      }
-      else if (hasCr) {
-        buffer[offset + i++] = (byte) '\r';
-        _peek[_peekLength++] = (byte) '\n';
-      }
-      else {
-        buffer[offset + i++] = (byte) '\n';
+      for (i++; i < length && attr.charAt(i) == ' '; i++) {
       }
 
-      int k = 0;
-      while (k < j && i + 1 < length)
-        buffer[offset + i++] = _boundaryBuffer[k++];
+      CharBuffer value = CharBuffer.allocate();
+      if (i < length && attr.charAt(i) == '\'') {
+         for (i++; i < length && attr.charAt(i) != '\''; i++)
+            value.append(attr.charAt(i));
+      } else if (i < length && attr.charAt(i) == '"') {
+         for (i++; i < length && attr.charAt(i) != '"'; i++)
+            value.append(attr.charAt(i));
+      } else if (i < length) {
+         char ch;
+         for (; i < length && (ch = attr.charAt(i)) != ' ' && ch != ';'; i++)
+            value.append(ch);
+      }
 
-      while (k < j)
-        _peek[_peekLength++] = _boundaryBuffer[k++];
-
-      _peek[_peekLength++] = (byte) b;
-      _peekOffset = 0;
-    }
-
-    if (i <= 0) {
-      _isPartDone = true;
-      if (b < 0)
-        _isDone = true;
-      return -1;
-    }
-    else {
-      return i;
-    }
-  }
-
-  /**
-   * Read the next byte from the peek or from the underlying stream.
-   */
-  private int read()
-    throws IOException
-  {
-    if (_peekOffset < _peekLength)
-      return _peek[_peekOffset++] & 0xff;
-    else
-      return _is.read();
-  }
-
-  private static String getAttributePart(String attr, String name)
-  {
-    if (attr == null)
-      return null;
-    
-    int length = attr.length();
-    int i = attr.indexOf(name);
-    if (i < 0)
-      return null;
-
-    for (i += name.length(); i < length && attr.charAt(i) != '='; i++) {
-    }
-    
-    for (i++; i < length && attr.charAt(i) == ' '; i++) {
-    }
-
-    CharBuffer value = CharBuffer.allocate();
-    if (i < length && attr.charAt(i) == '\'') {
-      for (i++; i < length && attr.charAt(i) != '\''; i++)
-        value.append(attr.charAt(i));
-    }
-    else if (i < length && attr.charAt(i) == '"') {
-      for (i++; i < length && attr.charAt(i) != '"'; i++)
-        value.append(attr.charAt(i));
-    }
-    else if (i < length) {
-      char ch;
-      for (; i < length && (ch = attr.charAt(i)) != ' ' && ch != ';'; i++)
-        value.append(ch);
-    }
-
-    return value.close();
-  }
+      return value.close();
+   }
 }

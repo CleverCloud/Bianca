@@ -30,7 +30,10 @@
  */
 package com.clevercloud.bianca.lib.file;
 
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.BooleanValue;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.vfs.TempBuffer;
 
 import java.io.IOException;
@@ -43,7 +46,7 @@ import java.util.logging.Logger;
  * Represents a Bianca file open for reading
  */
 abstract public class AbstractBinaryInputOutput
-        implements BinaryInput, BinaryOutput {
+   implements BinaryInput, BinaryOutput {
 
    private static final Logger log = Logger.getLogger(AbstractBinaryInputOutput.class.getName());
    protected final Env _env;
@@ -67,6 +70,7 @@ abstract public class AbstractBinaryInputOutput
    //
    // read methods
    //
+
    /**
     * Returns the input stream.
     */
@@ -80,7 +84,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       throw new UnsupportedOperationException(getClass().getName());
    }
 
@@ -89,14 +93,14 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    abstract public void unread()
-           throws IOException;
+      throws IOException;
 
    /**
     * Reads a character from a file, returning -1 on EOF.
     */
    @Override
    public int read()
-           throws IOException {
+      throws IOException {
       try {
          if (_is != null) {
             int c = _is.read();
@@ -124,7 +128,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public int read(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       try {
          if (_is != null) {
             int c = _is.read(buffer, offset, length);
@@ -152,7 +156,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public StringValue read(int length)
-           throws IOException {
+      throws IOException {
       if (_is == null) {
          return null;
       }
@@ -171,7 +175,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public StringValue readLine(long length)
-           throws IOException {
+      throws IOException {
       try {
          StringValue line = _lineReader.readLine(_env, this, length);
 
@@ -191,7 +195,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public boolean readOptionalLinefeed()
-           throws IOException {
+      throws IOException {
       if (_is == null) {
          return false;
       }
@@ -211,7 +215,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public StringValue appendTo(StringValue builder)
-           throws IOException {
+      throws IOException {
       if (_is != null) {
          return builder.append(_is);
       } else {
@@ -298,6 +302,7 @@ abstract public class AbstractBinaryInputOutput
    //
    // write methods
    //
+
    /**
     * Returns self as the output stream.
     */
@@ -307,13 +312,13 @@ abstract public class AbstractBinaryInputOutput
    }
 
    public void write(int ch)
-           throws IOException {
+      throws IOException {
       _os.write(ch);
    }
 
    @Override
    public void write(byte[] buffer, int offset, int length)
-           throws IOException {
+      throws IOException {
       _os.write(buffer, offset, length);
    }
 
@@ -323,7 +328,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public int write(InputStream is, int length)
-           throws IOException {
+      throws IOException {
       int writeLength = 0;
 
       TempBuffer tb = TempBuffer.allocate();
@@ -362,7 +367,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public void print(char v)
-           throws IOException {
+      throws IOException {
       write((byte) v);
    }
 
@@ -371,7 +376,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public void print(String s)
-           throws IOException {
+      throws IOException {
       int len = s.length();
       for (int i = 0; i < len; i++) {
          print(s.charAt(i));
@@ -383,7 +388,7 @@ abstract public class AbstractBinaryInputOutput
     */
    @Override
    public void flush()
-           throws IOException {
+      throws IOException {
       _os.flush();
    }
 

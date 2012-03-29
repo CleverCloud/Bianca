@@ -33,10 +33,9 @@ package com.clevercloud.bianca.lib.i18n;
 
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
 
 public class Utf8Encoder
-        extends Encoder {
+   extends Encoder {
 
    @Override
    public boolean isUtf8() {
@@ -57,7 +56,7 @@ public class Utf8Encoder
             char ch2;
 
             if (i + 1 < len
-                    && 0xDC00 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xDFFF) {
+               && 0xDC00 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xDFFF) {
                i++;
             } else {
                return false;
@@ -88,7 +87,7 @@ public class Utf8Encoder
             char ch2;
 
             if (i + 1 < len
-                    && 0xDC00 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xDFFF) {
+               && 0xDC00 <= (ch2 = str.charAt(i + 1)) && ch2 <= 0xDFFF) {
                i++;
 
                code = 0x10000 + ((ch - 0xD800) << 10) + (ch2 - 0xDC00);

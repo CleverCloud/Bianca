@@ -681,8 +681,8 @@ public class CurlResource {
       StringValue data;
 
       if (_responseCode == HttpURLConnection.HTTP_NOT_MODIFIED
-              || _responseCode == HttpURLConnection.HTTP_PRECON_FAILED
-              || (_failOnError && _responseCode >= 400)) {
+         || _responseCode == HttpURLConnection.HTTP_PRECON_FAILED
+         || (_failOnError && _responseCode >= 400)) {
          if (_isReturningHeader) {
             data = _header;
          } else {
@@ -708,16 +708,16 @@ public class CurlResource {
 
       if (_outputHeaderFile != null) {
          FileModule.fwrite(env,
-                 _outputHeaderFile,
-                 _header.toInputStream(),
-                 Integer.MAX_VALUE);
+            _outputHeaderFile,
+            _header.toInputStream(),
+            Integer.MAX_VALUE);
       }
 
       if (_outputFile != null) {
          FileModule.fwrite(env,
-                 _outputFile,
-                 data.toInputStream(),
-                 Integer.MAX_VALUE);
+            _outputFile,
+            data.toInputStream(),
+            Integer.MAX_VALUE);
 
       } else {
          env.print(data);

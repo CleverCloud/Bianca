@@ -32,8 +32,8 @@ package com.clevercloud.bianca.expr;
 import com.clevercloud.bianca.Location;
 import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.env.MethodIntern;
-import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.env.StringValue;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.util.L10N;
 
 import java.util.ArrayList;
@@ -49,9 +49,9 @@ public class ObjectMethodExpr extends AbstractMethodExpr {
    protected final Expr[] _args;
 
    public ObjectMethodExpr(Location location,
-           Expr objExpr,
-           String name,
-           ArrayList<Expr> args) {
+                           Expr objExpr,
+                           String name,
+                           ArrayList<Expr> args) {
       super(location);
 
       _objExpr = objExpr;
@@ -74,7 +74,6 @@ public class ObjectMethodExpr extends AbstractMethodExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

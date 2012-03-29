@@ -39,101 +39,94 @@ import java.io.IOException;
  * Implements the ISO-8859-1 EncodingWriter factory.
  */
 public final class ISO8859_1Writer extends EncodingWriter {
-  private final static ISO8859_1Writer _writer = new ISO8859_1Writer();
+   private final static ISO8859_1Writer _writer = new ISO8859_1Writer();
 
-  /**
-   * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
-   */
-  public ISO8859_1Writer()
-  {
-  }
-  
-  /**
-   * Returns the Java encoding for the writer.
-   */
-  public String getJavaEncoding()
-  {
-    return "ISO8859_1";
-  }
+   /**
+    * Null-arg constructor for instantiation by com.clevercloud.vfs.Encoding only.
+    */
+   public ISO8859_1Writer() {
+   }
 
-  /**
-   * Returns null, since WriteStream handles ISO-8859-1 directly.
-   *
-   * @return null for ISO-8859-1
-   */
-  public EncodingWriter create(String javaEncoding)
-  {
-    return _writer;
-  }
+   /**
+    * Returns the Java encoding for the writer.
+    */
+   public String getJavaEncoding() {
+      return "ISO8859_1";
+   }
 
-  /**
-   * Returns null, since WriteStream handles ISO-8859-1 directly.
-   *
-   * @return null for ISO-8859-1
-   */
-  public EncodingWriter create()
-  {
-    return _writer;
-  }
+   /**
+    * Returns null, since WriteStream handles ISO-8859-1 directly.
+    *
+    * @return null for ISO-8859-1
+    */
+   public EncodingWriter create(String javaEncoding) {
+      return _writer;
+   }
 
-  /**
-   * Returns the writer.
-   */
-  public static EncodingWriter getStaticWriter()
-  {
-    return _writer;
-  }
-  
-  /**
-   * Writes a character to the output stream with the correct encoding.
-   *
-   * @param ch the character to write.
-   */
-  public void write(ByteAppendable os, char ch)
-    throws IOException
-  {
-    os.write(ch);
-  }
+   /**
+    * Returns null, since WriteStream handles ISO-8859-1 directly.
+    *
+    * @return null for ISO-8859-1
+    */
+   public EncodingWriter create() {
+      return _writer;
+   }
 
-  /**
-   * Writes a character buffer using the correct encoding.
-   *
-   * @param os output stream for data.
-   * @param cBuf data.
-   * @param cOffset starting offset into the buffer.
-   * @param cLength number of characters to write
-   */
-  @Override
-  public void write(OutputStreamWithBuffer os,
-                    char []cBuf, int cOffset, int cLength)
-    throws IOException
-  {
-    byte []bBuf = os.getBuffer();
-    int bOffset = os.getBufferOffset();
-    int bEnd = bBuf.length;
+   /**
+    * Returns the writer.
+    */
+   public static EncodingWriter getStaticWriter() {
+      return _writer;
+   }
 
-    // int cEnd = cOffset + cLength;
+   /**
+    * Writes a character to the output stream with the correct encoding.
+    *
+    * @param ch the character to write.
+    */
+   public void write(ByteAppendable os, char ch)
+      throws IOException {
+      os.write(ch);
+   }
 
-    while (cLength > 0) {
-      int sublen = bEnd - bOffset;
-      if (cLength < sublen)
-        sublen = cLength;
+   /**
+    * Writes a character buffer using the correct encoding.
+    *
+    * @param os      output stream for data.
+    * @param cBuf    data.
+    * @param cOffset starting offset into the buffer.
+    * @param cLength number of characters to write
+    */
+   @Override
+   public void write(OutputStreamWithBuffer os,
+                     char[] cBuf, int cOffset, int cLength)
+      throws IOException {
+      byte[] bBuf = os.getBuffer();
+      int bOffset = os.getBufferOffset();
+      int bEnd = bBuf.length;
 
-      for (int i = sublen - 1; i >= 0; i--) {
-        bBuf[bOffset + i] = (byte) cBuf[cOffset + i];
+      // int cEnd = cOffset + cLength;
+
+      while (cLength > 0) {
+         int sublen = bEnd - bOffset;
+         if (cLength < sublen)
+            sublen = cLength;
+
+         for (int i = sublen - 1; i >= 0; i--) {
+            bBuf[bOffset + i] = (byte) cBuf[cOffset + i];
+         }
+
+         bOffset += sublen;
+         cOffset += sublen;
+         cLength -= sublen;
+
+         if (bOffset == bEnd && cLength > 0) {
+            bBuf = os.nextBuffer(bOffset);
+            bOffset = os.getBufferOffset();
+            bEnd = bBuf.length;
+         }
       }
 
-      bOffset += sublen;
-      cOffset += sublen;
-      cLength -= sublen;
-      
-      if (bOffset == bEnd && cLength > 0) {
-        bBuf = os.nextBuffer(bOffset);
-        bOffset = os.getBufferOffset();
-        bEnd = bBuf.length;
-      }
-    }
-
-    os.setBufferOffset(bOffset);
-  }
+      os.setBufferOffset(bOffset);
+   }
 }

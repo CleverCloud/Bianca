@@ -30,7 +30,6 @@
 package com.clevercloud.xpath;
 
 import com.clevercloud.xpath.pattern.AbstractPattern;
-
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
@@ -40,13 +39,13 @@ import java.util.ArrayList;
  * Expr.toBoolean, etc. functions to convert to normal Java types.
  */
 public abstract class XPathFun {
-  /**
-   * Evaluate the function.
-   *
-   * @param pattern The context pattern.
-   * @param args The evaluated arguments
-   */
-  public abstract Object eval(Node node, ExprEnvironment env, 
-                              AbstractPattern pattern, ArrayList args)
-    throws XPathException;
+   /**
+    * Evaluate the function.
+    *
+    * @param pattern The context pattern.
+    * @param args    The evaluated arguments
+    */
+   public abstract Object eval(Node node, ExprEnvironment env,
+                               AbstractPattern pattern, ArrayList args)
+      throws XPathException;
 }

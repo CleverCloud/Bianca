@@ -33,7 +33,6 @@ import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.ReadStream;
 import com.clevercloud.vfs.Vfs;
 import com.clevercloud.xml.Xml;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -44,44 +43,42 @@ import java.io.IOException;
  * JARV Verifier factory.
  */
 public class VerifierFactoryImpl implements VerifierFactory {
-  /**
-   * Compile a schema.
-   */
-  public Schema compileSchema(String url)
-    throws SAXException, IOException
-  {
-    Path path = Vfs.lookup(url);
+   /**
+    * Compile a schema.
+    */
+   public Schema compileSchema(String url)
+      throws SAXException, IOException {
+      Path path = Vfs.lookup(url);
 
-    ReadStream is = path.openRead();
-    try {
-      InputSource source = new InputSource(is);
-      source.setSystemId(url);
+      ReadStream is = path.openRead();
+      try {
+         InputSource source = new InputSource(is);
+         source.setSystemId(url);
 
-      return compileSchema(source);
-    } finally {
-      is.close();
-    }
-  }
+         return compileSchema(source);
+      } finally {
+         is.close();
+      }
+   }
 
-    
-  /**
-   * Compile a schema.
-   */
-  public Schema compileSchema(InputSource is)
-    throws SAXException, IOException
-  {
-    try {
-      RelaxBuilder builder = new RelaxBuilder();
 
-      XMLReader reader = new Xml();
+   /**
+    * Compile a schema.
+    */
+   public Schema compileSchema(InputSource is)
+      throws SAXException, IOException {
+      try {
+         RelaxBuilder builder = new RelaxBuilder();
 
-      reader.setContentHandler(builder);
+         XMLReader reader = new Xml();
 
-      reader.parse(is);
+         reader.setContentHandler(builder);
 
-      return new SchemaImpl(builder.getGrammar());
-    } catch (RelaxException e) {
-      throw new SAXException(e);
-    }
-  }
+         reader.parse(is);
+
+         return new SchemaImpl(builder.getGrammar());
+      } catch (RelaxException e) {
+         throw new SAXException(e);
+      }
+   }
 }

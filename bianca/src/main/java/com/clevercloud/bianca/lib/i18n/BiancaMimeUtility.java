@@ -30,37 +30,30 @@
  */
 package com.clevercloud.bianca.lib.i18n;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.clevercloud.bianca.UnimplementedException;
+import com.clevercloud.bianca.env.*;
 
 import javax.mail.Header;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeUtility;
-
-import com.clevercloud.bianca.UnimplementedException;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.BooleanValue;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.StringValue;
-import com.clevercloud.bianca.env.Value;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BiancaMimeUtility {
 
    private static final Logger log = Logger.getLogger(
-           BiancaMimeUtility.class.getName());
+      BiancaMimeUtility.class.getName());
 
    /*
     * Returns an array of decoded Mime headers/fields.
     */
    public static Value decodeMimeHeaders(Env env,
-           StringValue encodedHeaders,
-           String charset)
-           throws UnsupportedEncodingException {
+                                         StringValue encodedHeaders,
+                                         String charset)
+      throws UnsupportedEncodingException {
       ArrayValue headers = new ArrayValueImpl();
 
       try {
@@ -104,50 +97,50 @@ public class BiancaMimeUtility {
     * Returns decoded Mime header/field.
     */
    public static StringValue decodeMime(Env env,
-           CharSequence word,
-           String charset)
-           throws UnsupportedEncodingException {
+                                        CharSequence word,
+                                        String charset)
+      throws UnsupportedEncodingException {
       String decodedStr = MimeUtility.decodeText(word.toString());
 
       return env.createString(MimeUtility.unfold(decodedStr));
    }
 
    public static Value encodeMime(Env env,
-           StringValue name,
-           StringValue value,
-           String inCharset,
-           String outCharset,
-           String scheme)
-           throws UnsupportedEncodingException {
+                                  StringValue name,
+                                  StringValue value,
+                                  String inCharset,
+                                  String outCharset,
+                                  String scheme)
+      throws UnsupportedEncodingException {
       return encodeMime(env,
-              name,
-              value,
-              inCharset,
-              outCharset,
-              scheme,
-              "\r\n",
-              76);
+         name,
+         value,
+         inCharset,
+         outCharset,
+         scheme,
+         "\r\n",
+         76);
    }
 
    /**
     * Encodes a MIME header.
-    *
+    * <p/>
     * XXX: preferences
     *
-    * @param field_name header field name
+    * @param field_name  header field name
     * @param field_value header field value
     * @param preferences
     * @return encoded mime header
     */
    public static StringValue encodeMime(Env env,
-           StringValue name,
-           StringValue value,
-           String inCharset,
-           String outCharset,
-           String scheme,
-           String lineBreakChars,
-           int lineLength)
-           throws UnsupportedEncodingException {
+                                        StringValue name,
+                                        StringValue value,
+                                        String inCharset,
+                                        String outCharset,
+                                        String scheme,
+                                        String lineBreakChars,
+                                        int lineLength)
+      throws UnsupportedEncodingException {
       Decoder decoder = Decoder.create(inCharset);
 
       CharSequence nameUnicode = decoder.decode(env, name);
@@ -161,10 +154,10 @@ public class BiancaMimeUtility {
       sb.append(' ');
 
       String word = encodeMimeWord(valueUnicode.toString(),
-              outCharset,
-              scheme,
-              lineBreakChars,
-              lineLength);
+         outCharset,
+         scheme,
+         lineBreakChars,
+         lineLength);
 
       sb.append(MimeUtility.fold(sb.length(), word));
 
@@ -172,11 +165,11 @@ public class BiancaMimeUtility {
    }
 
    public static String encodeMimeWord(String value,
-           String charset,
-           String scheme,
-           String lineBreakChars,
-           int lineLength)
-           throws UnsupportedEncodingException {
+                                       String charset,
+                                       String scheme,
+                                       String lineBreakChars,
+                                       int lineLength)
+      throws UnsupportedEncodingException {
       if (lineLength != 76) {
          throw new UnimplementedException("Mime line length option");
       }

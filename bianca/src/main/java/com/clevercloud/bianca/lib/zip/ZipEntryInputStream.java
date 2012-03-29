@@ -29,11 +29,12 @@
  */
 package com.clevercloud.bianca.lib.zip;
 
+import com.clevercloud.bianca.env.Env;
 import com.clevercloud.bianca.lib.file.BinaryInput;
 import com.clevercloud.bianca.lib.file.ReadStreamInput;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.vfs.*;
 import com.clevercloud.util.L10N;
+import com.clevercloud.vfs.ReadStream;
+import com.clevercloud.vfs.VfsStream;
 
 import java.io.IOException;
 import java.util.zip.ZipEntry;
@@ -49,7 +50,7 @@ public class ZipEntryInputStream extends ReadStreamInput {
    private final long _position;
 
    public ZipEntryInputStream(BinaryInput in, long position)
-           throws IOException {
+      throws IOException {
       super(Env.getInstance());
 
       _in = in;
@@ -63,7 +64,7 @@ public class ZipEntryInputStream extends ReadStreamInput {
 
       if (curEntry == null) {
          throw new IOException(
-                 L.l("ZipEntry at position {0} not found", _position));
+            L.l("ZipEntry at position {0} not found", _position));
       }
 
       init(new ReadStream(new VfsStream(zipInputStream, null)));
@@ -74,7 +75,7 @@ public class ZipEntryInputStream extends ReadStreamInput {
     */
    @Override
    public BinaryInput openCopy()
-           throws IOException {
+      throws IOException {
       return new ZipEntryInputStream(_in.openCopy(), _position);
    }
 

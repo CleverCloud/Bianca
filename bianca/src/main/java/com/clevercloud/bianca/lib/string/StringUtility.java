@@ -29,39 +29,34 @@
  */
 package com.clevercloud.bianca.lib.string;
 
-import java.io.IOException;
-
 import com.clevercloud.bianca.BiancaModuleException;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.NullValue;
-import com.clevercloud.bianca.env.Post;
-import com.clevercloud.bianca.env.Value;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.lib.ArrayModule;
 import com.clevercloud.util.L10N;
+
+import java.io.IOException;
 
 public class StringUtility {
 
    private static final L10N L = new L10N(StringModule.class);
 
    public static Value parseStr(Env env,
-           CharSequence str,
-           ArrayValue result,
-           boolean isRef,
-           String encoding) {
+                                CharSequence str,
+                                ArrayValue result,
+                                boolean isRef,
+                                String encoding) {
       return parseStr(env, str, result, isRef, encoding,
-              env.getIniBoolean("magic_quotes_gpc"),
-              Env.DEFAULT_QUERY_SEPARATOR_MAP);
+         env.getIniBoolean("magic_quotes_gpc"),
+         Env.DEFAULT_QUERY_SEPARATOR_MAP);
    }
 
    public static Value parseStr(Env env,
-           CharSequence str,
-           ArrayValue result,
-           boolean isRef,
-           String encoding,
-           boolean isMagicQuotes,
-           int[] querySeparatorMap) {
+                                CharSequence str,
+                                ArrayValue result,
+                                boolean isRef,
+                                String encoding,
+                                boolean isMagicQuotes,
+                                int[] querySeparatorMap) {
       try {
          int len = str.length();
 
@@ -73,7 +68,7 @@ public class StringUtility {
             }
 
             for (; i < len && (ch = str.charAt(i)) != '='
-                    && querySeparatorMap[ch] == 0; i++) {
+               && querySeparatorMap[ch] == 0; i++) {
                i = addQueryChar(builder, str, len, i, ch);
             }
 
@@ -84,7 +79,7 @@ public class StringUtility {
             String value;
             if (ch == '=') {
                for (i++; i < len
-                       && querySeparatorMap[ch = str.charAt(i)] == 0; i++) {
+                  && querySeparatorMap[ch = str.charAt(i)] == 0; i++) {
                   i = addQueryChar(builder, str, len, i, ch);
                }
 
@@ -95,7 +90,7 @@ public class StringUtility {
 
             if (isRef) {
                Post.addFormValue(env, result, key,
-                       new String[]{value}, isMagicQuotes);
+                  new String[]{value}, isMagicQuotes);
             } else {
                // If key is an exsiting array, then append
                // this value to existing array
@@ -123,19 +118,19 @@ public class StringUtility {
                      }
                   } else {
                      Post.addFormValue(env, result, key,
-                             new String[]{value}, isMagicQuotes);
+                        new String[]{value}, isMagicQuotes);
                   }
                } else {
                   Post.addFormValue(env, result, key,
-                          new String[]{value}, isMagicQuotes);
+                     new String[]{value}, isMagicQuotes);
                }
             }
          }
 
          if (!isRef) {
             ArrayModule.extract(env, result,
-                    ArrayModule.EXTR_OVERWRITE,
-                    null);
+               ArrayModule.EXTR_OVERWRITE,
+               null);
          }
 
          return NullValue.NULL;
@@ -145,11 +140,11 @@ public class StringUtility {
    }
 
    protected static int addQueryChar(StringBuilder builder,
-           CharSequence str,
-           int len,
-           int i,
-           int ch)
-           throws IOException {
+                                     CharSequence str,
+                                     int len,
+                                     int i,
+                                     int ch)
+      throws IOException {
       if (str == null) {
          str = "";
       }
@@ -180,7 +175,7 @@ public class StringUtility {
    }
 
    public static void addQueryValue(Env env, ArrayValue array,
-           String key, String valueStr) {
+                                    String key, String valueStr) {
       if (key == null) {
          key = "";
       }

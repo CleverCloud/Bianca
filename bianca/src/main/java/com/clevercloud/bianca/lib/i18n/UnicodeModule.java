@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 public class UnicodeModule extends AbstractBiancaModule {
 
    private static final Logger log = Logger.getLogger(
-           UnicodeModule.class.getName());
+      UnicodeModule.class.getName());
    private static final L10N L = new L10N(UnicodeModule.class);
    public static final int U_INVALID_STOP = 0;
    public static final int U_INVALID_SKIP = 1;
@@ -79,9 +79,9 @@ public class UnicodeModule extends AbstractBiancaModule {
    }
 
    public static Value unicode_decode(Env env,
-           StringValue str,
-           String encoding,
-           @Optional int errorMode) {
+                                      StringValue str,
+                                      String encoding,
+                                      @Optional int errorMode) {
       try {
          Decoder decoder = Decoder.create(encoding);
 
@@ -95,9 +95,9 @@ public class UnicodeModule extends AbstractBiancaModule {
    }
 
    public static Value unicode_encode(Env env,
-           StringValue str,
-           String encoding,
-           @Optional int errorMode) {
+                                      StringValue str,
+                                      String encoding,
+                                      @Optional int errorMode) {
       try {
          Encoder encoder = Encoder.create(encoding);
 
@@ -117,10 +117,10 @@ public class UnicodeModule extends AbstractBiancaModule {
     * @return first occurence of needle in haystack, FALSE otherwise
     */
    public static Value iconv_strpos(Env env,
-           StringValue haystack,
-           StringValue needle,
-           @Optional("0") int offset,
-           @Optional("") String charset) {
+                                    StringValue haystack,
+                                    StringValue needle,
+                                    @Optional("0") int offset,
+                                    @Optional("") String charset) {
       if (charset.length() == 0) {
          charset = env.getIniString("iconv.internal_encoding");
       }
@@ -153,13 +153,12 @@ public class UnicodeModule extends AbstractBiancaModule {
     * Uses iconv.internal_encoding.
     *
     * @param charset encoding of StringValue arguments
-    *
     * @return last occurence of needle in haystack, FALSE otherwise
     */
    public static Value iconv_strrpos(Env env,
-           StringValue haystack,
-           StringValue needle,
-           @Optional("") String charset) {
+                                     StringValue haystack,
+                                     StringValue needle,
+                                     @Optional("") String charset) {
       if (charset.length() == 0) {
          charset = env.getIniString("iconv.internal_encoding");
       }
@@ -191,18 +190,17 @@ public class UnicodeModule extends AbstractBiancaModule {
     * Uses iconv.internal_encoding.
     *
     * @param env
-    * @param str encoded string
-    * @param offset of str after decoding
-    * @param length of str after decoding
+    * @param str     encoded string
+    * @param offset  of str after decoding
+    * @param length  of str after decoding
     * @param charset encoding of StringValue argument
     * @return substring of argument string.
-    *
     */
    public static Value iconv_substr(Env env,
-           StringValue str,
-           int offset,
-           @Optional("0x7fffffff") int length,
-           @Optional("") String charset) {
+                                    StringValue str,
+                                    int offset,
+                                    @Optional("0x7fffffff") int length,
+                                    @Optional("") String charset) {
       if (charset.length() == 0) {
          charset = env.getIniString("iconv.internal_encoding");
       }
@@ -262,14 +260,14 @@ public class UnicodeModule extends AbstractBiancaModule {
     * Returns encoded string from decoded argument string.
     *
     * @param env
-    * @param inCharset charset to decode from
+    * @param inCharset  charset to decode from
     * @param outCharset charset to decode to
-    * @param str to decode and encode
+    * @param str        to decode and encode
     */
    public static Value iconv(Env env,
-           String inCharset,
-           String outCharset,
-           StringValue str) {
+                             String inCharset,
+                             String outCharset,
+                             StringValue str) {
       boolean isIgnoreErrors = false;
 
       // options should be on outCharset
@@ -293,12 +291,12 @@ public class UnicodeModule extends AbstractBiancaModule {
       boolean isEndUtf8 = false;
 
       if (inCharset.equalsIgnoreCase("utf-8")
-              || inCharset.equalsIgnoreCase("utf-8")) {
+         || inCharset.equalsIgnoreCase("utf-8")) {
          isStartUtf8 = true;
       }
 
       if (outCharset.equalsIgnoreCase("utf-8")
-              || outCharset.equalsIgnoreCase("utf-8")) {
+         || outCharset.equalsIgnoreCase("utf-8")) {
          isEndUtf8 = true;
       }
 
@@ -348,8 +346,8 @@ public class UnicodeModule extends AbstractBiancaModule {
    }
 
    public static StringValue ob_iconv_handler(
-           StringValue contents,
-           int status) {
+      StringValue contents,
+      int status) {
       throw new UnimplementedException("ob_iconv_handler");
    }
 
@@ -361,17 +359,17 @@ public class UnicodeModule extends AbstractBiancaModule {
     * @return iconv environment settings
     */
    public static Value iconv_get_encoding(Env env,
-           @Optional("all") String type) {
+                                          @Optional("all") String type) {
       type = type.toLowerCase();
 
       if ("all".equals(type)) {
          ArrayValue array = new ArrayValueImpl();
          array.put(env, "input_encoding",
-                 env.getIniString("iconv.input_encoding"));
+            env.getIniString("iconv.input_encoding"));
          array.put(env, "output_encoding",
-                 env.getIniString("iconv.output_encoding"));
+            env.getIniString("iconv.output_encoding"));
          array.put(env, "internal_encoding",
-                 env.getIniString("iconv.internal_encoding"));
+            env.getIniString("iconv.internal_encoding"));
          return array;
       }
 
@@ -388,13 +386,14 @@ public class UnicodeModule extends AbstractBiancaModule {
 
    /**
     * Sets the current encoding.
+    *
     * @param env
     * @param type
     * @param charset
     */
    public static BooleanValue iconv_set_encoding(Env env,
-           String type,
-           StringValue charset) {
+                                                 String type,
+                                                 StringValue charset) {
       type = type.toLowerCase();
 
       if ("input_encoding".equals(type)) {
@@ -420,8 +419,8 @@ public class UnicodeModule extends AbstractBiancaModule {
     * @param charset
     */
    public static Value iconv_strlen(Env env,
-           StringValue str,
-           @Optional("") String charset) {
+                                    StringValue str,
+                                    @Optional("") String charset) {
       if (charset.length() == 0) {
          charset = env.getIniString("iconv.internal_encoding");
       }
@@ -449,17 +448,17 @@ public class UnicodeModule extends AbstractBiancaModule {
 
    /**
     * Encodes a MIME header.
-    *
+    * <p/>
     * XXX: preferences
     *
-    * @param fieldName header field name
-    * @param fieldValue header field value
+    * @param fieldName   header field name
+    * @param fieldValue  header field value
     * @param preferences
     */
    public static Value iconv_mime_encode(Env env,
-           StringValue fieldName,
-           StringValue fieldValue,
-           @Optional() ArrayValue preferences) {
+                                         StringValue fieldName,
+                                         StringValue fieldValue,
+                                         @Optional() ArrayValue preferences) {
       try {
          String scheme = "B";
          String lineBreakChars = "\r\n";
@@ -497,13 +496,13 @@ public class UnicodeModule extends AbstractBiancaModule {
          }
 
          return BiancaMimeUtility.encodeMime(env,
-                 fieldName,
-                 fieldValue,
-                 inCharset,
-                 outCharset,
-                 scheme,
-                 lineBreakChars,
-                 lineLength);
+            fieldName,
+            fieldValue,
+            inCharset,
+            outCharset,
+            scheme,
+            lineBreakChars,
+            lineLength);
 
       } catch (UnsupportedEncodingException e) {
          log.log(Level.FINE, e.getMessage(), e);
@@ -520,20 +519,20 @@ public class UnicodeModule extends AbstractBiancaModule {
     *
     * @param env
     * @param encoded_headers
-    * @param mode controls error recovery
+    * @param mode            controls error recovery
     * @param charset
     */
    public static Value iconv_mime_decode_headers(Env env,
-           StringValue encoded_headers,
-           @Optional() int mode,
-           @Optional() String charset) {
+                                                 StringValue encoded_headers,
+                                                 @Optional() int mode,
+                                                 @Optional() String charset) {
       if (charset.length() == 0) {
          charset = env.getIniString("iconv.internal_encoding");
       }
 
       try {
          return BiancaMimeUtility.decodeMimeHeaders(
-                 env, encoded_headers, charset);
+            env, encoded_headers, charset);
       } catch (UnsupportedEncodingException e) {
          log.log(Level.FINE, e.getMessage(), e);
          env.warning(L.l(e.getMessage()));
@@ -546,18 +545,18 @@ public class UnicodeModule extends AbstractBiancaModule {
 
    /**
     * Uses iconv.internal_encoding.
-    *
+    * <p/>
     * XXX: mode ignored
     *
     * @param env
     * @param encoded_header
-    * @param mode controls error recovery
-    * @param charset to encode resultant
+    * @param mode           controls error recovery
+    * @param charset        to encode resultant
     */
    public static Value iconv_mime_decode(Env env,
-           StringValue encodedHeader,
-           @Optional("1") int mode,
-           @Optional("") String charset) {
+                                         StringValue encodedHeader,
+                                         @Optional("1") int mode,
+                                         @Optional("") String charset) {
       if (charset.length() == 0) {
          charset = env.getIniString("iconv.internal_encoding");
       }
@@ -571,6 +570,7 @@ public class UnicodeModule extends AbstractBiancaModule {
          return BooleanValue.FALSE;
       }
    }
+
    static final IniDefinition INI_ICONV_INPUT_ENCODING = _iniDefinitions.add("iconv.input_encoding", "utf-8", PHP_INI_ALL);
    static final IniDefinition INI_ICONV_OUTPUT_ENCODING = _iniDefinitions.add("iconv.output_encoding", "utf-8", PHP_INI_ALL);
    static final IniDefinition INI_ICONV_INTERNAL_ENCODING = _iniDefinitions.add("iconv.internal_encoding", "utf-8", PHP_INI_ALL);

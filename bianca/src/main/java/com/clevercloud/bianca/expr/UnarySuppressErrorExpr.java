@@ -54,11 +54,11 @@ public class UnarySuppressErrorExpr extends AbstractUnaryExpr {
     */
    @Override
    public Expr createAssign(BiancaParser parser, Expr value)
-           throws IOException {
+      throws IOException {
       // php/03j2
 
       return new UnarySuppressErrorExpr(parser.getLocation(),
-              getExpr().createAssign(parser, value));
+         getExpr().createAssign(parser, value));
    }
 
    /**
@@ -66,19 +66,18 @@ public class UnarySuppressErrorExpr extends AbstractUnaryExpr {
     */
    @Override
    public Expr createAssignRef(BiancaParser parser,
-           Expr value)
-           throws IOException {
+                               Expr value)
+      throws IOException {
       // php/03j2
 
       return new UnarySuppressErrorExpr(parser.getLocation(),
-              getExpr().createAssignRef(parser, value));
+         getExpr().createAssignRef(parser, value));
    }
 
    /**
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -96,7 +95,6 @@ public class UnarySuppressErrorExpr extends AbstractUnaryExpr {
     * Evaluates the expression as a boolean.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -114,7 +112,6 @@ public class UnarySuppressErrorExpr extends AbstractUnaryExpr {
     * Evaluates the expression as a string.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -132,7 +129,6 @@ public class UnarySuppressErrorExpr extends AbstractUnaryExpr {
     * Evaluates the expression, copying the results as necessary
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

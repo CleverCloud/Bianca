@@ -45,133 +45,125 @@ import java.util.logging.Logger;
  * @since Resin 1.2
  */
 public class JndiPath extends FilesystemPath {
-  protected static final Logger log = Log.open(JndiPath.class);
-  protected static final L10N L = new L10N(JndiPath.class);
+   protected static final Logger log = Log.open(JndiPath.class);
+   protected static final L10N L = new L10N(JndiPath.class);
 
-  private Context parent;
+   private Context parent;
 
-  /**
-   * Creates a new JndiPath root.
-   */
-  public JndiPath()
-  {
-    super(null, "/", "/");
+   /**
+    * Creates a new JndiPath root.
+    */
+   public JndiPath() {
+      super(null, "/", "/");
 
-    _root = this;
-  }
+      _root = this;
+   }
 
-  /**
-   * Create a new JndiPath with the given name.
-   */
-  protected JndiPath(FilesystemPath root, String userPath, String path)
-  {
-    super(root, userPath, path);
-  }
+   /**
+    * Create a new JndiPath with the given name.
+    */
+   protected JndiPath(FilesystemPath root, String userPath, String path) {
+      super(root, userPath, path);
+   }
 
-  /**
-   * Walking down the path just stores the new name in the created Path.
-   *
-   * @param userPath the string used in the <code>lookup</code> call.
-   * @param attributes any inherited attributes.
-   * @param path the normalized slash-separated path.
-   * @return a new JndiPath representing the new path.
-   */
-  public Path fsWalk(String userPath,
-                     Map<String,Object> attributes,
-                     String path)
-  {
-    return new JndiPath(_root, userPath, path);
-  }
+   /**
+    * Walking down the path just stores the new name in the created Path.
+    *
+    * @param userPath   the string used in the <code>lookup</code> call.
+    * @param attributes any inherited attributes.
+    * @param path       the normalized slash-separated path.
+    * @return a new JndiPath representing the new path.
+    */
+   public Path fsWalk(String userPath,
+                      Map<String, Object> attributes,
+                      String path) {
+      return new JndiPath(_root, userPath, path);
+   }
 
-  /**
-   * The scheme is always "jndi:".
-   */
-  public String getScheme()
-  {
-    return "jndi";
-  }
+   /**
+    * The scheme is always "jndi:".
+    */
+   public String getScheme() {
+      return "jndi";
+   }
 
-  /**
-   * Create a new subcontext
-   */
-  public boolean mkdir()
-    throws IOException
-  {
-    try {
-      Context parent = getAllButLast(getPath());
+   /**
+    * Create a new subcontext
+    */
+   public boolean mkdir()
+      throws IOException {
+      try {
+         Context parent = getAllButLast(getPath());
 
-      parent.createSubcontext(getTail());
+         parent.createSubcontext(getTail());
 
-      return true;
-    } catch (Exception e) {
-      throw new IOExceptionWrapper(e);
-    }
-  }
-  
-  /**
-   * Returns the object bound at this path.
-   */
-  public Object getObject()
-    throws IOException
-  {
-    try {
-      Context parent = getAllButLast(getPath());
+         return true;
+      } catch (Exception e) {
+         throw new IOExceptionWrapper(e);
+      }
+   }
 
-      return parent.lookup(getTail());
-    } catch (Exception e) {
-      throw new IOExceptionWrapper(e);
-    }
-  }
-  
-  /**
-   * Sets the object bound at this path.
-   *
-   * @param value the new value
-   */
-  public void setObject(Object value)
-    throws IOException
-  {
-    try {
-      Context parent = getAllButLast(getPath());
+   /**
+    * Returns the object bound at this path.
+    */
+   public Object getObject()
+      throws IOException {
+      try {
+         Context parent = getAllButLast(getPath());
 
-      parent.rebind(getTail(), value);
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new IOExceptionWrapper(e);
-    }
-  }
+         return parent.lookup(getTail());
+      } catch (Exception e) {
+         throw new IOExceptionWrapper(e);
+      }
+   }
 
-  /**
-   * Returns the context found by looking up all but the last segment
-   * of the path.
-   *
-   * @param path slash-separated path
-   * @return context of the parent path
-   */
-  private Context getAllButLast(String path)
-    throws NamingException
-  {
-    if (parent != null)
+   /**
+    * Sets the object bound at this path.
+    *
+    * @param value the new value
+    */
+   public void setObject(Object value)
+      throws IOException {
+      try {
+         Context parent = getAllButLast(getPath());
+
+         parent.rebind(getTail(), value);
+      } catch (Exception e) {
+         e.printStackTrace();
+         throw new IOExceptionWrapper(e);
+      }
+   }
+
+   /**
+    * Returns the context found by looking up all but the last segment
+    * of the path.
+    *
+    * @param path slash-separated path
+    * @return context of the parent path
+    */
+   private Context getAllButLast(String path)
+      throws NamingException {
+      if (parent != null)
+         return parent;
+
+      Context context = new InitialContext();
+
+      int head = 1;
+      int tail;
+
+      while ((tail = path.indexOf('/', head)) > 0) {
+         String section = path.substring(head, tail);
+
+         if (context == null)
+            throw new NamingException(L.l("null context for `{0}'", path));
+
+         context = (Context) context.lookup(section);
+
+         head = tail + 1;
+      }
+
+      parent = context;
+
       return parent;
-    
-    Context context = new InitialContext();
-
-    int head = 1;
-    int tail;
-
-    while ((tail = path.indexOf('/', head)) > 0) {
-      String section = path.substring(head, tail);
-
-      if (context == null)
-        throw new NamingException(L.l("null context for `{0}'", path));
-      
-      context = (Context) context.lookup(section);
-
-      head = tail + 1;
-    }
-
-    parent = context;
-
-    return parent;
-  }
+   }
 }

@@ -29,7 +29,10 @@
  */
 package com.clevercloud.bianca.program;
 
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.CountDelegate;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.JavaInvoker;
+import com.clevercloud.bianca.env.ObjectValue;
 
 /**
  * A delegate that performs Array operations for Bianca objects.
@@ -55,8 +58,8 @@ public class FunctionCountDelegate implements CountDelegate {
    public int count(ObjectValue qThis) {
       if (_count != null) {
          return _count.callMethod(Env.getInstance(),
-                 _count.getBiancaClass(),
-                 qThis).toInt();
+            _count.getBiancaClass(),
+            qThis).toInt();
       } else {
          return 1;
       }

@@ -58,7 +58,6 @@ public class BinaryRightShiftExpr extends AbstractBinaryExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -73,7 +72,6 @@ public class BinaryRightShiftExpr extends AbstractBinaryExpr {
     * Evaluates the expression as a long.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

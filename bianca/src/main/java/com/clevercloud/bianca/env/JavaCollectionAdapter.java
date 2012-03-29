@@ -57,6 +57,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    //
    // Conversions
    //
+
    /**
     * Copy for assignment.
     */
@@ -93,7 +94,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    public Value putImpl(Value key, Value value) {
       if (key.toInt() != getSize()) {
          throw new UnsupportedOperationException(
-                 "random assignment into Collection");
+            "random assignment into Collection");
       }
 
       _collection.add(value.toJavaObject());
@@ -188,7 +189,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    }
 
    public class CollectionSet
-           extends AbstractSet<Map.Entry<Object, Object>> {
+      extends AbstractSet<Map.Entry<Object, Object>> {
 
       CollectionSet() {
       }
@@ -205,7 +206,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    }
 
    public class CollectionIterator
-           implements Iterator<Map.Entry<Object, Object>> {
+      implements Iterator<Map.Entry<Object, Object>> {
 
       private int _index;
       private Iterator _iterator;
@@ -232,7 +233,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    }
 
    public static class CollectionEntry
-           implements Map.Entry<Object, Object> {
+      implements Map.Entry<Object, Object> {
 
       private final int _key;
       private Object _value;
@@ -263,7 +264,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    }
 
    public class CollectionValueSet
-           extends AbstractSet<Map.Entry<Value, Value>> {
+      extends AbstractSet<Map.Entry<Value, Value>> {
 
       CollectionValueSet() {
       }
@@ -280,7 +281,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    }
 
    public class CollectionValueIterator
-           implements Iterator<Map.Entry<Value, Value>> {
+      implements Iterator<Map.Entry<Value, Value>> {
 
       private int _index;
       private Iterator _iterator;
@@ -309,7 +310,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    }
 
    public class ValueCollection
-           extends AbstractCollection<Value> {
+      extends AbstractCollection<Value> {
 
       ValueCollection() {
       }
@@ -326,7 +327,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    }
 
    public class KeyIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private int _index;
       private Iterator _iterator;
@@ -355,7 +356,7 @@ public class JavaCollectionAdapter extends JavaAdapter {
    }
 
    public class ValueIterator
-           implements Iterator<Value> {
+      implements Iterator<Value> {
 
       private Iterator _iterator;
 

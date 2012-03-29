@@ -33,9 +33,9 @@ package com.clevercloud.bianca.lib;
 import com.clevercloud.bianca.annotation.Optional;
 import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
-import com.clevercloud.bianca.module.ModuleStartupListener;
-import com.clevercloud.bianca.module.IniDefinitions;
 import com.clevercloud.bianca.module.IniDefinition;
+import com.clevercloud.bianca.module.IniDefinitions;
+import com.clevercloud.bianca.module.ModuleStartupListener;
 import com.clevercloud.util.L10N;
 
 import java.io.IOException;
@@ -49,11 +49,11 @@ import java.util.zip.GZIPOutputStream;
  * PHP output routines.
  */
 public class OutputModule extends AbstractBiancaModule
-        implements ModuleStartupListener {
+   implements ModuleStartupListener {
 
    private static final L10N L = new L10N(OutputModule.class);
    private static final Logger log = Logger.getLogger(
-           OutputModule.class.getName());
+      OutputModule.class.getName());
    private static final StringValue HTTP_ACCEPT_ENCODING = new StringValue("HTTP_ACCEPT_ENCODING");
    private static final IniDefinitions _iniDefinitions = new IniDefinitions();
 
@@ -61,13 +61,16 @@ public class OutputModule extends AbstractBiancaModule
    private enum Encoding {
 
       NONE, GZIP, DEFLATE
-   };
+   }
+
+   ;
 
    private static class GZOutputPair {
 
       public StringBuilderOutputStream _tempStream;
       public OutputStream _outputStream;
    }
+
    private static HashMap<Env, GZOutputPair> _gzOutputPairs = new HashMap<Env, GZOutputPair>();
    public static final int PHP_OUTPUT_HANDLER_START = 1;
    public static final int PHP_OUTPUT_HANDLER_CONT = 2;
@@ -87,8 +90,8 @@ public class OutputModule extends AbstractBiancaModule
       String handlerName = INI_OUTPUT_HANDLER.getAsString(env);
 
       if (handlerName != null
-              && !"".equals(handlerName)
-              && env.getFunction(handlerName) != null) {
+         && !"".equals(handlerName)
+         && env.getFunction(handlerName) != null) {
          Callable callback = env.createString(handlerName).toCallable(env);
 
          ob_start(env, callback, 0, true);
@@ -248,8 +251,8 @@ public class OutputModule extends AbstractBiancaModule
     * in the correct order in the array.
     */
    private static void listHandlers(Env env,
-           OutputBuffer ob,
-           ArrayValue handlers) {
+                                    OutputBuffer ob,
+                                    ArrayValue handlers) {
       if (ob == null) {
          return;
       }
@@ -282,16 +285,16 @@ public class OutputModule extends AbstractBiancaModule
     * by getFullStatus() and ob_get_status().
     */
    private static void putCommonStatus(ArrayValue element, OutputBuffer ob,
-           Env env, boolean fullStatus) {
+                                       Env env, boolean fullStatus) {
       LongValue type = LongValue.ONE;
       Callable callback = ob.getCallback();
 
       // TODO: need to replace logic because isInternal appears to be
       // specific to ob_, not general to Callback
-    /*
-      if (callback != null && callback.isInternal())
-      type = LongValue.ZERO;
-       */
+      /*
+     if (callback != null && callback.isInternal())
+     type = LongValue.ZERO;
+      */
 
       String name;
 
@@ -314,7 +317,7 @@ public class OutputModule extends AbstractBiancaModule
       // to be 0 and there is no interface to change this buffer_size
       // and no indication of its meaning.
       if (fullStatus && callback != null
-              && callback == UrlRewriterCallback.getInstance(env)) {
+         && callback == UrlRewriterCallback.getInstance(env)) {
          element.put(env.createString("buffer_size"), LongValue.ZERO);
       }
 
@@ -335,7 +338,7 @@ public class OutputModule extends AbstractBiancaModule
       element.put(env.createString("name".intern()), nameV);
 
       Value del = ob.getEraseFlag() ? BooleanValue.TRUE
-              : BooleanValue.FALSE;
+         : BooleanValue.FALSE;
 
       element.put(env.createString("del"), del);
    }
@@ -354,7 +357,7 @@ public class OutputModule extends AbstractBiancaModule
       ArrayValue element = new ArrayValueImpl();
 
       element.put(env.createString("chunk_size"),
-              LongValue.create(ob.getChunkSize()));
+         LongValue.create(ob.getChunkSize()));
 
       // TODO: Not sure why we even need to list a size -- PHP doesn't
       // even seem to respect it.  -1 => infinity?
@@ -385,7 +388,7 @@ public class OutputModule extends AbstractBiancaModule
 
       if (ob != null) {
          result.put(env.createString("level"),
-                 LongValue.create(ob.getLevel()));
+            LongValue.create(ob.getLevel()));
 
          putCommonStatus(result, ob, env, false);
       }
@@ -409,11 +412,11 @@ public class OutputModule extends AbstractBiancaModule
     * Pushes the output buffer
     */
    public static boolean ob_start(Env env,
-           @Optional Callable callback,
-           @Optional int chunkSize,
-           @Optional("true") boolean erase) {
+                                  @Optional Callable callback,
+                                  @Optional int chunkSize,
+                                  @Optional("true") boolean erase) {
       if (callback != null
-              && callback.getCallbackName().equals("ob_gzhandler")) {
+         && callback.getCallbackName().equals("ob_gzhandler")) {
          OutputBuffer ob = env.getOutputBuffer();
 
          for (; ob != null; ob = ob.getNext()) {
@@ -421,7 +424,7 @@ public class OutputModule extends AbstractBiancaModule
 
             if (cb.getCallbackName().equals("ob_gzhandler")) {
                env.warning(
-                       L.l("output handler 'ob_gzhandler' cannot be used twice"));
+                  L.l("output handler 'ob_gzhandler' cannot be used twice"));
                return false;
             }
          }
@@ -459,7 +462,7 @@ public class OutputModule extends AbstractBiancaModule
     * Adds a variable to the list for rewritten URLs.
     */
    public static boolean output_add_rewrite_var(Env env,
-           String name, String value) {
+                                                String name, String value) {
       UrlRewriterCallback rewriter = pushUrlRewriter(env);
 
       rewriter.addRewriterVar(name, value);
@@ -514,7 +517,7 @@ public class OutputModule extends AbstractBiancaModule
 
       if ((state & (PHP_OUTPUT_HANDLER_START)) != 0) {
          HttpModule.header(
-                 env, env.createString("Vary: Accept-Encoding"), true, 0);
+            env, env.createString("Vary: Accept-Encoding"), true, 0);
 
          int encodingFlag = 0;
 
@@ -525,12 +528,12 @@ public class OutputModule extends AbstractBiancaModule
          try {
             if (encoding == Encoding.GZIP) {
                HttpModule.header(
-                       env, env.createString("Content-Encoding: gzip"), true, 0);
+                  env, env.createString("Content-Encoding: gzip"), true, 0);
 
                pair._outputStream = new GZIPOutputStream(pair._tempStream);
             } else if (encoding == Encoding.DEFLATE) {
                HttpModule.header(
-                       env, env.createString("Content-Encoding: deflate"), true, 0);
+                  env, env.createString("Content-Encoding: deflate"), true, 0);
 
                pair._outputStream = new DeflaterOutputStream(pair._tempStream);
             }
@@ -564,6 +567,7 @@ public class OutputModule extends AbstractBiancaModule
 
       return result;
    }
+
    static final IniDefinition INI_OUTPUT_BUFFERING = _iniDefinitions.add("output_buffering", false, PHP_INI_PERDIR);
    static final IniDefinition INI_OUTPUT_HANDLER = _iniDefinitions.add("output_handler", "", PHP_INI_PERDIR);
    static final IniDefinition INI_IMPLICIT_FLUSH = _iniDefinitions.add("implicit_flush", false, PHP_INI_ALL);

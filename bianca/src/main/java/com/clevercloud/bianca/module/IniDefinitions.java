@@ -49,9 +49,9 @@ public class IniDefinitions {
     */
    public IniDefinition add(String name, boolean deflt, int scope) {
       return add(name,
-              IniDefinition.Type.BOOLEAN,
-              BooleanValue.create(deflt),
-              scope);
+         IniDefinition.Type.BOOLEAN,
+         BooleanValue.create(deflt),
+         scope);
    }
 
    /**
@@ -66,15 +66,15 @@ public class IniDefinitions {
     */
    public IniDefinition add(String name, String deflt, int scope) {
       return add(name,
-              IniDefinition.Type.STRING,
-              StringValue.create(deflt),
-              scope);
+         IniDefinition.Type.STRING,
+         StringValue.create(deflt),
+         scope);
    }
 
    private IniDefinition add(String name,
-           IniDefinition.Type type,
-           Value deflt,
-           int scope) {
+                             IniDefinition.Type type,
+                             Value deflt,
+                             int scope) {
       return add(new IniDefinition(name, type, deflt, scope));
    }
 
@@ -93,9 +93,9 @@ public class IniDefinitions {
     */
    public IniDefinition addUnsupported(String name, boolean deflt, int scope) {
       return addUnsupported(name,
-              IniDefinition.Type.BOOLEAN,
-              BooleanValue.create(deflt),
-              scope);
+         IniDefinition.Type.BOOLEAN,
+         BooleanValue.create(deflt),
+         scope);
    }
 
    /**
@@ -103,9 +103,9 @@ public class IniDefinitions {
     */
    public IniDefinition addUnsupported(String name, long deflt, int scope) {
       return addUnsupported(name,
-              IniDefinition.Type.LONG,
-              LongValue.create(deflt),
-              scope);
+         IniDefinition.Type.LONG,
+         LongValue.create(deflt),
+         scope);
    }
 
    /**
@@ -113,15 +113,15 @@ public class IniDefinitions {
     */
    public IniDefinition addUnsupported(String name, String deflt, int scope) {
       return addUnsupported(name,
-              IniDefinition.Type.STRING,
-              StringValue.create(deflt),
-              scope);
+         IniDefinition.Type.STRING,
+         StringValue.create(deflt),
+         scope);
    }
 
    private IniDefinition addUnsupported(String name,
-           IniDefinition.Type type,
-           Value deflt,
-           int scope) {
+                                        IniDefinition.Type type,
+                                        Value deflt,
+                                        int scope) {
       return add(new IniDefinition.Unsupported(name, type, deflt, scope));
    }
 
@@ -161,8 +161,8 @@ public class IniDefinitions {
 
    public IniDefinition get(String name) {
       IniDefinition iniDefinition = _defaultMap == null
-              ? null
-              : _defaultMap.get(name);
+         ? null
+         : _defaultMap.get(name);
 
       if (iniDefinition == null) {
          iniDefinition = new IniDefinition.Runtime(name);

@@ -29,8 +29,9 @@
  */
 package com.clevercloud.bianca.env;
 
-import java.lang.ref.*;
-import com.clevercloud.util.*;
+import com.clevercloud.util.FreeList;
+
+import java.lang.ref.SoftReference;
 
 /**
  * Cache entry root

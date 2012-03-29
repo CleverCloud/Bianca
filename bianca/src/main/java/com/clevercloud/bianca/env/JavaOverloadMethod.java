@@ -74,7 +74,7 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
             AbstractJavaMethod[][] restMethodTable = new AbstractJavaMethod[len + 1][];
 
             System.arraycopy(_restMethodTable, 0,
-                    restMethodTable, 0, _restMethodTable.length);
+               restMethodTable, 0, _restMethodTable.length);
 
             _restMethodTable = restMethodTable;
          }
@@ -158,7 +158,7 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
     */
    @Override
    public Value callMethod(Env env, BiancaClass qClass, Value qThis,
-           Value[] args) {
+                           Value[] args) {
       if (args.length < _methodTable.length) {
          AbstractJavaMethod[] methods = _methodTable[args.length];
 
@@ -173,10 +173,10 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
          } else {
             if (_restMethodTable.length == 0) {
                env.warning(L.l(
-                       "'{0}' overloaded method call with {1} arguments "
-                       + "does not match any overloaded method",
-                       getName(),
-                       args.length));
+                  "'{0}' overloaded method call with {1} arguments "
+                     + "does not match any overloaded method",
+                  getName(),
+                  args.length));
 
                return NullValue.NULL;
             }
@@ -188,8 +188,8 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
       } else {
          if (_restMethodTable.length == 0) {
             env.warning(L.l(
-                    "'{0}' overloaded method call with {1} "
-                    + "arguments has too many arguments", getName(), args.length));
+               "'{0}' overloaded method call with {1} "
+                  + "arguments has too many arguments", getName(), args.length));
 
             return NullValue.NULL;
          } else {
@@ -204,8 +204,8 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
     * Returns the Java function that matches the args passed in.
     */
    private AbstractJavaMethod getBestFitJavaMethod(AbstractJavaMethod[] methods,
-           AbstractJavaMethod[][] restMethodTable,
-           Value[] args) {
+                                                   AbstractJavaMethod[][] restMethodTable,
+                                                   Value[] args) {
 
       AbstractJavaMethod minCostJavaMethod = null;
       int minCost = Integer.MAX_VALUE;
@@ -228,8 +228,8 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
       }
 
       for (int i = Math.min(args.length, restMethodTable.length) - 1;
-              i >= 0;
-              i--) {
+           i >= 0;
+           i--) {
          if (restMethodTable[i] == null) {
             continue;
          }
@@ -257,8 +257,8 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
     * Returns the Java function that matches the args passed in.
     */
    private AbstractJavaMethod getBestFitJavaMethod(AbstractJavaMethod[] methods,
-           AbstractJavaMethod[][] restMethodTable,
-           Expr[] args) {
+                                                   AbstractJavaMethod[][] restMethodTable,
+                                                   Expr[] args) {
       AbstractJavaMethod minCostJavaMethod = null;
       int minCost = Integer.MAX_VALUE;
 
@@ -280,8 +280,8 @@ public class JavaOverloadMethod extends AbstractJavaMethod {
       }
 
       for (int i = Math.min(args.length, restMethodTable.length) - 1;
-              i >= 0;
-              i--) {
+           i >= 0;
+           i--) {
          if (restMethodTable[i] == null) {
             continue;
          }

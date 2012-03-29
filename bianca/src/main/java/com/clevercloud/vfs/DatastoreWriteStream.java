@@ -30,134 +30,118 @@
 
 package com.clevercloud.vfs;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
-import java.nio.channels.OverlappingFileLockException;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Stream encapsulating FileOutputStream
  */
 public class DatastoreWriteStream extends VfsStream
-    implements LockableStream
-{
-  private DatastoreOutputStream _os;
-  
-  /**
-   * Create a new FileWriteStream based on the java.io.* stream.
-   *
-   * @param fos the underlying file output stream.
-   */
-  public DatastoreWriteStream(DatastoreOutputStream fos)
-  {
-    super(null, fos);
-    _os = fos;
-  }
+   implements LockableStream {
+   private DatastoreOutputStream _os;
 
-  /**
-   * Create a new FileWriteStream based on the java.io.* stream.
-   *
-   * @param fos the underlying file output stream.
-   * @param path the associated Path.
-   */
-  public DatastoreWriteStream(DatastoreOutputStream fos, Path path)
-  {
-    super(null, fos, path);
-    _os = fos;
-  }
-
-  /**
-   * Closes the underlying stream.
-   */
-  public void close() throws IOException
-  {
-    /*
-    unlock();
-
-    _fileChannel = null;
+   /**
+    * Create a new FileWriteStream based on the java.io.* stream.
+    *
+    * @param fos the underlying file output stream.
     */
+   public DatastoreWriteStream(DatastoreOutputStream fos) {
+      super(null, fos);
+      _os = fos;
+   }
 
-    super.close();
-  }
+   /**
+    * Create a new FileWriteStream based on the java.io.* stream.
+    *
+    * @param fos  the underlying file output stream.
+    * @param path the associated Path.
+    */
+   public DatastoreWriteStream(DatastoreOutputStream fos, Path path) {
+      super(null, fos, path);
+      _os = fos;
+   }
 
-  public boolean lock(boolean shared, boolean block)
-  {
-    /*
-    unlock();
+   /**
+    * Closes the underlying stream.
+    */
+   public void close() throws IOException {
+      /*
+      unlock();
 
-    if (shared) {
-      // Invalid request for a shared "read" lock on a write only stream.
+      _fileChannel = null;
+      */
 
-      return false;
-    }
+      super.close();
+   }
 
-    try {
+   public boolean lock(boolean shared, boolean block) {
+      /*
+      unlock();
+
+      if (shared) {
+        // Invalid request for a shared "read" lock on a write only stream.
+
+        return false;
+      }
+
+      try {
+        if (_fileChannel == null) {
+          _fileChannel = _os.getChannel();
+        }
+
+        if (block)
+          _fileLock = _fileChannel.lock(0, Long.MAX_VALUE, false);
+        else
+          _fileLock = _fileChannel.tryLock(0, Long.MAX_VALUE, false);
+
+        return _fileLock != null;
+      } catch (OverlappingFileLockException e) {
+        log.log(Level.FINE, e.toString(), e);
+        return false;
+      } catch (IOException e) {
+        log.log(Level.FINE, e.toString(), e);
+        return false;
+      }
+
+      */
+
+      return true;
+   }
+
+   public boolean unlock() {
+      /*
+      try {
+        FileLock lock = _fileLock;
+        _fileLock = null;
+
+        if (lock != null) {
+          lock.release();
+
+          return true;
+        }
+
+        return false;
+      } catch (IOException e) {
+        log.log(Level.FINE, e.toString(), e);
+        return false;
+      }
+      */
+
+      return true;
+   }
+
+   /**
+    * Seeks based on the start.
+    */
+   public void seekStart(long pos)
+      throws IOException {
+      /*
       if (_fileChannel == null) {
         _fileChannel = _os.getChannel();
       }
 
-      if (block)
-        _fileLock = _fileChannel.lock(0, Long.MAX_VALUE, false);
-      else
-        _fileLock = _fileChannel.tryLock(0, Long.MAX_VALUE, false);
+      _fileChannel.position(pos);
 
-      return _fileLock != null;
-    } catch (OverlappingFileLockException e) {
-      log.log(Level.FINE, e.toString(), e);
-      return false;
-    } catch (IOException e) {
-      log.log(Level.FINE, e.toString(), e);
-      return false;
-    }
-    
-    */
-    
-    return true;
-  }
-
-  public boolean unlock()
-  {
-    /*
-    try {
-      FileLock lock = _fileLock;
-      _fileLock = null;
-
-      if (lock != null) {
-        lock.release();
-
-        return true;
-      }
-
-      return false;
-    } catch (IOException e) {
-      log.log(Level.FINE, e.toString(), e);
-      return false;
-    }
-    */
-    
-    return true;
-  }
-
-  /**
-   * Seeks based on the start.
-   */
-  public void seekStart(long pos)
-    throws IOException
-  {
-    /*
-    if (_fileChannel == null) {
-      _fileChannel = _os.getChannel();
-    }
-
-    _fileChannel.position(pos);
-    
-    */
-  }
+      */
+   }
 
 }

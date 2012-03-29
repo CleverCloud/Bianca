@@ -38,8 +38,8 @@ public class ClassField {
    private FieldVisibility _visibility = FieldVisibility.PUBLIC;
 
    public ClassField(StringValue name,
-           Expr initValue,
-           FieldVisibility visibility) {
+                     Expr initValue,
+                     FieldVisibility visibility) {
       _name = name;
       _initValue = initValue;
       _visibility = visibility;

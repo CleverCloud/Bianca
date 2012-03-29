@@ -30,11 +30,7 @@
 package com.clevercloud.bianca.expr;
 
 import com.clevercloud.bianca.Location;
-import com.clevercloud.bianca.env.ArrayValue;
-import com.clevercloud.bianca.env.ArrayValueImpl;
-import com.clevercloud.bianca.env.Env;
-import com.clevercloud.bianca.env.Value;
-import com.clevercloud.bianca.env.Var;
+import com.clevercloud.bianca.env.*;
 
 /**
  * Represents a PHP array[] reference expression.
@@ -71,7 +67,6 @@ public class ArrayTailExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -83,7 +78,6 @@ public class ArrayTailExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -95,7 +89,6 @@ public class ArrayTailExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -109,7 +102,6 @@ public class ArrayTailExpr extends AbstractVarExpr {
     * Evaluates the expression, setting an array if unset..
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -127,7 +119,6 @@ public class ArrayTailExpr extends AbstractVarExpr {
     * Evaluates the expression, assigning an object if unset..
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -145,7 +136,6 @@ public class ArrayTailExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -163,7 +153,6 @@ public class ArrayTailExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override
@@ -179,7 +168,6 @@ public class ArrayTailExpr extends AbstractVarExpr {
     * Evaluates the expression.
     *
     * @param env the calling environment.
-    *
     * @return the expression value.
     */
    @Override

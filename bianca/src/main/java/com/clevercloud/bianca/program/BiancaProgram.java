@@ -32,23 +32,26 @@ package com.clevercloud.bianca.program;
 
 import com.clevercloud.bianca.BiancaContext;
 import com.clevercloud.bianca.BiancaException;
-import com.clevercloud.bianca.env.*;
+import com.clevercloud.bianca.env.Env;
+import com.clevercloud.bianca.env.Value;
 import com.clevercloud.bianca.function.AbstractFunction;
 import com.clevercloud.bianca.page.BiancaPage;
-import com.clevercloud.bianca.statement.*;
+import com.clevercloud.bianca.statement.BlockStatement;
+import com.clevercloud.bianca.statement.ExprStatement;
+import com.clevercloud.bianca.statement.ReturnStatement;
+import com.clevercloud.bianca.statement.Statement;
 import com.clevercloud.vfs.Depend;
-import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.Dependency;
+import com.clevercloud.vfs.Path;
 import com.clevercloud.vfs.PersistentDependency;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a compiled Bianca program.
@@ -78,17 +81,17 @@ public class BiancaProgram {
    /**
     * Creates a new bianca program
     *
-    * @param bianca the owning bianca engine
+    * @param bianca     the owning bianca engine
     * @param sourceFile the path to the source file
-    * @param statement the top-level statement
+    * @param statement  the top-level statement
     */
    public BiancaProgram(BiancaContext bianca, Path sourceFile,
-           HashMap<String, Function> functionMap,
-           ArrayList<Function> functionList,
-           HashMap<String, InterpretedClassDef> classMap,
-           ArrayList<InterpretedClassDef> classList,
-           FunctionInfo functionInfo,
-           Statement statement) {
+                        HashMap<String, Function> functionMap,
+                        ArrayList<Function> functionList,
+                        HashMap<String, InterpretedClassDef> classMap,
+                        ArrayList<InterpretedClassDef> classList,
+                        FunctionInfo functionInfo,
+                        Statement statement) {
       _bianca = bianca;
 
       _topDepend = new PageDependency();
@@ -103,7 +106,7 @@ public class BiancaProgram {
 
       for (Map.Entry<String, Function> entry : functionMap.entrySet()) {
          _functionMapLowerCase.put(entry.getKey().toLowerCase(),
-                 entry.getValue());
+            entry.getValue());
       }
 
       _classMap = classMap;
@@ -116,13 +119,13 @@ public class BiancaProgram {
    /**
     * Creates a new bianca program
     *
-    * @param bianca the owning bianca engine
+    * @param bianca     the owning bianca engine
     * @param sourceFile the path to the source file
-    * @param statement the top-level statement
+    * @param statement  the top-level statement
     */
    public BiancaProgram(BiancaContext bianca,
-           Path sourceFile,
-           BiancaPage page) {
+                        Path sourceFile,
+                        BiancaPage page) {
       _bianca = bianca;
       _sourceFile = sourceFile;
       _compiledPage = page;
@@ -322,7 +325,7 @@ public class BiancaProgram {
          Statement[] statements = blockStmt.getStatements();
 
          if (statements.length > 0
-                 && statements[0] instanceof ExprStatement) {
+            && statements[0] instanceof ExprStatement) {
             ExprStatement exprStmt = (ExprStatement) statements[0];
 
             _statement = new ReturnStatement(exprStmt.getExpr());
@@ -337,7 +340,6 @@ public class BiancaProgram {
     *
     * @param env the calling environment
     * @return null if there is no return value
-    *
     */
    public Value execute(Env env) {
       return _statement.execute(env);
@@ -405,8 +407,8 @@ public class BiancaProgram {
             return _compiledPage.isModified();
          } else {
             for (PersistentDependency pd : _dependList) {
-                if (pd.isModified())
-                    return true;
+               if (pd.isModified())
+                  return true;
             }
             return false;
          }

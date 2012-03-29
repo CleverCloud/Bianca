@@ -36,8 +36,8 @@ import com.clevercloud.bianca.env.*;
 import com.clevercloud.bianca.module.AbstractBiancaModule;
 import com.clevercloud.util.L10N;
 
-import java.util.Iterator;
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -105,15 +105,15 @@ public class MathModule extends AbstractBiancaModule {
    /**
     * Convert a number between arbitrary bases
     *
-    * @param number A string represeantion of an binary number.
+    * @param number   A string represeantion of an binary number.
     * @param fromBase The base of the number parameter.
-    * @param toBase The base of convert to.
+    * @param toBase   The base of convert to.
     * @return the number as a Value, either a LongValue or a DoubleValue.
     */
    public static Value base_convert(Env env,
-           StringValue str,
-           int fromBase,
-           int toBase) {
+                                    StringValue str,
+                                    int fromBase,
+                                    int toBase) {
       if (fromBase < 2 || fromBase > 36) {
          env.warning(L.l("invalid `{0}' ({1})", "from base", fromBase));
          return BooleanValue.FALSE;
@@ -200,7 +200,7 @@ public class MathModule extends AbstractBiancaModule {
 
       int bufLen = reverseBuffer.length();
       StringBuilder buffer = new StringBuilder();
-      for (int j = bufLen-1; j >= 0; --j) {
+      for (int j = bufLen - 1; j >= 0; --j) {
          buffer.append(reverseBuffer.charAt(j));
       }
 
@@ -268,6 +268,7 @@ public class MathModule extends AbstractBiancaModule {
 
    /**
     * Returns a binary representation of a number.
+    *
     * @param value the number
     */
    public static StringValue decbin(Env env, long value) {
@@ -300,6 +301,7 @@ public class MathModule extends AbstractBiancaModule {
 
    /**
     * Returns a hexadecimal representation of a number.
+    *
     * @param value the number
     */
    public static StringValue dechex(Env env, long value) {
@@ -335,6 +337,7 @@ public class MathModule extends AbstractBiancaModule {
 
    /**
     * Returns an octal representation of a number.
+    *
     * @param value the number
     */
    public static StringValue decoct(Env env, long value) {
@@ -540,7 +543,7 @@ public class MathModule extends AbstractBiancaModule {
    }
 
    public static long mt_rand(@Optional("0") long min,
-           @Optional("RAND_MAX") long max) {
+                              @Optional("RAND_MAX") long max) {
       long range = max - min + 1;
 
       if (range <= 0) {
@@ -564,8 +567,8 @@ public class MathModule extends AbstractBiancaModule {
    }
 
    /**
-    *  Returns the decimal equivalent of the octal number represented by the
-    *  octal_string argument.
+    * Returns the decimal equivalent of the octal number represented by the
+    * octal_string argument.
     *
     * @param oct A string represeantion of an octal number.
     * @return the decimal equivalent of the octal number
@@ -597,7 +600,7 @@ public class MathModule extends AbstractBiancaModule {
    }
 
    public static long rand(@Optional int min,
-           @Optional("RAND_MAX") int max) {
+                           @Optional("RAND_MAX") int max) {
       return mt_rand(min, max);
    }
 

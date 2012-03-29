@@ -34,60 +34,52 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.NotationDeclaration;
 import java.io.Writer;
 
-public class NotationDeclarationImpl extends XMLEventImpl 
-  implements NotationDeclaration 
-{
-  private final String _name;
-  private final String _publicId;
-  private final String _systemId;
+public class NotationDeclarationImpl extends XMLEventImpl
+   implements NotationDeclaration {
+   private final String _name;
+   private final String _publicId;
+   private final String _systemId;
 
-  public NotationDeclarationImpl(String name, String publicId, String systemId)
-  {
-    _name = name;
-    _publicId = publicId;
-    _systemId = systemId;
-  }
+   public NotationDeclarationImpl(String name, String publicId, String systemId) {
+      _name = name;
+      _publicId = publicId;
+      _systemId = systemId;
+   }
 
-  public String getName()
-  {
-    return _name;
-  }
+   public String getName() {
+      return _name;
+   }
 
-  public String getPublicId()
-  {
-    return _publicId;
-  }
+   public String getPublicId() {
+      return _publicId;
+   }
 
-  public String getSystemId()
-  {
-    return _systemId;
-  }
+   public String getSystemId() {
+      return _systemId;
+   }
 
-  public int getEventType()
-  {
-    return NOTATION_DECLARATION;
-  }
+   public int getEventType() {
+      return NOTATION_DECLARATION;
+   }
 
-  public void writeAsEncodedUnicode(Writer writer) 
-    throws XMLStreamException
-  {
-    // XXX
-  }
+   public void writeAsEncodedUnicode(Writer writer)
+      throws XMLStreamException {
+      // XXX
+   }
 
-  public boolean equals(Object o) 
-  {
-    if (! (o instanceof NotationDeclaration))
-      return false;
-    if (o == null)
-      return false;
-    if (this == o)
-      return true;
+   public boolean equals(Object o) {
+      if (!(o instanceof NotationDeclaration))
+         return false;
+      if (o == null)
+         return false;
+      if (this == o)
+         return true;
 
-    NotationDeclaration decl = (NotationDeclaration) o;
-    
-    return getName().equals(decl.getName()) &&
-           getPublicId().equals(decl.getPublicId()) &&
-           getSystemId().equals(decl.getSystemId());
-  }
+      NotationDeclaration decl = (NotationDeclaration) o;
+
+      return getName().equals(decl.getName()) &&
+         getPublicId().equals(decl.getPublicId()) &&
+         getSystemId().equals(decl.getSystemId());
+   }
 }
 

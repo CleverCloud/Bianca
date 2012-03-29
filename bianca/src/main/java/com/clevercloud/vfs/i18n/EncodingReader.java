@@ -37,92 +37,84 @@ import java.io.UnsupportedEncodingException;
 /**
  * Abstract class for a byte-to-character encoding reader and its
  * associated factory.
- *
+ * <p/>
  * <p/>Implementations need to implement <code>create</code>
  * and <code>read()</code> at minimum.  Efficient implementations will
  * also implement the <code>read</code> into a buffer.
- *
+ * <p/>
  * <p/>Implementations should not buffer the bytes.
  */
 abstract public class EncodingReader extends Reader {
-  private String _javaEncoding;
+   private String _javaEncoding;
 
-  public String getJavaEncoding()
-  {
-    return _javaEncoding;
-  }
+   public String getJavaEncoding() {
+      return _javaEncoding;
+   }
 
-  public void setJavaEncoding(String encoding)
-  {
-    _javaEncoding = encoding;
-  }
-  
-  /**
-   * Returns a new encoding reader for the given stream and javaEncoding.
-   *
-   * @param is the input stream providing the bytes.
-   * @param javaEncoding the JDK name for the encoding.
-   *
-   * @return an encoding reader or null for ISO-8859-1.
-   */
-  public abstract Reader create(InputStream is, String javaEncoding)
-    throws UnsupportedEncodingException;
-  
-  /**
-   * Returns a new encoding reader for the given stream and javaEncoding.
-   *
-   * @param is the input stream providing the bytes.
-   * @param javaEncoding the JDK name for the encoding.
-   *
-   * @return an encoding reader or null for ISO-8859-1.
-   */
-  public Reader create(InputStream is)
-    throws UnsupportedEncodingException
-  {
-    Reader reader = create(is, getJavaEncoding());
+   public void setJavaEncoding(String encoding) {
+      _javaEncoding = encoding;
+   }
 
-    if (reader != null)
-      return reader;
-    else
-      return new UTF8Reader(is);
-  }
+   /**
+    * Returns a new encoding reader for the given stream and javaEncoding.
+    *
+    * @param is           the input stream providing the bytes.
+    * @param javaEncoding the JDK name for the encoding.
+    * @return an encoding reader or null for ISO-8859-1.
+    */
+   public abstract Reader create(InputStream is, String javaEncoding)
+      throws UnsupportedEncodingException;
 
-  /**
-   * Returns the next character using the correct encoding.
-   *
-   * @return the next character or -1 on end of file.
-   */
-  public abstract int read()
-    throws IOException;
+   /**
+    * Returns a new encoding reader for the given stream and javaEncoding.
+    *
+    * @param is           the input stream providing the bytes.
+    * @param javaEncoding the JDK name for the encoding.
+    * @return an encoding reader or null for ISO-8859-1.
+    */
+   public Reader create(InputStream is)
+      throws UnsupportedEncodingException {
+      Reader reader = create(is, getJavaEncoding());
 
-  /**
-   * Reads into a character buffer using the correct encoding.
-   *
-   * @param cbuf character buffer receiving the data.
-   * @param off starting offset into the buffer.
-   * @param len number of characters to read.
-   *
-   * @return the number of characters read or -1 on end of file.
-   */
-  public int read(char []cbuf, int off, int len)
-    throws IOException
-  {
-    for (int i = 0; i < len; i++) {
-      int ch = read();
+      if (reader != null)
+         return reader;
+      else
+         return new UTF8Reader(is);
+   }
 
-      if (ch < 0)
-        return len;
+   /**
+    * Returns the next character using the correct encoding.
+    *
+    * @return the next character or -1 on end of file.
+    */
+   public abstract int read()
+      throws IOException;
 
-      cbuf[off + i] = (char) ch;
-    }
+   /**
+    * Reads into a character buffer using the correct encoding.
+    *
+    * @param cbuf character buffer receiving the data.
+    * @param off  starting offset into the buffer.
+    * @param len  number of characters to read.
+    * @return the number of characters read or -1 on end of file.
+    */
+   public int read(char[] cbuf, int off, int len)
+      throws IOException {
+      for (int i = 0; i < len; i++) {
+         int ch = read();
 
-    return len;
-  }
+         if (ch < 0)
+            return len;
 
-  /**
-   * Closes the reader, possibly returning it to a pool.
-   */
-  public void close()
-  {
-  }
+         cbuf[off + i] = (char) ch;
+      }
+
+      return len;
+   }
+
+   /**
+    * Closes the reader, possibly returning it to a pool.
+    */
+   public void close() {
+   }
 }
