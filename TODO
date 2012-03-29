@@ -2,3 +2,4 @@ Remove TempBuffer
 Remove *BuilderValue references
 Check if convert_uudecode still works
 See TODO, TOCHECK, FIXME, XXX
+fix maj plugins WP + admin widgets

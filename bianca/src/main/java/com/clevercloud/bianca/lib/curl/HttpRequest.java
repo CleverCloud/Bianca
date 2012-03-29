@@ -399,7 +399,7 @@ public class HttpRequest
 
       try {
          while ((ch = in.read()) >= 0) {
-            bb.append(ch);
+            bb.append((char)ch);
          }
       } catch (IOException e) {
          throw new BiancaModuleException(e);
