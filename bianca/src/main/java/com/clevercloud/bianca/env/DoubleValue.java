@@ -409,12 +409,12 @@ public class DoubleValue extends NumberValue
          for (len--; len >= 0; len--) {
             int ch = v.charAt(len);
 
-            if (ch == '.') {
+            if (ch == '.' || ch == ',') {
                dot = true;
             }
 
             if (ch != '0' && nonzero < 0) {
-               if (ch == '.') {
+               if (ch == '.' || ch == ',') {
                   nonzero = len - 1;
                } else {
                   nonzero = len;
