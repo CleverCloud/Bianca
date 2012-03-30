@@ -1023,7 +1023,6 @@ public class CurlModule
     * Returns the version of this cURL implementation.
     *
     * @param env
-    * @param version
     */
    public static ArrayValue curl_version(Env env,
                                          @Optional Value age) {
