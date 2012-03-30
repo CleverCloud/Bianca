@@ -1923,7 +1923,7 @@ public class StringValue
     * Convert to an input stream.
     */
    @Override
-   public final InputStream toInputStream() {
+   public InputStream toInputStream() {
       return new StringValueInputStream(this);
    }
 
@@ -2270,25 +2270,39 @@ public class StringValue
          for (i = 0; i < length && _index < _length; i++) {
             char ch = s[_index++];
 
-            // TODO: check for length - i being enough
             if (ch < 0x80)
                buffer[offset + i] = (byte) ch;
             else if (ch < 0x800) {
-               buffer[offset + i++] = (byte) (0xc0 + (ch >> 6));
-               buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
+               if (length - (offset + i) > 1) {
+                  buffer[offset + i++] = (byte) (0xc0 + (ch >> 6));
+                  buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
+               } else {
+                  --_index;
+                  --i;
+               }
             } else if (ch < 0xd800 || 0xdfff < ch || i == length || _index == _length) {
                // server/0815
-               buffer[offset + i++] = (byte) (0xe0 + (ch >> 12));
-               buffer[offset + i++] = (byte) (0x80 + ((ch >> 6) & 0x3f));
-               buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
+               if (length - (offset + i) > 2) {
+                  buffer[offset + i++] = (byte) (0xe0 + (ch >> 12));
+                  buffer[offset + i++] = (byte) (0x80 + ((ch >> 6) & 0x3f));
+                  buffer[offset + i] = (byte) (0x80 + (ch & 0x3f));
+               } else {
+                  --_index;
+                  --i;
+               }
             } else {
-               char ch2 = s[_index++];
-               int v = 0x10000 + (ch & 0x3ff) * 0x400 + (ch2 & 0x3ff);
+               if (length - (offset + i) > 3) {
+                  char ch2 = s[_index++];
+                  int v = 0x10000 + (ch & 0x3ff) * 0x400 + (ch2 & 0x3ff);
 
-               buffer[offset + i++] = (byte) (0xf0 + (v >> 18));
-               buffer[offset + i++] = (byte) (0x80 + ((v >> 12) & 0x3f));
-               buffer[offset + i++] = (byte) (0x80 + ((v >> 6) & 0x3f));
-               buffer[offset + i] = (byte) (0x80 + (v & 0x3f));
+                  buffer[offset + i++] = (byte) (0xf0 + (v >> 18));
+                  buffer[offset + i++] = (byte) (0x80 + ((v >> 12) & 0x3f));
+                  buffer[offset + i++] = (byte) (0x80 + ((v >> 6) & 0x3f));
+                  buffer[offset + i] = (byte) (0x80 + (v & 0x3f));
+               } else {
+                  --_index;
+                  --i;
+               }
             }
          }
          return i;
@@ -2308,7 +2322,7 @@ public class StringValue
       int _length;
 
       SimpleStringValueReader(StringValue s) {
-         _str = s;
+         _str = new StringValue(s);
          _length = s.length();
       }
 
