@@ -58,7 +58,7 @@ com.clevercloud.bianca.lib.dom.DOMImplementation provides dom
 com.clevercloud.bianca.lib.dom.DOMProcessingInstruction provides dom
 com.clevercloud.bianca.lib.dom.DOMText provides dom
 com.clevercloud.bianca.lib.dom.DOMXPath provides dom
-com.clevercloud.bianca.lib.resin.MBeanServer
+com.clevercloud.bianca.lib.bianca.MBeanServer
 com.clevercloud.bianca.lib.xml.XmlReader
 com.clevercloud.bianca.lib.xml.XMLWriter
 com.clevercloud.bianca.lib.zip.ZipArchive provides ZipArchive

@@ -2,24 +2,24 @@
  * Copyright (c) 1998-2010 Caucho Technology -- all rights reserved
  * Copyright (c) 2011-2012 Clever Cloud SAS -- all rights reserved
  *
- * This file is part of Resin(R) Open Source
+ * This file is part of Bianca(R) Open Source
  *
  * Each copy or derived work must preserve the copyright notice and this
  * notice unmodified.
  *
- * Resin Open Source is free software; you can redistribute it and/or modify
+ * Bianca Open Source is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Resin Open Source is distributed in the hope that it will be useful,
+ * Bianca Open Source is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, or any warranty
  * of NON-INFRINGEMENT.  See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Resin Open Source; if not, write to the
+ * along with Bianca Open Source; if not, write to the
  *   Free SoftwareFoundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
@@ -73,7 +73,7 @@ abstract public class AbstractParser implements XMLReader, Parser {
    boolean _forgiving;
    boolean _extraForgiving;
    boolean _switchToXml = false;
-   boolean _doResinInclude = false;
+   boolean _doBiancaInclude = false;
 
    boolean _isNamespaceAware = true;
    boolean _isNamespacePrefixes = true;
@@ -163,7 +163,7 @@ abstract public class AbstractParser implements XMLReader, Parser {
       _forgiving = false;
       _extraForgiving = false;
       _switchToXml = false;
-      _doResinInclude = false;
+      _doBiancaInclude = false;
 
       _isJsp = false;
 
@@ -424,21 +424,21 @@ abstract public class AbstractParser implements XMLReader, Parser {
    }
 
    /**
-    * Enables including of other XML documents with resin:include.
+    * Enables including of other XML documents with bianca:include.
     *
-    * @param doResinInclude if true, enables the include.
+    * @param doBiancaInclude if true, enables the include.
     */
-   public void setResinInclude(boolean doResinInclude) {
-      _doResinInclude = doResinInclude;
+   public void setBiancaInclude(boolean doBiancaInclude) {
+      _doBiancaInclude = doBiancaInclude;
    }
 
    /**
-    * Returns true if resin:include will include other XML documents.
+    * Returns true if bianca:include will include other XML documents.
     *
-    * @param doResinInclude if true, enables the include.
+    * @param doBiancaInclude if true, enables the include.
     */
-   public boolean getResinInclude() {
-      return _doResinInclude;
+   public boolean getBiancaInclude() {
+      return _doBiancaInclude;
    }
 
    public Object getProperty(String name)
@@ -479,8 +479,8 @@ abstract public class AbstractParser implements XMLReader, Parser {
          return false;
       else if (name.equals("http://clevercloud.com/xml/features/skip-comments"))
          return _skipComments;
-      else if (name.equals("http://clevercloud.com/xml/features/resin-include"))
-         return _doResinInclude;
+      else if (name.equals("http://clevercloud.com/xml/features/bianca-include"))
+         return _doBiancaInclude;
       else
          throw new SAXNotRecognizedException(name);
    }
@@ -496,8 +496,8 @@ abstract public class AbstractParser implements XMLReader, Parser {
          _isNamespaceAware = true;
       } else if (name.equals("http://clevercloud.com/xml/features/skip-comments")) {
          _skipComments = value;
-      } else if (name.equals("http://clevercloud.com/xml/features/resin-include"))
-         _doResinInclude = value;
+      } else if (name.equals("http://clevercloud.com/xml/features/bianca-include"))
+         _doBiancaInclude = value;
       else if (name.equals("http://xml.org/sax/features/validation"))
          _isValidating = value;
       else

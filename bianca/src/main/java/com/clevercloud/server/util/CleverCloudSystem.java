@@ -2,24 +2,24 @@
  * Copyright (c) 1998-2010 Caucho Technology -- all rights reserved
  * Copyright (c) 2011-2012 Clever Cloud SAS -- all rights reserved
  *
- * This file is part of Resin(R) Open Source
+ * This file is part of Bianca(R) Open Source
  *
  * Each copy or derived work must preserve the copyright notice and this
  * notice unmodified.
  *
- * Resin Open Source is free software; you can redistribute it and/or modify
+ * Bianca Open Source is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Resin Open Source is distributed in the hope that it will be useful,
+ * Bianca Open Source is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, or any warranty
  * of NON-INFRINGEMENT.  See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Resin Open Source; if not, write to the
+ * along with Bianca Open Source; if not, write to the
  *
  *   Free Software Foundation, Inc.
  *   59 Temple Place, Suite 330
@@ -66,16 +66,16 @@ public class CleverCloudSystem {
    static String _localHost;
    static String _userDir;
    static String _userName;
-   static Path _resinHome;
+   static Path _biancaHome;
    static Path _rootDirectory;
    static boolean _isTesting;
    static boolean _isTestWindows;
 
    static boolean _hasJni;
-   static boolean _isResin;
+   static boolean _isBianca;
 
-   static String _resinVersion;
-   static String _resinFullVersion;
+   static String _biancaVersion;
+   static String _biancaFullVersion;
 
    private static int _isUnix = -1;
    private static String _newline;
@@ -102,23 +102,23 @@ public class CleverCloudSystem {
    }
 
    /**
-    * Sets the Path to be used as ResinHome.
+    * Sets the Path to be used as BiancaHome.
     */
-   public static void setResinHome(Path path) {
-      _resinHome = path;
+   public static void setBiancaHome(Path path) {
+      _biancaHome = path;
    }
 
    /**
-    * Gets the Path used as ResinHome.
+    * Gets the Path used as BiancaHome.
     */
-   public static Path getResinHome() {
-      if (_resinHome != null)
-         return _resinHome;
+   public static Path getBiancaHome() {
+      if (_biancaHome != null)
+         return _biancaHome;
 
-      String path = System.getProperty("resin.home");
+      String path = System.getProperty("bianca.home");
       if (path != null) {
-         _resinHome = Vfs.lookupNative(path);
-         return _resinHome;
+         _biancaHome = Vfs.lookupNative(path);
+         return _biancaHome;
       }
 
       String classpath = System.getProperty("java.class.path");
@@ -133,15 +133,15 @@ public class CleverCloudSystem {
          else
             subpath = classpath.substring(head, p);
 
-         if (subpath.endsWith(sep + "lib" + sep + "resin.jar") ||
-            subpath.equals("lib" + sep + "resin.jar")) {
+         if (subpath.endsWith(sep + "lib" + sep + "bianca.jar") ||
+            subpath.equals("lib" + sep + "bianca.jar")) {
             path = subpath.substring(0, subpath.length() -
-               ("lib" + sep + "resin.jar").length());
+               ("lib" + sep + "bianca.jar").length());
          } else if (subpath.endsWith(sep + "classes") ||
             subpath.equals("classes")) {
-            Path resinPath = Vfs.lookupNative(subpath);
-            resinPath = resinPath.lookup("com/clevercloud/util/CleverCloudSystem.class");
-            if (resinPath.exists()) {
+            Path biancaPath = Vfs.lookupNative(subpath);
+            biancaPath = biancaPath.lookup("com/clevercloud/util/CleverCloudSystem.class");
+            if (biancaPath.exists()) {
                path = subpath.substring(0, subpath.length() - "classes".length());
             }
          }
@@ -153,16 +153,16 @@ public class CleverCloudSystem {
       }
 
       if (path != null)
-         _resinHome = Vfs.lookupNative(path);
-      if (_resinHome != null && _resinHome.isDirectory())
-         return _resinHome;
+         _biancaHome = Vfs.lookupNative(path);
+      if (_biancaHome != null && _biancaHome.isDirectory())
+         return _biancaHome;
 
       return Vfs.lookup();
    }
 
    /**
     * Returns a path to the work directory.  The work directory is
-    * specified in the resin.conf by /clevercloud.com/java/work-path.  If
+    * specified in the bianca.conf by /clevercloud.com/java/work-path.  If
     * unspecified, it defaults to /tmp/clevercloud.
     *
     * @return directory path to work in.
@@ -277,7 +277,7 @@ public class CleverCloudSystem {
 
    /**
     * Set true to cause the tracking of detailed statistcs, default false.
-    * Detailed statistics cause various parts of Resin to keep more detailed
+    * Detailed statistics cause various parts of Bianca to keep more detailed
     * statistics at the possible expense of performance.
     */
    public static void setDetailedStatistics(boolean isVerboseStatistics) {
@@ -285,7 +285,7 @@ public class CleverCloudSystem {
    }
 
    /**
-    * Detailed statistics cause various parts of Resin to keep more detailed
+    * Detailed statistics cause various parts of Bianca to keep more detailed
     * statistics at the possible expense of some performance.
     */
    public static boolean isDetailedStatistics() {
@@ -383,7 +383,7 @@ public class CleverCloudSystem {
 
    public static void exitOom(Class cl, Throwable e) {
       try {
-         System.err.println(cl + " Resin restarting due to OutOfMemoryError " + e);
+         System.err.println(cl + " Bianca restarting due to OutOfMemoryError " + e);
       } finally {
          Runtime.getRuntime().halt(EXIT_OOM);
       }

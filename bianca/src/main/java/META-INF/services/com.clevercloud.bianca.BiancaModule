@@ -50,5 +50,5 @@ com.clevercloud.bianca.lib.xml.XMLWriterModule
 com.clevercloud.bianca.lib.zip.ZipModule
 com.clevercloud.bianca.lib.zlib.ZlibModule
 com.clevercloud.bianca.lib.jms.JMSModule
-com.clevercloud.bianca.lib.ResinModule
+com.clevercloud.bianca.lib.BiancaModule
 com.clevercloud.bianca.lib.bam.BamModule

@@ -2,24 +2,24 @@
  * Copyright (c) 1998-2010 Caucho Technology -- all rights reserved
  * Copyright (c) 2011-2012 Clever Cloud SAS -- all rights reserved
  *
- * This file is part of Resin(R) Open Source
+ * This file is part of Bianca(R) Open Source
  *
  * Each copy or derived work must preserve the copyright notice and this
  * notice unmodified.
  *
- * Resin Open Source is free software; you can redistribute it and/or modify
+ * Bianca Open Source is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Resin Open Source is distributed in the hope that it will be useful,
+ * Bianca Open Source is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, or any warranty
  * of NON-INFRINGEMENT.  See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Resin Open Source; if not, write to the
+ * along with Bianca Open Source; if not, write to the
  *
  *   Free Software Foundation, Inc.
  *   59 Temple Place, Suite 330
@@ -92,13 +92,13 @@ public class BiancaServlet
       checkJavaVersion();
    }
 
-   protected BiancaServletImpl getBiancaServlet(boolean isResin) {
+   protected BiancaServletImpl getBiancaServlet(boolean isBianca) {
       BiancaServletImpl impl = null;
 
-      if (isResin) {
+      if (isBianca) {
          try {
             Class cl = Class.forName(
-               "com.clevercloud.bianca.servlet.ProResinBiancaServlet");
+               "com.clevercloud.bianca.servlet.ProBiancaBiancaServlet");
 
             Constructor cons = cl.getConstructor(File.class);
 
@@ -107,7 +107,7 @@ public class BiancaServlet
             //impl = (BiancaServletImpl) cl.newInstance();
          } catch (ConfigException e) {
             log.log(Level.FINEST, e.toString(), e);
-            log.info("Bianca compiled mode requires Resin "
+            log.info("Bianca compiled mode requires Bianca "
                + "personal or professional licenses");
             log.info(e.getMessage());
 
@@ -118,7 +118,7 @@ public class BiancaServlet
          if (impl == null) {
             try {
                Class cl = Class.forName(
-                  "com.clevercloud.bianca.servlet.ResinBiancaServlet");
+                  "com.clevercloud.bianca.servlet.BiancaBiancaServlet");
                impl = (BiancaServletImpl) cl.newInstance();
             } catch (Exception e) {
                log.log(Level.FINEST, e.toString(), e);
@@ -376,7 +376,7 @@ public class BiancaServlet
    }
 
    /**
-    * Sets the directory for Resin/Bianca licenses.
+    * Sets the directory for Bianca/Bianca licenses.
     */
    public void setLicenseDirectory(String relPath) {
       _licenseDirectory = new File(getServletContext().getRealPath(relPath));

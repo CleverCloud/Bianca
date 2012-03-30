@@ -2,24 +2,24 @@
  * Copyright (c) 1998-2010 Caucho Technology -- all rights reserved
  * Copyright (c) 2011-2012 Clever Cloud SAS -- all rights reserved
  *
- * This file is part of Resin(R) Open Source
+ * This file is part of Bianca(R) Open Source
  *
  * Each copy or derived work must preserve the copyright notice and this
  * notice unmodified.
  *
- * Resin Open Source is free software; you can redistribute it and/or modify
+ * Bianca Open Source is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Resin Open Source is distributed in the hope that it will be useful,
+ * Bianca Open Source is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, or any warranty
  * of NON-INFRINGEMENT.  See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Resin Open Source; if not, write to the
+ * along with Bianca Open Source; if not, write to the
  *
  *   Free Software Foundation, Inc.
  *   59 Temple Place, Suite 330
@@ -777,8 +777,8 @@ public class PDO implements EnvCleanup {
          return getJdbcDataSource(env, dsn);
       } else if (dsn.indexOf(":jdbc:") > 0) {
          return getJdbcDataSource(env, dsn);
-      } else if (dsn.startsWith("resin:")) {
-         return getResinDataSource(env, dsn);
+      } else if (dsn.startsWith("bianca:")) {
+         return getBiancaDataSource(env, dsn);
       } else {
          env.error(L.l("'{0}' is an unknown PDO data source.",
             dsn));
@@ -926,9 +926,9 @@ public class PDO implements EnvCleanup {
    }
 
    /**
-    * Opens a resin connection based on the dsn.
+    * Opens a bianca connection based on the dsn.
     */
-   private DataSource getResinDataSource(Env env, String dsn)
+   private DataSource getBiancaDataSource(Env env, String dsn)
       throws Exception {
       String driver = "com.clevercloud.db.jdbc.ConnectionPoolDataSourceImpl";
 

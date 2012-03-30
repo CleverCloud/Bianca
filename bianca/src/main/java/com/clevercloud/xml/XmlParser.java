@@ -2,24 +2,24 @@
  * Copyright (c) 1998-2010 Caucho Technology -- all rights reserved
  * Copyright (c) 2011-2012 Clever Cloud SAS -- all rights reserved
  *
- * This file is part of Resin(R) Open Source
+ * This file is part of Bianca(R) Open Source
  *
  * Each copy or derived work must preserve the copyright notice and this
  * notice unmodified.
  *
- * Resin Open Source is free software; you can redistribute it and/or modify
+ * Bianca Open Source is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Resin Open Source is distributed in the hope that it will be useful,
+ * Bianca Open Source is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, or any warranty
  * of NON-INFRINGEMENT.  See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Resin Open Source; if not, write to the
+ * along with Bianca Open Source; if not, write to the
  *   Free SoftwareFoundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
@@ -859,9 +859,9 @@ public class XmlParser extends AbstractParser {
    }
 
    /**
-    * Handles processing of the resin:include tag.
+    * Handles processing of the bianca:include tag.
     */
-   private void handleResinInclude()
+   private void handleBiancaInclude()
       throws IOException, SAXException {
       String filename = _attributes.getValue("path");
 
@@ -869,15 +869,15 @@ public class XmlParser extends AbstractParser {
          filename = _attributes.getValue("href");
 
       if (filename.equals(""))
-         throw error(L.l("<resin:include> expects a `path' attribute."));
+         throw error(L.l("<bianca:include> expects a `path' attribute."));
 
       pushInclude(filename);
    }
 
    /**
-    * Handles processing of the resin:include tag.
+    * Handles processing of the bianca:include tag.
     */
-   private void handleResinIncludeDirectory()
+   private void handleBiancaIncludeDirectory()
       throws IOException, SAXException {
       String filename = _attributes.getValue("path");
 
@@ -887,7 +887,7 @@ public class XmlParser extends AbstractParser {
       String extension = _attributes.getValue("extension");
 
       if (filename.equals(""))
-         throw error(L.l("<resin:include> expects a `path' attribute."));
+         throw error(L.l("<bianca:include> expects a `path' attribute."));
 
       Path pwd;
       if (_searchPath != null)
@@ -897,7 +897,7 @@ public class XmlParser extends AbstractParser {
 
       Path dir = pwd.lookup(filename);
       if (!dir.isDirectory())
-         throw error(L.l("`{0}' is not a directory for resin:include-directory.  The href for resin:include-directory must refer to a directory.",
+         throw error(L.l("`{0}' is not a directory for bianca:include-directory.  The href for bianca:include-directory must refer to a directory.",
             dir.getNativePath()));
 
       String[] list = dir.list();
@@ -2422,22 +2422,22 @@ public class XmlParser extends AbstractParser {
    private void addElement(QName child, boolean isEmpty,
                            QAttributes attributes, NamespaceMap oldNamespace)
       throws IOException, SAXException {
-      if (!_doResinInclude) {
+      if (!_doBiancaInclude) {
       } else if (child.getName() == "include" &&
-         child.getNamespaceURI() == "http://clevercloud.com/ns/resin/core" ||
-         child.getName() == "resin:include") {
+         child.getNamespaceURI() == "http://clevercloud.com/ns/bianca/core" ||
+         child.getName() == "bianca:include") {
          if (!isEmpty)
-            throw error(L.l("resin:include must be an empty tag"));
+            throw error(L.l("bianca:include must be an empty tag"));
 
-         handleResinInclude();
+         handleBiancaInclude();
          return;
       } else if (child.getName() == "include-directory" &&
-         child.getNamespaceURI() == "http://clevercloud.com/ns/resin/core" ||
-         child.getName() == "resin:include-directory") {
+         child.getNamespaceURI() == "http://clevercloud.com/ns/bianca/core" ||
+         child.getName() == "bianca:include-directory") {
          if (!isEmpty)
-            throw error(L.l("resin:include-directory must be an empty tag"));
+            throw error(L.l("bianca:include-directory must be an empty tag"));
 
-         handleResinIncludeDirectory();
+         handleBiancaIncludeDirectory();
          return;
       }
 
