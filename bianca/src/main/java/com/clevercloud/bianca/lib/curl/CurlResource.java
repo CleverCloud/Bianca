@@ -710,7 +710,6 @@ public class CurlResource {
       }
 
       if (_outputFile != null) {
-         Logger.getAnonymousLogger().severe("to write :" + data.toString().getBytes().length);
          FileModule.fwrite(env,
             _outputFile,
             data.toInputStream(),
