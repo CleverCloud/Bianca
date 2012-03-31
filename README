@@ -1,27 +1,25 @@
 README
 -----------------------------------------------------
 
-1. What is Bianca ?
-2. Why a development branch maintained by Clever Cloud ?
+1. What is Bianca?
+2. Why a fork?
 3. Compiling
 4. Installing
 5. Report an issue
 
 
-I. What is Bianca ?
+I. What is Bianca?
 -----------------------------------------------------
-CleverCloud's Bianca (TM) is a fast, 100% Java implementation of the PHP language
-allowing developers to use PHP flexibility for the web interface and Java for
+Bianca is a fast, 100% Java implementation of the PHP language allowing
+developers to use PHP flexibility for the web interface and Java for
 stability.
 
 
-II. Why a development branch maintained by Clever Cloud ?
+II. Why a fork?
 -----------------------------------------------------
-Clever Cloud has copied the Quercus project, maintained and copyrighted by
+Clever Cloud has forked the Quercus project, maintained and copyrighted by
 Caucho Technology, to have a best response for issues fixing and features
 requests. Quercus is a part of Caucho's project Resin.
-You can find the Git-port of Caucho's SVN here :
-http://github.com/Kdecherf/resin
 
 
 III. Compiling
@@ -40,5 +38,4 @@ V. Report an issue
 -----------------------------------------------------
 If you find an issue with our version of Bianca, please report it on the
 GitHub bugtracker : http://github.com/CleverCloud/Bianca/issues
-If the issue comes from CleverCloud's code, we will copy it on the CleverCloud's
-bugtracker with patches.
+
