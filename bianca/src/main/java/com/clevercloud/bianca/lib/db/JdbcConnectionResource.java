@@ -70,7 +70,7 @@ public abstract class JdbcConnectionResource
    private boolean _isCatalogOptimEnabled = false;
    private boolean _isUsed;
    protected SqlParseToken _sqlParseToken = new SqlParseToken();
-   protected static String ENCODING;
+   protected static String ENCODING = "utf8";
 
    public JdbcConnectionResource(Env env) {
       _env = env;
