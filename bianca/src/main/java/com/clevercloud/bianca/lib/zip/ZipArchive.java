@@ -25,13 +25,19 @@
  *   Boston, MA 02111-1307  USA
  *
  * @author Kevin Decherf <kdecherf@gmail.com>
+ * @author Marc-Antoine Perennou <Marc-Antoine@Perennou.com>
  */
 package com.clevercloud.bianca.lib.zip;
 
-import com.clevercloud.bianca.env.EnvCleanup;
+import com.clevercloud.bianca.annotation.Optional;
+import com.clevercloud.bianca.env.*;
 import com.clevercloud.util.L10N;
 
+import java.io.IOException;
+import java.util.Enumeration;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class ZipArchive implements EnvCleanup {
 
@@ -82,6 +88,81 @@ public class ZipArchive implements EnvCleanup {
    public static final int ER_INCONS = 21;
    public static final int ER_REMOVE = 22;
    public static final int ER_DELETED = 23;
+
+   public LongValue numFiles = new LongValue(0);
+
+   private ZipFile _zip = null;
+
+   public BooleanValue open(StringValue filename, @Optional int flags) {
+      /*TODO: handle flags*/
+      if (filename == null || filename.length() == 0) {
+         return BooleanValue.FALSE;
+      }
+
+      try {
+         _zip = new ZipFile(filename.toString());
+      } catch (IOException e) {
+         Logger.getLogger(ZipArchive.class.getName()).severe(e.getMessage());
+         return BooleanValue.FALSE;
+      }
+
+      Enumeration<? extends ZipEntry> entries = _zip.entries();
+      long num = 0;
+      while (entries.hasMoreElements()) {
+         if (!entries.nextElement().isDirectory())
+            ++num;
+      }
+      numFiles = new LongValue(num);
+
+      return BooleanValue.TRUE;
+   }
+
+   public ZipEntry getFromIndex(LongValue index, @Optional LongValue length, @Optional int flags) {
+      if (_zip == null)
+         return null;
+      Enumeration<? extends ZipEntry> entries = _zip.entries();
+      ZipEntry ret = null;
+      for (long i = 0; i <= index.toLong(); ++i) {
+         if (entries.hasMoreElements()) {
+            ret = entries.nextElement();
+            if (ret.isDirectory())
+               --i;
+         } else
+            return null;
+      }
+      return ret;
+   }
+
+   public Value statIndex(LongValue index, @Optional int flags) {
+      ZipEntry entry = getFromIndex(index, new LongValue(-1), flags);
+      if (entry == null || entry.isDirectory())
+         return BooleanValue.FALSE;
+
+      ArrayValue ret = new ArrayValueImpl();
+      ret.append(new StringValue("name"), new StringValue(entry.getName()));
+      ret.append(new StringValue("index"), index);
+      ret.append(new StringValue("crc"), new LongValue(entry.getCrc()));
+      ret.append(new StringValue("size"), new LongValue(entry.getSize()));
+      ret.append(new StringValue("mtime"), new LongValue(entry.getTime()));
+      ret.append(new StringValue("comp_size"), new LongValue(entry.getCompressedSize()));
+      ret.append(new StringValue("comp_method"), new LongValue(entry.getMethod()));
+
+      return ret;
+   }
+
+   public BooleanValue close() {
+      if (_zip == null)
+         return BooleanValue.FALSE;
+      numFiles = new LongValue(0);
+      try {
+         _zip.close();
+      } catch (IOException e) {
+         Logger.getLogger(ZipArchive.class.getName()).severe(e.getMessage());
+         return BooleanValue.FALSE;
+      }
+      _zip = null;
+      return BooleanValue.TRUE;
+   }
 
    @Override
    public void cleanup() throws Exception {
