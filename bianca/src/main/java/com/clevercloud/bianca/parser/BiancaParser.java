@@ -5243,6 +5243,8 @@ public class BiancaParser {
          ch = read();
          if (ch == 'x' || ch == 'X') {
             return parseHex();
+         } else if (ch == 'b' || ch == 'B') {
+            return parseBin();
          } else if (ch == '0') {
             return parseNumberToken(ch);
          } else {
@@ -5344,6 +5346,35 @@ public class BiancaParser {
       } else {
          _lexeme = String.valueOf(dValue);
 
+         return DOUBLE;
+      }
+   }
+
+   /**
+    * Parses the next as bin
+    */
+   private int parseBin()
+      throws IOException {
+      long value = 0;
+      double dValue = 0;
+
+      while (true) {
+         int ch = read();
+
+         if ('0' == ch || ch == '1') {
+            value = 2 * value + ch - '0';
+            dValue = 2 * dValue + ch - '0';
+         } else {
+            _peek = ch;
+            break;
+         }
+      }
+
+      if (value == dValue) {
+         _lexeme = String.valueOf(value);
+         return LONG;
+      } else {
+         _lexeme = String.valueOf(dValue);
          return DOUBLE;
       }
    }
