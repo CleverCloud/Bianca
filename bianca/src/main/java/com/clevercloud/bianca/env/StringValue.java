@@ -874,10 +874,10 @@ public class StringValue
 
       int i = 0;
       char ch = buffer.charAt(i++);
-      if (ch == '-') {
-         sign = -1;
-      } else if ('0' <= ch && ch <= '9') {
+      if ('0' <= ch && ch <= '9') {
          value = ch - '0';
+      } else if (ch == '-' && len > 1) {
+         sign = -1;
       } else {
          return this;
       }
