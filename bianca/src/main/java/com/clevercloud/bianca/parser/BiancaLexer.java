@@ -53,9 +53,8 @@ public class BiancaLexer {
    private String _namespace = "";
    private HashMap<String, String> _namespaceUseMap = new HashMap<String, String>();
 
-   public BiancaLexer(BiancaParser parser, ReadStream is) {
+   public BiancaLexer(BiancaParser parser) {
       this._parser = parser;
-      this._is = is;
    }
 
    public void init(ReadStream is) {

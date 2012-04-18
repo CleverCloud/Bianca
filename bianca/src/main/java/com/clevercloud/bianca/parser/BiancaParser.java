@@ -100,7 +100,6 @@ public class BiancaParser {
       this(bianca);
 
       init(sourceFile, is);
-      _lexer = new BiancaLexer(this, is);
    }
 
    private void init(Path sourceFile)
@@ -123,6 +122,8 @@ public class BiancaParser {
 
       _parserLocation.setLineNumber(1);
 
+      if (_lexer == null)
+         _lexer = new BiancaLexer(this);
       _lexer.init(is);
    }
 
