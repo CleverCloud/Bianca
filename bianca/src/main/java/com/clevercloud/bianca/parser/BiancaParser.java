@@ -392,10 +392,9 @@ public class BiancaParser {
       Location location = getLocation();
 
       BiancaLexer.Token token = _lexer.parsePhpText();
-      String lexeme = _lexer.getLexeme();
 
-      if (lexeme.length() > 0) {
-         statements.add(_factory.createText(location, lexeme));
+      if (_lexer.getLexeme().length() > 0) {
+         statements.add(_factory.createText(location, _lexer.getLexeme()));
       }
 
       if (token == BiancaLexer.Token.TEXT_ECHO) {
@@ -438,7 +437,6 @@ public class BiancaParser {
          Location location = getLocation();
 
          BiancaLexer.Token token = _lexer.parseToken();
-         String lexeme;
 
          switch (token) {
             case NONE:
@@ -597,29 +595,26 @@ public class BiancaParser {
                return statementList;
 
             case TEXT:
-               lexeme = _lexer.getLexeme();
-               if (lexeme.length() > 0) {
-                  statementList.add(_factory.createText(location, lexeme));
+               if (_lexer.getLexeme().length() > 0) {
+                  statementList.add(_factory.createText(location, _lexer.getLexeme()));
                }
                break;
 
             case TEXT_PHP:
-               lexeme = _lexer.getLexeme();
-               if (lexeme.length() > 0) {
-                  statementList.add(_factory.createText(location, lexeme));
+               if (_lexer.getLexeme().length() > 0) {
+                  statementList.add(_factory.createText(location, _lexer.getLexeme()));
                }
 
                token = _lexer.nextToken();
 
-               if (token == BiancaLexer.Token.IDENTIFIER && lexeme.equalsIgnoreCase("php")) {
+               if (token == BiancaLexer.Token.IDENTIFIER && _lexer.getLexeme().equalsIgnoreCase("php")) {
                   _lexer.dropToken();
                }
                break;
 
             case TEXT_ECHO:
-               lexeme = _lexer.getLexeme();
-               if (lexeme.length() > 0) {
-                  statementList.add(_factory.createText(location, lexeme));
+               if (_lexer.getLexeme().length() > 0) {
+                  statementList.add(_factory.createText(location, _lexer.getLexeme()));
                }
 
                parseEcho(statementList);
@@ -640,7 +635,6 @@ public class BiancaParser {
       Location location = getLocation();
 
       BiancaLexer.Token token = _lexer.parseToken();
-      String lexeme;
 
       switch (token) {
          case SEMICOLUMN:
@@ -677,24 +671,22 @@ public class BiancaParser {
             return parseTry();
 
          case TEXT:
-            lexeme = _lexer.getLexeme();
-            if (lexeme.length() > 0) {
-               return _factory.createText(location, lexeme);
+            if (_lexer.getLexeme().length() > 0) {
+               return _factory.createText(location, _lexer.getLexeme());
             } else {
                return parseStatement();
             }
 
          case TEXT_PHP: {
             Statement stmt = null;
-            lexeme = _lexer.getLexeme();
 
-            if (lexeme.length() > 0) {
-               stmt = _factory.createText(location, lexeme);
+            if (_lexer.getLexeme().length() > 0) {
+               stmt = _factory.createText(location, _lexer.getLexeme());
             }
 
             token = _lexer.nextToken();
 
-            if (token == BiancaLexer.Token.IDENTIFIER && lexeme.equalsIgnoreCase("php")) {
+            if (token == BiancaLexer.Token.IDENTIFIER && _lexer.getLexeme().equalsIgnoreCase("php")) {
                _lexer.dropToken();
             }
 
@@ -1990,8 +1982,7 @@ public class BiancaParser {
             break;
 
             case IDENTIFIER:
-               String lexeme = _lexer.getLexeme();
-               if (lexeme.equals("var")) {
+               if (_lexer.getLexeme().equals("var")) {
                   parseClassVarDefinition(0);
                } else {
                   _lexer.saveToken(token);
@@ -3183,44 +3174,43 @@ public class BiancaParser {
    private Expr parseTermBase()
       throws IOException {
       BiancaLexer.Token token = _lexer.parseToken();
-      String lexeme = _lexer.getLexeme();
 
       switch (token) {
          case STRING:
-            return createString(lexeme);
+            return createString(_lexer.getLexeme());
 
          case SYSTEM_STRING: {
             ArrayList<Expr> args = new ArrayList<Expr>();
-            args.add(createString(lexeme));
+            args.add(createString(_lexer.getLexeme()));
             return _factory.createCall(this, "shell_exec", args);
          }
 
          case SIMPLE_SYSTEM_STRING: {
             ArrayList<Expr> args = new ArrayList<Expr>();
-            args.add(parseEscapedString(lexeme, BiancaLexer.Token.SIMPLE_STRING_ESCAPE, true));
+            args.add(parseEscapedString(_lexer.getLexeme(), BiancaLexer.Token.SIMPLE_STRING_ESCAPE, true));
             return _factory.createCall(this, "shell_exec", args);
          }
 
          case COMPLEX_SYSTEM_STRING: {
             ArrayList<Expr> args = new ArrayList<Expr>();
-            args.add(parseEscapedString(lexeme, BiancaLexer.Token.COMPLEX_STRING_ESCAPE, true));
+            args.add(parseEscapedString(_lexer.getLexeme(), BiancaLexer.Token.COMPLEX_STRING_ESCAPE, true));
             return _factory.createCall(this, "shell_exec", args);
          }
 
          case SIMPLE_STRING_ESCAPE:
          case COMPLEX_STRING_ESCAPE:
-            return parseEscapedString(lexeme, token, false);
+            return parseEscapedString(_lexer.getLexeme(), token, false);
 
          case BINARY:
             try {
-               return createString(lexeme);
+               return createString(_lexer.getLexeme());
             } catch (Exception e) {
                throw new BiancaParseException(e);
             }
 
          case SIMPLE_BINARY_ESCAPE:
          case COMPLEX_BINARY_ESCAPE:
-            return parseEscapedString(lexeme, token, false);
+            return parseEscapedString(_lexer.getLexeme(), token, false);
 
          case LONG: {
             long value = 0;
@@ -3228,7 +3218,7 @@ public class BiancaParser {
             long sign = 1;
             boolean isOverflow = false;
 
-            char ch = lexeme.charAt(0);
+            char ch = _lexer.getLexeme().charAt(0);
 
             int i = 0;
             if (ch == '+') {
@@ -3238,9 +3228,9 @@ public class BiancaParser {
                i++;
             }
 
-            int len = lexeme.length();
+            int len = _lexer.getLexeme().length();
             for (; i < len; i++) {
-               int digit = lexeme.charAt(i) - '0';
+               int digit = _lexer.getLexeme().charAt(i) - '0';
                long oldValue = value;
 
                value = value * 10 + digit;
@@ -3259,7 +3249,7 @@ public class BiancaParser {
          }
          case DOUBLE:
             return _factory.createLiteral(
-               new DoubleValue(Double.parseDouble(lexeme)));
+               new DoubleValue(Double.parseDouble(_lexer.getLexeme())));
 
          case NULL:
             return _factory.createNull();
@@ -3304,11 +3294,11 @@ public class BiancaParser {
 
          case IDENTIFIER:
          case NAMESPACE: {
-            if (lexeme.equals("new")) {
+            if (_lexer.getLexeme().equals("new")) {
                return parseNew();
             }
 
-            String name = lexeme;
+            String name = _lexer.getLexeme();
 
             token = _lexer.nextToken();
 
@@ -3361,7 +3351,7 @@ public class BiancaParser {
          }
 
          case IMPORT: {
-            String importTokenString = lexeme;
+            String importTokenString = _lexer.getLexeme();
 
             token = _lexer.nextToken();
 
@@ -3498,12 +3488,11 @@ public class BiancaParser {
          throw error(L.l("Expected identifier at '{0}'", _lexer.tokenName(token)));
       }
 
-      String lexeme = _lexer.getLexeme();
-      if (lexeme.indexOf('\\') >= 0) {
-         throw error(L.l("Namespace is not allowed for variable ${0}", lexeme));
+      if (_lexer.getLexeme().indexOf('\\') >= 0) {
+         throw error(L.l("Namespace is not allowed for variable ${0}", _lexer.getLexeme()));
       }
 
-      return _factory.createVar(_function.createVar(lexeme));
+      return _factory.createVar(_function.createVar(_lexer.getLexeme()));
    }
 
    public Expr createVar(String name) {

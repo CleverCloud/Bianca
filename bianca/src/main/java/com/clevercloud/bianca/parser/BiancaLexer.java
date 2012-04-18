@@ -1683,7 +1683,6 @@ public class BiancaLexer {
    }
 
    public Token nextToken() throws IOException {
-      /*TODO: check lexeme of callers*/
       _peekToken = parseToken();
       return _peekToken;
    }
