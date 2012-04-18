@@ -1,5 +1,13 @@
-Remove TempBuffer
-Remove *BuilderValue references
+Remove TempBuffer, QDate
+
 Check if convert_uudecode still works
-See TODO, TOCHECK, FIXME, XXX
-fix maj plugins WP + admin widgets
+
+fix WP admin widgets
+
+check StringValue vs BinaryValue:
+    PhpBinaryInput
+    AbstractBinaryInput
+    AbstractBinaryInputOutput
+    BufferedBinaryInputOutput
+
+See TODO, TOCHECK, FIXME, XXX in code
