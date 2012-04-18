@@ -77,6 +77,30 @@ public class BiancaLexer {
    }
 
    public enum Token {
+      SIMPLE_QUOTE,
+      DOUBLE_QUOTE,
+      COLUMN,
+      SEMICOLUMN,
+      DOLLAR,
+      LEFT_PAREN,
+      RIGHT_PAREN,
+      AROBAS,
+      LEFT_BRACKET,
+      RIGHT_BRACKET,
+      COMMA,
+      LEFT_BRACE,
+      RIGHT_BRACE,
+      TILD,
+      PLUS,
+      MINUS,
+      MUL,
+      DIV,
+      MOD,
+      ASSIGN,
+      LOWER,
+      GREATER,
+      QUESTION,
+      DOT,
       IDENTIFIER,
       STRING,
       LONG,
@@ -89,9 +113,13 @@ public class BiancaLexer {
       LEQ,
       GEQ,
       NEQ,
+      NOT,
       EQUALS,
       NEQUALS,
+      AND,
       C_AND,
+      XOR,
+      OR,
       C_OR,
       PLUS_ASSIGN,
       MINUS_ASSIGN,
@@ -182,7 +210,11 @@ public class BiancaLexer {
       TEXT_PHP,
       NAMESPACE,
       USE,
-      LAST_IDENTIFIER_LEXEME
+      LAST_IDENTIFIER_LEXEME;
+
+      public boolean isIdentifierLexeme() {
+         return this.ordinal() >= FIRST_IDENTIFIER_LEXEME.ordinal();
+      }
    }
 
    /**
@@ -713,7 +745,7 @@ public class BiancaLexer {
          case LAST_IDENTIFIER_LEXEME:
             return "end of file";
 
-         case '\'':
+         case SIMPLE_QUOTE:
             return "'";
 
          case AS:
@@ -869,11 +901,7 @@ public class BiancaLexer {
             return "USE";
 
          default:
-            if (32 <= token && token < 127) {
-               return "'" + (char) token + "'";
-            } else {
-               return "(token " + token + ")";
-            }
+            return "(token " + token + ")";
       }
    }
 
@@ -1259,21 +1287,31 @@ public class BiancaLexer {
             }
 
             case '\'':
-               parseStringToken('\'');
+               parseStringToken('"');
                return Token.STRING;
 
             case ';':
+               return Token.SEMICOLUMN;
             case '$':
+               return Token.DOLLAR;
             case '(':
+               return Token.LEFT_PAREN;
             case ')':
+               return Token.RIGHT_PAREN;
             case '@':
+               return Token.AROBAS;
             case '[':
+               return Token.LEFT_BRACKET;
             case ']':
+               return Token.RIGHT_BRACKET;
             case ',':
+               return Token.COMMA;
             case '{':
+               return Token.LEFT_BRACE;
             case '}':
+               return Token.RIGHT_BRACE;
             case '~':
-               return ch;
+               return Token.TILD;
 
             case '+':
                ch = read();
@@ -1285,7 +1323,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return '+';
+               return Token.PLUS;
 
             case '-':
                ch = read();
@@ -1299,7 +1337,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return '-';
+               return Token.MINUS;
 
             case '*':
                ch = read();
@@ -1309,7 +1347,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return '*';
+               return Token.MUL;
 
             case '/':
                ch = read();
@@ -1346,7 +1384,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return '/';
+               return Token.DIV;
 
             case '%':
                ch = read();
@@ -1366,7 +1404,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return '%';
+               return Token.MOD;
 
             case ':':
                ch = read();
@@ -1376,7 +1414,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return ':';
+               return Token.COLUMN;
 
             case '=':
                ch = read();
@@ -1392,7 +1430,7 @@ public class BiancaLexer {
                   return Token.ARRAY_RIGHT;
                } else {
                   _peek = ch;
-                  return '=';
+                  return Token.ASSIGN;
                }
 
             case '!':
@@ -1407,7 +1445,7 @@ public class BiancaLexer {
                   }
                } else {
                   _peek = ch;
-                  return '!';
+                  return Token.NOT;
                }
 
             case '&':
@@ -1418,7 +1456,7 @@ public class BiancaLexer {
                   return Token.AND_ASSIGN;
                } else {
                   _peek = ch;
-                  return '&';
+                  return Token.AND;
                }
 
             case '^':
@@ -1429,7 +1467,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return '^';
+               return Token.XOR;
 
             case '|':
                ch = read();
@@ -1439,7 +1477,7 @@ public class BiancaLexer {
                   return Token.OR_ASSIGN;
                } else {
                   _peek = ch;
-                  return '|';
+                  return Token.OR;
                }
 
             case '<':
@@ -1467,14 +1505,14 @@ public class BiancaLexer {
                      throw _parser.error(L.l("expected 'script' at '{0}'", sb));
                   }
 
-                  expect('>');
+                  expect(Token.GREATER);
 
                   return parsePhpText();
                } else {
                   _peek = ch;
                }
 
-               return '<';
+               return Token.LOWER;
 
             case '>':
                ch = read();
@@ -1494,7 +1532,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return '>';
+               return Token.GREATER;
 
             case '?':
                ch = read();
@@ -1512,7 +1550,7 @@ public class BiancaLexer {
                   _peek = ch;
                }
 
-               return '?';
+               return Token.QUESTION;
 
             case '.':
                ch = read();
@@ -1526,7 +1564,7 @@ public class BiancaLexer {
                if ('0' <= ch && ch <= '9') {
                   return parseNumberToken('.');
                } else {
-                  return '.';
+                  return Token.DOT;
                }
 
             case '0':
@@ -1547,7 +1585,7 @@ public class BiancaLexer {
                   int ch2 = read();
 
                   if (ch2 == '\'') {
-                     parseStringToken('\'');
+                     parseStringToken('"');
                      return Token.BINARY;
                   } else if (ch2 == '"') {
 
@@ -1638,7 +1676,7 @@ public class BiancaLexer {
 
       if (token == BiancaLexer.Token.IDENTIFIER) {
          return resolveIdentifier(_lexeme);
-      } else if (BiancaLexer.Token.FIRST_IDENTIFIER_LEXEME <= token) {
+      } else if (token.isIdentifierLexeme()) {
          return resolveIdentifier(_lexeme);
       } else {
          throw _parser.error(L.l("expected identifier at {0}.", tokenName(token)));
@@ -1670,15 +1708,15 @@ public class BiancaLexer {
    public int getRead() {
       return _peek;
    }
-   
+
    public String getNamespace() {
       return _namespace;
    }
-   
+
    public void setNamespace(String namespace) {
       _namespace = namespace;
    }
-   
+
    public void putNamespace(String key, String name) {
       _namespaceUseMap.put(key, name);
    }
