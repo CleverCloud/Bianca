@@ -3254,7 +3254,7 @@ public class BiancaParser {
 
          case BINARY:
             try {
-               return createBinary(_lexeme);
+               return createString(_lexeme);
             } catch (Exception e) {
                throw new BiancaParseException(e);
             }
@@ -4925,16 +4925,7 @@ public class BiancaParser {
 
    private Expr createString(String lexeme) {
       // TODO: see BiancaParser.parseDefault for _bianca == null
-      return _factory.createUnicode(lexeme);
-   }
-
-   private Expr createBinary(String bytes)
-      throws IOException {
-      // TODO: see BiancaParser.parseDefault for _bianca == null
-      // php/0ch1, php/0350
-      // return _factory.createBinary(bytes);
-
-      return _factory.createBinary(bytes);
+      return _factory.createString(lexeme);
    }
 
    /**

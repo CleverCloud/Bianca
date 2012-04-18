@@ -89,20 +89,6 @@ public class ExprFactory {
    }
 
    /**
-    * Creates a string literal expression.
-    */
-   public Expr createUnicode(String lexeme) {
-      return new LiteralUnicodeExpr(lexeme);
-   }
-
-   /**
-    * Creates a binary literal expression.
-    */
-   public Expr createBinary(String bytes) {
-      return new LiteralBinaryStringExpr(bytes);
-   }
-
-   /**
     * Creates a long literal expression.
     */
    public Expr createLong(long value) {
@@ -614,37 +600,12 @@ public class ExprFactory {
 
       tail = append(left.getNext(), tail);
 
-      if (left.getValue() instanceof LiteralBinaryStringExpr
-         && tail.getValue() instanceof LiteralBinaryStringExpr) {
-         LiteralBinaryStringExpr leftString = (LiteralBinaryStringExpr) left.getValue();
-         LiteralBinaryStringExpr rightString = (LiteralBinaryStringExpr) tail.getValue();
-
-         String bytes = (leftString.evalConstant().toString()
-            + rightString.evalConstant().toString());
-
-         Expr value = createBinary(bytes);
-
-         return createAppendImpl(value, tail.getNext());
-      } else if (left.getValue() instanceof LiteralBinaryStringExpr
-         || tail.getValue() instanceof LiteralBinaryStringExpr) {
-         left.setNext(tail);
-
-         return left;
-      } else if (left.getValue() instanceof LiteralStringExpr
+      if (left.getValue() instanceof LiteralStringExpr
          && tail.getValue() instanceof LiteralStringExpr) {
          LiteralStringExpr leftString = (LiteralStringExpr) left.getValue();
          LiteralStringExpr rightString = (LiteralStringExpr) tail.getValue();
 
          Expr value = createString(leftString.evalConstant().toString()
-            + rightString.evalConstant().toString());
-
-         return createAppendImpl(value, tail.getNext());
-      } else if (left.getValue() instanceof LiteralUnicodeExpr
-         && tail.getValue() instanceof LiteralUnicodeExpr) {
-         LiteralUnicodeExpr leftString = (LiteralUnicodeExpr) left.getValue();
-         LiteralUnicodeExpr rightString = (LiteralUnicodeExpr) tail.getValue();
-
-         Expr value = createUnicode(leftString.evalConstant().toString()
             + rightString.evalConstant().toString());
 
          return createAppendImpl(value, tail.getNext());
