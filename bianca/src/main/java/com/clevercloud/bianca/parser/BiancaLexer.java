@@ -37,6 +37,7 @@ import com.clevercloud.vfs.ReadStream;
 import java.io.CharConversionException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class BiancaLexer {
    private final static L10N L = new L10N(BiancaLexer.class);
@@ -47,7 +48,6 @@ public class BiancaLexer {
    private boolean _hasCr;
    private String _lexeme = "";
    private String _heredocEnd = null;
-   private CharBuffer _sb = new CharBuffer();
    private String _comment;
    private final static HashMap<String, Token> _insensitiveReserved = new HashMap<String, Token>();
    private String _namespace = "";
@@ -490,13 +490,13 @@ public class BiancaLexer {
     */
    public Token parseEscapedString(char end)
       throws IOException {
-      _sb.setLength(0);
+      StringBuilder sb = new StringBuilder();
 
       int ch;
 
       while ((ch = read()) > 0) {
          if (_heredocEnd == null && ch == end) {
-            _lexeme = _sb.toString();
+            _lexeme = sb.toString();
             return Token.STRING;
          } else if (ch == '\\') {
             ch = read();
@@ -507,37 +507,37 @@ public class BiancaLexer {
                case '1':
                case '2':
                case '3':
-                  _sb.append((char) parseOctalEscape(ch));
+                  sb.append((char) parseOctalEscape(ch));
                   break;
                case 't':
-                  _sb.append('\t');
+                  sb.append('\t');
                   break;
                case 'r':
-                  _sb.append('\r');
+                  sb.append('\r');
                   break;
                case 'n':
-                  _sb.append('\n');
+                  sb.append('\n');
                   break;
                case '"':
                case '`':
                   if (_heredocEnd != null) {
-                     _sb.append('\\');
+                     sb.append('\\');
                   }
 
-                  _sb.append((char) ch);
+                  sb.append((char) ch);
                   break;
                case '$':
                case '\\':
-                  _sb.append((char) ch);
+                  sb.append((char) ch);
                   break;
                case 'x': {
                   int value = parseHexEscape();
 
                   if (value >= 0) {
-                     _sb.append((char) value);
+                     sb.append((char) value);
                   } else {
-                     _sb.append('\\');
-                     _sb.append('x');
+                     sb.append('\\');
+                     sb.append('x');
                   }
 
                   break;
@@ -546,34 +546,34 @@ public class BiancaLexer {
                   result = parseUnicodeEscape(false);
 
                   if (result < 0) {
-                     _sb.append('\\');
-                     _sb.append('u');
+                     sb.append('\\');
+                     sb.append('u');
                   } else {
-                     _sb.append(Character.toChars(result));
+                     sb.append(Character.toChars(result));
                   }
                   break;
                case 'U':
                   result = parseUnicodeEscape(true);
 
                   if (result < 0) {
-                     _sb.append('\\');
-                     _sb.append('U');
+                     sb.append('\\');
+                     sb.append('U');
                   } else {
-                     _sb.append(Character.toChars(result));
+                     sb.append(Character.toChars(result));
                   }
                   break;
                case '{':
                   ch = read();
                   _peek = ch;
                   if (ch == '$' && _heredocEnd == null) {
-                     _sb.append('{');
+                     sb.append('{');
                   } else {
-                     _sb.append("\\{");
+                     sb.append("\\{");
                   }
                   break;
                default:
-                  _sb.append('\\');
-                  _sb.append((char) ch);
+                  sb.append('\\');
+                  sb.append((char) ch);
                   break;
             }
          } else if (ch == '$') {
@@ -581,14 +581,14 @@ public class BiancaLexer {
 
             if (ch == '{') {
                _peek = '$';
-               _lexeme = _sb.toString();
+               _lexeme = sb.toString();
                return Token.COMPLEX_STRING_ESCAPE;
             } else if (isIdentifierStart(ch)) {
                _peek = ch;
-               _lexeme = _sb.toString();
+               _lexeme = sb.toString();
                return Token.SIMPLE_STRING_ESCAPE;
             } else {
-               _sb.append('$');
+               sb.append('$');
                _peek = ch;
             }
          } else if (ch == '{') {
@@ -596,39 +596,39 @@ public class BiancaLexer {
 
             if (ch == '$') {
                _peek = ch;
-               _lexeme = _sb.toString();
+               _lexeme = sb.toString();
                return Token.COMPLEX_STRING_ESCAPE;
             } else {
                _peek = ch;
-               _sb.append('{');
+               sb.append('{');
             }
          } /* bianca/013c
          else if ((ch == '\r' || ch == '\n') && _heredocEnd == null)
          throw error(L.l("unexpected newline in string."));
           */ else {
-            _sb.append((char) ch);
+            sb.append((char) ch);
 
-            if (_heredocEnd == null || !_sb.endsWith(_heredocEnd)) {
-            } else if (_sb.length() == _heredocEnd.length()
-               || _sb.charAt(_sb.length() - _heredocEnd.length() - 1) == '\n'
-               || _sb.charAt(_sb.length() - _heredocEnd.length() - 1) == '\r') {
-               _sb.setLength(_sb.length() - _heredocEnd.length());
+            if (_heredocEnd == null || !sb.toString().endsWith(_heredocEnd)) {
+            } else if (sb.length() == _heredocEnd.length()
+               || sb.charAt(sb.length() - _heredocEnd.length() - 1) == '\n'
+               || sb.charAt(sb.length() - _heredocEnd.length() - 1) == '\r') {
+               sb.setLength(sb.length() - _heredocEnd.length());
 
-               if (_sb.length() > 0 && _sb.charAt(_sb.length() - 1) == '\n') {
-                  _sb.setLength(_sb.length() - 1);
+               if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') {
+                  sb.setLength(sb.length() - 1);
                }
-               if (_sb.length() > 0 && _sb.charAt(_sb.length() - 1) == '\r') {
-                  _sb.setLength(_sb.length() - 1);
+               if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\r') {
+                  sb.setLength(sb.length() - 1);
                }
 
                _heredocEnd = null;
-               _lexeme = _sb.toString();
+               _lexeme = sb.toString();
                return Token.STRING;
             }
          }
       }
 
-      _lexeme = _sb.toString();
+      _lexeme = sb.toString();
 
       return Token.STRING;
    }
@@ -638,7 +638,7 @@ public class BiancaLexer {
     */
    private void parseStringToken(int end)
       throws IOException {
-      _sb.setLength(0);
+      StringBuilder sb = new StringBuilder();
 
       int ch;
 
@@ -650,10 +650,10 @@ public class BiancaLexer {
                int value = parseUnicodeEscape(false);
 
                if (value < 0) {
-                  _sb.append('\\');
-                  _sb.append('u');
+                  sb.append('\\');
+                  sb.append('u');
                } else {
-                  _sb.append(Character.toChars(value));
+                  sb.append(Character.toChars(value));
                }
 
                continue;
@@ -661,39 +661,39 @@ public class BiancaLexer {
                int value = parseUnicodeEscape(true);
 
                if (value < 0) {
-                  _sb.append('\\');
-                  _sb.append('U');
+                  sb.append('\\');
+                  sb.append('U');
                } else {
-                  _sb.append(Character.toChars(value));
+                  sb.append(Character.toChars(value));
                }
 
                continue;
             }
 
             if (end == '"') {
-               _sb.append('\\');
+               sb.append('\\');
 
                if (ch >= 0) {
-                  _sb.append((char) ch);
+                  sb.append((char) ch);
                }
             } else {
                switch (ch) {
                   case '\'':
                   case '\\':
-                     _sb.append((char) ch);
+                     sb.append((char) ch);
                      break;
                   default:
-                     _sb.append('\\');
-                     _sb.append((char) ch);
+                     sb.append('\\');
+                     sb.append((char) ch);
                      break;
                }
             }
          } else {
-            _sb.append((char) ch);
+            sb.append((char) ch);
          }
       }
 
-      _lexeme = _sb.toString();
+      _lexeme = sb.toString();
    }
 
    /**
@@ -704,27 +704,27 @@ public class BiancaLexer {
       int ch = read();
 
       if (ch == '*') {
-         _sb.setLength(0);
-         _sb.append('/');
-         _sb.append('*');
+         StringBuilder sb = new StringBuilder();
+         sb.append('/');
+         sb.append('*');
 
          do {
             if (ch != '*') {
-               _sb.append((char) ch);
+               sb.append((char) ch);
             } else if ((ch = read()) == '/') {
-               _sb.append('*');
-               _sb.append('/');
+               sb.append('*');
+               sb.append('/');
 
-               _comment = _sb.toString();
+               _comment = sb.toString();
 
                return;
             } else {
-               _sb.append('*');
+               sb.append('*');
                _peek = ch;
             }
          } while ((ch = read()) >= 0);
 
-         _comment = _sb.toString();
+         _comment = sb.toString();
       } else if (ch >= 0) {
          do {
             if (ch != '*') {
@@ -910,7 +910,7 @@ public class BiancaLexer {
     */
    private Token parseHeredocToken()
       throws IOException {
-      _sb.setLength(0);
+      StringBuilder sb = new StringBuilder();
 
       int ch;
 
@@ -920,10 +920,10 @@ public class BiancaLexer {
       _peek = ch;
 
       while ((ch = read()) >= 0 && ch != '\r' && ch != '\n') {
-         _sb.append((char) ch);
+         sb.append((char) ch);
       }
 
-      _heredocEnd = _sb.toString();
+      _heredocEnd = sb.toString();
 
       if (ch == '\n') {
       } else if (ch == '\r') {
@@ -1035,38 +1035,38 @@ public class BiancaLexer {
          }
       }
 
-      _sb.setLength(0);
+      StringBuilder sb = new StringBuilder();
 
       Token token = Token.LONG;
 
       for (; '0' <= ch && ch <= '9'; ch = read()) {
-         _sb.append((char) ch);
+         sb.append((char) ch);
       }
 
       if (ch == '.') {
          token = Token.DOUBLE;
 
-         _sb.append((char) ch);
+         sb.append((char) ch);
 
          for (ch = read(); '0' <= ch && ch <= '9'; ch = read()) {
-            _sb.append((char) ch);
+            sb.append((char) ch);
          }
       }
 
       if (ch == 'e' || ch == 'E') {
          token = Token.DOUBLE;
 
-         _sb.append((char) ch);
+         sb.append((char) ch);
 
          ch = read();
          if (ch == '+' || ch == '-') {
-            _sb.append((char) ch);
+            sb.append((char) ch);
             ch = read();
          }
 
          if ('0' <= ch && ch <= '9') {
             for (; '0' <= ch && ch <= '9'; ch = read()) {
-               _sb.append((char) ch);
+               sb.append((char) ch);
             }
          } else {
             throw _parser.error(L.l("illegal exponent"));
@@ -1076,11 +1076,11 @@ public class BiancaLexer {
       _peek = ch;
 
       if (ch0 == '0' && token == Token.LONG) {
-         int len = _sb.length();
+         int len = sb.length();
          int value = 0;
 
          for (int i = 0; i < len; i++) {
-            ch = _sb.charAt(i);
+            ch = sb.charAt(i);
             if ('0' <= ch && ch <= '7') {
                value = value * 8 + ch - '0';
             } else {
@@ -1090,7 +1090,7 @@ public class BiancaLexer {
 
          _lexeme = String.valueOf(value);
       } else {
-         _lexeme = _sb.toString();
+         _lexeme = sb.toString();
       }
 
       return token;
@@ -1149,15 +1149,13 @@ public class BiancaLexer {
 
    private Token lexemeToToken()
       throws IOException {
-      _lexeme = _sb.toString();
-
       // the 'static' reserved keyword vs late static binding (static::$a)
       if (_peek == ':' && "static".equals(_lexeme)) {
          return Token.IDENTIFIER;
       }
 
       Token reserved = _insensitiveReserved.get(_lexeme.toLowerCase());
-      if (reserved != Token.NONE) {
+      if (reserved != null && reserved != Token.NONE) {
          return reserved;
       } else {
          return Token.IDENTIFIER;
@@ -1185,8 +1183,8 @@ public class BiancaLexer {
       ch = ignoreWhiteSpace(ch);
 
       if (isNamespaceIdentifierStart(ch)) {
-         _sb.setLength(0);
-         _sb.append((char) ch);
+         StringBuilder sb = new StringBuilder();
+         sb.append((char) ch);
 
          for (ch = read(); ch >= 0; ch = read()) {
             pos = _is.getPosition();
@@ -1205,7 +1203,7 @@ public class BiancaLexer {
             }
 
             if (isNamespaceIdentifierPart(ch)) {
-               _sb.append((char) ch);
+               sb.append((char) ch);
             } else {
                break;
             }
@@ -1213,6 +1211,7 @@ public class BiancaLexer {
 
          _peek = ch;
 
+         _lexeme = sb.toString();
          return lexemeToToken();
       }
 
@@ -1287,7 +1286,7 @@ public class BiancaLexer {
             }
 
             case '\'':
-               parseStringToken('"');
+               parseStringToken('\'');
                return Token.STRING;
 
             case ';':
@@ -1544,7 +1543,6 @@ public class BiancaLexer {
                   if (ch != '\n') {
                      _peek = ch;
                   }
-
                   return parsePhpText();
                } else {
                   _peek = ch;
@@ -1615,15 +1613,16 @@ public class BiancaLexer {
       ch = ignoreWhiteSpace(ch);
 
       if (isIdentifierStart(ch)) {
-         _sb.setLength(0);
-         _sb.append((char) ch);
+         StringBuilder sb = new StringBuilder();
+         sb.append((char) ch);
 
          for (ch = read(); isIdentifierPart(ch); ch = read()) {
-            _sb.append((char) ch);
+            sb.append((char) ch);
          }
 
          _peek = ch;
 
+         _lexeme = sb.toString();
          return lexemeToToken();
       }
 
