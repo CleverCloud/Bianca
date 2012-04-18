@@ -41,7 +41,7 @@ import java.util.HashMap;
 public class BiancaLexer {
    private final static L10N L = new L10N(BiancaLexer.class);
    private int _peek = -1;
-   private Token _peekToken = Token.LAST_IDENTIFIER_LEXEME;
+   private Token _peekToken = Token.NONE;
    private BiancaParser _parser;
    private ReadStream _is;
    private boolean _hasCr;
@@ -61,7 +61,7 @@ public class BiancaLexer {
    public void init(ReadStream is) {
       this._is = is;
       this._peek = -1;
-      this._peekToken = Token.LAST_IDENTIFIER_LEXEME;
+      this._peekToken = Token.NONE;
    }
 
    public String getLexeme() {
@@ -77,6 +77,7 @@ public class BiancaLexer {
    }
 
    public enum Token {
+      NONE,
       SIMPLE_QUOTE,
       DOUBLE_QUOTE,
       COLUMN,
@@ -742,7 +743,7 @@ public class BiancaLexer {
     */
    public String tokenName(Token token) {
       switch (token) {
-         case LAST_IDENTIFIER_LEXEME:
+         case NONE:
             return "end of file";
 
          case SIMPLE_QUOTE:
@@ -1157,7 +1158,7 @@ public class BiancaLexer {
       }
 
       Token reserved = _insensitiveReserved.get(_lexeme.toLowerCase());
-      if (reserved != Token.LAST_IDENTIFIER_LEXEME) {
+      if (reserved != Token.NONE) {
          return reserved;
       } else {
          return Token.IDENTIFIER;
@@ -1225,8 +1226,8 @@ public class BiancaLexer {
    public Token parseToken()
       throws IOException {
       Token peekToken = _peekToken;
-      if (peekToken != Token.LAST_IDENTIFIER_LEXEME) {
-         _peekToken = Token.LAST_IDENTIFIER_LEXEME;
+      if (peekToken != Token.NONE) {
+         _peekToken = Token.NONE;
          return peekToken;
       }
 
@@ -1235,7 +1236,7 @@ public class BiancaLexer {
 
          switch (ch) {
             case -1:
-               return Token.LAST_IDENTIFIER_LEXEME;
+               return Token.NONE;
 
             case ' ':
             case '\t':
@@ -1670,7 +1671,7 @@ public class BiancaLexer {
       throws IOException {
       BiancaLexer.Token token = _peekToken;
 
-      if (token == Token.LAST_IDENTIFIER_LEXEME) {
+      if (token == Token.NONE) {
          token = parseNamespaceIdentifier(read());
       }
 
@@ -1694,7 +1695,7 @@ public class BiancaLexer {
    }
 
    public void dropToken() {
-      _peekToken = Token.LAST_IDENTIFIER_LEXEME;
+      _peekToken = Token.NONE;
    }
 
    public Token getToken() {

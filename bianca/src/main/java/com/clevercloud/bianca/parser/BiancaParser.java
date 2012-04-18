@@ -440,7 +440,7 @@ public class BiancaParser {
          String lexeme;
 
          switch (token) {
-            case LAST_IDENTIFIER_LEXEME:
+            case NONE:
                return statementList;
 
             case SEMICOLUMN:
@@ -1703,7 +1703,7 @@ public class BiancaParser {
          if (token != BiancaLexer.Token.RIGHT_PAREN
             && token != BiancaLexer.Token.AND
             && token != BiancaLexer.Token.DOLLAR
-            && token != BiancaLexer.Token.LAST_IDENTIFIER_LEXEME) {
+            && token != BiancaLexer.Token.NONE) {
             _lexer.saveToken(token);
             expectedClass = parseIdentifier();
             token = _lexer.parseToken();
@@ -1998,7 +1998,7 @@ public class BiancaParser {
                }
                break;
 
-            case LAST_IDENTIFIER_LEXEME:
+            case NONE:
             case RIGHT_BRACE:
             default:
                _lexer.saveToken(token);
@@ -2240,7 +2240,7 @@ public class BiancaParser {
       BiancaLexer.Token token = _lexer.nextToken();
 
       switch (token) {
-         case LAST_IDENTIFIER_LEXEME:
+         case NONE:
          case SEMICOLUMN:
          case RIGHT_BRACE:
          case PHP_END:
@@ -3591,7 +3591,7 @@ public class BiancaParser {
 
       BiancaLexer.Token token;
 
-      while ((token = _lexer.parseToken()) != BiancaLexer.Token.LAST_IDENTIFIER_LEXEME && token != BiancaLexer.Token.RIGHT_PAREN) {
+      while ((token = _lexer.parseToken()) != BiancaLexer.Token.NONE && token != BiancaLexer.Token.RIGHT_PAREN) {
          boolean isRef = false;
 
          if (token == BiancaLexer.Token.AND) {
@@ -3673,7 +3673,7 @@ public class BiancaParser {
       if (token != BiancaLexer.Token.LEFT_PAREN) {
          _lexer.saveToken(token);
       } else {
-         while ((token = _lexer.parseToken()) != BiancaLexer.Token.LAST_IDENTIFIER_LEXEME && token != BiancaLexer.Token.RIGHT_PAREN) {
+         while ((token = _lexer.parseToken()) != BiancaLexer.Token.NONE && token != BiancaLexer.Token.RIGHT_PAREN) {
             _lexer.saveToken(token);
 
             args.add(parseExpr());
@@ -3733,7 +3733,7 @@ public class BiancaParser {
 
       ArrayList<Expr> leftVars = new ArrayList<Expr>();
 
-      while (token != BiancaLexer.Token.LAST_IDENTIFIER_LEXEME && token != BiancaLexer.Token.RIGHT_PAREN) {
+      while (token != BiancaLexer.Token.NONE && token != BiancaLexer.Token.RIGHT_PAREN) {
          if (token == BiancaLexer.Token.LIST) {
             leftVars.add(parseListHead());
 
@@ -3899,7 +3899,7 @@ public class BiancaParser {
       throws IOException {
       BiancaLexer.Token token = _lexer.getToken();
 
-      if (token == BiancaLexer.Token.LAST_IDENTIFIER_LEXEME) {
+      if (token == BiancaLexer.Token.NONE) {
          token = _lexer.parseIdentifier();
       }
 
