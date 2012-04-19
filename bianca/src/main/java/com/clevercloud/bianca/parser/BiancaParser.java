@@ -400,7 +400,7 @@ public class BiancaParser {
       if (token == BiancaLexer.Token.TEXT_ECHO) {
          parseEcho(statements);
       } else if (token == BiancaLexer.Token.TEXT_PHP) {
-         token = _lexer.nextToken();
+         token = _lexer.parseToken();
 
          if (token == BiancaLexer.Token.IDENTIFIER && "php".equalsIgnoreCase(_lexer.getLexeme())) {
             _lexer.dropToken();
@@ -605,9 +605,9 @@ public class BiancaParser {
                   statementList.add(_factory.createText(location, _lexer.getLexeme()));
                }
 
-               token = _lexer.nextToken();
+               token = _lexer.parseToken();
 
-               if (token == BiancaLexer.Token.IDENTIFIER && _lexer.getLexeme().equalsIgnoreCase("php")) {
+               if (token == BiancaLexer.Token.IDENTIFIER && "php".equalsIgnoreCase(_lexer.getLexeme())) {
                   _lexer.dropToken();
                }
                break;
@@ -684,9 +684,9 @@ public class BiancaParser {
                stmt = _factory.createText(location, _lexer.getLexeme());
             }
 
-            token = _lexer.nextToken();
+            token = _lexer.parseToken();
 
-            if (token == BiancaLexer.Token.IDENTIFIER && _lexer.getLexeme().equalsIgnoreCase("php")) {
+            if (token == BiancaLexer.Token.IDENTIFIER && "php".equalsIgnoreCase(_lexer.getLexeme())) {
                _lexer.dropToken();
             }
 
@@ -700,9 +700,9 @@ public class BiancaParser {
          default:
             Statement stmt = parseStatementImpl(token);
 
-            token = _lexer.nextToken();
-            if (token == BiancaLexer.Token.SEMICOLUMN) {
-               _lexer.dropToken();
+            token = _lexer.parseToken();
+            if (token != BiancaLexer.Token.SEMICOLUMN) {
+               _lexer.saveToken(token);
             }
 
             return stmt;
@@ -774,12 +774,12 @@ public class BiancaParser {
 
          createEchoStatements(location, statements, expr);
 
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          if (token != BiancaLexer.Token.COMMA) {
+            _lexer.saveToken(token);
             return;
          }
-         _lexer.dropToken();
       }
    }
 
@@ -862,12 +862,12 @@ public class BiancaParser {
 
          // statementList.add(new ExprStatement(expr));
 
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          if (token != BiancaLexer.Token.COMMA) {
+            _lexer.saveToken(token);
             return _factory.createBlock(location, statementList);
          }
-         _lexer.dropToken();
       }
    }
 
@@ -976,12 +976,12 @@ public class BiancaParser {
 
          _lexer.expect(BiancaLexer.Token.RIGHT_PAREN);
 
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          if (token == BiancaLexer.Token.COLUMN) {
-            _lexer.dropToken();
             return parseAlternateIf(test, location);
          }
+         _lexer.saveToken(token);
 
          Statement trueBlock = parseStatement();
 
@@ -1328,10 +1328,11 @@ public class BiancaParser {
 
          boolean isRef = false;
 
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
          if (token == BiancaLexer.Token.AND) {
-            _lexer.dropToken();
             isRef = true;
+         } else {
+            _lexer.saveToken(token);
          }
 
          AbstractVarExpr valueExpr = (AbstractVarExpr) parseLeftHandSide();
@@ -1348,11 +1349,12 @@ public class BiancaParser {
 
             keyVar = valueExpr;
 
-            token = _lexer.nextToken();
+            token = _lexer.parseToken();
 
             if (token == BiancaLexer.Token.AND) {
-               _lexer.dropToken();
                isRef = true;
+            } else {
+               _lexer.saveToken(token);
             }
 
             valueVar = (AbstractVarExpr) parseLeftHandSide();
@@ -1368,14 +1370,14 @@ public class BiancaParser {
 
          Statement block;
 
-         token = _lexer.nextToken();
+         token = _lexer.parseToken();
 
          if (token == BiancaLexer.Token.COLUMN) {
-            _lexer.dropToken();
             block = _factory.createBlock(getLocation(), parseStatementList());
 
             _lexer.expect(BiancaLexer.Token.ENDFOREACH);
          } else {
+            _lexer.saveToken(token);
             block = parseStatement();
          }
 
@@ -1456,14 +1458,15 @@ public class BiancaParser {
       try {
          _returnsReference = false;
 
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          String comment = _lexer.getComment();
          _lexer.dropComment();
 
          if (token == BiancaLexer.Token.AND) {
-            _lexer.dropToken();
             _returnsReference = true;
+         } else {
+            _lexer.saveToken(token);
          }
 
          String name;
@@ -1602,13 +1605,14 @@ public class BiancaParser {
       try {
          _returnsReference = false;
 
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          String comment = null;
 
          if (token == BiancaLexer.Token.AND) {
-            _lexer.dropToken();
             _returnsReference = true;
+         } else {
+            _lexer.saveToken(token);
          }
 
          String name = "__bianca_closure_" + _functionsParsed;
@@ -1629,10 +1633,9 @@ public class BiancaParser {
          Arg[] useArgs;
          ArrayList<VarExpr> useVars = new ArrayList<VarExpr>();
 
-         token = _lexer.nextToken();
+         token = _lexer.parseToken();
 
          if (token == BiancaLexer.Token.USE) {
-            _lexer.dropToken();
             _lexer.expect(BiancaLexer.Token.LEFT_PAREN);
 
             useArgs = parseFunctionArgDefinition();
@@ -1646,6 +1649,7 @@ public class BiancaParser {
 
             _lexer.expect(BiancaLexer.Token.RIGHT_PAREN);
          } else {
+            _lexer.saveToken(token);
             useArgs = new Arg[0];
          }
 
@@ -2013,14 +2017,14 @@ public class BiancaParser {
 
          String name = parseIdentifier();
 
-         token = _lexer.nextToken();
+         token = _lexer.parseToken();
 
-         Expr expr = null;
+         Expr expr;
 
          if (token == BiancaLexer.Token.ASSIGN) {
-            _lexer.dropToken();
             expr = parseExpr();
          } else {
+            _lexer.saveToken(token);
             expr = _factory.createNull();
          }
 
@@ -2273,14 +2277,14 @@ public class BiancaParser {
       Expr expr = parseExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case COMMA:
-               _lexer.dropToken();
                expr = _factory.createComma(expr, parseExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2324,14 +2328,14 @@ public class BiancaParser {
       Expr expr = parseWeakXorExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case OR_RES:
-               _lexer.dropToken();
                expr = _factory.createOr(expr, parseWeakXorExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2345,14 +2349,14 @@ public class BiancaParser {
       Expr expr = parseWeakAndExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case XOR_RES:
-               _lexer.dropToken();
                expr = _factory.createXor(expr, parseWeakAndExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2366,14 +2370,14 @@ public class BiancaParser {
       Expr expr = parseConditionalExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case AND_RES:
-               _lexer.dropToken();
                expr = _factory.createAnd(expr, parseConditionalExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2387,16 +2391,16 @@ public class BiancaParser {
       Expr expr = parseOrExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case QUESTION:
-               token = _lexer.nextToken();
+               token = _lexer.parseToken();
 
                if (token == BiancaLexer.Token.COLUMN) {
-                  _lexer.dropToken();
                   expr = _factory.createShortConditional(expr, parseOrExpr());
                } else {
+                  _lexer.saveToken(token);
                   Expr trueExpr = parseExpr();
                   _lexer.expect(BiancaLexer.Token.COLUMN);
                   // php/33c1
@@ -2404,6 +2408,7 @@ public class BiancaParser {
                }
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2417,14 +2422,14 @@ public class BiancaParser {
       Expr expr = parseAndExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case C_OR:
-               _lexer.dropToken();
                expr = _factory.createOr(expr, parseAndExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2438,13 +2443,14 @@ public class BiancaParser {
       Expr expr = parseBitOrExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case C_AND:
                expr = _factory.createAnd(expr, parseBitOrExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2458,14 +2464,14 @@ public class BiancaParser {
       Expr expr = parseBitXorExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case OR:
-               _lexer.dropToken();
                expr = _factory.createBitOr(expr, parseBitXorExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2479,14 +2485,14 @@ public class BiancaParser {
       Expr expr = parseBitAndExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case XOR:
-               _lexer.dropToken();
                expr = _factory.createBitXor(expr, parseBitAndExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2500,14 +2506,14 @@ public class BiancaParser {
       Expr expr = parseEqExpr();
 
       while (true) {
-         BiancaLexer.Token token = _lexer.nextToken();
+         BiancaLexer.Token token = _lexer.parseToken();
 
          switch (token) {
             case AND:
-               _lexer.dropToken();
                expr = _factory.createBitAnd(expr, parseEqExpr());
                break;
             default:
+               _lexer.saveToken(token);
                return expr;
          }
       }
@@ -2917,12 +2923,12 @@ public class BiancaParser {
 
          switch (token) {
             case LEFT_BRACKET: {
-               token = _lexer.nextToken();
+               token = _lexer.parseToken();
 
                if (token == BiancaLexer.Token.RIGHT_BRACKET) {
-                  _lexer.dropToken();
                   term = _factory.createArrayTail(getLocation(), term);
                } else {
+                  _lexer.saveToken(token);
                   Expr index = parseExpr();
                   token = _lexer.parseToken();
 
@@ -2996,12 +3002,12 @@ public class BiancaParser {
 
          switch (token) {
             case LEFT_BRACKET: {
-               token = _lexer.nextToken();
+               token = _lexer.parseToken();
 
                if (token == BiancaLexer.Token.RIGHT_BRACKET) {
-                  _lexer.dropToken();
                   term = _factory.createArrayTail(getLocation(), term);
                } else {
+                  _lexer.saveToken(token);
                   Expr index = parseExpr();
                   token = _lexer.parseToken();
 
@@ -3048,23 +3054,24 @@ public class BiancaParser {
     */
    private Expr parseDeref(Expr term)
       throws IOException {
-      String name = null;
-      Expr nameExpr = null;
+      String name;
+      Expr nameExpr;
 
-      BiancaLexer.Token token = _lexer.nextToken();
+      BiancaLexer.Token token = _lexer.parseToken();
 
       if (token == BiancaLexer.Token.DOLLAR) {
+         _lexer.saveToken(token);
          // php/09e0
          nameExpr = parseTerm(false);
 
          return term.createFieldGet(_factory, nameExpr);
       } else if (token == BiancaLexer.Token.LEFT_BRACE) {
-         _lexer.dropToken();
          nameExpr = parseExpr();
          _lexer.expect(BiancaLexer.Token.RIGHT_BRACE);
 
          return term.createFieldGet(_factory, nameExpr);
       } else {
+         _lexer.saveToken(token);
          name = parseIdentifier();
 
          return term.createFieldGet(_factory, new StringValue(name));
@@ -3294,7 +3301,7 @@ public class BiancaParser {
 
          case IDENTIFIER:
          case NAMESPACE: {
-            if (_lexer.getLexeme().equals("new")) {
+            if ("new".equals(_lexer.getLexeme())) {
                return parseNew();
             }
 
@@ -3353,9 +3360,10 @@ public class BiancaParser {
          case IMPORT: {
             String importTokenString = _lexer.getLexeme();
 
-            token = _lexer.nextToken();
+            token = _lexer.parseToken();
 
             if (token == BiancaLexer.Token.LEFT_PAREN) {
+               _lexer.saveToken(token);
                return parseCall(importTokenString);
             } else {
                return parseImport();
@@ -3394,12 +3402,12 @@ public class BiancaParser {
 
          switch (token) {
             case LEFT_BRACKET: {
-               token = _lexer.nextToken();
+               token = _lexer.parseToken();
 
                if (token == BiancaLexer.Token.RIGHT_BRACKET) {
-                  _lexer.dropToken();
                   lhs = _factory.createArrayTail(getLocation(), lhs);
                } else {
+                  _lexer.saveToken(token);
                   Expr index = parseExpr();
                   token = _lexer.parseToken();
 
@@ -3859,12 +3867,12 @@ public class BiancaParser {
          if (token == BiancaLexer.Token.IDENTIFIER) {
             sb.append(_lexer.getLexeme());
 
-            token = _lexer.nextToken();
+            token = _lexer.parseToken();
 
             if (token == BiancaLexer.Token.DOT) {
-               _lexer.dropToken();
                sb.append('.');
             } else {
+               _lexer.saveToken(token);
                break;
             }
          } else if (token == BiancaLexer.Token.MUL) {
@@ -3888,12 +3896,13 @@ public class BiancaParser {
    private String parseIdentifier()
       throws IOException {
       BiancaLexer.Token token = _lexer.getToken();
+      _lexer.dropToken();
 
       if (token == BiancaLexer.Token.NONE) {
          token = _lexer.parseIdentifier();
       }
 
-      if (token != BiancaLexer.Token.IDENTIFIER && ! token.isIdentifierLexeme()) {
+      if (token != BiancaLexer.Token.IDENTIFIER && !token.isIdentifierLexeme()) {
          throw error(L.l("expected identifier at {0}.", _lexer.tokenName(token)));
       }
 

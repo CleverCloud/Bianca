@@ -29,7 +29,6 @@
 */
 package com.clevercloud.bianca.parser;
 
-import com.clevercloud.util.CharBuffer;
 import com.clevercloud.util.L10N;
 import com.clevercloud.vfs.IOExceptionWrapper;
 import com.clevercloud.vfs.ReadStream;
@@ -37,7 +36,6 @@ import com.clevercloud.vfs.ReadStream;
 import java.io.CharConversionException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 public class BiancaLexer {
    private final static L10N L = new L10N(BiancaLexer.class);
