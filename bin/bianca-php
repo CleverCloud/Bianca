@@ -5,4 +5,4 @@ if [ -z $1 ]; then
 	exit 1
 fi
 
-LC_CTYPE=C java -cp $(echo $(dirname $0)/../**/*.jar /opt/glassfish3/glassfish/modules/*.jar | sed 's/ /:/g') com.clevercloud.bianca.CliBianca -d register_argc_argv=1 $*
+LC_CTYPE=C java -cp $(echo $(dirname $0)/../**/*.jar | sed 's/ /:/g') com.clevercloud.bianca.CliBianca -d register_argc_argv=1 $*
