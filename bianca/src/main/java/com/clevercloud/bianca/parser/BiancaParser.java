@@ -3150,7 +3150,6 @@ public class BiancaParser {
          expr = _factory.createAppend(expr, tail);
 
          if (isSystem) {
-            expr = _factory.createAppend(expr, createString(" ")); /* FIXME: Should this go outside ? */
             token = _lexer.parseEscapedString('`');
          } else {
             token = _lexer.parseEscapedString('"');
@@ -3163,6 +3162,8 @@ public class BiancaParser {
 
             expr = _factory.createAppend(expr, string);
          }
+
+         expr = _factory.createAppend(expr, createString(_lexer.getLexeme()));
 
          if (token == BiancaLexer.Token.STRING) {
             return expr;
