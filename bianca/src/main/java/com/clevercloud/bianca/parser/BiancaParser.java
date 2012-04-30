@@ -3110,6 +3110,7 @@ public class BiancaParser {
             _lexer.saveRead(ch);
 
             String varName = sb.toString();
+            sb = new StringBuilder();
 
             if (varName.equals("this")) {
                tail = _factory.createThis(_classDef);
@@ -3127,7 +3128,6 @@ public class BiancaParser {
                   if ((ch = _lexer.read()) != '>') {
                      tail = _factory.createAppend(tail, createString("-"));
                   } else if (_lexer.isIdentifierPart(ch = _lexer.read())) {
-                     sb = new StringBuilder();
                      for (; _lexer.isIdentifierPart(ch); ch = _lexer.read()) {
                         sb.append((char) ch);
                      }
@@ -3150,6 +3150,7 @@ public class BiancaParser {
          expr = _factory.createAppend(expr, tail);
 
          if (isSystem) {
+            expr = _factory.createAppend(expr, createString(" ")); /* FIXME: Should this go outside ? */
             token = _lexer.parseEscapedString('`');
          } else {
             token = _lexer.parseEscapedString('"');

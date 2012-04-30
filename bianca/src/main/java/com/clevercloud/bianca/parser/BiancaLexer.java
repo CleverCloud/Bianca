@@ -1270,7 +1270,6 @@ public class BiancaLexer {
             }
             case '`': {
                Token token = parseEscapedString('`');
-
                switch (token) {
                   case STRING:
                      return Token.SYSTEM_STRING;
@@ -1671,9 +1670,7 @@ public class BiancaLexer {
          token = parseNamespaceIdentifier(read());
       }
 
-      if (token == BiancaLexer.Token.IDENTIFIER) {
-         return resolveIdentifier(_lexeme);
-      } else if (token.isIdentifierLexeme()) {
+      if (token == BiancaLexer.Token.IDENTIFIER || token.isIdentifierLexeme()) {
          return resolveIdentifier(_lexeme);
       } else {
          throw _parser.error(L.l("expected identifier at {0}.", tokenName(token)));
