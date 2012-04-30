@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+if [ -z $1 ]; then
+	echo Input file expected
+	exit 1
+fi
+
+LC_CTYPE=C java -cp $(echo $(dirname $0)/../**/*.jar /opt/glassfish3/glassfish/modules/*.jar | sed 's/ /:/g') com.clevercloud.bianca.CliBianca -d register_argc_argv=1 $*
